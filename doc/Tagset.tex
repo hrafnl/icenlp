@@ -1,0 +1,197 @@
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{multirow}
+\usepackage{setspace}
+\usepackage{url}
+%\usepackage{longtable}
+\usepackage{natbib}
+%\input{fancy}
+
+\oddsidemargin  0.0in
+\evensidemargin 0.0in
+\textwidth      6.0in
+%\headheight     0.5in
+\headheight     0.0in
+\topmargin      0.0in
+\textheight 9.0in
+
+\bibpunct{(}{)}{,}{a}{}{;}
+
+\title{The Icelandic tagset}
+\author{Hrafn Loftsson \\
+        Department of Computer Science \\
+        Reykjavik University \\
+        e-mail: hrafn@ru.is \\
+        }
+
+\begin{document}
+\hyphenation{Ice-Tagger Ice-Morphy Reykja-vik}
+\label{firstpage}
+\date{January 2007}
+\maketitle
+%\tableofcontents
+%\newpage
+%\begin{spacing}{1.5}
+
+\section{Introduction}
+\label{sec:tagset}
+The main Icelandic tagset was created in the making of the Icelandic Frequency Dictionary (\emph{IFD}) corpus \citep{pin91}.
+Due to the morphological richness of the Icelandic language, the main tagset is large and makes fine distinctions compared to related languages.
+The rich inflections of an Icelandic word contribute more information about POS of surrounding words than is the case, for example, for English where word order is not as free.
+The tagset consists of 700 possible tags, 639 tags of which appear in the \emph{IFD} corpus.
+%: 192 noun tags, 163 pronoun tags, 144 adjective tags, 82 verb tags, 27 numeral tags, 24 article tags, 16 punctuation tags, 9 adverb/preposition tags, 3 conjunction tags and 1 tag for foreign words and words not analysed, respectively.
+
+We can illustrate the preciseness of the tags by examining the semantics of a tag.
+Each character in the tag has a particular function.
+The first character denotes the word class.
+For each word class there is a predefined number of additional characters (at most six) which describe morphological features, like \emph{gender}, \emph{number} and \emph{case} for nouns; \emph{degree} and \emph{declension} for adjectives; \emph{voice}, \emph{mood} and \emph{tense} for verbs, etc.
+
+Tables \ref{tab:semanticsNounAdj} and \ref{tab:semanticsVerb} show the semantics of the noun and the adjective tags, and the semantics of the verb tags, respectively.
+Consider, for example, the tag ``\emph{nken}''.  The first letter, ``\emph{n}'', denotes the word class ``\emph{nafnor{\dh}}'' (noun), the second letter, ``\emph{k}'', denotes the gender ``\emph{karlkyn}'' (masculine), the third letter, ``\emph{e}'', denotes the number ``\emph{eintala}'' (singular) and the last letter, ``\emph{n}'', denotes the case ``\emph{nefnifall}'' (nominative case).
+
+\begin{table}
+\begin{tabular}{lll}
+\hline
+\hline
+Char & Category/ & Symbol -- semantics \\
+\# & Feature \\
+\hline
+1 & Word class & {\bf n}--noun, {\bf l}--adjective  \\
+2 & Gender & {\bf k}--masculine, {\bf v}--feminine, {\bf h}--neuter, {\bf x}--unspecified  \\
+3 & Number & {\bf e}--singular, {\bf f}--plural \\
+4 & Case & {\bf n}--nominative, {\bf o}--accusative, {\bf {\th}}--dative, {\bf e}--genitive \\
+5 & Article & {\bf g}--with suffixed article \\
+5 & Declension & {\bf v}--strong, {\bf s}--weak  \\
+6 & Proper noun & {\bf m}--person, {\bf {\"o}}--place, {\bf s}--other \\
+6 & Degree & {\bf f}--positive, {\bf m}--comparative, {\bf e}--superlative \\
+\hline
+\hline
+\end{tabular}
+\caption{The semantics of the tags for nouns and adjectives.}
+\label{tab:semanticsNounAdj}
+\end{table}
+
+\begin{table}
+\begin{tabular}{lll}
+\hline
+\hline
+Char & Category/ & Symbol -- semantics \\
+\# & Feature \\
+\hline
+%\pagebreak
+1 & Word class & {\bf s}--verb (except for past participle) \\
+2 & Mood & {\bf n}--infinitive, {\bf b}--imperative, {\bf f}--indicative, {\bf v}--subjunctive, \\
+  & & {\bf s}--supine, {\bf l}--persent participle \\
+3 & Voice & {\bf g}--active, {\bf m}--middle  \\
+4 & Person & {\bf 1}--$1^{st}$ person, {\bf 2}--$2^{nd}$ person, {\bf 3}--$3^{rd}$ person,  \\
+5 & Number & {\bf e}--singular, {\bf f}--plural \\
+6 & Tense & {\bf n}--present, {\bf þ}--past\\
+\hline
+\hline
+\end{tabular}
+\caption{The semantics of the tags for verbs.}
+\label{tab:semanticsVerb}
+\end{table}
+
+To give another example, consider the phrase ``\emph{fallegu hestarnir hoppu{\dh}u}'' (the beautiful horses jumped).
+The corresponding tag for ``\emph{fallegu}'' is ``\emph{lkenvf}'', denoting adjective, masculine, singular, nominative, weak declension, positive;
+the tag for ``\emph{hestarnir}'' is ``\emph{nkfng}'', denoting noun, masculine, plural, nominative with suffixed definite article, and the tag for ``\emph{hoppu{\dh}u}'' is ``\emph{sfg3f{\th}}'', denoting verb, indicative mood, active voice, 3-rd person, plural and past tense.
+Note the agreement in gender, number and case between the adjective and the noun, and the agreement in person and number between the adjective/noun and the verb.
+
+A complete description of the tagset can be found in the Appendix \ref{appendix:tagset}.
+
+\begin{spacing}{1.0}
+%\addcontentsline{toc}{section}{References}
+\bibliographystyle{abbrvnat}
+\bibliography{ref}
+\end{spacing}
+
+\newpage
+\begin{spacing}{1.0}
+\appendix
+%\addcontentsline{toc}{section}{Appendix}
+\section{The Icelandic tagset}
+\label{appendix:tagset}
+\begin{table}[h]
+\begin{center}
+{\scriptsize
+\caption{The Icelandic tagset}
+%\begin{longtable}{lll}
+\begin{tabular}{lll}
+\hline
+\hline
+
+Char\# & Category/Feature & Symbol -- semantics \\
+\hline
+%\endhead
+1 & Word class & {\bf n}--noun \\
+2 & Gender & {\bf k}--masculine, {\bf v}--feminine, {\bf h}--neuter, {\bf x}--unspecified  \\
+3 & Number & {\bf e}--singular, {\bf f}--plural \\
+4 & Case & {\bf n}--nominative, {\bf o}--accusative, {\bf {\th}}--dative, {\bf e}--genitive  \\
+5 & Article & {\bf g}--with suffixed definite article \\
+6 & Proper noun & {\bf m}--person name, {\bf {\"o}}--place name, {\bf s}--other proper name \\
+\hline
+1 & Word class & {\bf l}--adjective \\
+2 & Gender & {\bf k}--masculine, {\bf v}--feminine, {\bf h}--neuter \\
+3 & Number & {\bf e}--singular, {\bf f}--plural \\
+4 & Case & {\bf n}--nominative, {\bf o}--accusative, {\bf {\th}}--dative, {\bf e}--genitive  \\
+5 & Declension & {\bf s}--strong declension, {\bf v}--weak declension, {\bf o}--indeclineable  \\
+6 & Degree & {\bf f}--positive, {\bf m}--comparative, {\bf e}--superlative \\
+\hline
+1 & Word class & {\bf f}--pronoun \\
+2 & Subcategory & {\bf a}--demonstrative, {\bf b}--reflexive, {\bf e}--possessive, {\bf o}--indefinite, \\
+  & & {\bf p}--personal, {\bf s}--interrogative, {\bf t}--relative  \\
+3 & Gender/Person & {\bf k}--masculine, {\bf v}--feminine, {\bf h}--neuter/{\bf 1}--$1^{st}$ person, {\bf 2}--$2^{nd}$ person \\
+4 & Number & {\bf e}--singular, {\bf f}--plural \\
+5 & Case & {\bf n}--nominative, {\bf o}--accusative, {\bf {\th}}--dative, {\bf e}--genitive  \\
+\hline
+1 & Word class & {\bf g}--article \\
+2 & Gender & {\bf k}--masculine, {\bf v}--feminine, {\bf h}--neuter \\
+3 & Number & {\bf e}--singular, {\bf f}--plural \\
+4 & Case & {\bf n}--nominative, {\bf o}--accusative, {\bf {\th}}--dative, {\bf e}--genitive  \\
+\hline
+1 & Word class & {\bf t}--numeral \\
+2 & Category & {\bf f}--alpha, {\bf o}--numeric, {\bf p}--percentage \\
+3 & Gender & {\bf k}--masculine, {\bf v}--feminine, {\bf h}--neuter  \\
+4 & Number & {\bf e}--singular, {\bf f}--plural \\
+5 & Case & {\bf n}--nominative, {\bf o}--accusative, {\bf {\th}}--dative, {\bf e}--genitive  \\
+\hline
+%\pagebreak
+1 & Word class & {\bf s}--verb (except for past participle) \\
+2 & Mood & {\bf n}--infinitive, {\bf b}--imperative, {\bf f}--indicative, {\bf v}--subjunctive, \\
+  & & {\bf s}--supine, {\bf l}--persent participle \\
+3 & Voice & {\bf g}--active, {\bf m}--middle  \\
+4 & Person & {\bf 1}--$1^{st}$ person, {\bf 2}--$2^{nd}$ person, {\bf 3}--$3^{rd}$ person,  \\
+5 & Number & {\bf e}--singular, {\bf f}--plural \\
+6 & Tense & {\bf n}--present, {\bf þ}--past\\
+\hline
+1 & Word class & {\bf s}--verb (past participle) \\
+2 & Mood & {\bf þ}--past participle\\
+3 & Voice & {\bf g}--active, {\bf m}--middle  \\
+4 & Gender & {\bf k}--masculine, {\bf v}--feminine, {\bf h}--neuter \\
+5 & Number & {\bf e}--singular, {\bf f}--plural \\
+6 & Case & {\bf n}--nominative, {\bf o}--accusative, {\bf {\th}}--dative, {\bf e}--genitive  \\
+\hline
+1 & Word class & {\bf a}--adverb and preposition \\
+2 & Category & {\bf a}--does not govern case, {\bf u}--exclamation, \\
+  & & {\bf o}--governs accusative, {\bf þ}--governs dative, {\bf e}--governs genitive \\
+3 & Degree & {\bf m}--comparative, {\bf e}--superlative \\
+\hline
+1 & Word class & {\bf c}--conjunction \\
+2 & Category & {\bf n}--sign of infinitive, {\bf t}--relative conjunction, \\
+\hline
+1 & Word class & {\bf e}--foreign word\\
+\hline
+1 & Word class & {\bf x}--unanalyzed word \\
+\hline
+\hline
+%\end{longtable}
+\end{tabular}
+}
+\end{center}
+\end{table}
+\end{spacing}
+
+%\end{spacing}
+\end{document}
