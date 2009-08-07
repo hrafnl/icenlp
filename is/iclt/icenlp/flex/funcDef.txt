@@ -1,0 +1,31 @@
+OpenQual = "{*QUAL"
+CloseQual= "*QUAL}"
+
+OpenSubj = "{*SUBJ"[<>]?
+CloseSubj = "*SUBJ"[<>]?"}"
+
+OpenObj = "{*OBJ"(AP|NOM)?[<>]
+CloseObj = "*OBJ"(AP|NOM)?[<>]"}"
+
+OpenObjI = "{*IOBJ"[<>]
+CloseObjI = "*IOBJ"[<>]"}"
+
+OpenComp = "{*COMP"[<>]? 
+CloseComp = "*COMP"[<>]?"}"
+
+OpenTemp = "{*TIMEX"
+CloseTemp = "*TIMEX}"
+
+FuncQualifier = {OpenQual}~{CloseQual}
+FuncSubject = {OpenSubj}~{CloseSubj}
+FuncObject = {OpenObj}~{CloseObj}
+FuncObjectI = {OpenObjI}~{CloseObjI}	/* Infinitive verb phrase object */
+FuncComplement = {OpenComp}~{CloseComp}
+FuncTemp = {OpenTemp}~{CloseTemp}
+
+Function = {FuncQualifier} | {FuncSubject} | {FuncObject} | {FuncObjectI} | {FuncComplement} | {FuncTemp}
+
+/* A nominative subjec is either one nominative NP or a sequence of nominative NPs */
+NomSubject = {NPNom} | {NPsNom}
+AccSubject = {NPAcc} | {NPsAcc}
+DatSubject = {NPDat} | {NPsDat}
