@@ -1,0 +1,104 @@
+/* This transducer prints each phrase of a sentence on a separate line */
+package is.ru.cs.nlp.icenlp.core.iceparser;
+import java.io.*;
+%%
+
+%public
+%class Phrase_Per_Line
+%standalone
+%line
+
+%unicode
+
+%{
+  StringBuffer str = new StringBuffer();
+  int count = 0;
+  int funcCount = 0;
+  
+  //java.io.Writer out = new BufferedWriter(new OutputStreamWriter(System.out, "UTF-8"));
+  java.io.Writer out = new BufferedWriter(new OutputStreamWriter(System.out));
+      
+  public void parse(java.io.Writer _out) throws java.io.IOException
+  {
+      	out = _out;
+      	while (!zzAtEOF) 
+      	    yylex();
+  }
+  
+%}
+
+%eof{
+	try {
+	  out.flush();	
+	} 
+	catch (IOException e) {
+            e.printStackTrace();
+        }
+%eof}
+
+WordChar = [^\r\n\t\f\[\]\{\} ]
+Word = {WordChar}+
+Label = AdvP|APs?|NPs?|VP[bgips]?|PP|S?CP|InjP|MWE_(AdvP|AP|CP|PP)
+Func = (("*"SUBJ|"*"I?OBJ(AP|NOM)?|"*"COMP)(<|>)?)|"*"QUAL | "*"TIMEX
+
+%state PHRASE
+%state FUNC
+
+%%
+
+<YYINITIAL> {
+"["{Label}" " 	{ /* System.err.println("InitLabel open " + yytext()); */
+		  count++; str.append(yytext()); 
+		  yybegin(PHRASE);
+		}
+"{"{Func}" " 	{ 
+		  /* System.err.println("InitFunc open " + yytext()); */
+		  funcCount++; 
+		  str.append(yytext()); 
+		  yybegin(FUNC);
+		}
+{Word}" "{Word}	{ out.write(yytext()); out.write("\n");}
+"\n"		{ //System.err.print("Reading line: " + Integer.toString(yyline+1) + "\r"); 
+		  out.write("\n"); }
+.		{ ;}
+}
+
+<PHRASE> {
+" "{Label}"]"	{ count--; 
+		  /* System.err.println("PhraseLabel close " + yytext()); */
+		  str.append(yytext());
+		  if (count == 0) { 
+		  	/*System.out.println("Match");*/
+			out.write(str.toString());
+			out.write("\n");
+			str.setLength(0);
+			yybegin(YYINITIAL);
+		  }
+	  	}
+"["{Label}" " 	{ 
+		  /* System.err.println("PhraseLabel open " + yytext()); */
+		  count++; 
+		  str.append(yytext());}
+		  
+.		{ str.append(yytext());}
+}
+
+<FUNC> {
+" "{Func}"}"	{ 
+		  /* System.err.println("Func close " + yytext()); */
+		  funcCount--; 
+		  str.append(yytext());
+		  if (funcCount == 0) { 
+			out.write(str.toString());
+			out.write("\n");
+			str.setLength(0);
+			yybegin(YYINITIAL);
+		  }
+	  	}
+"{"{Func}" " 	{ 
+		  /* System.err.println("Func open2 " + yytext()); */
+		  funcCount++; str.append(yytext());
+		}	  	
+.		{ str.append(yytext());}
+
+}
