@@ -1,0 +1,10 @@
+is.iclt.icenlp.core.iceNER
+is.iclt.icenlp.core.icemorphy
+is.iclt.icenlp.core.icetagger
+is.iclt.icenlp.core.tokenizer
+is.iclt.icenlp.core.tritagger
+is.iclt.icenlp.core.utils
+is.iclt.icenlp.facade
+is.iclt.icenlp.flex.iceparser
+is.iclt.icenlp.flex.icetagger
+is.iclt.icenlp.runner
