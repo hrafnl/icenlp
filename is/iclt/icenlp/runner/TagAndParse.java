@@ -1,0 +1,267 @@
+/*
+ * Copyright (C) 2009 Hrafn Loftsson
+ *
+ * This file is part of the IceNLP toolkit.
+ * IceNLP is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * IceNLP is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with IceNLP. If not,  see <http://www.gnu.org/licenses/>.
+ *
+ * Contact information:
+ * Hrafn Loftsson, School of Computer Science, Reykjavik University.
+ * hrafn@ru.is
+ */
+package is.iclt.icenlp.runner;
+
+import is.iclt.icenlp.facade.IceTaggerFacade;
+import is.iclt.icenlp.facade.IceParserFacade;
+import is.iclt.icenlp.core.icetagger.IceTaggerLexicons;
+import is.iclt.icenlp.core.icetagger.IceTaggerResources;
+import is.iclt.icenlp.core.tritagger.TriTaggerLexicons;
+import is.iclt.icenlp.core.tritagger.TriTaggerResources;
+import is.iclt.icenlp.core.tokenizer.Sentences;
+import is.iclt.icenlp.core.tokenizer.TokenizerResources;
+import is.iclt.icenlp.core.utils.Lexicon;
+import is.iclt.icenlp.core.utils.FileEncoding;
+
+import javax.swing.*;
+import java.io.*;
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.util.regex.Pattern;
+
+/**
+ * An application with GUI to tag and parse Icelandic text.
+ * @author Hrafn Loftsson
+ */
+public class TagAndParse implements ActionListener {
+    private static JFrame frame;
+    //private static JButton quitButton;
+    private JTextArea textInput;
+    private JTextArea textTagged;
+    private JTextArea textParsed;
+    private JCheckBox checkIncludeFunc, checkPhrasePerLine, checkTokenPerLine, checkTriTagger;
+    private IceTaggerFacade tagger;
+    private IceParserFacade parser;
+    private String modelPath="../../ngrams/models/";
+
+    public TagAndParse() throws IOException
+    {
+        System.out.println("Loading dictionaries ...");
+        TokenizerResources tokResources = new TokenizerResources();
+        Lexicon tokLexicon = new Lexicon(tokResources.isLexicon);
+
+        IceTaggerResources iceResources = new IceTaggerResources();
+        IceTaggerLexicons iceLexicons = new IceTaggerLexicons(iceResources);
+
+        tagger = new IceTaggerFacade(iceLexicons, tokLexicon);
+
+        // Create an instance of TriTagger
+        System.out.println("Loading TriTagger ...");
+        TriTaggerResources triResources = new TriTaggerResources();
+        TriTaggerLexicons triLexicons = new TriTaggerLexicons(triResources, true);
+        tagger.createTriTagger(triLexicons);
+
+        parser = new IceParserFacade();
+
+   }
+
+    // Only used for debugging
+    public TagAndParse(boolean debug) throws IOException
+    {
+        System.out.println("Loading dictionaries ...");
+        Lexicon tokLexicon = new Lexicon("../../dict/tokenizer/lexicon.txt");
+
+        IceTaggerLexicons iceLexicons = new IceTaggerLexicons("../../dict/icetagger/");
+
+        tagger = new IceTaggerFacade(iceLexicons, tokLexicon);
+
+        // Create an instance of TriTagger
+        System.out.println("Loading TriTagger ...");
+        TriTaggerLexicons triLexicons = new TriTaggerLexicons(modelPath, false);
+        tagger.createTriTagger(triLexicons);
+
+        parser = new IceParserFacade();
+
+   }
+
+    private void createAndShowGUI(String fileName) throws IOException
+    {
+            //Make sure we have nice window decorations.
+            JFrame.setDefaultLookAndFeelDecorated(true);
+
+            //Create and set up the window.
+            frame = new JFrame("Greining texta - mörkun (IceTagger) og þáttun (IceParser)");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setBounds(30,30,200,300);
+
+            createComponents(frame.getContentPane());
+            //frame.getContentPane().add(contents, BorderLayout.CENTER);
+            if (fileName != null)
+                 loadFile(fileName);
+
+            //Display the window.
+            frame.pack();
+            frame.setVisible(true);
+    }
+
+    // Inserts new line between every word/tag pair
+    private String setNewlines(String taggedStr)
+    {
+       StringBuffer buf = new StringBuffer();
+       Pattern p = Pattern.compile(" ");
+       String[] strs;
+       strs = p.split(taggedStr);
+       for (int i=0; i<=strs.length-1; i++)
+       {
+          buf.append(strs[i]);
+          if (i%2 == 1 && i!=strs.length-1)
+            buf.append("\n");
+          else
+            buf.append(" ");
+       }
+       return buf.toString();
+    }
+
+    public void actionPerformed(ActionEvent e) {
+       String taggedStr=null;
+       if (e.getActionCommand().equals("Greina"))
+       {
+           try {
+                Sentences sents = tagText(textInput.getText());
+                taggedStr = sents.toString();
+           }
+           catch (IOException ex) {System.err.println("IOException: " + ex.getMessage()); }
+
+           if (taggedStr != null) {
+                if (checkTokenPerLine.isSelected())
+                    textTagged.setText(setNewlines(taggedStr));
+                else
+                    textTagged.setText(taggedStr);
+                textTagged.setCaretPosition(0);
+                try {
+                    String parsedStr = parser.parse(taggedStr, checkIncludeFunc.isSelected(), checkPhrasePerLine.isSelected());
+                    textParsed.setText(parsedStr);
+                    textParsed.setCaretPosition(0);
+                }
+                catch (IOException ex) {System.err.println("IOException: " + ex.getMessage()); }
+           }
+       }
+       else if (e.getActionCommand().equals("Hætta"))
+        System.exit(0);
+   }
+
+    public void createComponents(Container pane) {
+                JButton tagButton = new JButton("Greina texta");
+                tagButton.setMnemonic(KeyEvent.VK_I);
+                tagButton.addActionListener(this);
+                tagButton.setPreferredSize(new Dimension(20,20));
+                tagButton.setActionCommand("Greina");
+
+                int rows=10;
+                int cols=100;
+
+                Dimension textDimension = new Dimension(300,300);
+                Font myFont = new Font("Courier", Font.PLAIN, 16);
+                textInput = new JTextArea(
+                            "Hér skal slá inn textann sem á að greina.",rows,cols
+                    );
+                textInput.setLineWrap(true);
+                textInput.setWrapStyleWord(true);
+                textInput.setFont(myFont);
+                textInput.setPreferredSize(textDimension);
+
+                JScrollPane scrollingArea = new JScrollPane(textInput);
+                //scrollingArea.setBorder(BorderFactory.createEmptyBorder(30,30,100,100));
+
+                textTagged = new JTextArea("Hér birtist markaði textinn.",rows,cols);
+                textTagged.setLineWrap(true);
+                textTagged.setWrapStyleWord(true);
+                textTagged.setFont(myFont);
+                textTagged.setEditable(false);
+                JScrollPane scrollingArea2 = new JScrollPane(textTagged);
+                //textTagged.setPreferredSize(textDimension);
+
+                textParsed = new JTextArea("Hér birtist þáttaði textinn.",rows,cols);
+                textParsed.setLineWrap(true);
+                textParsed.setWrapStyleWord(true);
+                textParsed.setFont(myFont);
+                textParsed.setEditable(false);
+                JScrollPane scrollingArea3 = new JScrollPane(textParsed);
+                //textParsed.setPreferredSize(textDimension);
+
+                checkTriTagger = new JCheckBox("Nota HMM markara");
+                checkTriTagger.setSelected(true); // turn  the check box on or off
+                checkIncludeFunc = new JCheckBox("Setningafræðileg hlutverk");
+                checkIncludeFunc.setSelected(true); // turn  the check box on or off
+                checkPhrasePerLine = new JCheckBox("Liðir í sér línu");
+                checkPhrasePerLine.setSelected(true); // turn  the check box on or off
+                checkTokenPerLine = new JCheckBox("Orð/mark í sér línu");
+                checkTokenPerLine.setSelected(false); // turn  the check box on or off
+
+                JLabel labTagging = new JLabel("Mörkun:");
+                JLabel labParsing = new JLabel("Þáttun:");
+
+                pane.setLayout(new BoxLayout(frame.getContentPane(),BoxLayout.Y_AXIS));
+
+                JPanel checkBoxPanel = new JPanel(new FlowLayout());
+                checkBoxPanel.add(checkTriTagger);
+                checkBoxPanel.add(checkTokenPerLine);
+                checkBoxPanel.add(checkIncludeFunc);
+                checkBoxPanel.add(checkPhrasePerLine);
+                pane.add(checkBoxPanel, BorderLayout.CENTER);
+                pane.add(tagButton, BorderLayout.CENTER);
+                pane.add(scrollingArea,BorderLayout.CENTER);
+                pane.add(labTagging, BorderLayout.WEST);
+                pane.add(scrollingArea2,BorderLayout.CENTER);
+                pane.add(labParsing, BorderLayout.WEST);
+                pane.add(scrollingArea3,BorderLayout.CENTER);
+            }
+
+
+
+
+   public Sentences tagText(String text) throws IOException
+   {
+        tagger.useTriTagger(checkTriTagger.isSelected());   // use TriTagger?
+        return tagger.tag(text);
+   }
+
+   private void loadFile(String fileName) throws IOException{
+    String str;
+
+    textInput.setText("");
+    BufferedReader bf = FileEncoding.getReader(fileName);
+
+    while((str = bf.readLine()) != null) {
+            textInput.append(str);
+    }
+    bf.close();
+   }
+
+   // Read in command line args
+   public static void main(String[] args)
+   throws IOException {
+
+       TagAndParse app = new TagAndParse();
+       //TagAndParse app = new TagAndParse(true);
+
+       if (args.length == 1) {
+          app.createAndShowGUI(args[0]);
+       }
+       else {
+          app.createAndShowGUI(null);
+        }
+
+   }
+}
