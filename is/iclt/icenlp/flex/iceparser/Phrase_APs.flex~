@@ -1,0 +1,56 @@
+/* This transducer groups together a sequence of adjectival phrases */
+/* The phrases must agree in case */
+package is.ru.cs.nlp.icenlp.core.iceparser;
+import java.io.*;
+%%
+
+%public
+%class Phrase_APs
+%standalone
+%line
+
+%unicode
+
+%{
+  String APOpen=" [APs ";
+  String APClose=" APs] ";
+  
+  //java.io.Writer out = new BufferedWriter(new OutputStreamWriter(System.out, "UTF-8"));
+  java.io.Writer out = new BufferedWriter(new OutputStreamWriter(System.out));
+      
+  public void parse(java.io.Writer _out) throws java.io.IOException
+  {
+      	out = _out;
+      	while (!zzAtEOF) 
+      	    yylex();
+  }
+  
+%}
+
+%eof{
+	try {
+	  out.flush();	
+	} 
+	catch (IOException e) {
+            e.printStackTrace();
+        }
+%eof}
+
+%include regularDef.txt
+
+BaediCP = {OpenCP}{WhiteSpace}+[Bb]æði~{CloseCP}
+APConjNom = ({WhiteSpace}+({ConjPhraseOrComma}{WhiteSpace}+)?{APNom})+
+APConjAcc = ({WhiteSpace}+({ConjPhraseOrComma}{WhiteSpace}+)?{APAcc})+
+APConjDat = ({WhiteSpace}+({ConjPhraseOrComma}{WhiteSpace}+)?{APDat})+
+APConjGen = ({WhiteSpace}+({ConjPhraseOrComma}{WhiteSpace}+)?{APGen})+
+
+// APSeq = ({BaediCP}{WhiteSpace}+)? ({APNom}{APConjNom} | {APAcc}{APConjAcc} | {APDat}{APConjDat} | {APGen}{APConjGen})
+APSeq = {APNom}{APConjNom} | {APAcc}{APConjAcc} | {APDat}{APConjDat} | {APGen}{APConjGen}
+
+
+%%
+
+{APSeq}	{ out.write(APOpen+yytext()+APClose);}
+"\n"	{ //System.err.print("Reading line: " + Integer.toString(yyline+1) + "\r"); 
+	  out.write("\n"); }
+.	{ out.write(yytext());}
