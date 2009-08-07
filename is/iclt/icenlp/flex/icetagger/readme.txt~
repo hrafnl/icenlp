@@ -1,0 +1,4 @@
+1. jflex genIceRules.flex
+2. javac genIceRules.java
+3. java genIceRules IceRules.rul > IceLocalRules.java
+4. runCopy 
