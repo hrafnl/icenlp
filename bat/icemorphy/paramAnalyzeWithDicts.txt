@@ -1,0 +1,49 @@
+[MODE = one|all|fill]  
+[one=analyze the input file and return the one most frequent tag for each word]
+[all=analyze the input file and return all tags for each word]
+[fill=fill in missing tags in the input file (dictionary)]
+MODE=all
+
+[The name of the input file to analyze ]
+INPUT_FILE=test.txt
+
+[The name of the output file]
+OUTPUT_FILE=test.out
+
+[LOG_FILE is either a file name or empty if no log (debug info) is desired]
+LOG_FILE=
+
+[SEPARATOR = space|equal. Controls the character between the word and its tags]
+SEPARATOR=space
+
+[TAGSEPARATOR = space|underscore. Controls the character between the tags
+TAGSEPARATOR=space
+
+[The dictionary]
+DICT=../../dict/icetagger/otb.dict
+
+[The base dictionary]
+BASE_DICT=../../dict/icetagger/baseDict.dict
+
+[Main dictionary of endings and corresponding tags. Should not be changed.]
+ENDINGS_BASE=../../dict/icetagger/baseEndings.dict
+
+[Dictionary of endings and corresponding tags]
+ENDINGS_DICT=../../dict/icetagger/otb.endings.dict
+
+[Dictionary of endings for proper names and corresponding tags]
+ENDINGS_PROPER_DICT=../../dict/icetagger/otb.endingsProper.dict
+
+[The prefixes dictionary
+PREFIXES_DICT=../../dict/icetagger/prefixes.dict
+
+[Tag frequency file]
+TAG_FREQUENCY_FILE=../../dict/icetagger/otbTags.freq.dict
+
+[Used by the Tokenizer]
+
+[Lexicon used by the tokenizer]
+TOKEN_DICT=../../dict/tokenizer/lexicon.txt
+
+
+
