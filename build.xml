@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+
+<project name="IceNLP_Resources" default="release-jar" basedir=".">
+	<description>
+		Compiles a release version of the IceNLP toolkit as a single jar file with resource files
+	</description>
+
+	<property name="src" location="src" />
+	<property name="build" location="build" />
+	<property name="dist" location="dist" />
+	<property name="lib" location="lib" />
+	<property name="dict" location="dict" />
+	<property name="lemmald" location="${lib}/Lemmatizer.jar" />
+
+    <property name="jar_version" value="1.1" />
+	<property name="jar_name" value="IceNLPCore" />
+
+
+
+	<target name="init">
+		<tstamp /> <!-- Create the timestamp for the build -->
+		<!-- Create all the directories for the build -->
+		<mkdir dir="${build}" />
+		<mkdir dir="${dist}" />
+	</target>
+
+
+	<target name="compile" depends="init" description="Compiles all the source files">
+		<javac srcdir="${src}" destdir="${build}" classpath="${lemmald}" />
+	</target>
+	
+
+	<target name="release-jar" depends="compile, init" description="Compiles a release version of IceNLP">
+		<jar destfile="${dist}/${jar_name}.jar">
+			<fileset dir="${build}">
+				<include name="**/*.class" />
+			</fileset>
+            <fileset dir="./">
+				<!--exclude name="dict/icetagger/otb/*.dict" /-->
+                <!--exclude name="dict/icetagger/otbBin.dict" /-->
+				<include name="dict/icetagger/*.dict" />
+				<include name="dict/tokenizer/*" />
+				<!--exclude name="dict/tritagger/old/*.dict" /-->
+                <include name="dict/tritagger/*.dict" />
+                <!--exclude name="dict/tritagger/*WC.dict" /-->                
+                <include name="ngrams/models/otb.*" />
+            </fileset>
+		</jar>
+	</target>
+
+	<target name="clean" description="clean up" >
+        <!-- Delete the ${build} and ${dist} directory trees -->
+        <delete dir="${build}"/>
+        <!--delete dir="${dist}"/-->
+  </target>
+</project>
