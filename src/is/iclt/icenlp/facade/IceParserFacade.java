@@ -21,7 +21,7 @@
  */
 package is.iclt.icenlp.facade;
 
-import is.iclt.icenlp.flex.iceparser.*;
+import is.iclt.icenlp.core.iceparser.*;
 
 import java.io.*;
 

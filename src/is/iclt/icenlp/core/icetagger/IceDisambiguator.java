@@ -25,7 +25,6 @@ import is.iclt.icenlp.core.tokenizer.*;
 import is.iclt.icenlp.core.utils.IceLog;
 import is.iclt.icenlp.core.utils.Lexicon;
 import is.iclt.icenlp.core.utils.IceTag;
-import is.iclt.icenlp.flex.icetagger.IceLocalRules;
 
 import java.util.ArrayList;
 import java.util.ListIterator;

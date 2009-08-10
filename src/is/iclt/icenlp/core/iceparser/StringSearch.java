@@ -19,7 +19,7 @@
  * Hrafn Loftsson, School of Computer Science, Reykjavik University.
  * hrafn@ru.is
  */
-package is.iclt.icenlp.flex.iceparser;
+package is.iclt.icenlp.core.iceparser;
 /**
  * A static helper class for doing string searches. Used by the IceParser transducers
  */
