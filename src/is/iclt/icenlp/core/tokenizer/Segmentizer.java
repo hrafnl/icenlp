@@ -191,7 +191,10 @@ public class Segmentizer
 			else
 				idx--;
 		}
-		abbrev = currLine.substring( idx + 1, endIndex + 1 );
+        if (idx == 0)
+            abbrev = currLine.substring( 0, endIndex + 1 );
+		else
+		    abbrev = currLine.substring( idx + 1, endIndex + 1 );
 		return (lex.lookup( abbrev, true ) != null);
 	}
 
@@ -240,7 +243,8 @@ public class Segmentizer
 			if( nextChar == ' ' )    // If a space after the full stops
 				endOfSentence = true;
             // fífunni.1 eða salati.»
-            else if ((ch == '.' || ch == '!' || ch == '?' || ch == ':' || ch == '»') && Character.isDigit(nextChar))
+            else if ((ch == '.' || ch == '!' || ch == '?'  || ch == '»' /*|| ch == ':'*/)
+                    && Character.isDigit(nextChar))
                 endOfSentence = true;
 
 
@@ -257,7 +261,7 @@ public class Segmentizer
             if( ch == '.' && !isPeriodEOS() )        // Is the period really marking EOS
 				endOfSentence = false;
             // Check for salati.»
-			else if( (ch == '.' || ch == '!' || ch == '?' || ch == ':') && (nextChar == '"' || nextChar == '«' || ch == '»') ) // || ch == '»'))
+			else if( (ch == '.' || ch == '!' || ch == '?' /*|| ch == ':'*/) && (nextChar == '"' || nextChar == '«' || ch == '»') ) // || ch == '»'))
 				endOfSentence = false;
 				// Check for like: "Elsku mamma," jörmuðu kiðlingarnir ....
 			else if( (ch == '"' || ch == '»') && currIndex > 1) {
@@ -338,7 +342,7 @@ public class Segmentizer
 						saveSentence = true;
 					}
 
-					if( ch == '.' || ch == '!' || ch == '?' || ch == ':'
+					if( ch == '.' || ch == '!' || ch == '?' //|| ch == ':'
 					    || ch == '"' || ch == '«' || ch == '»')    // Full stops
 					{
 						if( isFullStop( ch, isLastChar ) )

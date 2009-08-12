@@ -127,12 +127,17 @@ public class Lexicon
 
 		String lookupWord;
 
-		if( ignoreCase )
+		/*if( ignoreCase )
 			lookupWord = word.toLowerCase();
-		else
+		else*/
 			lookupWord = word;
 
 		String entry = storage.getProperty( lookupWord, null );
+        if (entry == null && ignoreCase)   {
+           lookupWord = word.toLowerCase();
+           entry = storage.getProperty( lookupWord, null );
+        }
+
 		return entry;
 
 	}
