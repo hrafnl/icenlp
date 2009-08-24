@@ -78,12 +78,20 @@
 		<copy file="doc/IceNLP.pdf" todir="${dist}/${package}/doc" />
 		<copy file="doc/Tagset.pdf" todir="${dist}/${package}/doc" />
 		
-		<zip compress="yes" destfile="${dist}/IceNLP-${jar_version}.zip" basedir="${dist}/${package}" />
+		<zip compress="yes" destfile="${dist}/IceNLP-${jar_version}.zip">
+ 			<zipfileset dir="bat" includes="**/*.sh" filemode="755" prefix="${package}/bat" />
+			<zipfileset dir="bat" includes="**/*" excludes="**/*.sh" prefix="${package}/bat" />
+			
+		    <zipfileset dir="dict" prefix="${package}/dict" />
+			<zipfileset dir="lib" prefix="${package}/lib" />
+			<zipfileset dir="ngrams" prefix="${package}/ngrams" />
+			<zipfileset dir="doc" includes="**/*.pdf" prefix="${package}/doc" />
+		</zip>
 	</target>
 
 	<target name="clean" description="clean up" >
         <!-- Delete the ${build} and ${dist} directory trees -->
         <delete dir="${build}"/>
         <delete dir="${dist}"/>
-  </target>
+    </target>
 </project>
