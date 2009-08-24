@@ -17,7 +17,9 @@
  * USA
  */
 
-package is.iclt.icenlp.core.formald;
+package is.iclt.icenlp.core.tokenizer;
+
+import is.iclt.icenlp.core.formald.FormaldUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -40,9 +42,9 @@ import net.sourceforge.segment.srx.io.Srx2Parser;
  * @author Marcin Miłkowski 
  * @author Anton Karl Ingason // minor modifications to adapt this to IceNLP
  */
-public class SentenceTokenizer {
+public class SrxSegmentizer {
 
-  private volatile static SentenceTokenizer uniqueInstance;
+  private volatile static SrxSegmentizer uniqueInstance;
 
   private BufferedReader srxReader;
   private final SrxDocument document;
@@ -51,7 +53,7 @@ public class SentenceTokenizer {
 
   static final String RULES = "/dict/formald/segment.srx";
 
-  public SentenceTokenizer(final String language) {
+  public SrxSegmentizer(final String language) {
     this.language = language;
     try {
       srxReader = new BufferedReader(new InputStreamReader( Object.class.getClass().getResourceAsStream( RULES ) ));
@@ -109,15 +111,15 @@ public class SentenceTokenizer {
     super.finalize();
   }
 
-  public static SentenceTokenizer newInstance(){
-    return new SentenceTokenizer("is");
+  public static SrxSegmentizer newInstance(){
+    return new SrxSegmentizer("is");
   }
 
-  public static SentenceTokenizer getInstance(){
+  public static SrxSegmentizer getInstance(){
         if( uniqueInstance == null ){
-            synchronized( SentenceTokenizer.class ){
+            synchronized( SrxSegmentizer.class ){
                 if( uniqueInstance == null ){
-                    uniqueInstance = new SentenceTokenizer("is");
+                    uniqueInstance = new SrxSegmentizer("is");
                 }
             }
         }
@@ -163,7 +165,7 @@ public class SentenceTokenizer {
   public static void main( String[] args ){
   	  // String test = "'\"Dæmi um texta: Nú er 16. des og 2. jan og 12. jan og 17. des og 1. febrúar og 8. desember.\"' og 7.7.2009 og fleira. Það pr. 1.p. og. það er þt. m.p.m.p. A.K.K.K. Svaka dót. Og U.S.A. skv. ja. Eitt. (Og annað). Jaja (!) vei. Það [í alvöru!] virkar. Það er þ. á m. þ.á.m. þf. sþ. að t.a.m. st. er. Fór Rvk. í Siglufj. og Rvík. þar. Það gott p.r. og PR. mama ófn. með óákv.gr. o.þ.u.l. er o.fl. með o.s.frv. verulega hér. Mín p.s. leturbr. o.m.fl. því að lh.þt. er með 4 ltr. af efni. Það var kgúrsk. um klst. frá Khöfn. í kl. 5 í gær. Frá Ólafsfj. í gær. Í Árneshr. og Hrunamannahr. erum við. Það er hr. ég hérna. Við viljum u-hljv. og i-hljóðv. í hvelli í 1.hl. og 2. hl. alltaf. Ég er fyrrv. dr. Anton gaur. Á bls. 5 er b.t. þín. Sögn í bh. er hér. Er ás. Með ákv.gr. og ákv. gr. hér. Með aukaf. og ao. og aths. þar. Lítill alm. alg. andh. ath. efst. Bara afs. Jens. Hér er a.fn. og. Sögn í 1.p. og 3.p. og líka og ab.fn. en ekki afffn er sko 1. persóna í lagi. Er o.þ.u.l. ab.fn. hér og a.n.l. góður? Sí og æ. Það er a. með þ. sem ö. og við förum í. Það og m.a. svo að þeir eru hér. Og þ.l. og a.m.k. gott. Nú er 1. ágúst og 11. ágúst í dag. Þú ert t.d. í því. Ég er Nr. 1 í þessu NR. 1 dæmi. Flott mál. ";
 	  
-       SentenceTokenizer sentenceTokenizer = SentenceTokenizer.newInstance();
+       SrxSegmentizer sentenceTokenizer = SrxSegmentizer.newInstance();
               
        if( args.length == 0 ){      
     	   sentenceTokenizer.runStdin();
