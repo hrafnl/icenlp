@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="IceNLP_Resources" default="release-jar" basedir=".">
+<project name="IceNLP_Resources" default="package" basedir=".">
 	<description>
 		Compiles a release version of the IceNLP toolkit as a single jar file with resource files
 	</description>
@@ -8,25 +8,36 @@
 	<property name="src" location="src" />
 	<property name="build" location="build" />
 	<property name="dist" location="dist" />
-	<property name="lib" location="lib" />
+	<property name="package" value="IceNLP" />
+	<property name="lib" location="lib" />	
+	
 	<property name="dict" location="dict" />
 	<property name="lemmald" location="${lib}/Lemmatizer.jar" />
+	<property name="segment" location="${lib}/segment-1.3.3.jar" />
+	<property name="commons_io" location="${lib}/commons-io-1.4.jar" />
 
-    <property name="jar_version" value="1.1" />
+    <property name="jar_version" value="1.2-dev" />
 	<property name="jar_name" value="IceNLPCore" />
+	
+	<path id="classpath">
+		<pathelement location="${lemmald}" />
+		<pathelement location="${segment}" />
+		<pathelement location="${commons_io}" />
+	</path>			
 
-
-
-	<target name="init">
+	<target name="init" depends="clean">
 		<tstamp /> <!-- Create the timestamp for the build -->
 		<!-- Create all the directories for the build -->
 		<mkdir dir="${build}" />
 		<mkdir dir="${dist}" />
+		<mkdir dir="${dist}/${package}" />
 	</target>
 
 
 	<target name="compile" depends="init" description="Compiles all the source files">
-		<javac srcdir="${src}" destdir="${build}" classpath="${lemmald}" />
+		<javac srcdir="${src}" destdir="${build}">
+			<classpath refid="classpath" />
+	    </javac>
 	</target>
 	
 
@@ -42,15 +53,37 @@
 				<include name="dict/tokenizer/*" />
 				<!--exclude name="dict/tritagger/old/*.dict" /-->
                 <include name="dict/tritagger/*.dict" />
+            	<include name="dict/formald/segment.srx" />
                 <!--exclude name="dict/tritagger/*WC.dict" /-->                
                 <include name="ngrams/models/otb.*" />
             </fileset>
 		</jar>
 	</target>
+	
+	<target name="package" depends="release-jar">
+		
+		<copy file="${dist}/${jar_name}.jar" todir="${dist}/${package}/dist" />
+		<copy todir="${dist}/${package}/bat">
+			<fileset dir="bat" />
+		</copy>
+		<copy todir="${dist}/${package}/dict">
+			<fileset dir="dict" />
+		</copy>
+		<copy todir="${dist}/${package}/lib">
+			<fileset dir="lib" />
+		</copy>		
+		<copy todir="${dist}/${package}/ngrams">
+			<fileset dir="ngrams" />
+		</copy>		
+		<copy file="doc/IceNLP.pdf" todir="${dist}/${package}/doc" />
+		<copy file="doc/Tagset.pdf" todir="${dist}/${package}/doc" />
+		
+		<zip compress="no" destfile="${dist}/IceNLP-${jar_version}.zip" basedir="${dist}/${package}" />
+	</target>
 
 	<target name="clean" description="clean up" >
         <!-- Delete the ${build} and ${dist} directory trees -->
         <delete dir="${build}"/>
-        <!--delete dir="${dist}"/-->
+        <delete dir="${dist}"/>
   </target>
 </project>
