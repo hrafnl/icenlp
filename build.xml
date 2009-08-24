@@ -78,7 +78,7 @@
 		<copy file="doc/IceNLP.pdf" todir="${dist}/${package}/doc" />
 		<copy file="doc/Tagset.pdf" todir="${dist}/${package}/doc" />
 		
-		<zip compress="no" destfile="${dist}/IceNLP-${jar_version}.zip" basedir="${dist}/${package}" />
+		<zip compress="yes" destfile="${dist}/IceNLP-${jar_version}.zip" basedir="${dist}/${package}" />
 	</target>
 
 	<target name="clean" description="clean up" >
