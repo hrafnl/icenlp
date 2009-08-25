@@ -9,7 +9,8 @@
 	<property name="build" location="build" />
 	<property name="dist" location="dist" />
 	<property name="package" value="IceNLP" />
-	<property name="lib" location="lib" />	
+	<property name="lib" location="lib" />
+	<property name="javadoc" location="javadoc" />	
 	
 	<property name="dict" location="dict" />
 	<property name="lemmald" location="${lib}/Lemmatizer.jar" />
@@ -94,4 +95,35 @@
         <delete dir="${build}"/>
         <delete dir="${dist}"/>
     </target>
+	
+	
+	<!-- ================================================================== -->
+	<!-- JAVADOC -->
+	<!-- ================================================================== -->
+	<target name="javadoc">
+		<delete dir="${javadoc}"/>
+		<javadoc destdir="${javadoc}" author="true" version="true" use="true" access="public" noqualifier="all" encoding="utf-8" windowtitle="IceNLP Javadoc">
+
+			<classpath>
+				<pathelement location="${build}" />
+				<fileset dir="${lib}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+
+			<fileset dir="${src}" defaultexcludes="no">
+				<include name="**/*.java" />
+			</fileset>
+
+			<doctitle>
+				<![CDATA[<h1>${javadoctitle}</h1>]]></doctitle>
+		<bottom>
+			<![CDATA[<i>Copyright &#169; 2009 <a href="http://www2.ru.is/faculty/hrafn/index_isl.htm" target="_top">Hrafn Loftsson</a>, <a href="http://www3.hi.is/~antoni/" target="_top">Anton Karl Ingason</a>
+			</i>]]></bottom>
+		<link offline="true" href="http://java.sun.com/products/jdk/1.5/docs/api/" packagelistLoc="/tmp" />
+	</javadoc>
+	<echo>javadoc output can now be found in javadoc/index.html</echo>
+	</target>
+
+	
 </project>
