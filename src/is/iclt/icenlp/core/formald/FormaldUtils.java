@@ -36,11 +36,17 @@ import org.apache.commons.io.FileUtils;
 import org.w3c.dom.*;
 
 /**
- * 
+ * A util class with static methods for common tasks.
  * @author <a href="mailto:anton.karl.ingason@gmail.com">Anton Karl Ingason</a>
  */
 public class FormaldUtils {
 
+	/**
+	 * Writes a String to a file. Complains to system out and prints stack trace 
+	 * if an IOException occurs.
+	 * @param filename Name of the file to be written.
+	 * @param data The String data that will be written to the file.
+	 */
     public static void stringToFile( String filename, String data ){
         try {
             FileUtils.writeStringToFile(new File(filename), data);
@@ -50,6 +56,12 @@ public class FormaldUtils {
         }
     }
 
+    /**
+     * Reads a file to a String. Complains to system out and prints stack trace
+     * if an IOException occurs.
+     * @param filename Name of the file to be read.
+     * @return The content of the file as a String.
+     */
     public static String fileToString( String filename ){
         String contents = null;
         try {
@@ -61,6 +73,12 @@ public class FormaldUtils {
         return contents;
     }
 
+    /**
+     * Returns an XML String representation of a DOM object 
+     * provided as an <code>org.w3c.org.Document</code> interface.
+     * @param doc The input <code>Document</code>.
+     * @return An XML String representing the <code>Document</code>.
+     */
     public static String docToString(Document doc) {
         //Serialize DOM
         OutputFormat format = new OutputFormat(doc);
@@ -77,7 +95,10 @@ public class FormaldUtils {
         return stringOut.toString();
     }
 
-
+    /**
+     * Creates an instance of an empty <code>org.w3c.dom.Document</code>.
+     * @return An empty <code>org.w3c.dom.Document</code>
+     */
     public static org.w3c.dom.Document createDocument(){
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = null;
@@ -91,11 +112,27 @@ public class FormaldUtils {
         return impl.createDocument(null,null,null);
     }
 
+    /**
+     * Loads an <code>org.w3c.dom.Document</code> from an XML String.
+     * @param xml The XML to be parsed into a Document. The String must
+     * be a well formed XML document.
+     * @return The <code>Document</code> that results from the parse.
+     * @throws org.xml.sax.SAXException
+     * @throws java.io.IOException
+     */
     public static org.w3c.dom.Document loadXMLFrom(String xml)
             throws org.xml.sax.SAXException, java.io.IOException {
         return loadXMLFrom(new java.io.ByteArrayInputStream(xml.getBytes()));
     }
 
+    /**
+     * Loads an <code>org.w3c.dom.Document</code> from an <code>InputStream</code>.
+     * The InputStream must return a well formed XML Document as a String. 
+     * @param is
+     * @return
+     * @throws org.xml.sax.SAXException
+     * @throws java.io.IOException
+     */
     public static org.w3c.dom.Document loadXMLFrom(java.io.InputStream is)
             throws org.xml.sax.SAXException, java.io.IOException {
         javax.xml.parsers.DocumentBuilderFactory factory =
