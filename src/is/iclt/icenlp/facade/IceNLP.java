@@ -21,17 +21,21 @@
  */
 package is.iclt.icenlp.facade;
 
+import is.iclt.icenlp.core.formald.tags.TagFormat;
+import is.iclt.icenlp.core.formald.tags.TaggedText;
 import is.iclt.icenlp.core.icetagger.IceTaggerLexicons;
 import is.iclt.icenlp.core.icetagger.IceTaggerResources;
+import is.iclt.icenlp.core.lemmald.Lemmald;
 import is.iclt.icenlp.core.tokenizer.Segmentizer;
+import is.iclt.icenlp.core.tokenizer.SrxSegmentizer;
 import is.iclt.icenlp.core.tokenizer.TokenizerResources;
 import is.iclt.icenlp.core.tokenizer.Sentences;
 import is.iclt.icenlp.core.utils.Lexicon;
 import java.io.IOException;
 
 /**
- * Provides singleton access to tools from the <a target="_blank" href="http://nlp.ru.is">IceNLP</a>
- * toolbox, IceTagger and IceParser.
+ * Provides simple singleton access to tools from the <a target="_blank" href="http://nlp.ru.is">IceNLP</a>
+ * toolbox. Tools include IceTagger, IceParser (shallow parser) and Lemmald (lemmatizer).
  * Use the {@link #getInstance} method to acccess those tools.
  *
  * @author Anton Karl Ingason <anton.karl.ingason@gmail.com>
@@ -43,6 +47,7 @@ public class IceNLP {
     private IceMorphyFacade analyzer;
     private IceTaggerFacade tagger;
     private IceParserFacade parser;
+    
     Lexicon tokLexicon=null;
     private boolean debug=false;
 
@@ -72,7 +77,7 @@ public class IceNLP {
             ex.printStackTrace();
         }
         // Initialize parser        
-        parser = new IceParserFacade();        
+        parser = new IceParserFacade();                   
     }
 
     public String tokenize(String input) 
@@ -94,6 +99,14 @@ public class IceNLP {
         }
         return output;
     }
+    
+    public String srxSegmentize( String text ){    
+    	if( text == null ){
+    		return null;    		
+    	}
+    	
+    	return SrxSegmentizer.getInstance().sentencePerLine(text);
+    }
 
     public String analyze( String input ){
         if( input == null ){
@@ -109,39 +122,96 @@ public class IceNLP {
         }
         return output;
     }
+        
     /**
      * Part-of-Speech (PoS) tags a String using IceTagger. IceTagger is a rule
      * based PoS tagger for Icelandic and part of the IceNLP toolbox.
-     * @param input The text to be tagged. The input format is one sentence per line
-     *    and the encoding should be UTF-8.
-     * @return The tagged text. The output format is one sentence per line where
-     *    each token is followed by its PoS-tag. Encoding is UTF-8.
+     * This operation assigns a fully disambiguated unique tag, for unknown
+     * as well as known word forms.
+     * @param input The text to be tagged. The input format is plain text.
+     *    and the encoding should be UTF-8. Sentences are segmentized using
+     *    {@link srxSegmentize} before tagging.
+     * @return The tagged text as a {@link TaggedText} object that can be
+     *    queried for sentences, tokens and their corresponding tags.
      *    Returns {@code null} if input is {@code null}.
      */
-    public String tag( String input ){
-        if( input == null ){
+    public TaggedText tagText( String text ){
+        if( text == null ){
+            return null;
+        }
+        
+        String lines = srxSegmentize(text);
+        return tagLines( lines );       
+    }
+    
+    
+    
+    /**
+     * Part-of-Speech (PoS) tags a String using IceTagger. IceTagger is a rule
+     * based PoS tagger for Icelandic and part of the IceNLP toolbox.
+     * This operation assigns a fully disambiguated unique tag, for unknown
+     * as well as known word forms.
+     * @param lines The text to be tagged. The input format is <b>one sentence per line</b>
+     *    and the encoding should be UTF-8.
+     * @return The tagged text as a {@link TaggedText} object that can be
+     *    queried for sentences, tokens and their corresponding tags.
+     *    Returns {@code null} if input is {@code null}.
+     */
+    public TaggedText tagLines( String lines ){
+        if( lines == null ){
             return null;
         }
 
         String output = null;
         try {
-            output = tagger.tag(input).toString();
+            output = tagger.tag( lines ).toString();
         } catch (IOException ex) {
             System.out.println("Exception in IceTagger!");
             ex.printStackTrace();
         }
-        return output;
+        
+        return TaggedText.newInstance( output, TagFormat.ICE1 );
     }
+    
+    /**
+     * Part-of-Speech tags a String using the method {@link #tagLines}
+     * and also assigns a lemma (base form) to each token using the
+     * Lemmald lemmatizer. 
+     * @param text
+     * @return The tagged text as a {@link TaggedText} object that can be
+     *    queried for sentences, tokens and their corresponding tags and lemmata.
+     *    Returns {@code null} if input is {@code null}.
+     */
+    public TaggedText tagAndLemmatizeText( String text ){
+    	String lines = srxSegmentize( text );
+    	TaggedText output = tagAndLemmatizeLines( lines );    	
+    	return output;
+    }     
+    
+    /**
+     * Part-of-Speech tags a String using the method {@link #tagLines}
+     * and also assigns a lemma (base form) to each token using the
+     * Lemmald lemmatizer. 
+     * @param lines
+     * @return The tagged text as a {@link TaggedText} object that can be
+     *    queried for sentences, tokens and their corresponding tags and lemmata.
+     *    Returns {@code null} if input is {@code null}.
+     */
+    public TaggedText tagAndLemmatizeLines( String lines ){
+    	TaggedText output = tagLines( lines );
+    	Lemmald.getInstance().lemmatizeTagged( output );
+    	return output;
+    }        
 
     /**
      * Parses the input using IceParser. IceParser is a rule based shallow parser
      * (chunker) and part of the IceNLP toolbox. 
-     * @param input Part-of-Speech tagged text of the format returned by (@link #tag)
+     * @param input Part-of-Speech tagged text of the format ICE2.
      * method of this class. Encoding UTF-8.
      * @return Parsed text. Includes tags as well as annotation of phrases. Encoding UTF-8.
      * Returns {@code null} if input is {@code null}.
      */
-    public String parse( String input ){
+    public String parseLines( String input ){
         if( input == null ){
             return null;
         }
@@ -155,25 +225,52 @@ public class IceNLP {
         }
         return output;
     }
-
+    
+  
     /**
-     * Tags and parses a String using IceTagger and IceParser. Equivalent
-     * to calling {@link #tag} first and passing the output to {@link #parse}.
-     * @param input The text to be tagged and parsed. Encoding UTF-8.
+     * Tags and parses a String using IceTagger and IceParser.
+     * @param text The text to be tagged and parsed. Encoding UTF-8. 
+     *  Plain text. Sentences are segmentized using {@link #srxSegmentize(String)}
      * @return Tagged and parsed text, {@code null} if input is {@code null}.
      */
-    public String tagAndParse( String input ){
+    public String tagAndParseText( String text ){
+        if( text == null ){
+            return null;
+        }
+        
+        String lines = srxSegmentize(text);
+        return parseLines( tagLines( lines ).toString(TagFormat.ICE2) );
+    }   
+    
+
+    /**
+     * Tags and parses a String using IceTagger and IceParser.
+     * @param input The text to be tagged and parsed. Encoding UTF-8. 
+     *  One sentence per line.
+     * @return Tagged and parsed text, {@code null} if input is {@code null}.
+     */
+    public String tagAndParseLines( String input ){
         if( input == null ){
             return null;
         }
         
-        return parse( tag( input ));
+        return parseLines( tagLines( input ).toString(TagFormat.ICE2) );
     }
+    
+    /**
+     * Constructs a new instance of IceNLP
+     * @return A newly created instance of IceNLP.
+     */
+    public static IceNLP newInstance(){
+    	return new IceNLP();	    	
+    }
+        
     
     /**
      * Provides a unique instance of the IceNLP class. The instance can be
      * used to invoke methods for Part-of-Speech tagging and parsing Icelandic
-     * text.
+     * text. Use <code>IceNLP.terminate()</code> to terminate the instance
+     * and release resources.
      * @return A unique instance of IceNLP.
      */
     public static IceNLP getInstance(){
@@ -185,6 +282,16 @@ public class IceNLP {
             }
         }
         return uniqueInstance;
+    }
+    
+    /**
+     * Terminates the unique instance provided by getInstance() by
+     * setting it to null and releasing resources.
+     */
+    public static void terminate(){
+    	Lemmald.terminate();
+    	SrxSegmentizer.terminate();
+    	uniqueInstance = null;
     }
 
 }

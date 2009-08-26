@@ -21,6 +21,8 @@
  */
 package is.iclt.icenlp.facade;
 
+import is.iclt.icenlp.core.formald.tags.TagFormat;
+
 /**
  * A class for testing the IceNLP class.
  * @author Anton Karl Ingason
@@ -29,7 +31,7 @@ public class IceNLPTest {
 
 
 public static void main(String args[]) {
-    String input = "Ég er rauður kaktus\n og ég ætla að syngja þetta lag.";
+    String input = "Ég er rauður kaktus"+System.getProperty("line.separator")+" og ég ætla að syngja þetta lag.";
     String output;
     IceNLP theInstance = IceNLP.getInstance();
 
@@ -42,13 +44,24 @@ public static void main(String args[]) {
     System.out.println(output);
 
     //Mörkun:
-    output = theInstance.tag(input);
-    System.out.println(output);
+    output = theInstance.tagLines(input).toString(TagFormat.ICE2);
+    System.out.println("TAG START");
+    System.out.print(output);
+    System.out.println("TAG END");
 
+    //Mörkun:
+    output = theInstance.tagAndLemmatizeText("Ég er nr. 1 í a.m.k. þessu leikriti. Allir eiga sinn tíma. Hún kom kl. 5 í dag.").toString(TagFormat.ICE2);
+    
+    System.out.println("TAGT START");
+    System.out.print(output);
+    System.out.println("TAGT END");
+    
+    
     //Mörkun og þáttun:
-    output = theInstance.tagAndParse(input);
+    output = theInstance.tagAndParseLines(input);
     System.out.println(output);
 
+    
 
 }
 

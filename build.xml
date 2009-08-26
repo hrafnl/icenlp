@@ -16,6 +16,8 @@
 	<property name="lemmald" location="${lib}/Lemmatizer.jar" />
 	<property name="segment" location="${lib}/segment-1.3.3.jar" />
 	<property name="commons_io" location="${lib}/commons-io-1.4.jar" />
+	<property name="commons_logging" location="${lib}/commons-logging-1.1.1.jar" />
+	<property name="commons_cli" location="${lib}/commons-cli-1.2.jar" />
 
     <property name="jar_version" value="1.2-dev" />
 	<property name="jar_name" value="IceNLPCore" />
@@ -24,6 +26,8 @@
 		<pathelement location="${lemmald}" />
 		<pathelement location="${segment}" />
 		<pathelement location="${commons_io}" />
+		<pathelement location="${commons_logging}" />
+	    <pathelement location="${commons_cli}" />
 	</path>			
 
 	<target name="init" depends="clean">

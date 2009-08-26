@@ -24,6 +24,9 @@ package is.iclt.icenlp.core.formald;
 
 import com.sun.org.apache.xml.internal.serialize.OutputFormat;
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
+//import org.apache.xml.serialize.OutputFormat;
+//import org.apache.xml.serialize.XMLSerializer;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -84,8 +87,7 @@ public class FormaldUtils {
         OutputFormat format = new OutputFormat(doc);
         // as a String
         StringWriter stringOut = new StringWriter();
-        XMLSerializer serial = new XMLSerializer(stringOut,
-                format);
+        XMLSerializer serial = new XMLSerializer(stringOut, format);
         try {
             serial.serialize(doc);
         } catch (IOException ex) {
