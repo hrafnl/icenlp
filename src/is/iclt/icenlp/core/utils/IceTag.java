@@ -103,6 +103,7 @@ public class IceTag extends Tag {
 
    public static final char cAdverb = 'a';
    public static final char cExclamation = 'u';
+   public static final char cAbbreviation = 's';
     
    public static final char cUndef=' ';
 
@@ -662,7 +663,7 @@ public class IceTag extends Tag {
        char first = tag.charAt(0);
        switch  (first)
        {
-          case 'a' : if (tag.charAt(1) == 'a')       // adverb
+          case 'a' : if (tag.charAt(1) == cAdverb)       // adverb
                         caseLetter = cNoMatch;           // wildCard, allow adverbs to match all cases
                      else
                         caseLetter = tag.charAt(1);     // Prepositions
@@ -931,7 +932,7 @@ public class IceTag extends Tag {
         switch (tagStr.charAt(0)) {
             case 'a' :  if (tagStr.length() == 1)
                             wordClass = WordClass.wcAdverb;
-                        else if (tagStr.charAt(1) == 'a')
+                        else if (tagStr.charAt(1) == cAdverb || tagStr.charAt(1) == cAbbreviation)
                             wordClass = WordClass.wcAdverb;
                         else if (tagStr.charAt(1) == 'u')
                             wordClass = WordClass.wcExcl;
@@ -1297,6 +1298,9 @@ public class IceTag extends Tag {
               txt.append(AnnotationSeparator);
               txt.append(annotationDegree(tagStr.charAt(2), english));
           }
+     }
+     else if (tagStr.charAt(1) == cAbbreviation) {
+         if (english) txt.append("Abbreviation"); else txt.append("Skammstöfun");
      }
      else if (tagStr.charAt(1) == cExclamation)
      {

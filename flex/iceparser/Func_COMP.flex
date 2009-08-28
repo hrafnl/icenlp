@@ -86,10 +86,11 @@ VPPastSeq = {VPPast}({WhiteSpace}+{ConjPhraseOrComma}{WhiteSpace}+{VPPast})*
 Complement = {APNom} | {APsNom} | {NPNom} | {NPsNom} | {VPPastSeq} 
 
 SubjectVerbBe = {FuncSubject}{WhiteSpace}+{VPBe}{WhiteSpace}+
-//IncorrectSubject = {SubjectVerbBe}{FuncSubject}
-//SubjectOtherVerb = {FuncSubject}{WhiteSpace}+{VPOther}{WhiteSpace}+
 
-SubjVerbAdvPCompl = {SubjectVerbBe}{AdvP}{WhiteSpace}+{Complement}
+// This covers a case like: "Hann er ekki mjög góður kennari"
+SubjVerbAdvPCompl = {SubjectVerbBe}({MWE_AdvP}|{AdvP}){WhiteSpace}+{Complement}
+// This covers a case like: "Hann er a.m.k. ekki mjög góður kennari"
+SubjVerbMWEAdvPCompl = {SubjectVerbBe}{MWE_AdvP}{WhiteSpace}+{AdvP}{WhiteSpace}+{Complement}
 SubjVerbCPCompl = {SubjectVerbBe}{CP}{WhiteSpace}+{Complement}
 SubjVerbNPCompl = {SubjectVerbBe}({AdvP}{WhiteSpace}+)?({NPAcc}|{NPDat}){WhiteSpace}+{Complement}  /* Það var mér tilhlökkunarefni */
 SubjVerbCompl = {SubjectVerbBe}({FuncQualifier}{WhiteSpace}+)?{Complement}
@@ -110,12 +111,17 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 %%
 
 
-{SubjVerbAdvPCompl}	{ 
+{SubjVerbAdvPCompl} 	{ 
 			/* Find where the Adverb phrase ended and insert the COMP label */
 			StringSearch.splitString(yytext(),"AdvP]", true, 5);		
 			out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 			} 
- 
+{SubjVerbMWEAdvPCompl}  {
+			/* Find where the second adverb phrase ended and insert the COMP label */
+			StringSearch.splitString(yytext()," AdvP]", true, 6);		
+			out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
+			} 
+
 {SubjVerbNPCompl}	{ 
 			/* Find where the NP phrase ended after the verb phrase and insert the COMP label */
 			StringSearch.splitString2(yytext(),"VPb]","NP]");		

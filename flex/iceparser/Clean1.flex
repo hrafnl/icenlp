@@ -100,7 +100,7 @@ ProperNounTagNotGen = n{Gender}{Number}[noþ]("-"|{ArticleChar}){ProperName}{Whi
 ProperNounTagGen = n{Gender}{Number}e("-"|{ArticleChar}){ProperName}{WhiteSpace}+
 ProperNounWithQualifer = {OpenNP}g{WordSpaces}{ProperNounTagNotGen}({WordSpaces}{ProperNounTagGen})+~{CloseNP}
 
-AdvPSeq = (({OpenAdvP}~{CloseAdvP}){WhiteSpace}+){2,5}
+AdvPSeq = (({OpenAdvP}~{AdverbTag}{CloseAdvP}){WhiteSpace}+){2,5}
 APs = {OpenAPs}~{CloseAPs}
 DatNPWithNomAdjPhrase = {OpenNP}d{WhiteSpace}+{OpenAP}n~{CloseNP}
 

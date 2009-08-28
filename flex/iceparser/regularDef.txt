@@ -20,6 +20,8 @@ ProperName = [msö]
 
 AdverbTag = aa[me]?{WhiteSpace}+
 Adverb = {WordSpaces}{AdverbTag}
+AbbrevTag = as{WhiteSpace}+
+Abbreviation = {WordSpaces}{AbbrevTag}
 
 AdjectiveTag = l{Gender}{Number}{Case}{Declension}{Degree}
 

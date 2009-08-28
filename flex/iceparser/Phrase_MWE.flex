@@ -264,7 +264,8 @@ MWEAdv = 	{Adp}({Nyju}|{Sjalfsogdu}|{Visu}|{Minnsta}{Kosti}|({Nokkru}|{Odru}){Le
 		{Thess}({Vegna}|{I}{Stad})			|
 		{Thar}?{Ada}{Auki}				|
 		{Thar}{Aa}{Medal}				|
-		{Odru}{Hverju}
+		{Odru}{Hverju}					|
+		{Abbreviation}
 
 MWEA =		({Alls}|{Annars}|{Einhvers}|{Einsp}|{Ferns}|{Hvers}|{Margs}	|
 		{Neins}|{Nokkurs}|{Sams}|{Tvenns}|{Threnns}	|

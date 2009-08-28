@@ -64,6 +64,7 @@ import java.io.*;
 
 Adjective = {WordSpaces}{AdjectiveTag}
 AdverbPhrase = {OpenAdvP}~"aa"{WhiteSpace}+{CloseAdvP}
+//AdverbPhrase = {OpenAdvP}{WordSpaces}"aa"{WhiteSpace}+{CloseAdvP}
 AdjectivePhrase = {AdverbPhrase}?{Adjective} 
 
 %%
