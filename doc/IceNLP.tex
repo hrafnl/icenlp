@@ -74,7 +74,7 @@ A main directory, {\bf IceNLP}, will be created with the following subdirectorie
 
 The {\bf dist} directory contains the \emph{IceNLPCore.jar} file.  This file consists of all the .class files needed to run \emph{IceNLP} along with default dictionaries (``resource files''). 
 
-The {\bf lib} directory contains the \emph{Lemmatizer.jar} file.  This file consists of all the .class files needed to run \emph{Lemmald}. 
+The {\bf lib} directory contains various .jar files used by \emph{IceNLP}. 
 
 The {\bf bat} directory includes commands (.sh and .bat files) for running individual components of the tool.
 The commands for each tool can be found in a subdirectory of the {\bf bat} directory (see Section \ref{sec:usage}).
@@ -457,7 +457,7 @@ To understand fully some of the other parameters you need to consult \citep{lof0
 \item \emph{FULL\_OUTPUT}: \emph{yes|no}. If \emph{yes} the tagger will write  subject-verb-object information and information on prepositional phrases to the output file and detailed information for unknown words. If \emph{no} then only unknown words are marked.
 \item \emph{BASE\_TAGGING}: \emph{yes|no}. If \emph{yes} the tagger will only assign a single tag to each word based on maximum frequency.
 \item \emph{TAG\_MAP\_DICT}: The name of the dictionary used for mapping the tags used internally by IceTagger to some other tagset.
-\item \emph{LEMMATIZER\_FILE}: If IceTagger should output the lemma, in addition to word and tag, then this is used to specify the location of the settings file for the lemmtizer. 
+\item \emph{LEMMATIZE}: \emph{yes|no}. If \emph{yes} then IceTagger outputs the lemma, in addition to the word and its tag. Note that the lemma is only written out if \emph{OUTPUT\_FORMAT}=1. 
 \item \emph{STRICT}: \emph{yes|no}. Strict tokenisation or not. Used by the tokeniser, see section \ref{sec:tok}.
 \item For typical use of IceTagger, the user does not need to provide values for the following parameters, because as a default the corresponding files are read directly from the \emph{IceNLPCore.jar} file:
 \begin{itemize}
