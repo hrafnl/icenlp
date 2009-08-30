@@ -59,6 +59,11 @@
 				<!--exclude name="dict/tritagger/old/*.dict" /-->
                 <include name="dict/tritagger/*.dict" />
             	<include name="dict/formald/segment.srx" />
+            	
+            	<!-- Lemmald /-->
+            	<include name="dict/lemmald/postfixRules.txt" />
+            	<include name="dict/lemmald/rule_database_utf8.dat" />
+            	<include name="dict/lemmald/settings.txt" />
                 <!--exclude name="dict/tritagger/*WC.dict" /-->                
                 <include name="ngrams/models/otb.*" />
             </fileset>
@@ -71,6 +76,9 @@
 		<copy todir="${dist}/${package}/bat">
 			<fileset dir="bat" />
 		</copy>
+		
+	    <chmod perm="+x" dir="${dist}/${package}/bat" includes="**/*.sh" />		 
+		
 		<copy todir="${dist}/${package}/dict">
 			<fileset dir="dict" />
 		</copy>

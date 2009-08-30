@@ -239,7 +239,7 @@ public class IceNLP {
         }
         
         String lines = srxSegmentize(text);
-        return parseLines( tagLines( lines ).toString(TagFormat.ICE2) );
+        return parseLines( tagLines( lines ).toString(TagFormat.ICE1) );
     }   
     
 
@@ -254,7 +254,7 @@ public class IceNLP {
             return null;
         }
         
-        return parseLines( tagLines( input ).toString(TagFormat.ICE2) );
+        return parseLines( tagLines( input ).toString(TagFormat.ICE1) );
     }
     
     /**

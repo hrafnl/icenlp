@@ -31,7 +31,7 @@ public class IceNLPTest {
 
 
 public static void main(String args[]) {
-    String input = "Ég er rauður kaktus"+System.getProperty("line.separator")+" og ég ætla að syngja þetta lag.";
+    String input = "Ég er a.m.k. rauður kaktus"+System.getProperty("line.separator")+" og ég ætla að syngja þetta lag.";
     String output;
     IceNLP theInstance = IceNLP.getInstance();
 
@@ -58,8 +58,10 @@ public static void main(String args[]) {
     
     
     //Mörkun og þáttun:
+    System.out.println("Inputlines:" + input);
+    
     output = theInstance.tagAndParseLines(input);
-    System.out.println(output);
+    System.out.println("ParseOutput:\n"+output);
 
     
 
