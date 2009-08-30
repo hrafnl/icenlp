@@ -40,7 +40,7 @@ public class RunIceTaggerApertium extends RunIceTagger{
         Date before = runner.initialize(args);
 
         // Instantiate an output class
-        runner.iceOutput = new IceTaggerOutputApertium(runner.outputFormat, runner.separator, runner.fullOutput, runner.fullDisambiguation, runner.tagMapFile, runner.lemmatizerFile);
+        runner.iceOutput = new IceTaggerOutputApertium(runner.outputFormat, runner.separator, runner.fullOutput, runner.fullDisambiguation, runner.tagMapFile, runner.lemmatize);
         // Perform the tagging
         runner.performTagging();
 		

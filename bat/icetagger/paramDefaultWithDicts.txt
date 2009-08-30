@@ -72,8 +72,8 @@ VERB_ADVERB_DICT=../../dict/icetagger/otb.verbAdverb.dict
 [Tag mapping file ]
 [TAG_MAP_DICT=../../dict/icetagger/otb.apertium.dict]
 
-[Lemmtizer settings file ]
-[LEMMATIZER_FILE=../../dict/lemmald/settings.txt]
+[LEMMATIZE = yes|no ]
+LEMMATIZE=no
 
 [Used by IceMorphy]
 

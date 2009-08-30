@@ -51,8 +51,8 @@ BASE_TAGGING=no
 [Tag mapping file ]
 [TAG_MAP_DICT=../../dict/icetagger/otb.apertium.dict]
 
-[Lemmtizer settings file ]
-[LEMMATIZER_FILE=../../dict/lemmald/settings.txt]
+[LEMMATIZE = yes|no ]
+LEMMATIZE=no
 
 [Used by the Tokenizer]
 

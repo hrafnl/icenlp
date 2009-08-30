@@ -24,7 +24,8 @@ package is.iclt.icenlp.core.icetagger;
 import is.iclt.icenlp.core.tokenizer.IceTokenTags;
 import is.iclt.icenlp.core.tokenizer.Segmentizer;
 import is.iclt.icenlp.core.utils.Lexicon;
-import is.iclt.icenlp.core.utils.Lemmald;
+import is.iclt.icenlp.core.lemmald.Lemmald;
+import is.iclt.icenlp.core.lemmald.LemmaResult;
 
 import java.io.IOException;
 
@@ -37,6 +38,7 @@ public class IceTaggerOutput {
     protected int outputFormat = Segmentizer.tokenPerLine;    // Default is one word/tag per line
     protected boolean fullOutput = false;
 	protected boolean fullDisambiguation = true;
+    //protected boolean lemmatize = false;
     protected String separator;      // Separator between a word and its tag
     protected Lexicon myTagMap=null;        // Maps IFD tags to some other tag set
     protected Lemmald myLemmald=null;
@@ -52,18 +54,21 @@ public class IceTaggerOutput {
        // Do not use this one!
     }
 
-    public IceTaggerOutput(int outFormat, String wordTagSeparator, boolean useFullOutput, boolean useFullDisambiguation, String tagMapFile, String lemmatizerFile) throws IOException
+    public IceTaggerOutput(int outFormat, String wordTagSeparator, boolean useFullOutput, boolean useFullDisambiguation, String tagMapFile, boolean showLemma) throws IOException
     {
         outputFormat = outFormat;
         separator = wordTagSeparator;
         fullOutput = useFullOutput;
         fullDisambiguation = useFullDisambiguation;
+        //lemmatize = showLemma;
         // A tap map file if needed
         if (tagMapFile != null)
             myTagMap = new Lexicon(tagMapFile);
         // A lemmatizer if needed
-        if (lemmatizerFile != null)
-           myLemmald = new Lemmald(lemmatizerFile);
+        if (showLemma) {
+           //myLemmald = new Lemmald(lemmatizerFile);
+           myLemmald = Lemmald.newInstance();
+        }
     }
 
     protected String getMappedTag(String tag)
@@ -79,7 +84,7 @@ public class IceTaggerOutput {
 
     public String buildOutput( IceTokenTags tok, int index, int numTokens )
     {
-            String str, tag, mappedTag, lemma;
+            String str, tag, mappedTag;
 
             if( outputFormat == Segmentizer.tokenPerLine )
             {
@@ -95,7 +100,9 @@ public class IceTaggerOutput {
 
                     // Add the lemma?
                     if (myLemmald != null) {
-                       lemma = myLemmald.getLemma(tok.lexeme, tag);
+                        LemmaResult lemmaResult = myLemmald.lemmatize(tok.lexeme,tag);
+                        String lemma = lemmaResult.getLemma();
+                       //lemma = myLemmald.getLemma(tok.lexeme, tag);
                        str = str + " " + lemma;
                     }
                 }
@@ -141,7 +148,7 @@ public class IceTaggerOutput {
 
         public String buildOutputBaseTagging( IceTokenTags tok)
         {
-            String tag, str, mappedTag, lemma;
+            String tag, str, mappedTag;
 
             tag = tok.getFirstTagStr();
             if (myTagMap != null) {
@@ -152,7 +159,9 @@ public class IceTaggerOutput {
                 str = tok.lexeme + " " + tag;
 
             if (myLemmald != null) {
-                 lemma = myLemmald.getLemma(tok.lexeme, tag);
+                 LemmaResult lemmaResult = myLemmald.lemmatize(tok.lexeme,tag);
+                 String lemma = lemmaResult.getLemma();
+                 //lemma = myLemmald.getLemma(tok.lexeme, tag);
                  str = str + " " + lemma;
             }
 

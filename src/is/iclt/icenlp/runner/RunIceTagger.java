@@ -56,10 +56,10 @@ public class RunIceTagger
     private String tokenDictPath = null;
 	private String baseDictPath, dictPath, prefixesDictPath, idiomsDictPath;
 	private String verbPrepDictPath, verbObjDictPath, verbAdverbDictPath;
-	protected String tagFrequencyFile, tagMapFile, lemmatizerFile, endingsBasePath, endingsDictPath, endingsProperDictPath;
+	protected String tagFrequencyFile, tagMapFile, endingsBasePath, endingsDictPath, endingsProperDictPath;
     private String lineFormatStr, outputFormatStr, sentenceStartStr, separatorStr;
     private String modelStr, modelTypeStr;
-    private String fullOutputStr;
+    private String fullOutputStr, lemmatizeStr;
     private Lexicon tokLex;
     private boolean standardInputOutput=false;
     protected boolean fullOutput = false;
@@ -68,6 +68,7 @@ public class RunIceTagger
     private boolean changedDefaultOutputFormat=false;
 	protected boolean fullDisambiguation = true;
 	private boolean strictTokenization = true;
+    protected boolean lemmatize=false;
     private IceTagger.HmmModelType modelType = IceTagger.HmmModelType.none;
     protected String separator;    // Separator between a word and its tag
     private int lineFormat = Segmentizer.tokenPerLine;    // Default is one token per line
@@ -118,7 +119,7 @@ public class RunIceTagger
 		System.out.println( "  -tf <tag frequency file>" );
         System.out.println( "  -tm <tag mapping file>" );
         System.out.println( "  -td <tokenization dictionary>" );
-        System.out.println( "  -ls <lemma settings file>" );
+        System.out.println( "  -lem (lemmatize)" );
         System.out.println( "  -m  <HMM model>" );
         System.out.println( "  -mt <start|end|startend>" );
         System.out.println( "  -fo (full output)" );
@@ -263,7 +264,7 @@ public class RunIceTagger
 		tokenDictPath = parameters.getProperty( "TOKEN_DICT" );
 		tagFrequencyFile = parameters.getProperty( "TAG_FREQUENCY_FILE");
         tagMapFile =   parameters.getProperty( "TAG_MAP_DICT");
-        lemmatizerFile =   parameters.getProperty( "LEMMATIZER_FILE");
+        lemmatizeStr =   parameters.getProperty( "LEMMATIZE");
         fullOutputStr = parameters.getProperty( "FULL_OUTPUT" );
 		String fullDisambiguationStr = parameters.getProperty( "FULL_DISAMBIGUATION", "yes" );
 		String baseTaggingStr = parameters.getProperty( "BASE_TAGGING", "no" );
@@ -274,6 +275,7 @@ public class RunIceTagger
 		fullDisambiguation = fullDisambiguationStr.equals("yes");
 		baseTagging = baseTaggingStr.equals("yes");
 		strictTokenization = strictTokenizationStr.equals("yes");
+        lemmatize = lemmatizeStr.equals("yes");
 
         getFormat();
 		in.close();
@@ -333,8 +335,8 @@ public class RunIceTagger
                 tagMapFile = args[i + 1];
             else if( args[i].equals( "-td" ) )
                 tokenDictPath = args[i + 1];
-            else if( args[i].equals( "-ls" ) )
-                lemmatizerFile = args[i + 1];
+            else if( args[i].equals( "-lem" ) )
+                lemmatize = true;
             else if( args[i].equals( "-bt" ) )
 				baseTagging = true;
 			else if( args[i].equals( "-nf" ) )
@@ -560,7 +562,7 @@ private void setDefaults()
                   System.out.println( "Using a HMM for full disambiguation" );
         }
 
-        if (lemmatizerFile != null)
+        if (lemmatize)
             System.out.println("Producing lemmata");
         if (tagMapFile != null)
             System.out.println("Mapping tags using " + tagMapFile);
@@ -744,7 +746,7 @@ private void setDefaults()
         Date before = runner.initialize(args);
 
         // Instantiate an output class
-        runner.iceOutput = new IceTaggerOutput(runner.outputFormat, runner.separator, runner.fullOutput, runner.fullDisambiguation, runner.tagMapFile, runner.lemmatizerFile);
+        runner.iceOutput = new IceTaggerOutput(runner.outputFormat, runner.separator, runner.fullOutput, runner.fullDisambiguation, runner.tagMapFile, runner.lemmatize);
         // Perform the tagging
         runner.performTagging();
 

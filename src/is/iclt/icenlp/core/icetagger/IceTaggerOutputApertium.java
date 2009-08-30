@@ -22,6 +22,7 @@
 package is.iclt.icenlp.core.icetagger;
 
 import is.iclt.icenlp.core.tokenizer.IceTokenTags;
+import is.iclt.icenlp.core.lemmald.LemmaResult;
 
 import java.io.IOException;
 
@@ -31,9 +32,9 @@ import java.io.IOException;
  */
 public class IceTaggerOutputApertium extends IceTaggerOutput{
 
-    public IceTaggerOutputApertium(int outFormat, String wordTagSeparator, boolean useFullOutput, boolean useFullDisambiguation, String tagMapFile, String lemmatizerFile) throws IOException
+    public IceTaggerOutputApertium(int outFormat, String wordTagSeparator, boolean useFullOutput, boolean useFullDisambiguation, String tagMapFile, boolean showLemma) throws IOException
     {
-        super(outFormat, wordTagSeparator, useFullOutput, useFullDisambiguation, tagMapFile, lemmatizerFile);
+        super(outFormat, wordTagSeparator, useFullOutput, useFullDisambiguation, tagMapFile, showLemma);
     }
 
     public String buildOutput( IceTokenTags tok, int index, int numTokens )
@@ -49,8 +50,11 @@ public class IceTaggerOutputApertium extends IceTaggerOutput{
             mappedTag = tag;
 
         // Add the lemma?
-        if (myLemmald != null)
-            lemma = myLemmald.getLemma(tok.lexeme, tag);
+        if (myLemmald != null) {
+            LemmaResult lemmaResult = myLemmald.lemmatize(tok.lexeme,tag);
+            lemma = lemmaResult.getLemma();
+            //lemma = myLemmald.getLemma(tok.lexeme, tag);
+        }
 
         //str = "^" + tok.lexeme + "/" + lemma + mappedTag + "$ ";
         // Apertium þarf ekki orðið sjálft, eingöngu lemmuna
