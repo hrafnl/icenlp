@@ -22,7 +22,7 @@
 
 package is.iclt.icenlp.core.formald.tags;
 
-import is.iclt.icenlp.core.utils.XmlOperations2;
+import is.iclt.icenlp.core.utils.XmlOperations;
 
 import java.io.IOException;
 import org.w3c.dom.*;
@@ -41,12 +41,12 @@ public class XMLTagFormat extends TagFormat {
     
     @Override
     public Document decode(String data) {       
-        return XmlOperations2.loadXMLFrom(data);    
+        return XmlOperations.loadXMLFrom(data);    
     }
 
     @Override
     public String encode(Document data) {
-        return XmlOperations2.docToString(data);
+        return XmlOperations.docToString(data);
     }
     
     public static TagFormat newInstance() {

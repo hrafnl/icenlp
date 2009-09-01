@@ -25,7 +25,7 @@ package is.iclt.icenlp.core.formald.tags;
 import is.iclt.icenlp.core.formald.Text;
 import is.iclt.icenlp.core.formald.tagsets.Tagset;
 import is.iclt.icenlp.core.utils.FileOperations;
-import is.iclt.icenlp.core.utils.XmlOperations2;
+import is.iclt.icenlp.core.utils.XmlOperations;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -91,7 +91,7 @@ public class TaggedText extends Text {
 
 
     public static Document createEmptyDoc(){
-        Document doc = XmlOperations2.createDocument();
+        Document doc = XmlOperations.createDocument();
         Element docRoot = doc.createElement("taggedText");
         doc.appendChild(docRoot);
         return doc;
@@ -188,7 +188,7 @@ public class TaggedText extends Text {
 
     @Override
     public String toString(){        
-        return XmlOperations2.docToString( this.getDocument() );
+        return XmlOperations.docToString( this.getDocument() );
     }
 
     public String toString( final TagFormat outputFormat ){
