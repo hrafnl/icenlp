@@ -26,7 +26,6 @@ import is.iclt.icenlp.core.formald.tags.TagFormat;
 import is.iclt.icenlp.core.formald.tags.TaggedText;
 import is.iclt.icenlp.core.lemmald.*;
 import is.iclt.icenlp.core.utils.FileOperations;
-import is.iclt.icenlp.core.utils.XmlOperations;
 
 import org.apache.commons.cli.*;
 import org.apache.commons.io.IOUtils;

@@ -20,7 +20,6 @@
 package is.iclt.icenlp.core.tokenizer;
 
 import is.iclt.icenlp.core.utils.FileOperations;
-import is.iclt.icenlp.core.utils.XmlOperations;
 
 import java.io.BufferedReader;
 import java.io.IOException;

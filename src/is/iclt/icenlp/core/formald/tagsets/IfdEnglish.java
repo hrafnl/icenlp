@@ -28,7 +28,7 @@ import java.util.HashMap;
  * In progress, a class that represents an English version of the IFD tagset.
  * @author <a href="mailto:anton.karl.ingason@gmail.com">Anton Karl Ingason</a>
  */
-public class IFDEnglish {
+public class IfdEnglish {
 
     HashMap<String,String> tagmap = new HashMap<String,String>();
     HashMap<String,String> postmap = new HashMap<String,String>();
@@ -98,7 +98,7 @@ public class IFDEnglish {
         postmap.put("adv-g", "p-g");
     }
 
-    public IFDEnglish(){
+    public IfdEnglish(){
         this.loadTagmaps();
         this.loadPostmap();
     }

@@ -22,7 +22,7 @@
 
 package is.iclt.icenlp.core.formald.tags;
 
-import is.iclt.icenlp.core.utils.XmlOperations;
+import is.iclt.icenlp.core.utils.XmlOperations2;
 
 import java.io.IOException;
 import org.w3c.dom.*;
@@ -40,22 +40,13 @@ public class XMLTagFormat extends TagFormat {
     private XMLTagFormat(){}
     
     @Override
-    public Document decode(String data) {
-        try {
-            return XmlOperations.loadXMLFrom(data);
-        } catch (SAXException ex) {
-            System.out.println( ex.getMessage() );
-            ex.printStackTrace();
-        } catch (IOException ex) {
-            System.out.println( ex.getMessage() );
-            ex.printStackTrace();
-        }
-        return null;
+    public Document decode(String data) {       
+        return XmlOperations2.loadXMLFrom(data);    
     }
 
     @Override
     public String encode(Document data) {
-        return XmlOperations.docToString(data);
+        return XmlOperations2.docToString(data);
     }
     
     public static TagFormat newInstance() {

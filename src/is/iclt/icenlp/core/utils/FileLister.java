@@ -20,7 +20,7 @@
  * anton.karl.ingason@gmail.com
  */
 
-package is.iclt.icenlp.core.formald;
+package is.iclt.icenlp.core.utils;
 
 import java.io.File;
 import java.util.ArrayList;
