@@ -38,7 +38,7 @@ import  org.w3c.dom.ls.DOMImplementationLS;
 import  org.w3c.dom.ls.LSSerializer;
 
 
-public class XmlOperations2 {
+public class XmlOperations {
 
 	public static org.w3c.dom.Document createDocument(){
 		return new org.apache.xerces.dom.DocumentImpl();
