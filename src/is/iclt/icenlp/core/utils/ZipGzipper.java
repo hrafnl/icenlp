@@ -1,29 +1,20 @@
-/*
- * ZipGzipper.java
- *
- * Created on 27. mars 2008, 17:20
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
+// "Java Tech"
+//  Code provided with book for educational purposes only.
+//  No warranty or guarantee implied.
+//  This code freely available. No copyright claimed.
+//  2003
+//  (minor changes by Anton Karl Ingason 2009, same conditions as above)
+//
 
-package is.iclt.icenlp.core.lemmald.tools;
+package is.iclt.icenlp.core.utils;
 
-/*
- * ZipGzipper.java
- *
- * Created on 15. febr�ar 2008, 13:16
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
 
 import java.io.*;
+import java.util.Scanner;
 import java.util.zip.*;
 
 /**
- *
- * @author Anton
+ * A class for zipping and unzipping
  */
 public class ZipGzipper {
 
@@ -274,5 +265,51 @@ public class ZipGzipper {
     return STATUS_OK;
 
   } // gunzipFile
+  
+  
+	public static String gz2String(InputStream fis) {
+		StringBuffer output = new StringBuffer();
+
+		GZIPInputStream gzip_in_stream;
+		try {
+
+			BufferedInputStream source = new BufferedInputStream(fis);
+			gzip_in_stream = new GZIPInputStream(source);
+
+			BufferedReader reader = FileEncoding.getReader(gzip_in_stream);
+
+			String gutti;
+			while ((gutti = reader.readLine()) != null) {
+				output.append(gutti + System.getProperty("line.separator"));
+			}
+
+		} catch (IOException ex) {
+			System.out.println("IO Exception while unzipping data!");
+			ex.printStackTrace();
+		}
+
+		return output.toString();
+	}
+
+	public static String gz2String(String filePath) {
+		StringBuffer output = new StringBuffer();
+
+		try {
+
+			GZIPInputStream stream = new GZIPInputStream(
+					new BufferedInputStream(new FileInputStream(filePath)));
+			Scanner scanner = new Scanner(stream);
+			while (scanner.hasNextLine()) {
+				output.append(scanner.nextLine() + "\n");
+			}
+
+		} catch (Exception e) {
+			System.out.println("Exception in gz2String:");
+			e.printStackTrace();
+		}
+
+		return output.toString();
+	}
+	
 
 } // ZipGzipper

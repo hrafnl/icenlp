@@ -19,7 +19,8 @@
 
 package is.iclt.icenlp.core.tokenizer;
 
-import is.iclt.icenlp.core.formald.FormaldUtils;
+import is.iclt.icenlp.core.utils.FileOperations;
+import is.iclt.icenlp.core.utils.XmlOperations;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -150,7 +151,7 @@ public class SrxSegmentizer {
   }
   
   public void runTextFiles( String inputFile, String outputFile ){
-	  String input = FormaldUtils.fileToString(inputFile);
+	  String input = FileOperations.fileToString(inputFile);
 	  
 	  StringBuilder output = new StringBuilder();
 	  List<String> sentences = tokenize(input);
@@ -159,7 +160,7 @@ public class SrxSegmentizer {
            output.append( System.getProperty("line.separator") );
       }	            
       
-	  FormaldUtils.stringToFile(outputFile, output.toString().trim() );
+	  FileOperations.stringToFile(outputFile, output.toString().trim() );
   }
   
   public static void main( String[] args ){

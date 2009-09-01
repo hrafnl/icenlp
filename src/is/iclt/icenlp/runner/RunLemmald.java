@@ -22,10 +22,12 @@
 
 package is.iclt.icenlp.runner;
 
-import is.iclt.icenlp.core.formald.FormaldUtils;
 import is.iclt.icenlp.core.formald.tags.TagFormat;
 import is.iclt.icenlp.core.formald.tags.TaggedText;
 import is.iclt.icenlp.core.lemmald.*;
+import is.iclt.icenlp.core.utils.FileOperations;
+import is.iclt.icenlp.core.utils.XmlOperations;
+
 import org.apache.commons.cli.*;
 import org.apache.commons.io.IOUtils;
 import java.io.IOException;
@@ -85,7 +87,7 @@ public class RunLemmald {
     			System.exit(1);
     		}   
     		else {
-    			input = FormaldUtils.fileToString( cmdLine.getOptionValue("i"));
+    			input = FileOperations.fileToString( cmdLine.getOptionValue("i"));
     		}
     		
     		if( ! cmdLine.hasOption("o") ){
@@ -106,7 +108,7 @@ public class RunLemmald {
     		System.out.print(output);
     	}
     	else {
-    		FormaldUtils.stringToFile(outputFile, output);    		
+    		FileOperations.stringToFile(outputFile, output);    		
     	}
     }
 

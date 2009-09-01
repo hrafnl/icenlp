@@ -22,7 +22,7 @@
 
 package is.iclt.icenlp.core.lemmald;
 
-import is.iclt.icenlp.core.lemmald.tools.FileOperations;
+import is.iclt.icenlp.core.utils.ZipGzipper;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -58,7 +58,7 @@ public class RuleDatabase {
 
 
         // Load and tokenize file
-        String ruleDatabase = FileOperations.gz2String( ris );
+        String ruleDatabase = ZipGzipper.gz2String( ris );
         //String ruleDatabase = FileOperations.getContents("rules.txt");
         StringTokenizer ruleTokenizer = new StringTokenizer( ruleDatabase, System.getProperty("line.separator") );
 

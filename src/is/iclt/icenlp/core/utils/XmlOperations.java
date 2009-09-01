@@ -20,7 +20,7 @@
  * anton.karl.ingason@gmail.com
  */
 
-package is.iclt.icenlp.core.formald;
+package is.iclt.icenlp.core.utils;
 
 import com.sun.org.apache.xml.internal.serialize.OutputFormat;
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
@@ -39,42 +39,11 @@ import org.apache.commons.io.FileUtils;
 import org.w3c.dom.*;
 
 /**
- * A util class with static methods for common tasks.
+ * A util class with static methods for common XML-related tasks.
  * @author <a href="mailto:anton.karl.ingason@gmail.com">Anton Karl Ingason</a>
  */
-public class FormaldUtils {
+public class XmlOperations {
 
-	/**
-	 * Writes a String to a file. Complains to system out and prints stack trace 
-	 * if an IOException occurs.
-	 * @param filename Name of the file to be written.
-	 * @param data The String data that will be written to the file.
-	 */
-    public static void stringToFile( String filename, String data ){
-        try {
-            FileUtils.writeStringToFile(new File(filename), data);
-        } catch (IOException ex) {
-            System.out.println("Could not write to file '"+filename+"'!");
-            ex.printStackTrace();
-        }
-    }
-
-    /**
-     * Reads a file to a String. Complains to system out and prints stack trace
-     * if an IOException occurs.
-     * @param filename Name of the file to be read.
-     * @return The content of the file as a String.
-     */
-    public static String fileToString( String filename ){
-        String contents = null;
-        try {
-            contents = FileUtils.readFileToString(new File(filename));
-        } catch (IOException ex) {
-            System.out.println("Could not read file '"+filename+"'!");
-            ex.printStackTrace();
-        }
-        return contents;
-    }
 
     /**
      * Returns an XML String representation of a DOM object 
@@ -91,7 +60,7 @@ public class FormaldUtils {
         try {
             serial.serialize(doc);
         } catch (IOException ex) {
-            Logger.getLogger(FormaldUtils.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(XmlOperations.class.getName()).log(Level.SEVERE, null, ex);
         }
         // Display the XML
         return stringOut.toString();

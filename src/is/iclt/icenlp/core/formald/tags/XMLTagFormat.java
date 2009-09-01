@@ -22,7 +22,8 @@
 
 package is.iclt.icenlp.core.formald.tags;
 
-import is.iclt.icenlp.core.formald.FormaldUtils;
+import is.iclt.icenlp.core.utils.XmlOperations;
+
 import java.io.IOException;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
@@ -41,7 +42,7 @@ public class XMLTagFormat extends TagFormat {
     @Override
     public Document decode(String data) {
         try {
-            return FormaldUtils.loadXMLFrom(data);
+            return XmlOperations.loadXMLFrom(data);
         } catch (SAXException ex) {
             System.out.println( ex.getMessage() );
             ex.printStackTrace();
@@ -54,7 +55,7 @@ public class XMLTagFormat extends TagFormat {
 
     @Override
     public String encode(Document data) {
-        return FormaldUtils.docToString(data);
+        return XmlOperations.docToString(data);
     }
     
     public static TagFormat newInstance() {

@@ -22,8 +22,8 @@
 
 package is.iclt.icenlp.core.lemmald;
 
-import is.iclt.icenlp.core.lemmald.tools.FileOperations;
-import is.iclt.icenlp.core.lemmald.tools.ZipGzipper;
+import is.iclt.icenlp.core.utils.FileOperations;
+import is.iclt.icenlp.core.utils.ZipGzipper;
 
 import java.io.File;
 import java.util.*;
@@ -41,7 +41,7 @@ public class Trainer {
         Hashtable<String,Integer> ruleFailure = new Hashtable<String,Integer>();
         
         // Load training data        
-        ArrayList<LemmaWord> trainingData = this.loadTrainingData( trainingDataFile );
+        ArrayList<LemmaWord> trainingData = loadTrainingData( trainingDataFile );
                 
         // Begin training
         System.out.println("Begin training");
@@ -189,7 +189,7 @@ public class Trainer {
                 
         String tempFile = System.getProperty("user.dir") + "/" + "rules.txt";
                  
-        FileOperations.writeContents( fileOutput.toString(), tempFile );         
+        FileOperations.stringToFile( tempFile, fileOutput.toString() );         
         File theRules = new File( tempFile );        
         ZipGzipper.gzipFile( theRules, ruleOutputFile );
         File toDelete = new File( tempFile );      
@@ -205,7 +205,7 @@ public class Trainer {
         System.out.println("Loading data");        
         ArrayList<LemmaWord> lemmaList = new ArrayList<LemmaWord>();
                 
-        String otbtxt = FileOperations.getContents( filename );        
+        String otbtxt = FileOperations.fileToString( filename );        
         StringTokenizer otbLines = new StringTokenizer( otbtxt, System.getProperty("line.separator") );
         
         // Prepare variables
