@@ -26,6 +26,7 @@ import is.iclt.icenlp.core.formald.tags.TagFormat;
 import is.iclt.icenlp.core.formald.tags.TaggedText;
 import is.iclt.icenlp.core.lemmald.*;
 import is.iclt.icenlp.core.utils.FileOperations;
+import is.iclt.icenlp.facade.IceNLP;
 
 import org.apache.commons.cli.*;
 import org.apache.commons.io.IOUtils;
@@ -44,9 +45,7 @@ public class RunLemmald {
         options = new Options();
 
       //  options.addOption("lemmatize",false,"lemmatize plain text");
-      //  options.addOption("lemmatizeTagged",false,"lemmatize tagged text"); 
-        options.addOption("pipeMode",false,"read input from stdin and write output to stdout");
-        
+        options.addOption("lemmatizeTagged",false,"lemmatize tagged text (one word and tag per line in input)"); 
 
         // train
         // options.addOption("t", false, "train lemmatizer" );
@@ -55,60 +54,56 @@ public class RunLemmald {
         options.addOption("h", false, "display this message");
 
         // input file
-        options.addOption("i", true, "input file");
+        options.addOption("i", true, "input file, reads from stdin if none is supplied");
         options.getOption("i").setArgName("file");
 
         // output file
-        options.addOption("o", true, "output file");
+        options.addOption("o", true, "output file, writes to stdout if none is supplied");
         options.getOption("o").setArgName("file");
 
     }
     
     public static void runConsole( CommandLine cmdLine ){
+
     	String input = null;
     	String output = null;
     	String outputFile = null;
     	
-    	// Read input
-    	if( cmdLine.hasOption("pipeMode") ){
+    	// Read input, assume reading from stdin if no input file is specified
+    	if( cmdLine.hasOption("i") ){
+    		input = FileOperations.fileToString( cmdLine.getOptionValue("i"));
+    	}
+    	else {
     		try {
     			input = IOUtils.toString(System.in);
     		} catch ( IOException ex ){
     			System.out.println("Exception while reading from stdin!");
-    			ex.printStackTrace();
-    			System.exit(1);
     		}
     	}
-    	else {
-    		    		
-    		if( ! cmdLine.hasOption("i")){
-    			System.out.println("You must supply an input file!");
-    			System.exit(1);
-    		}   
-    		else {
-    			input = FileOperations.fileToString( cmdLine.getOptionValue("i"));
-    		}
-    		
-    		if( ! cmdLine.hasOption("o") ){
-    			System.out.println("You must supply an output file!");
-    		}
-    		else {
-    			outputFile = cmdLine.getOptionValue("o");
-    		}    		
+    	    	    	
+    	// Create a TaggedText object to lemmatize
+    	TaggedText taggedText = null;    	
+    	if( cmdLine.hasOption("lemmatizeTagged")){
+    		// Lemmatize tagged  	
+    		taggedText = TaggedText.newInstance(input, TagFormat.ICE2);    	        		
     	}
-    	
-    	// Lemmatize    	
-    	Lemmald lemmald = Lemmald.newInstance();
-    	TaggedText result = lemmald.lemmatizeText( input );    	
-    	output = result.toString(TagFormat.ICE2);
-    	
+    	else {  // tag and lemmatize plain text
+    		taggedText = IceNLP.newInstance().tagText( input );    	
+    	}
+    	// Lemmatize
+    	Lemmald lemmald = Lemmald.newInstance();    	
+    	lemmald.lemmatizeTagged( taggedText );    	
+    	output = taggedText.toString(TagFormat.ICE2);
+
     	// Return output
-    	if( cmdLine.hasOption("pipeMode")){
-    		System.out.print(output);
-    	}
-    	else {
+    	if( cmdLine.hasOption("o")){
+    		outputFile = cmdLine.getOptionValue("o");
     		FileOperations.stringToFile(outputFile, output);    		
     	}
+    	else {
+    		System.out.print(output);    		
+    	}
+    	
     }
 
     public static void main(String[] args) {
@@ -117,9 +112,9 @@ public class RunLemmald {
     	 try {
     	    // parse the command line arguments
     	    CommandLine cmdLine = parser.parse( options, args );
-    	    if(cmdLine.hasOption("h") || args.length == 0 ){
+    	    if(cmdLine.hasOption("h") ){
     	    	HelpFormatter formatter = new HelpFormatter();
-    	    	formatter.printHelp( "lemmatizer.sh", options );	
+    	    	formatter.printHelp( "lemmatize.sh", options );	
     	    }
     	    else {
     	    	runConsole( cmdLine );

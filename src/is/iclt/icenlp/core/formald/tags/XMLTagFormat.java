@@ -23,13 +23,10 @@
 package is.iclt.icenlp.core.formald.tags;
 
 import is.iclt.icenlp.core.utils.XmlOperations;
-
-import java.io.IOException;
 import org.w3c.dom.*;
-import org.xml.sax.SAXException;
 
 /**
- * An implentation of TagFormat where the tagged text is represented
+ * An implementation of TagFormat where the tagged text is represented
  * as an XML String.
  * 
  * @see TagFormat
