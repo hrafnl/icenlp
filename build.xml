@@ -41,11 +41,11 @@
 
 	<target name="compile" depends="init" description="Compiles all the source files">
 		<javac srcdir="${src}" destdir="${build}">
-			<classpath refid="classpath" />
+			 <classpath refid="classpath" /> 		
+			 <!-- <compilerarg value="-Xlint"/> /-->
 	    </javac>
-	</target>
+	</target>	
 	
-
 	<target name="release-jar" depends="compile, init" description="Compiles a release version of IceNLP">
 	    <manifestclasspath property="jar.classpath" jarfile="${dist}/${jar_name}.jar">
 	      <classpath refid="classpath"/>
