@@ -425,6 +425,28 @@ Furthermore, if the -i/-o parameters are not provided, the tokenizer reads from 
  echo "Ég á stóran hund. Sá er a.m.k. 10 kíló." | ./tokenize.sh
 \end{verbatim}
 
+\subsection{SrxSegmentizer}
+The \textit{SrxSegmentizer} splits sentences according to rules defined in an SRX file. Such SRX
+rules are included in the IceNLP distribution and the \textit{Segment} library is used internally
+to apply the rules.
+
+Use the command \textbf{srxsegmentizer.sh}. Two parameters can be supplied, an input file
+and an output file. If those are omitted, input is read from stdin and output written to
+stdout.
+
+\textbf{Example:}
+
+\begin{verbatim}
+./srxsegmentizer.sh testinput.txt output.txt 
+(or, using stdin/stdout)
+echo "Þetta er nr. 1 og a.m.k. fínt. Farið e.t.v. þangað." | ./srxsegmentizer.sh
+\end{verbatim}
+
+Output:
+\begin{verbatim}
+Þetta er nr. 1 og a.m.k. fínt. 
+Farið e.t.v. þangað. 
+\end{verbatim}
 
 \subsection{IceTagger}
 \label{sec:icetagger_usage}
@@ -500,6 +522,83 @@ echo "Ég á stóran hund" | ./icetagger.sh
 %The message and communication protocol used is based on the AIR publish-subscribe protocol, built especially for A.I. research (see www.mindmakers.org).
 
 %A precise description of how to use \emph{IceTagger} in this case will follow in a later version of this User Guide.
+
+\subsection{Lemmald}
+The lemmatizer can be used as part of IceTagger by supplying the \textit{-lem} parameter and specifying output
+format \textit{1}. See section \ref{sec:icetagger_usage} on IceTagger usage for further information. 
+An example of such usage is the following:
+
+\begin{verbatim}
+echo "Ég á stóran hund" | ./icetagger.sh -of 1 -lem 
+\end{verbatim}
+
+The same result can be achieved using \textbf{./lemmatize.sh} and that command also allows for lemmatizing
+input that has already been tagged, for example using a different tagger. The parameters of \textbf{./lemmatize.sh}
+are the following:
+\begin{itemize}
+ \item \textit{-i<file>}: The input file. If omitted the input is read from stdin.
+ \item \textit{-o<file>}: The output file. If omitted the output is written to stdout.
+ \item \textit{-h}: Display help.
+ \item \textit{-lemmatizeTagged}: Indicates that the input is already tagged. Such input
+      should have one token per line and each token should consist of a word and its tag.
+\end{itemize}
+
+\textbf{Example 1: Lemmatizing a plain text file}
+
+\begin{verbatim}
+./lemmatize.sh -i plaintext.txt -o myoutput.txt
+(or, using stdin/stdout)
+echo "Við erum æðislegar. Við kunnum alla dansana." | ./lemmatize.sh
+\end{verbatim}
+
+Reads the plain text file plaintext.txt and writes the result to myoutput.txt. \textit{IceTagger} is used for tagging
+before \textit{Lemmald} lemmatizes.
+
+Input:
+\begin{verbatim}
+Við erum æðislegar. Við kunnum alla dansana. 
+\end{verbatim}
+
+Output:
+\begin{verbatim}
+Við ég fp1fn
+erum vera sfg1fn
+æðislegar æðislegur lvfnsf
+. . .
+
+Við ég fp1fn
+kunnum kvinna sfg1fþ
+alla allur fokfo
+dansana dans nkfog
+. . .
+\end{verbatim}
+
+\textbf{Example 2: Lemmatizing input that is already tagged}
+
+To lemmatize tagged input, with one token per line, each of which has a word form and a Part-Of-Speech tag, supply the parameter "-lemmatizeTagged".
+The lemma is added between the word form and its tag.
+
+\begin{verbatim}
+./lemmatize.sh -i testinput.txt -o output.txt -lemmatizeTagged
+(or, using stdin/stdout)
+cat testinput.txt | ./lemmatize.sh -lemmatizeTagged 
+\end{verbatim}
+
+Input:
+\begin{verbatim}
+Ég fp1en
+á sfg1en
+stóran lkeosf
+hund nkeo 
+\end{verbatim}
+
+Output:
+\begin{verbatim}
+Ég ég fp1en
+á eiga sfg1en
+stóran stór lkeosf
+hund hundur nkeo 
+\end{verbatim}
 
 \subsection{IceMorphy}
 The morphological analyser, \emph{IceMorphy}, can be used as a stand-alone application.
