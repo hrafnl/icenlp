@@ -23,7 +23,6 @@
 	<property name="jar_name" value="IceNLPCore" />
 	
 	<path id="classpath">
-		<!--pathelement location="${lemmald}"/-->
 		<pathelement location="${segment}" />
 		<pathelement location="${commons_io}" />
 		<pathelement location="${commons_logging}" />
@@ -48,7 +47,10 @@
 	
 
 	<target name="release-jar" depends="compile, init" description="Compiles a release version of IceNLP">
-		<jar destfile="${dist}/${jar_name}.jar">
+	    <manifestclasspath property="jar.classpath" jarfile="${dist}/${jar_name}.jar">
+	      <classpath refid="classpath"/>
+	    </manifestclasspath>  
+		<jar destfile="${dist}/${jar_name}.jar">			
 			<fileset dir="${build}">
 				<include name="**/*.class" />
 			</fileset>
@@ -68,6 +70,10 @@
                 <!--exclude name="dict/tritagger/*WC.dict" /-->                
                 <include name="ngrams/models/otb.*" />
             </fileset>
+	        <manifest>
+	                <attribute name="Built-By" value="${user.name}" />
+	                <attribute name="Class-Path" value="${jar.classpath}"/>
+	        </manifest>
 		</jar>
 	</target>
 	
