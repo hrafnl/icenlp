@@ -19,11 +19,11 @@
 	<property name="commons_cli" location="${lib}/commons-cli-1.2.jar" />
 	<property name="xerces" location="${lib}/xerces.jar" />
 
-    <property name="jar_version" value="1.2-dev" />
+    <property name="jar_version" value="1.2" />
 	<property name="jar_name" value="IceNLPCore" />
 	
 	<path id="classpath">
-		<pathelement location="${lemmald}" />
+		<!--pathelement location="${lemmald}"/-->
 		<pathelement location="${segment}" />
 		<pathelement location="${commons_io}" />
 		<pathelement location="${commons_logging}" />
