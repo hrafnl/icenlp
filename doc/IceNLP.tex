@@ -22,13 +22,18 @@ A Natural Language Processing Toolkit for Icelandic \\ \ \\
 \author{Hrafn Loftsson \\
         School of Computer Science \\
         Reykjavik University \\
-        e-mail: hrafn@ru.is \\
-        }
+        hrafn@ru.is 
+\and
+	Anton Karl Ingason \\
+	School of Humanities \\
+	University of Iceland \\
+	anton.karl.ingason@gmail.com \\
+}
 
 \begin{document}
 \hyphenation{Ice-Tagger Ice-Morphy Reykja-vik}
 \label{firstpage}
-\date{June 2009}
+\date{September 2009}
 \maketitle
 \tableofcontents
 \newpage
@@ -36,7 +41,7 @@ A Natural Language Processing Toolkit for Icelandic \\ \ \\
 
 \section{What is IceNLP?}
 \emph{IceNLP} is a Natural Language Processing (NLP) toolkit for analysing Icelandic text.
-The toolkit consists of a tokeniser, the morphological analyser \emph{IceMorphy}, the linguistic rule-based tagger \emph{IceTagger}, the trigram tagger \emph{TriTagger}, the shallow parser \emph{IceParser}, the lemmatiser \emph{Lemmald}, and the named entity recogniser \emph{IceNER}.
+The toolkit consists of a tokeniser and a sentence segmentiser, the morphological analyser \emph{IceMorphy}, the linguistic rule-based tagger \emph{IceTagger}, the trigram tagger \emph{TriTagger}, the shallow parser \emph{IceParser}, the lemmatiser \emph{Lemmald}, and the named entity recogniser \emph{IceNER}.
 The system is written as a collection of Java classes.
 
 The tokeniser is used for tokenising stream of characters into linguistic units and for performing sentence segmentation \citep{pal00}.
@@ -57,7 +62,7 @@ Furthermore, an accuracy of 92.51\% is achieved by using TriTagger as a word cla
 It labels both constituent structure and grammatical functions.
 Evaluation shows that F-measure for constituents and syntactic functions is 96.7\% and 84.3\%, respectively, when assuming perfectly tagged input \citep{lof07b}.
 
-\emph{Lemmald}\footnote{\emph{Lemmald}, as a stand-alone program, can be downloaded from \url{http://www.hi.is/~antoni/lemmald/}.} is a mixed method lemmatiser for Icelandic.
+\emph{Lemmald} is a mixed method lemmatiser for Icelandic.
 It combines the advantages of data-driven machine learning with linguistic insights to maximize performance.
 Given correct tagging, the system lemmatizes Icelandic text with an accuracy of 99.55\% \citep{ant08}.
 
@@ -244,7 +249,7 @@ The parser is implemented in Java and the lexical analyser generator tool JFlex 
 
 \section{Lemmald}
 \emph{Lemmald} is a mixed method lemmatizer for Icelandic.
-It which achieves good performance by relying on \emph{IceTagger} for tagging and the \emph{IFD} corpus for training.
+It achieves good performance by relying on \emph{IceTagger} for tagging and the \emph{IFD} corpus for training.
 \emph{Lemmald} combines the advantages of data-driven machine learning with linguistic insights to maximize performance.
 
 To achieve this, it makes use of a novel approach: Hierarchy of Linguistic Identities (HOLI), which involves organizing features and feature structures for the machine learning based on linguistic knowledge \citep{ant08}.
@@ -384,7 +389,7 @@ Java is available for free from Sun, \url{http://java.sun.com}.
 In this section, usage of the individual tools on Linux is described. For running on Windows, please use .bat files instead of .sh files.
 \subsection{The tokeniser}
 \label{sec:tok}
-The tokeniser application is used for tokenising input files and converting between different file formats.
+The tokeniser application is used for tokenising input files and converting between different file formats (the tokeniser performs both word tokenisation and sentence segmentation).
 
 To start the application, open a terminal (command prompt), go to the \textbf{bat/tokenizer} directory and type in the following command:\\ \\
 %\begin{center}
@@ -420,7 +425,7 @@ For example, the following command:
 runs the tokeniser on the input file \emph{test.txt} and writes to the output file \emph{test.out}.
 The format of the input file is one sentence per line, and the desired output format is one token per line.
 
-Furthermore, if the -i/-o parameters are not provided, the tokenizer reads from standard input and writes to standard output. In that case, inputFormat=3 and outputFormat=1. For example, the following Linux command can be used to tokenize the string ``Ég á stóran hund. Sá er a.m.k. 10 kíló.'' (and write the output to the screen): 
+Furthermore, if the -i/-o parameters are not provided, the tokeniser reads from standard input and writes to standard output. In that case, inputFormat=3 and outputFormat=1. For example, the following Linux command can be used to tokenize the string ``Ég á stóran hund. Sá er a.m.k. 10 kíló.'' (and write the output to the screen): 
 \begin{verbatim}
  echo "Ég á stóran hund. Sá er a.m.k. 10 kíló." | ./tokenize.sh
 \end{verbatim}
