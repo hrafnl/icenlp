@@ -371,7 +371,7 @@ public class Tokenizer
 		boolean abbrevFound = false;
 
 		while( Character.isLetterOrDigit( ch ) || ch == '-' || ch == '.' || ch == '_' || ch == '@'  ||
-		       (!strictTokenization && (ch == '/' || ch == '$' || ch == '^' || ch == '{' || ch == '}' || ch == '(' || ch == ')' || ch == '\'')) ) // Single quote
+		       (!strictTokenization && (ch == '/' || ch == '$' || ch == '^' || ch == '{' || ch == '}' || ch == '(' || ch == ')' || ch == '\'' || ch == '’')) ) // Single quote
 		{
             if( i >= maxLexemeSize )
 		    {
@@ -401,7 +401,7 @@ public class Tokenizer
 				// More than one consecutive periods are disallowed
                 // HL: Also break a period and a single quote away from the word, 10.02.2009
                 // HL: Also break a period and a quote away from the word, 23.06.2009
-                if( lastch == '.' && (ch == '.' || ch == '\'' || ch == '»'))
+                if( lastch == '.' && (ch == '.' || ch == '\'' || ch == '»' || ch == '"' || ch == '”'))
 				{
 					periodFound = false;
 					index--;
