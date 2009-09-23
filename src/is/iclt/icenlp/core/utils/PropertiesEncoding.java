@@ -131,6 +131,7 @@ public class PropertiesEncoding extends Properties {
                 }
             }
 	    }
+        //System.out.println(line);
 	    line = in.readLine();
     }
     }

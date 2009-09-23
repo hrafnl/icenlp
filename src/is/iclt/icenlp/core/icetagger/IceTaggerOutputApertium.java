@@ -56,7 +56,12 @@ public class IceTaggerOutputApertium extends IceTaggerOutput{
             //lemma = myLemmald.getLemma(tok.lexeme, tag);
         }
 
-        //str = "^" + tok.lexeme + "/" + lemma + mappedTag + "$ ";
+        // Special handling for the verbs "vera", "hafa" and "geta"
+        if (mappedTag.matches(".*<vblex>.*")) {
+            if (lemma.equalsIgnoreCase("vera")) {mappedTag = mappedTag.replaceFirst("vblex","vbser");}
+            else if (lemma.equalsIgnoreCase("hafa")) {mappedTag = mappedTag.replaceFirst("vblex","vbhaver");}
+            else if (lemma.equalsIgnoreCase("geta")) {mappedTag = mappedTag.replaceFirst("vblex","vaux");}
+        }
         // Apertium þarf ekki orðið sjálft, eingöngu lemmuna
         str = "^" + lemma + mappedTag + "$ ";
         return str;
