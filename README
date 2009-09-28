@@ -2,5 +2,19 @@ IceNLP is an open source Natural Language Processing (NLP) toolkit for analysing
 
 http://sourceforge.net/projects/icenlp
 
+-----------------------------------------
+Regarding SVN:
+
+The files 
+	src/is/iclt/icenlp/core/icetagger/IceLocalRules.java 
+	src/is/iclt/icenlp/core/iceparser/*.java (except StringSearch.java) 
+	src/is/iclt/icenlp/core/iceNER/NameScanner.java 
+are not version controlled because they are automatically generated from .flex source files.
+
+To generate these .java files use the shells:         
+	/flex/icetagger/compileRules.sh 
+	/flex/iceparser/flexAll.sh
+	/flex/iceNER/flexit.sh
+-----------------------------------------
 hrafn@ru.is
 anton.karl.ingason@gmail.com

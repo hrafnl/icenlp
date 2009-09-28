@@ -41,6 +41,7 @@ kr.=ABBREV
 l.=ABBREV
 mar.=ABBREV
 M.=ABBREV
+Mr.=ABBREV
 m.=ABBREV
 m.a.=ABBREV
 m.fl.=ABBREV
