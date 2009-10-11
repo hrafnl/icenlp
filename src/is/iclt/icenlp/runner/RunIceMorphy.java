@@ -256,8 +256,10 @@ public class RunIceMorphy {
         }
 
 
-        if (error)
+        if (error) {
+            System.err.println("Exiting!");
             System.exit(0);
+        }
     }
 
     private void loadParameters (String filename)

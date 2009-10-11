@@ -209,8 +209,10 @@ public class RunIceTagger
 			System.out.println( "Parameter: " + "FULL_OUTPUT" + " is missing" );
 			error = true;
 		}
-		if( error )
+		if( error ) {
+            System.err.println("Exiting!");
 			System.exit( 0 );
+        }
 	}
 
 	private void getFormat()
@@ -238,7 +240,7 @@ public class RunIceTagger
 		Properties parameters = new Properties();
 		BufferedInputStream in = new BufferedInputStream(
 				new FileInputStream( filename ) );
-		System.out.println( "Loading parameters..." );
+		//System.out.println( "Loading parameters..." );
 		parameters.load( in );
 		inputFile = parameters.getProperty("INPUT_FILE");
 		outputFile = parameters.getProperty( "OUTPUT_FILE" );

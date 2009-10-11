@@ -54,7 +54,9 @@ public class RunTriTagger {
     private static int sentenceStart;   // Sentences start with upper case or lower case letters?
     private static boolean useIceMorphy=false;
     private static boolean strictTokenization=true;
-    private static int lineFormat= Segmentizer.sentencePerLine;    // Default is one sentence per line
+    private boolean changedDefaultInputFormat=false;
+    private boolean changedDefaultOutputFormat=false;
+    private static int lineFormat= Segmentizer.tokenPerLine;     // Default is one token per line
     private static int outputFormat=Segmentizer.tokenPerLine;    // Default is one word/tag per line
     private static int ngram=3;                                  // Default is trigrams
     private static int numTokens=0, numUnknowns=0;
@@ -99,6 +101,8 @@ public class RunTriTagger {
         {
             if (!lineFormatStr.matches("1|2|3"))
                 { System.out.println("Parameter: " + "LINE_FORMAT" + " needs values 1|2|3"); error = true; }
+            else
+                changedDefaultInputFormat = true;
         }
         if (outputFormatStr == null)
         { System.out.println("Parameter: " + "OUTPUT_FORMAT" + " is missing"); error = true; }
@@ -106,6 +110,8 @@ public class RunTriTagger {
         {
             if (!outputFormatStr.matches("1|2"))
                 { System.out.println("Parameter: " + "OUTPUT_FORMAT" + " needs values 1|2"); error = true; }
+            else
+                 changedDefaultOutputFormat = true;
         }
         if (iceMorphyStr.equals("yes"))
         {
@@ -122,8 +128,10 @@ public class RunTriTagger {
             if (prefixesDictPath == null)
             { System.out.println("Parameter: " + "PREFIXES_DICT" + " is missing"); error = true; }
         }
-        if (error)
+        if (error)   {
+            System.err.println("Exiting!");
             System.exit(0);
+        }
     }
 
     private void loadParameters (String filename)
@@ -218,10 +226,14 @@ public class RunTriTagger {
             model = args[i+1];
           else if (args[i].equals("-n"))
             ngramStr = args[i+1];
-          else if (args[i].equals("-lf"))
+          else if (args[i].equals("-lf")) {
             lineFormatStr = args[i+1];
-          else if (args[i].equals("-of"))
+            changedDefaultInputFormat = true;
+          }
+          else if (args[i].equals("-of")) {
             outputFormatStr = args[i+1];
+            changedDefaultOutputFormat = true;
+          }
           else if (args[i].equals("-ss"))
             sentenceStartStr = args[i+1];
           else if (args[i].equals("-p"))
@@ -252,7 +264,7 @@ public class RunTriTagger {
 
 private void setDefaults ()
 {
-        lineFormatStr = "2";
+        lineFormatStr = "1";
         outputFormatStr = "1";
         sentenceStartStr = "upper";
         ngramStr = "3";
@@ -479,8 +491,10 @@ private void processParam(String args[]) throws IOException
                 // If neither reading input from a file nor a filelist then read from standard input
                 if (inputFile == null) {
                     standardInputOutput = true;
-                    lineFormat = Segmentizer.sentencePerLine;   // Assume one sentence per line
-                    outputFormat = Segmentizer.sentencePerLine;
+                    if (!changedDefaultInputFormat)
+                        lineFormat = Segmentizer.sentencePerLine;   // Assume one sentence per line
+                    if (!changedDefaultOutputFormat)
+                        outputFormat = Segmentizer.sentencePerLine;
                 }
         }
 }
