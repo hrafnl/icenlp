@@ -24,12 +24,14 @@ package is.iclt.icenlp.facade;
 import is.iclt.icenlp.core.icemorphy.IceMorphy;
 import is.iclt.icenlp.core.icetagger.IceTagger;
 import is.iclt.icenlp.core.icetagger.IceTaggerLexicons;
+import is.iclt.icenlp.core.lemmald.Lemmald;
 import is.iclt.icenlp.core.tokenizer.*;
 import is.iclt.icenlp.core.tritagger.TriTaggerLexicons;
 import is.iclt.icenlp.core.tritagger.TriTagger;
 import is.iclt.icenlp.core.utils.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Provides a simplified interface to IceTagger.
@@ -50,6 +52,7 @@ public class IceTaggerFacade
     private Tokenizer tokenizer;
     private IceTagger tagger;
     private Segmentizer segmentizer;
+    private Lexicon mapper;
 
     public IceTaggerFacade(IceTaggerLexicons iceLexicons, Lexicon tokenizerLexicon) throws IOException
     {
@@ -72,6 +75,16 @@ public class IceTaggerFacade
         initIceTagger(iceLexicons);
 
     }
+
+    public IceTaggerFacade(IceTaggerLexicons iceLexicons, Lexicon tokenizerLexicon, Lexicon mapperLexicon, boolean preLoadlemmald) throws IOException
+    {
+        this(iceLexicons,tokenizerLexicon);
+        this.mapper = mapperLexicon;
+        if(preLoadlemmald)
+            Lemmald.getInstance();
+    }
+
+
 
     private void initIceTagger(IceTaggerLexicons iceLexicons) {
 
@@ -169,5 +182,42 @@ public class IceTaggerFacade
         return sents;
     }
 
-
+    /**
+     * Returns a IceNLP tagged string that has been mapped
+     * to an equivalent Apertium form. 
+     *
+     * @param String object that contains the string that will
+     * be tagged.
+     * @return String object that contains the string apertium
+     * tagged.
+     */
+    public String tagApertium(String text) throws IOException
+    {       
+        Lemmald myLemmald = Lemmald.getInstance();
+        Sentences sentences = this.tag(text);
+        String out = "";
+        
+        for(Sentence s : sentences.getSentences())
+        {
+            ArrayList<Token> tokens = s.getTokens();
+            for(Token o : tokens)
+            {
+                IceTokenTags tok = (IceTokenTags)o;
+                String lemma = myLemmald.lemmatize(tok.lexeme,tok.getFirstTagStr()).getLemma();
+                String mappedTag = mapper.lookup(tok.getFirstTagStr(), false);
+                
+                if(mappedTag == null)
+                    mappedTag = "<NOT MAPPED>" + ":" + tok.getFirstTagStr();
+                
+                // Special cases of mapping.
+                if (mappedTag.matches(".*<vblex>.*")) {
+                    if (lemma.equalsIgnoreCase("vera")) {mappedTag = mappedTag.replaceFirst("vblex","vbser");}
+                    else if (lemma.equalsIgnoreCase("hafa")) {mappedTag = mappedTag.replaceFirst("vblex","vbhaver");}
+                    else if (lemma.equalsIgnoreCase("geta")) {mappedTag = mappedTag.replaceFirst("vblex","vaux");}
+                }
+                out = out + "^"+lemma + mappedTag + "$ "; 
+            }
+        }
+        return out;
+    } 
 }
