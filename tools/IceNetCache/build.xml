@@ -1,18 +1,19 @@
 <project name="IceNetCache" basedir="." default="clean-build">
 	
-	 <path id="files-classpath">  
-	     <fileset dir="lib" >  
-	         <include name="*.jar"/>  
-	     </fileset>  
-	 </path> 
-	
 	<property name="src.dir" value="src"/>
 	<property name="dist.dir" value="dist"/>
     <property name="build.dir" value="build"/>
     <property name="classes.dir" value="${build.dir}/classes"/>
-    <property name="jar.dir" value="${build.dir}/jar"/>
+    <property name="jar.dir" value="dist"/>
     <property name="main-class" value="is.ru.icecache.runner.Runner"/>
-	
+    <property name="IceNLPCoreFolder" value="../../dist/"/>
+
+	 <path id="files-classpath">  
+        <fileset dir="${IceNLPCoreFolder}" >  
+	         <include name="*.jar"/>  
+	     </fileset>  
+	 </path> 
+
     <target name="clean">
         <delete dir="${build.dir}"/>
     </target>
@@ -31,14 +32,15 @@
         <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
             <manifest>
                 <attribute name="Main-Class" value="${main-class}"/>
-            	<attribute name="Class-Path" value="IceNLPCore.jar" />
+                <attribute name="Class-Path" value="${IceNLPCoreFolder}/IceNLPCore.jar" />
             </manifest>
         </jar>
 		<copy todir="${jar.dir}">
-			<fileset dir="lib" includes="*.jar"/>
+                <fileset dir="${IceNLPCoreFolder}" includes="*.jar"/>
 		</copy>
-
     </target>
 	
-	<target name="clean-build" depends="clean,jar"/>
+    <target name="clean-build" depends="clean,jar">
+        <delete dir="${build.dir}"/>
+    </target>
 </project>
