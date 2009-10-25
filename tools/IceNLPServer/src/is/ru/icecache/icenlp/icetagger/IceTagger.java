@@ -21,7 +21,7 @@ public class IceTagger implements IIceTagger
 			// Let's check if any of the configuration are not set.
 			// if so, let's read it from the context.
 			// Let's check for the IceTaggerLexicons.
-			IceTaggerLexicons iceLexicons = null; //;new IceTaggerLexicons(Configuration.iceLexiconsDir);
+			IceTaggerLexicons iceLexicons = null;
 			if(Configuration.iceLexiconsDir == null)
 			{
 		        IceTaggerResources iceResources = new IceTaggerResources();
@@ -60,16 +60,27 @@ public class IceTagger implements IIceTagger
 				System.out.println("[i] Using Tokenizer lexicon from " + Configuration.iceLexiconsDir);
 			}
 			
-			if(Configuration.mapperLexicon == null)
-				throw new Exception("Could not find mapper lexicon.");
-				
-			Lexicon mapper = new Lexicon(Configuration.mapperLexicon);
-			System.out.println("[i] Using Lexicon mapper from " + Configuration.mapperLexicon);
+			// If the user wants to use the mapper lexicon we must build one.
+			if(Configuration.mapperLexicon != null)
+			{
+				Lexicon mapper = new Lexicon(Configuration.mapperLexicon);
+				System.out.println("The user want's to use mapperlexicon");
+			}
 			
-			facade = new IceTaggerFacade(iceLexicons, tokLexicon,mapper, Configuration.appertiumOutput);
+			if(Configuration.lemmatize)
+			{
+				System.out.println("The user want's to lemmatize the output.");
+			}
+			
+			//Lexicon mapper = new Lexicon(Configuration.mapperLexicon);
+			//System.out.println("[i] Using Lexicon mapper from " + Configuration.mapperLexicon);
+			
+			//facade = new IceTaggerFacade(iceLexicons, tokLexicon,mapper, Configuration.appertiumOutput);
+			
+			// We will now create normal instance of IceNLP.
+			facade = new IceTaggerFacade(iceLexicons, tokLexicon);
 			
 			// Let's check for the TriTagger
-			
 			TriTaggerLexicons triLexicons = null;//new TriTaggerLexicons(Configuration.tritaggerLexicon, true);
 	        if(Configuration.tritaggerLexicon == null)
 	        {
@@ -106,21 +117,6 @@ public class IceTagger implements IIceTagger
 		try 
 		{
 			return facade.tag(text).toString();
-		} 
-		catch (IOException e) 
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return "error";
-		}
-	}
-	
-	@Override
-	public String tagApertium(String text) 
-	{
-		try 
-		{
-			return facade.tagApertium(text);
 		} 
 		catch (IOException e) 
 		{

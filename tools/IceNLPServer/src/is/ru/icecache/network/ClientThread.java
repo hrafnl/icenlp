@@ -88,7 +88,7 @@ public class ClientThread implements Runnable
 					String taggedString = null;
 					try
 					{
-						taggedString = IceNLPSingletonService.getInstance().processText(strFromClient);
+						taggedString = IceNLPSingletonService.getInstance().tagText(strFromClient);
 					}
 					catch (Exception e) 
 					{

@@ -10,10 +10,7 @@ public class Configuration
 	// Default host-name and port are set.
 	public static String host = "localhost";
 	public static String port = "1234";
-	
-	// Default we don't use appertium output.
-	public static boolean appertiumOutput = true;
-	
+
 	// default we disable Tritagger by default.
 	public static boolean tritagger = false;
 	
@@ -26,4 +23,6 @@ public class Configuration
 	// The mapperLexicon must be read from a command line
 	// TODO: Add this lexicon into the IceNLP resource.
 	public static String mapperLexicon = null;
+	
+	public static boolean lemmatize = false;
 }

@@ -46,17 +46,8 @@ public class IceNLPSingletonService
         return instance_;
 	}
 	
-	/***
-	 * Process text allows thread to tag text
-	 * depending on the configuration whether
-	 * the output will be on IFD or Apertim form.
-	 * @param text to be tagged.
-	 * @return Tagged string.
-	 */
-	public String processText(String text)
+	public String tagText(String text)
 	{
-		if(Configuration.appertiumOutput)
-			return icetagger.tagApertium(text);
 		return icetagger.tag(text).replace("\n", "");
 	}
 }

@@ -12,12 +12,15 @@ public class Runner
 		System.out.println(">> IceCache v1 - program parameters");
 		System.out.println("-port=[port-number]");
 		System.out.println("-host=[hostname]");
-		System.out.println("-apertiumoutput=true|false");
 		System.out.println("-tritagger=true|false");
 		System.out.println("-icelexicondir=dir");
 		System.out.println("-tokenizerlexicon=dir");
 		System.out.println("-mapperlexicon=dir");
 		System.out.println("-tritaggerlexicon=dir");
+		
+		// These are new features.
+		System.out.println("-lemmatize=true|false");
+		System.out.println("-mapperlexicon=dir");
 	}
 	
 	public static void main(String[] args) 
@@ -41,7 +44,7 @@ public class Runner
 		{
 			for(String s:args)
 			{
-				if(s.matches("(?i)-(port|host|apertiumoutput|tritagger|icelexicondir|tokenizerlexicon|mapperlexicon|tritaggerlexicon)=.+"))
+				if(s.matches("(?i)-(port|host|tritagger|icelexicondir|tokenizerlexicon|mapperlexicon|tritaggerlexicon|lemmatize)=.+"))
 				{
 					// Lets remove the - and move everything to lower case.
 					s = s.replace("-", "");
@@ -54,18 +57,6 @@ public class Runner
 					else if(kv[0].equals("host"))
 						Configuration.host = kv[1];
 					
-					else if(kv[0].equals("apertiumoutput"))
-					{
-						String apertArg = kv[1].toLowerCase();
-
-						if(apertArg.equals("true") || apertArg.equals("false"))
-							Configuration.appertiumOutput = Boolean.parseBoolean(apertArg);
-						else
-						{
-							System.out.println("[x] apertiumOutput can only be true or false");
-							return;				
-						}
-					}
 					else if(kv[0].equals("tritagger"))
 					{
 						String tritaggerArgs = kv[1].toLowerCase();
@@ -97,6 +88,19 @@ public class Runner
 					else if(kv[0].equals("tritaggerlexicon"))
 					{
 						Configuration.tritaggerLexicon = kv[1] + '/';
+					}
+					
+					else if(kv[0].equals("lemmatize"))
+					{
+						String lemmatizeArg = kv[1].toLowerCase();
+
+						if(lemmatizeArg.equals("true") || lemmatizeArg.equals("false"))
+							Configuration.lemmatize = Boolean.parseBoolean(lemmatizeArg);
+						else
+						{
+							System.out.println("[x] lemmatize argument can only be true or false");
+							return;				
+						}						
 					}
 
 					else
