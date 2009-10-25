@@ -39,7 +39,7 @@ public class Runner
 		Thread thread;
 		
 		// Let's announce the name of the server.
-		System.out.println(">> IceCache v1.");
+		System.out.println(">> IceNLPServer 1.0");
 		
 		if(args.length != 0)
 		{

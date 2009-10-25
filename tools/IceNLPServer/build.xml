@@ -1,4 +1,4 @@
-<project name="IceNetCache" basedir="." default="clean-build">
+<project name="IceNLPServer" basedir="." default="clean-build">
 	
 	<property name="src.dir" value="src"/>
 	<property name="dist.dir" value="dist"/>
