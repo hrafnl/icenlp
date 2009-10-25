@@ -1,5 +1,5 @@
-<project name="cacheClient" basedir="." default="clean-build">	
-	<property name="src.dir" value="src"/>
+<project name="IceNLPClient" basedir="." default="clean-build">	
+    <property name="src.dir" value="src"/>
     <property name="build.dir" value="build"/>
     <property name="classes.dir" value="${build.dir}/classes"/>
     <property name="dist.dir" value="dist"/>
