@@ -1,6 +1,5 @@
 package is.ru.icecache.icenlp;
 
-import is.ru.icecache.common.Configuration;
 import is.ru.icecache.icenlp.icetagger.IIceTagger;
 import is.ru.icecache.icenlp.icetagger.IceTagger;
 import is.ru.icecache.icenlp.icetagger.IceTaggerConfigrationException;

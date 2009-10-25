@@ -25,4 +25,5 @@ public class Configuration
 	public static String mapperLexicon = null;
 	
 	public static boolean lemmatize = false;
+	public static String taggingOutputFormat = null;
 }

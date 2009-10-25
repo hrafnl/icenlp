@@ -21,6 +21,7 @@ public class Runner
 		// These are new features.
 		System.out.println("-lemmatize=true|false");
 		System.out.println("-mapperlexicon=dir");
+		System.out.println("-tagginoutputformat=format");
 	}
 	
 	public static void main(String[] args) 
@@ -44,7 +45,7 @@ public class Runner
 		{
 			for(String s:args)
 			{
-				if(s.matches("(?i)-(port|host|tritagger|icelexicondir|tokenizerlexicon|mapperlexicon|tritaggerlexicon|lemmatize)=.+"))
+				if(s.matches("(?i)-(port|host|tritagger|icelexicondir|tokenizerlexicon|mapperlexicon|tritaggerlexicon|lemmatize|tagginoutputformat)=.+"))
 				{
 					// Lets remove the - and move everything to lower case.
 					s = s.replace("-", "");
@@ -82,12 +83,17 @@ public class Runner
 					
 					else if(kv[0].equals("mapperlexicon"))
 					{
-						Configuration.mapperLexicon = kv[1] + '/';
+						Configuration.mapperLexicon = kv[1];
 					}
 					
 					else if(kv[0].equals("tritaggerlexicon"))
 					{
 						Configuration.tritaggerLexicon = kv[1] + '/';
+					}
+					
+					else if(kv[0].equals("tagginoutputformat"))
+					{
+						Configuration.taggingOutputFormat = kv[1];
 					}
 					
 					else if(kv[0].equals("lemmatize"))
