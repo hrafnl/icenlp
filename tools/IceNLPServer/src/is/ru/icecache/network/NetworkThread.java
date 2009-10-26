@@ -3,6 +3,7 @@ package is.ru.icecache.network;
 import is.ru.icecache.common.Configuration;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -26,7 +27,8 @@ public class NetworkThread implements Runnable
 		
 		try 
 		{
-			this.serverSocket = new ServerSocket(Integer.parseInt(Configuration.port));
+			InetSocketAddress address = new InetSocketAddress(Configuration.host, 1234);
+			this.serverSocket = new ServerSocket(Integer.parseInt(Configuration.port),12,address.getAddress());
 		}
 		
 		catch (Exception e)
