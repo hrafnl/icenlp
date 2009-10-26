@@ -6,8 +6,8 @@ public class Word
 	private String tag;
 	private String lemma;
 	
-	public Word(String lexeme, String tag) {
-		super();
+	public Word(String lexeme, String tag) 
+	{
 		this.lexeme = lexeme;
 		this.tag = tag;
 	}

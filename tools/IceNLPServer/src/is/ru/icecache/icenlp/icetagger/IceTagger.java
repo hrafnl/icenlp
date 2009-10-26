@@ -132,7 +132,10 @@ public class IceTagger implements IIceTagger
 			for(Sentence s : sentences.getSentences())
 			{
 				for(Token token : s.getTokens())
-					wordList.add(new Word(token.lexeme, ((IceTokenTags)token).getFirstTagStr()));
+				{
+					IceTokenTags t = ((IceTokenTags)token);
+					wordList.add(new Word(t.lexeme, t.getFirstTagStr()));
+				}
 			}
 			
 			if(Configuration.lemmatize)
@@ -192,12 +195,12 @@ public class IceTagger implements IIceTagger
 				if(Configuration.lemmatize)
 				{
 					for(Word word: wordList)
-						output = output + word.getLexeme() + " " + word.getTag()+ " ";
+						output = output + word.getLemma() + " " + word.getTag()+ " ";
 				}
 				else
 				{
 					for(Word word: wordList)
-						output = output + word.getLemma() + " " + word.getTag()+ " ";
+						output = output + word.getLexeme() + " " + word.getTag()+ " ";
 				}
 						
 			}
