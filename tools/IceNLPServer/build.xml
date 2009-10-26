@@ -35,13 +35,11 @@
                 <attribute name="Class-Path" value="IceNLPCore.jar ../../dist/IceNLPCore.jar" />
             </manifest>
         </jar>
-        <copy file="${jar.dir}/${ant.project.name}.jar" todir="../../dist/IceNLP/tools/IceNLPServer"/>
-        <echo file="../../dist/IceNLP/tools/IceNLPServer/run.sh" append="false">#\!/bin/sh
+        <echo file="${jar.dir}/run.sh" append="false">#\!/bin/sh
         java -jar ${ant.project.name}.jar $$*
         </echo>
 </target>
     <target name="clean-build" depends="clean,jar">
         <delete dir="${build.dir}"/>
-        <delete dir="${dist.dir}"/>
     </target>
 </project>

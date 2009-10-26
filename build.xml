@@ -21,7 +21,7 @@
 
     <property name="jar_version" value="1.2" />
 	<property name="jar_name" value="IceNLPCore" />
-	
+
 	<path id="classpath">
 		<pathelement location="${segment}" />
 		<pathelement location="${commons_io}" />
@@ -30,7 +30,7 @@
 		<pathelement location="${xerces}" />
 	</path>			
 
-	<target name="init" depends="clean">
+	<target name="init" depends="clean" >
 		<tstamp /> <!-- Create the timestamp for the build -->
 		<!-- Create all the directories for the build -->
 		<mkdir dir="${build}" />
@@ -76,8 +76,29 @@
 	        </manifest>
 		</jar>
 	</target>
+
+
+    <available file="tools/IceNLPServer/dist" type="dir"
+               property="IceNLPServer.present"/>
+    <available file="tools/IceNLPClient/dist" type="dir"
+               property="IceNLPClient.present"/>
+
+    <target name="server-jar" if="IceNLPServer.present">
+        <echo message="Found IceNLPServer dir"/>
+        <copy todir="${dist}/${package}/tools">
+			<fileset dir="tools/IceNLPServer/dist" />
+		</copy>
+    </target>
+
+    <target name="client-jar" if="IceNLPClient.present">
+        <echo message="Found IceNLPClient dir"/>
+        <copy todir="${dist}/${package}/tools">
+			<fileset dir="tools/IceNLPClient/dist" />
+		</copy>
+    </target>
+
 	
-	<target name="package" depends="release-jar">
+	<target name="package" depends="release-jar, server-jar, client-jar" >
 		
 		<copy file="${dist}/${jar_name}.jar" todir="${dist}/${package}/dist" />
 		<copy todir="${dist}/${package}/bat">
@@ -94,12 +115,16 @@
 		</copy>		
 		<copy todir="${dist}/${package}/ngrams">
 			<fileset dir="ngrams" />
-		</copy>		
+		</copy>
+
+
 		<copy file="doc/IceNLP.pdf" todir="${dist}/${package}/doc" />
 		<copy file="doc/Tagset.pdf" todir="${dist}/${package}/doc" />
 		
-		<zip compress="yes" destfile="${dist}/IceNLP-${jar_version}.zip">			
-			<zipfileset dir="dist" includes="IceNLPCore.jar" prefix="${package}/dist" />			
+		<zip compress="yes" destfile="${dist}/IceNLP-${jar_version}.zip">
+			<zipfileset dir="dist" includes="IceNLPCore.jar" prefix="${package}/dist" />
+            <zipfileset dir="tools/IceNLPServer/dist" includes="**/*" prefix="${package}/tools/IceNLPServer" erroronmissingdir="false"/>
+            <zipfileset dir="tools/IceNLPClient/dist" includes="**/*" prefix="${package}/tools/IceNLPClient" erroronmissingdir="false"/>
  			<zipfileset dir="bat" includes="**/*.sh" filemode="755" prefix="${package}/bat" />			
 			<zipfileset dir="bat" includes="**/*" excludes="**/*.sh" prefix="${package}/bat" />
 			
@@ -138,7 +163,7 @@
 			<doctitle>
 				<![CDATA[<h1>${javadoctitle}</h1>]]></doctitle>
 		<bottom>
-			<![CDATA[<i>Copyright &#169; 2009 <a href="http://www2.ru.is/faculty/hrafn/index_isl.htm" target="_top">Hrafn Loftsson</a>, <a href="http://www3.hi.is/~antoni/" target="_top">Anton Karl Ingason</a>
+			<![CDATA[<i>Copyright &#169; 2009 <a href="http://www.ru.is/faculty/hrafn/index_isl.htm" target="_top">Hrafn Loftsson</a>, <a href="http://www3.hi.is/~antoni/" target="_top">Anton Karl Ingason</a>
 			</i>]]></bottom>
 		<link offline="true" href="http://java.sun.com/products/jdk/1.5/docs/api/" packagelistLoc="/tmp" />
 	</javadoc>

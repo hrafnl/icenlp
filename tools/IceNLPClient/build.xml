@@ -22,12 +22,10 @@
                 <attribute name="Main-Class" value="${main-class}"/>
             </manifest>
         </jar>
-        <copy file="${dist.dir}/${ant.project.name}.jar" todir="../../dist/IceNLP/tools/IceNLPClient"/>    
     </target>
 	
 	<target name="clean-build" depends="clean,jar">
             
         <delete dir="${build.dir}"/>
-        <delete dir="${dist.dir}"/>
     </target>
 </project>
