@@ -32,15 +32,13 @@
         <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
             <manifest>
                 <attribute name="Main-Class" value="${main-class}"/>
-                <attribute name="Class-Path" value="IceNLPCore.jar" />
+                <attribute name="Class-Path" value="IceNLPCore.jar ../../IceNLPCore.jar" />
             </manifest>
         </jar>
-		<copy todir="${jar.dir}">
-                <fileset dir="${IceNLPCoreFolder}" includes="*.jar"/>
-		</copy>
+        <copy file="${jar.dir}/${ant.project.name}.jar" todir="../../dist/tools/IceNLPServer"/>
     </target>
-	
     <target name="clean-build" depends="clean,jar">
         <delete dir="${build.dir}"/>
+        <delete dir="${dist.dir}"/>
     </target>
 </project>
