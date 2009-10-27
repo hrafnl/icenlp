@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-public class MapperLexicon 
+public class MappingLexicon 
 {
 	// Hash map for direct tags mappings.
 	private HashMap<String, String> tagMaps;
@@ -19,7 +19,7 @@ public class MapperLexicon
 	// Hash map for exceptions.
 	private HashMap<String,  List<Pair<String, String>>> expcetionMaps;
 	
-	public MapperLexicon(String mapperFile) throws IOException 
+	public MappingLexicon(String mapperFile) throws IOException 
 	{
 		
 		// Let's initialize the maps.

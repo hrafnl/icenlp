@@ -18,13 +18,13 @@ import is.iclt.icenlp.facade.IceTaggerFacade;
 import is.ru.icenlpserver.common.Configuration;
 import is.ru.icenlpserver.common.Pair;
 import is.ru.icenlpserver.common.Word;
-import is.ru.icenlpserver.icenlp.MapperLexicon;
+import is.ru.icenlpserver.icenlp.MappingLexicon;
 
 public class IceTagger implements IIceTagger 
 {
 	private IceTaggerFacade facade;
 	private Lemmald lemmald = null;
-	private MapperLexicon mappingLexicon = null;
+	private MappingLexicon mappingLexicon = null;
 	private String taggingOutputForamt = null;
 	private boolean lemmatize = false;
 	public IceTagger() throws IceTaggerConfigrationException
@@ -92,7 +92,7 @@ public class IceTagger implements IIceTagger
 			{
 				String mappingLexicon = Configuration.getInstance().getValue("mappinglexicon");
 				System.out.println("[i] Reading mapping lexicon from: " + mappingLexicon + '.');
-				this.mappingLexicon = new MapperLexicon(mappingLexicon);
+				this.mappingLexicon = new MappingLexicon(mappingLexicon);
 			}
 			
 			if(this.lemmatize)
