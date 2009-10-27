@@ -24,7 +24,7 @@ public class IceTagger implements IIceTagger
 {
 	private IceTaggerFacade facade;
 	private Lemmald lemmald = null;
-	private MapperLexicon mapperLexicon = null;
+	private MapperLexicon mappingLexicon = null;
 	private String taggingOutputForamt = null;
 	private boolean lemmatize = false;
 	public IceTagger() throws IceTaggerConfigrationException
@@ -91,7 +91,7 @@ public class IceTagger implements IIceTagger
 			if(Configuration.getInstance().containsKey("mappinglexicon"))
 			{
 				String mappingLexicon = Configuration.getInstance().getValue("mappinglexicon");
-				this.mapperLexicon = new MapperLexicon(mappingLexicon);
+				this.mappingLexicon = new MapperLexicon(mappingLexicon);
 				System.out.println("[i] using mapping lexicon: " + mappingLexicon);
 			}
 			
@@ -161,14 +161,12 @@ public class IceTagger implements IIceTagger
 					word.setLemma(this.lemmald.lemmatize(word.getLexeme(), word.getTag()).getLemma());
 			}
 			
-			
 			// If there is any mapper then we will use it.
-			if(this.mapperLexicon != null)
+			if(this.mappingLexicon != null)
 			{
 				for(Word word : wordList)
 				{
-					
-					String mappedTag = mapperLexicon.lookupTagmap(word.getTag(), false);
+					String mappedTag = mappingLexicon.lookupTagmap(word.getTag(), false);
 					if(mappedTag != null)
 						word.setTag(mappedTag);
 					else
@@ -178,19 +176,15 @@ public class IceTagger implements IIceTagger
 			
 			// Let's check if there are any mapping exceptions that
 			// we need to change.
-			if(this.mapperLexicon != null)
+			if(this.mappingLexicon != null)
 			{
 				for(Word word : wordList)
 				{
-					String lookupWord;
-					if(this.lemmatize)
-						lookupWord = word.getLemma();
-					else
-						lookupWord = word.getLexeme();
-					
-					if(this.mapperLexicon.hasExceptionRuleForLemma(lookupWord))
+					String lookupWord = word.getLemma();
+	
+					if(this.mappingLexicon.hasExceptionRuleForLemma(lookupWord))
 					{
-						List<Pair<String, String>> rules = this.mapperLexicon.getExceptionRuleForLexeme(lookupWord);
+						List<Pair<String, String>> rules = this.mappingLexicon.getExceptionRuleForLexeme(lookupWord);
 						for(Pair<String, String> pair : rules)
 						{
 							if(word.getTag().matches(".*" +pair.one +".*"))
@@ -225,17 +219,16 @@ public class IceTagger implements IIceTagger
 			// if we have any tagging output set.
 			else
 			{
-
 					for(Word word: wordList)
 					{
 						String part = this.taggingOutputForamt.replace("[LEXEME]", word.getLexeme());
 						part = part.replace("[TAG]", word.getTag());
-						part = part.replace("[LEMMA]", word.getLemma());
+						if(this.lemmatize)
+							part = part.replace("[LEMMA]", word.getLemma());
 						output = output + part;
 					}	
 			}
 			return output;
-
 		} 
 		catch (IOException e) 
 		{

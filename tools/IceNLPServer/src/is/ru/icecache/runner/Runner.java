@@ -14,27 +14,7 @@ import is.ru.icecache.icenlp.icetagger.IceTaggerConfigrationException;
 import is.ru.icecache.network.NetworkThread;
 
 public class Runner 
-{
-	/*
-	public static void printHelp()
-	{
-		System.out.println(">> IceCache v1 - program parameters");
-		System.out.println("-port=[port-number]");
-		System.out.println("-host=[hostname]");
-		System.out.println("-tritagger=true|false");
-		System.out.println("-icelexicondir=dir");
-		System.out.println("-tokenizerlexicon=dir");
-		System.out.println("-mapperlexicon=dir");
-		System.out.println("-tritaggerlexicon=dir");
-		
-		// These are new features.
-		System.out.println("-lemmatize=true|false");
-		System.out.println("-mapperlexicon=dir");
-		System.out.println("-tagginoutputformat=format");
-	}
-	*/
-	
-	
+{	
 	public static void loadConfig(String location)
 	{
 		
