@@ -15,7 +15,7 @@ import is.ru.icecache.network.NetworkThread;
 
 public class Runner 
 {	
-	public static void loadConfig(String location)
+	public static boolean loadConfig(String location)
 	{
 		
 		FileInputStream fstream = null;
@@ -33,7 +33,7 @@ public class Runner
 		catch (Exception e)
 		{
 			System.out.println("[x] Error while opening configuration file: " + e.getMessage());
-			return;
+			return false;
 		}
 		
 		// Let's go through the configuration file.
@@ -59,7 +59,7 @@ public class Runner
 					    else
 					    {
 					    	System.out.println("[x] Error in configuration file in line " + lineNumber);
-					    	return;
+					    	return false;
 					    }
 					    
 						String key = strLine.substring(0,strLine.indexOf("=")).replaceAll("\\s", "");
@@ -69,7 +69,7 @@ public class Runner
 					else
 					{
 						System.out.println("[x] Error in configuration file in line " + lineNumber);
-						return;
+						return false;
 					}
 				}
 				
@@ -79,17 +79,22 @@ public class Runner
 		catch (IOException e) 
 		{
 			System.out.println("[x] Error while reading configuration file: " + e.getMessage());
-			return ;
+			return false;
 		}
+		return true;
 	}
 	
 	public static void main(String[] args) 
 	{		
+		// Let's announce the name of the server.
+		System.out.println(">> IceNLPServer 1.0");
+		
 		// We will read the default config file.
 		if(args.length == 0)
 		{
 			System.out.println("[i] using default config file: IceNLPServer.conf");
-			loadConfig("IceNLPServer.conf");
+			if(!loadConfig("IceNLPServer.conf"))
+				return;
 		}
 		
 		// We will read the config file that is passed in through args.
@@ -103,7 +108,8 @@ public class Runner
 			else if(args[0].matches("(?i)--(config|c)=.+"))
 			{
 				System.out.println("[i] using config file: IceNLPServer.conf");
-				loadConfig(args[0]);
+				if(!loadConfig(args[0]))
+					return;
 			}
 			else
 			{
@@ -119,9 +125,6 @@ public class Runner
 		
 		final NetworkThread nt;
 		Thread thread;
-		
-		// Let's announce the name of the server.
-		System.out.println(">> IceNLPServer 1.0");
 				
 		// Lets create the first instance of the singleton service.
 		try
@@ -134,7 +137,6 @@ public class Runner
 			return;
 		}
 	
-		System.out.println("[i] ready.");
 		
 		// Let's start the network thread.
 		nt = new NetworkThread();

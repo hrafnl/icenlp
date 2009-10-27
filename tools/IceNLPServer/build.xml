@@ -38,6 +38,9 @@
         <echo file="${jar.dir}/run.sh" append="false">#\!/bin/sh
         java -jar ${ant.project.name}.jar $$*
         </echo>
+        <copy file="conf/IceNLPServer.conf" todir="${jar.dir}"/>
+        <chmod perm="+x" dir="${jar.dir}" includes="**/*.sh" /> 
+
 </target>
     <target name="clean-build" depends="clean,jar">
         <delete dir="${build.dir}"/>

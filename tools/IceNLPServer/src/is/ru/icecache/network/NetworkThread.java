@@ -54,6 +54,8 @@ public class NetworkThread implements Runnable
 	@Override
 	public void run() 
 	{
+		System.out.println("[i] ready.");
+		
 		while(this.alive)
 		{
 			try 

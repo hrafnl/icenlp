@@ -38,16 +38,14 @@ public class IceTagger implements IIceTagger
 				this.taggingOutputForamt = Configuration.getInstance().getValue("taggingoutputformat");
 				
 				if(this.taggingOutputForamt.contains("[LEMMA]"))
-				{
 					this.lemmatize = true;
-				}
 				
-				System.out.println("[i] tagging output format: " + this.taggingOutputForamt);
+				System.out.println("[i] tagging output format: " + this.taggingOutputForamt + '.');
 			}
 			
 			// Loading IceTagger lexicons.
 			IceTaggerLexicons iceLexicons = null;
-			if(!Configuration.getInstance().containsKey("IceLexiconsDir"))
+			if(!Configuration.getInstance().containsKey("icelexiconsdir"))
 			{
 		        IceTaggerResources iceResources = new IceTaggerResources();
 		        if( iceResources.isDictionaryBase == null ) throw new Exception("Could not locate base dictionary");
@@ -61,14 +59,17 @@ public class IceTagger implements IIceTagger
 				if( iceResources.isVerbPrep == null ) throw new Exception("Could not locate verb prep dictionary" );
 				if( iceResources.isVerbObj == null ) throw new Exception("Could not locate verb obj dictionary");
 				if( iceResources.isVerbAdverb == null ) throw new Exception("Could not locate verb adverb dictionary" );
+				System.out.println("[i] Reading IceTagger lexicons from IceNLP resource.");
 				iceLexicons = new IceTaggerLexicons(iceResources);
-				System.out.println("[i] Using IceTagger lexicons from IceNLP resource.");
 			}
 			else
 			{
 				String iceLexiconDirs = Configuration.getInstance().getValue("IceLexiconsDir");
+
+				if(!iceLexiconDirs.endsWith("/"))
+					iceLexiconDirs = iceLexiconDirs + '/';
+				System.out.println("[i] Reading IceTagger lexicon from " + iceLexiconDirs + '.');
 				iceLexicons = new IceTaggerLexicons(iceLexiconDirs);
-				System.out.println("[i] using IceTagger lexicon from " + iceLexiconDirs);
 			}
 			
 			// Loading tokenizer lexicon.
@@ -77,28 +78,27 @@ public class IceTagger implements IIceTagger
 			{
 				TokenizerResources tokResources = new TokenizerResources();
 		        if (tokResources.isLexicon == null) throw new Exception( "Could not locate token dictionary");
+		        System.out.println("[i] Reading Tokenizer lexicon from IceNLP resource.");
 		        tokLexicon = new Lexicon(tokResources.isLexicon);
-		        System.out.println("[i] Using Tokenizer lexicon from IceNLP resource.");
 			}
 			else
 			{
 				String tokenLexicon = Configuration.getInstance().getValue("tokenizerlexicon");
+				System.out.println("[i] Reading Tokenizer lexicon from " + tokenLexicon + '.');
 				tokLexicon = new Lexicon(tokenLexicon);
-				System.out.println("[i] Using Tokenizer lexicon from " + tokenLexicon);
 			}
 			
 			// If the user wants to use the mapper lexicon we must build one.
 			if(Configuration.getInstance().containsKey("mappinglexicon"))
 			{
 				String mappingLexicon = Configuration.getInstance().getValue("mappinglexicon");
+				System.out.println("[i] Reading mapping lexicon from: " + mappingLexicon + '.');
 				this.mappingLexicon = new MapperLexicon(mappingLexicon);
-				System.out.println("[i] using mapping lexicon: " + mappingLexicon);
 			}
 			
-
 			if(this.lemmatize)
 			{
-				System.out.println("[i] Creating instance of Lemmald.");
+				System.out.println("[i] Loading Lemmald.");
 				this.lemmald = Lemmald.getInstance();
 			}
 				
@@ -112,14 +112,14 @@ public class IceTagger implements IIceTagger
 	    		if( triResources.isNgrams == null ) throw new Exception("Could not locate model ngram");
 	    		if( triResources.isLambda == null ) throw new Exception( "Could not locate lambdas");
 	    		if( triResources.isFrequency == null ) throw new Exception("Could not locate model frequency");
+	    		System.out.println("[i] Reading Tritagger lexicon from IceNLP resource.");
 	    		triLexicons = new TriTaggerLexicons(triResources, true);
-	    		System.out.println("[i] Using Tritagger lexicon from IceNLP resource");
 	        }
 	        else
 	        {
 	        	String tritaggerLexicon = Configuration.getInstance().getValue("tritaggerlexicon");
+	        	System.out.println("[i] Reading Tritagger lexicon from " + tritaggerLexicon + '.');
 	        	triLexicons = new TriTaggerLexicons(tritaggerLexicon, true);
-	        	System.out.println("[i] Using Tritagger lexicon from " + tritaggerLexicon);
 	        }
 	        
 			facade.createTriTagger(triLexicons);
@@ -128,7 +128,7 @@ public class IceTagger implements IIceTagger
 	        	if(Configuration.getInstance().getValue("tritagger").toLowerCase().equals("true"))
 	        	{
 	        		facade.useTriTagger(true);
-	        		System.out.println("[i] Tritagger is used with IceTagger");
+	        		System.out.println("[i] Tritagger is used with IceTagger.");
 	        	}
 	        }
 		}
