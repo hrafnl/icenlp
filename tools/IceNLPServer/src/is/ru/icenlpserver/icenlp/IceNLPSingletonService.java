@@ -1,8 +1,8 @@
-package is.ru.icecache.icenlp;
+package is.ru.icenlpserver.icenlp;
 
-import is.ru.icecache.icenlp.icetagger.IIceTagger;
-import is.ru.icecache.icenlp.icetagger.IceTagger;
-import is.ru.icecache.icenlp.icetagger.IceTaggerConfigrationException;
+import is.ru.icenlpserver.icenlp.icetagger.IIceTagger;
+import is.ru.icenlpserver.icenlp.icetagger.IceTagger;
+import is.ru.icenlpserver.icenlp.icetagger.IceTaggerConfigrationException;
 
 /***
  * IceNLPSingletonService is a singleton

@@ -1,4 +1,4 @@
-package is.ru.icecache.network;
+package is.ru.icenlpserver.network;
 
 import java.util.LinkedList;
 import java.util.List;

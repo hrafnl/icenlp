@@ -1,4 +1,4 @@
-package is.ru.icecache.icenlp.icetagger;
+package is.ru.icenlpserver.icenlp.icetagger;
 
 public interface IIceTagger 
 {

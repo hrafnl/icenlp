@@ -1,4 +1,4 @@
-package is.ru.icecache.runner;
+package is.ru.icenlpserver.runner;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
@@ -8,10 +8,10 @@ import java.io.InputStreamReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import is.ru.icecache.common.Configuration;
-import is.ru.icecache.icenlp.IceNLPSingletonService;
-import is.ru.icecache.icenlp.icetagger.IceTaggerConfigrationException;
-import is.ru.icecache.network.NetworkThread;
+import is.ru.icenlpserver.common.Configuration;
+import is.ru.icenlpserver.icenlp.IceNLPSingletonService;
+import is.ru.icenlpserver.icenlp.icetagger.IceTaggerConfigrationException;
+import is.ru.icenlpserver.network.NetworkThread;
 
 public class Runner 
 {	

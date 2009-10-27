@@ -1,4 +1,4 @@
-package is.ru.icecache.icenlp.icetagger;
+package is.ru.icenlpserver.icenlp.icetagger;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -15,10 +15,10 @@ import is.iclt.icenlp.core.tritagger.TriTaggerLexicons;
 import is.iclt.icenlp.core.tritagger.TriTaggerResources;
 import is.iclt.icenlp.core.utils.Lexicon;
 import is.iclt.icenlp.facade.IceTaggerFacade;
-import is.ru.icecache.common.Configuration;
-import is.ru.icecache.common.Pair;
-import is.ru.icecache.common.Word;
-import is.ru.icecache.icenlp.MapperLexicon;
+import is.ru.icenlpserver.common.Configuration;
+import is.ru.icenlpserver.common.Pair;
+import is.ru.icenlpserver.common.Word;
+import is.ru.icenlpserver.icenlp.MapperLexicon;
 
 public class IceTagger implements IIceTagger 
 {

@@ -1,6 +1,6 @@
-package is.ru.icecache.network;
+package is.ru.icenlpserver.network;
 
-import is.ru.icecache.icenlp.IceNLPSingletonService;
+import is.ru.icenlpserver.icenlp.IceNLPSingletonService;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;

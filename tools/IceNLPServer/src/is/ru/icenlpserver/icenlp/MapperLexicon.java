@@ -1,6 +1,6 @@
-package is.ru.icecache.icenlp;
+package is.ru.icenlpserver.icenlp;
 
-import is.ru.icecache.common.Pair;
+import is.ru.icenlpserver.common.Pair;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;

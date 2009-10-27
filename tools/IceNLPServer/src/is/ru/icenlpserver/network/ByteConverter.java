@@ -1,4 +1,4 @@
-package is.ru.icecache.network;
+package is.ru.icenlpserver.network;
 
 /**
  * ByteConverter contains methods

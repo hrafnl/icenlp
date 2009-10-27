@@ -1,6 +1,6 @@
-package is.ru.icecache.network;
+package is.ru.icenlpserver.network;
 
-import is.ru.icecache.common.Configuration;
+import is.ru.icenlpserver.common.Configuration;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

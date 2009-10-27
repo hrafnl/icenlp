@@ -1,4 +1,4 @@
-package is.ru.icecache.common;
+package is.ru.icenlpserver.common;
 
 import java.util.HashMap;
 
