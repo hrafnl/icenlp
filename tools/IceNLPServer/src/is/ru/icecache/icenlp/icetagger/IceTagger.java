@@ -25,15 +25,29 @@ public class IceTagger implements IIceTagger
 	private IceTaggerFacade facade;
 	private Lemmald lemmald = null;
 	private MapperLexicon mapperLexicon = null;
+	private String taggingOutputForamt = null;
+	private boolean lemmatize = false;
 	public IceTagger() throws IceTaggerConfigrationException
 	{
 		try
 		{
-			// Let's check if any of the configuration are not set.
-			// if so, let's read it from the context.
-			// Let's check for the IceTaggerLexicons.
+			
+			// Check for the tagging output
+			if(Configuration.getInstance().containsKey("taggingoutputformat"))
+			{
+				this.taggingOutputForamt = Configuration.getInstance().getValue("taggingoutputformat");
+				
+				if(this.taggingOutputForamt.contains("[LEMMA]"))
+				{
+					this.lemmatize = true;
+				}
+				
+				System.out.println("[i] tagging output format: " + this.taggingOutputForamt);
+			}
+			
+			// Loading IceTagger lexicons.
 			IceTaggerLexicons iceLexicons = null;
-			if(Configuration.iceLexiconsDir == null)
+			if(!Configuration.getInstance().containsKey("IceLexiconsDir"))
 			{
 		        IceTaggerResources iceResources = new IceTaggerResources();
 		        if( iceResources.isDictionaryBase == null ) throw new Exception("Could not locate base dictionary");
@@ -52,13 +66,14 @@ public class IceTagger implements IIceTagger
 			}
 			else
 			{
-				iceLexicons = new IceTaggerLexicons(Configuration.iceLexiconsDir);
-				System.out.println("[i] using IceTagger lexicon from " + Configuration.iceLexiconsDir);
+				String iceLexiconDirs = Configuration.getInstance().getValue("IceLexiconsDir");
+				iceLexicons = new IceTaggerLexicons(iceLexiconDirs);
+				System.out.println("[i] using IceTagger lexicon from " + iceLexiconDirs);
 			}
 			
-			// Let's check for the tokenizer lexicon.
+			// Loading tokenizer lexicon.
 			Lexicon tokLexicon = null;//new Lexicon(Configuration.tokenizerLexicon);
-			if(Configuration.tokenizerLexicon == null)
+			if(!Configuration.getInstance().containsKey("tokenizerlexicon"))
 			{
 				TokenizerResources tokResources = new TokenizerResources();
 		        if (tokResources.isLexicon == null) throw new Exception( "Could not locate token dictionary");
@@ -67,33 +82,31 @@ public class IceTagger implements IIceTagger
 			}
 			else
 			{
-				tokLexicon = new Lexicon(Configuration.iceLexiconsDir);
-				System.out.println("[i] Using Tokenizer lexicon from " + Configuration.iceLexiconsDir);
+				String tokenLexicon = Configuration.getInstance().getValue("tokenizerlexicon");
+				tokLexicon = new Lexicon(tokenLexicon);
+				System.out.println("[i] Using Tokenizer lexicon from " + tokenLexicon);
 			}
 			
 			// If the user wants to use the mapper lexicon we must build one.
-			if(Configuration.mapperLexicon != null)
+			if(Configuration.getInstance().containsKey("mappinglexicon"))
 			{
-				//this.mapper = new Lexicon(Configuration.mapperLexicon);
-				this.mapperLexicon = new MapperLexicon(Configuration.mapperLexicon);
-				System.out.println("[i] using mapping lexicon: " + Configuration.mapperLexicon);
+				String mappingLexicon = Configuration.getInstance().getValue("mappinglexicon");
+				this.mapperLexicon = new MapperLexicon(mappingLexicon);
+				System.out.println("[i] using mapping lexicon: " + mappingLexicon);
 			}
 			
-			if(Configuration.lemmatize)
+
+			if(this.lemmatize)
 			{
 				System.out.println("[i] Creating instance of Lemmald.");
 				this.lemmald = Lemmald.getInstance();
 			}
-			if(Configuration.taggingOutputFormat != null)
-			{
-				System.out.println("[i] tagging output format: " + Configuration.taggingOutputFormat);
-			}
-	
+				
 			facade = new IceTaggerFacade(iceLexicons, tokLexicon);
 			
 			// Let's check for the TriTagger
 			TriTaggerLexicons triLexicons = null;//new TriTaggerLexicons(Configuration.tritaggerLexicon, true);
-	        if(Configuration.tritaggerLexicon == null)
+	        if(!Configuration.getInstance().containsKey("tritaggerlexicon"))
 	        {
 	            TriTaggerResources triResources = new TriTaggerResources();
 	    		if( triResources.isNgrams == null ) throw new Exception("Could not locate model ngram");
@@ -104,15 +117,19 @@ public class IceTagger implements IIceTagger
 	        }
 	        else
 	        {
-	        	triLexicons = new TriTaggerLexicons(Configuration.tritaggerLexicon, true);
-	        	System.out.println("[i] Using Tritagger lexicon from " + Configuration.tritaggerLexicon);
+	        	String tritaggerLexicon = Configuration.getInstance().getValue("tritaggerlexicon");
+	        	triLexicons = new TriTaggerLexicons(tritaggerLexicon, true);
+	        	System.out.println("[i] Using Tritagger lexicon from " + tritaggerLexicon);
 	        }
 	        
 			facade.createTriTagger(triLexicons);
-	        if(Configuration.tritagger)
+	        if(Configuration.getInstance().containsKey("tritagger"))
 	        {
-	        	facade.useTriTagger(true);
-	        	System.out.println("[i] Tritagger loaded");
+	        	if(Configuration.getInstance().getValue("tritagger").toLowerCase().equals("true"))
+	        	{
+	        		facade.useTriTagger(true);
+	        		System.out.println("[i] Tritagger is used with IceTagger");
+	        	}
 	        }
 		}
 		
@@ -138,7 +155,7 @@ public class IceTagger implements IIceTagger
 				}
 			}
 			
-			if(Configuration.lemmatize)
+			if(this.lemmatize)
 			{
 				for(Word word: wordList)
 					word.setLemma(this.lemmald.lemmatize(word.getLexeme(), word.getTag()).getLemma());
@@ -166,7 +183,7 @@ public class IceTagger implements IIceTagger
 				for(Word word : wordList)
 				{
 					String lookupWord;
-					if(Configuration.lemmatize)
+					if(this.lemmatize)
 						lookupWord = word.getLemma();
 					else
 						lookupWord = word.getLexeme();
@@ -190,9 +207,9 @@ public class IceTagger implements IIceTagger
 			String output ="";
 			
 			// If we have not set any tagging output
-			if(Configuration.taggingOutputFormat == null)
+			if(this.taggingOutputForamt == null)
 			{
-				if(Configuration.lemmatize)
+				if(this.lemmatize)
 				{
 					for(Word word: wordList)
 						output = output + word.getLemma() + " " + word.getTag()+ " ";
@@ -208,24 +225,14 @@ public class IceTagger implements IIceTagger
 			// if we have any tagging output set.
 			else
 			{
-				if(Configuration.lemmatize)
-				{
+
 					for(Word word: wordList)
 					{
-						String part = Configuration.taggingOutputFormat.replace("[LEXEME]", word.getLemma());
+						String part = this.taggingOutputForamt.replace("[LEXEME]", word.getLexeme());
 						part = part.replace("[TAG]", word.getTag());
-						output = output + part;
-					}
-				}
-				else
-				{
-					for(Word word: wordList)
-					{
-						String part = Configuration.taggingOutputFormat.replace("[LEXEME]", word.getLexeme());
-						part = part.replace("[TAG]", word.getTag());
+						part = part.replace("[LEMMA]", word.getLemma());
 						output = output + part;
 					}	
-				}
 			}
 			return output;
 

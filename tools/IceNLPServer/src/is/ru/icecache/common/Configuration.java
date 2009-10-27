@@ -1,29 +1,37 @@
 package is.ru.icecache.common;
 
-/***
- * Makes the progam configuration (from arguments)
- * available in code.
- * @author hlynurs
- */
+import java.util.HashMap;
+
 public class Configuration 
 {
-	// Default host-name and port are set.
-	public static String host = "localhost";
-	public static String port = "1234";
-
-	// default we disable Tritagger by default.
-	public static boolean tritagger = false;
+	private static Configuration instance;
+	private HashMap<String, String> config;
+		
+	protected Configuration()
+	{
+		this.config = new HashMap<String, String>();
+	}
 	
-	// If these configuration are set to NULL then
-	// we will read them from IceNLP resources.
-	public static String iceLexiconsDir = null;
-	public static String tokenizerLexicon = null;
-	public static String tritaggerLexicon = null;
+	public void addConfigEntry(String key, String value)
+	{
+		this.config.put(key.toLowerCase(), value);
+	}
 	
-	// The mapperLexicon must be read from a command line
-	// TODO: Add this lexicon into the IceNLP resource.
-	public static String mapperLexicon = null;
+	public String getValue(String key)
+	{
+		return this.config.get(key.toLowerCase());
+	}
 	
-	public static boolean lemmatize = false;
-	public static String taggingOutputFormat = null;
+	public boolean containsKey(String key)
+	{
+		return this.config.containsKey(key.toLowerCase());
+	}
+	
+	public static synchronized Configuration getInstance()
+	{
+		if(instance == null)
+			instance = new Configuration();
+		
+		return instance;
+	}
 }

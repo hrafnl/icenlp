@@ -32,7 +32,7 @@
         <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
             <manifest>
                 <attribute name="Main-Class" value="${main-class}"/>
-                <attribute name="Class-Path" value="IceNLPCore.jar ../../dist/IceNLPCore.jar" />
+                <attribute name="Class-Path" value="IceNLPCore.jar ../../dist/IceNLPCore.jar ../../../dist/IceNLPCore.jar" />
             </manifest>
         </jar>
         <echo file="${jar.dir}/run.sh" append="false">#\!/bin/sh

@@ -1,5 +1,13 @@
 package is.ru.icecache.runner;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import is.ru.icecache.common.Configuration;
 import is.ru.icecache.icenlp.IceNLPSingletonService;
 import is.ru.icecache.icenlp.icetagger.IceTaggerConfigrationException;
@@ -7,6 +15,7 @@ import is.ru.icecache.network.NetworkThread;
 
 public class Runner 
 {
+	/*
 	public static void printHelp()
 	{
 		System.out.println(">> IceCache v1 - program parameters");
@@ -23,16 +32,109 @@ public class Runner
 		System.out.println("-mapperlexicon=dir");
 		System.out.println("-tagginoutputformat=format");
 	}
+	*/
+	
+	
+	public static void loadConfig(String location)
+	{
+		
+		FileInputStream fstream = null;
+		DataInputStream in = null;
+		BufferedReader br = null;
+		
+		try
+		{
+			// Let's open up the configuration file and read
+			// through it.
+			fstream = new FileInputStream(location);
+			in = new DataInputStream(fstream);
+			br = new BufferedReader(new InputStreamReader(in));			
+		}
+		catch (Exception e)
+		{
+			System.out.println("[x] Error while opening configuration file: " + e.getMessage());
+			return;
+		}
+		
+		// Let's go through the configuration file.
+		String strLine;
+		try 
+		{
+			int lineNumber = 1;
+			while ((strLine = br.readLine()) != null)
+			{	
+				// We don't want to look at comments
+				if(!strLine.startsWith("#") && !strLine.startsWith("//") && strLine.length() > 0)
+				{
+					if(strLine.length() >= 3 && strLine.contains("="))
+					{ 
+					    Pattern p = Pattern.compile("\"[^\"]+\"");
+					    
+					    Matcher matcher = p.matcher(strLine);
+					    String value;
+					    if(matcher.find())
+					    {
+					    	value = matcher.group().replace("\"", "");
+					    }
+					    else
+					    {
+					    	System.out.println("[x] Error in configuration file in line " + lineNumber);
+					    	return;
+					    }
+					    
+						String key = strLine.substring(0,strLine.indexOf("=")).replaceAll("\\s", "");
+
+						Configuration.getInstance().addConfigEntry(key, value);
+					}
+					else
+					{
+						System.out.println("[x] Error in configuration file in line " + lineNumber);
+						return;
+					}
+				}
+				
+				lineNumber += 1;
+			}
+		} 
+		catch (IOException e) 
+		{
+			System.out.println("[x] Error while reading configuration file: " + e.getMessage());
+			return ;
+		}
+	}
 	
 	public static void main(String[] args) 
-	{
-		if(args.length == 1)
+	{		
+		// We will read the default config file.
+		if(args.length == 0)
 		{
-			if(args[0].matches("(?i)-(help|h)"))
+			System.out.println("[i] using default config file: IceNLPServer.conf");
+			loadConfig("IceNLPServer.conf");
+		}
+		
+		// We will read the config file that is passed in through args.
+		else if(args.length == 1)
+		{
+			if(args[0].matches("(?i)--(help|h)"))
 			{
-				printHelp();
+				System.out.println("Help menu");
 				return;
 			}
+			else if(args[0].matches("(?i)--(config|c)=.+"))
+			{
+				System.out.println("[i] using config file: IceNLPServer.conf");
+				loadConfig(args[0]);
+			}
+			else
+			{
+				System.out.println("Help menu");
+				return;
+			}
+		}
+		else
+		{
+			System.out.println("Help menu");
+			return;
 		}
 		
 		final NetworkThread nt;
@@ -40,94 +142,7 @@ public class Runner
 		
 		// Let's announce the name of the server.
 		System.out.println(">> IceNLPServer 1.0");
-		
-		if(args.length != 0)
-		{
-			for(String s:args)
-			{
-				if(s.matches("(?i)-(port|host|tritagger|icelexicondir|tokenizerlexicon|mapperlexicon|tritaggerlexicon|lemmatize|tagginoutputformat)=.+"))
-				{
-					// Lets remove the - and move everything to lower case.
-					s = s.replace("-", "");
-					//s = s.toLowerCase();
-					String[] kv = s.split("=");
-					
-					if(kv[0].equals("port"))
-						Configuration.port = kv[1];
-					
-					else if(kv[0].equals("host"))
-						Configuration.host = kv[1];
-					
-					else if(kv[0].equals("tritagger"))
-					{
-						String tritaggerArgs = kv[1].toLowerCase();
-
-						if(tritaggerArgs.equals("true") || tritaggerArgs.equals("false"))
-							Configuration.tritagger = Boolean.parseBoolean(tritaggerArgs);
-						else
-						{
-							System.out.println("[x] tritagger argument can only be true or false");
-							return;				
-						}
-					}
-					
-					else if(kv[0].equals("icelexicondir"))
-					{
-						Configuration.iceLexiconsDir = kv[1] + '/';
-					}
-					
-					else if(kv[0].equals("tokenizerlexicon"))
-					{
-						Configuration.tokenizerLexicon = kv[1] + '/';
-					}
-					
-					else if(kv[0].equals("mapperlexicon"))
-					{
-						Configuration.mapperLexicon = kv[1];
-					}
-					
-					else if(kv[0].equals("tritaggerlexicon"))
-					{
-						Configuration.tritaggerLexicon = kv[1] + '/';
-					}
-					
-					else if(kv[0].equals("tagginoutputformat"))
-					{
-						Configuration.taggingOutputFormat = kv[1];
-					}
-					
-					else if(kv[0].equals("lemmatize"))
-					{
-						String lemmatizeArg = kv[1].toLowerCase();
-
-						if(lemmatizeArg.equals("true") || lemmatizeArg.equals("false"))
-							Configuration.lemmatize = Boolean.parseBoolean(lemmatizeArg);
-						else
-						{
-							System.out.println("[x] lemmatize argument can only be true or false");
-							return;				
-						}						
-					}
-
-					else
-					{
-						System.out.println("[x] unknown parameter: " + s);
-						return;
-					}
-				}
 				
-				else
-				{
-					System.out.println("[x] error in parameter: " + s);
-					return;
-				}
-			}
-		}
-		
-		// Let's print out the server information.
-		System.out.println("[i] listning on host: " + Configuration.host + ".");
-		System.out.println("[i] listning on port: " + Configuration.port + ".");	
-		
 		// Lets create the first instance of the singleton service.
 		try
 		{
@@ -138,7 +153,7 @@ public class Runner
 			System.out.println("[x] configuration error: " + e.getMessage());
 			return;
 		}
-		
+	
 		System.out.println("[i] ready.");
 		
 		// Let's start the network thread.

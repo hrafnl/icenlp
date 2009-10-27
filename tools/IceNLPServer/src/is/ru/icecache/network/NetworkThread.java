@@ -27,13 +27,27 @@ public class NetworkThread implements Runnable
 		
 		try 
 		{
-			InetSocketAddress address = new InetSocketAddress(Configuration.host, 1234);
-			this.serverSocket = new ServerSocket(Integer.parseInt(Configuration.port),12,address.getAddress());
+			// Find the host name that the server will use.
+			String host = "localhost";
+			if(Configuration.getInstance().containsKey("host"))
+				host = Configuration.getInstance().getValue("host");
+			
+			InetSocketAddress address = new InetSocketAddress(host, 1234);
+			
+			// Find the network port that the server will use.
+			String port = "1234";
+			if(Configuration.getInstance().containsKey("port"))
+				port = Configuration.getInstance().getValue("port");
+			
+			this.serverSocket = new ServerSocket(Integer.parseInt(port), 10,address.getAddress());
+		
+			System.out.println("[i] Server hostname: " + host);
+			System.out.println("[i] Server port: " + port);
 		}
 		
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			System.out.println("[x] Error in binding host/port to server: " + e.getMessage());
 		}
 	}
 	
