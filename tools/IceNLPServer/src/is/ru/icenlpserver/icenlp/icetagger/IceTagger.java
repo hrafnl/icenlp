@@ -31,7 +31,6 @@ public class IceTagger implements IIceTagger
 	{
 		try
 		{
-			
 			// Check for the tagging output
 			if(Configuration.getInstance().containsKey("taggingoutputformat"))
 			{

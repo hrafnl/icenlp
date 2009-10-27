@@ -5,7 +5,7 @@
     <property name="build.dir" value="build"/>
     <property name="classes.dir" value="${build.dir}/classes"/>
     <property name="jar.dir" value="dist"/>
-    <property name="main-class" value="is.ru.icecache.runner.Runner"/>
+    <property name="main-class" value="is.ru.icenlpserver.runner.Runner"/>
     <property name="IceNLPCoreFolder" value="../../dist/"/>
 
 	 <path id="files-classpath">  
