@@ -22,10 +22,16 @@
                 <attribute name="Main-Class" value="${main-class}"/>
             </manifest>
         </jar>
-    </target>
+        <echo file="${dist.dir}/runClient.sh" append="false">#\!/bin/sh
+                java -jar ${ant.project.name}.jar $$*
+        </echo>        
+        <chmod perm="+x" dir="${dist.dir}" includes="**/*.sh" />
+
+
+
+        </target>
 	
 	<target name="clean-build" depends="clean,jar">
-            
         <delete dir="${build.dir}"/>
     </target>
 </project>
