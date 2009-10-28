@@ -11,11 +11,36 @@ import java.net.Socket;
 import java.util.LinkedList;
 import java.util.List;
 
-
 public class Runner 
-{
+{	
+	public static void printHelp()
+	{
+		System.out.println("IceNLPClient 1.0");
+		System.out.println("\t --host|h= \t Connection host.");
+		System.out.println("\t --port|p= \t Connection port.");
+	}
+	
 	public static void main(String[] args) 
 	{		
+		String host = "localhost";
+		int port = 1234;
+		
+		if(args.length > 0)
+		{	
+			for(String arg : args)
+			{
+				if(arg.matches("(?i)--(port|p)=.+"))
+					port = Integer.parseInt(arg.split("=")[1]);
+				else if(arg.matches("(?i)--(host|h)=.+"))
+					host = arg.split("=")[1];
+				else
+				{
+					printHelp();
+					return;
+				}
+					
+			}
+		}
 		try
 		{
 			// Let's read from the std-in
@@ -26,7 +51,7 @@ public class Runner
 			in = br.readLine();
 			
 			Socket socket = null;
-			socket = new Socket("localhost", 1234);
+			socket = new Socket(host, port);
 			String out = tagString(in, socket);
 			System.out.println(out);
 		}

@@ -23,12 +23,9 @@
             </manifest>
         </jar>
         <echo file="${dist.dir}/runClient.sh" append="false">#\!/bin/sh
-                java -jar ${ant.project.name}.jar $$*
+                java -jar ${ant.project.name}.jar --port=1234 --host=localhost $$*
         </echo>        
         <chmod perm="+x" dir="${dist.dir}" includes="**/*.sh" />
-
-
-
         </target>
 	
 	<target name="clean-build" depends="clean,jar">
