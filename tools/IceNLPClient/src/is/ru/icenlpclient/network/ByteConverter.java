@@ -1,4 +1,4 @@
-package is.ru.icecache.network;
+package is.ru.icenlpclient.network;
 
 public class ByteConverter 
 {

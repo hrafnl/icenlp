@@ -1,7 +1,7 @@
 package is.runner;
 
-import is.ru.icecache.network.ByteConverter;
-import is.ru.icecache.network.Packet;
+import is.ru.icenlpclient.network.ByteConverter;
+import is.ru.icenlpclient.network.Packet;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
