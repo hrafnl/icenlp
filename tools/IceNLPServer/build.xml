@@ -35,7 +35,7 @@
                 <attribute name="Class-Path" value="IceNLPCore.jar ../../dist/IceNLPCore.jar ../../../dist/IceNLPCore.jar" />
             </manifest>
         </jar>
-        <echo file="${jar.dir}/run.sh" append="false">#\!/bin/sh
+        <echo file="${jar.dir}/runServer.sh" append="false">#\!/bin/sh
         java -jar ${ant.project.name}.jar $$*
         </echo>
         <copy file="conf/IceNLPServer.conf" todir="${jar.dir}"/>
