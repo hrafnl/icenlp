@@ -17,14 +17,17 @@ public class MappingLexicon
 	private HashMap<String, String> tagMaps;
 
 	// Hash map for exceptions.
-	private HashMap<String,  List<Pair<String, String>>> expcetionMaps;
+	private HashMap<String,  List<Pair<String, String>>> lemmaExceptionMap;
+	
+	// Hash map for lexeme exceptions.
+	private HashMap<String,  List<Pair<String, String>>> lexemeExceptionMap;
 	
 	public MappingLexicon(String mapperFile) throws IOException 
-	{
-		
+	{	
 		// Let's initialize the maps.
 		this.tagMaps = new HashMap<String, String>();
-		this.expcetionMaps = new HashMap<String, List<Pair<String, String>>>();
+		this.lemmaExceptionMap = new HashMap<String, List<Pair<String, String>>>();
+		this.lexemeExceptionMap = new HashMap<String, List<Pair<String, String>>>();
 
 		// Let's read in the mapperFile
 		FileInputStream fstream = new FileInputStream(mapperFile);
@@ -45,20 +48,32 @@ public class MappingLexicon
 						if(strLine.matches("LEMMA=[^\t]+\t[^\t]+\t[^\t]+"))
 						{
 							String[] str = strLine.substring(6).split("\t");
-							if(!this.expcetionMaps.containsKey(str[0]))
+							if(!this.lemmaExceptionMap.containsKey(str[0]))
 							{
 								List< Pair<String, String> > emptyPairList = new LinkedList< Pair<String, String> >();
-								this.expcetionMaps.put(str[0], emptyPairList);
+								this.lemmaExceptionMap.put(str[0], emptyPairList);
 							}
 							Pair<String, String> pair = new Pair<String, String>(str[1], str[2]);
-							this.expcetionMaps.get(str[0]).add(pair);
+							this.lemmaExceptionMap.get(str[0]).add(pair);
 						}
+						
+						else if(strLine.matches("LEXEME=[^\t]+\t[^\t]+\t[^\t]+"))
+						{	
+							String[] str = strLine.substring(6).split("\t");
+							if(!this.lexemeExceptionMap.containsKey(str[0]))
+							{
+								List< Pair<String, String> > emptyPairList = new LinkedList< Pair<String, String> >();
+								this.lexemeExceptionMap.put(str[0], emptyPairList);
+							}
+							Pair<String, String> pair = new Pair<String, String>(str[1], str[2]);
+							this.lexemeExceptionMap.get(str[0]).add(pair);
+						}
+						
 						else
 						{
 							System.out.println("[x] Error in exception rule in mapping file " + mapperFile + " on ine " + lineNum);
 							System.out.println("Rule was: " + strLine);
 						}
-					
 					}
 					else
 					{
@@ -95,24 +110,30 @@ public class MappingLexicon
 		return null;
 	}
 	
-	
-	
-	public List<Pair<String, String>> getExceptionRuleForLexeme(String lexeme)
+
+	public List<Pair<String, String>> getExceptionRulesForLemma(String lemma)
 	{
-		if(!this.expcetionMaps.containsKey(lexeme))
+		if(!this.lemmaExceptionMap.containsKey(lemma))
 			return null;
 		
-		return this.expcetionMaps.get(lexeme);
+		return this.lemmaExceptionMap.get(lemma);
+	}
+		
+	public boolean hasExceptionRulesForLemma(String lexeme)
+	{
+		return this.lemmaExceptionMap.containsKey(lexeme);
 	}
 	
-	
-	public boolean hasExceptionRuleForLemma(String lexeme)
+	public boolean hasExceptionRulesForLexeme(String lexeme)
 	{
-		return this.expcetionMaps.containsKey(lexeme);
+		return this.lexemeExceptionMap.containsKey(lexeme);
 	}
 	
-	public boolean hasMapForLexeme(String lexeme)
+	public List<Pair<String, String>> getExceptionRulesForLexeme(String lexeme)
 	{
-		return this.tagMaps.containsKey(lexeme);
+		if(!this.lexemeExceptionMap.containsKey(lexeme))
+			return null;
+		
+		return this.lexemeExceptionMap.get(lexeme);
 	}
 }

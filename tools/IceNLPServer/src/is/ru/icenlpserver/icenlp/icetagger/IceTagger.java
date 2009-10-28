@@ -173,17 +173,16 @@ public class IceTagger implements IIceTagger
 				}
 			}
 			
-			// Let's check if there are any mapping exceptions that
-			// we need to change.
+			// Go over Lemma Exception rules.
 			if(this.mappingLexicon != null)
 			{
 				for(Word word : wordList)
 				{
 					String lookupWord = word.getLemma();
 	
-					if(this.mappingLexicon.hasExceptionRuleForLemma(lookupWord))
+					if(this.mappingLexicon.hasExceptionRulesForLemma(lookupWord))
 					{
-						List<Pair<String, String>> rules = this.mappingLexicon.getExceptionRuleForLexeme(lookupWord);
+						List<Pair<String, String>> rules = this.mappingLexicon.getExceptionRulesForLemma(lookupWord);
 						for(Pair<String, String> pair : rules)
 						{
 							if(word.getTag().matches(".*" +pair.one +".*"))
@@ -196,7 +195,29 @@ public class IceTagger implements IIceTagger
 				}
 			}
 			
-			// Let's create the output string.
+			// Go over lexeme exception rules.
+			if(this.mappingLexicon != null)
+			{
+				for(Word word : wordList)
+				{
+					String lookupWord = word.getLexeme();
+	
+					if(this.mappingLexicon.hasExceptionRulesForLexeme(lookupWord))
+					{
+						List<Pair<String, String>> rules = this.mappingLexicon.getExceptionRulesForLexeme(lookupWord);
+						for(Pair<String, String> pair : rules)
+						{
+							if(word.getTag().matches(".*" +pair.one +".*"))
+							{
+								word.setTag(word.getTag().replaceFirst(pair.one, pair.two));
+								break;
+							}
+						}
+					}
+				}
+			}
+			
+			// Create output string that will be sent to the client.
 			String output ="";
 			
 			// If we have not set any tagging output
@@ -211,11 +232,9 @@ public class IceTagger implements IIceTagger
 				{
 					for(Word word: wordList)
 						output = output + word.getLexeme() + " " + word.getTag()+ " ";
-				}
-						
+				}				
 			}
-			
-			// if we have any tagging output set.
+
 			else
 			{
 					for(Word word: wordList)
@@ -229,10 +248,10 @@ public class IceTagger implements IIceTagger
 			}
 			return output;
 		} 
+		
 		catch (IOException e) 
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("[x] Error while generating output to client: " + e.getMessage());
 			return "error";
 		}
 	}
