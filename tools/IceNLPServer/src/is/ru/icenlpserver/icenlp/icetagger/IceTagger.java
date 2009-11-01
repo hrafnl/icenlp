@@ -104,32 +104,32 @@ public class IceTagger implements IIceTagger
 			facade = new IceTaggerFacade(iceLexicons, tokLexicon);
 			
 			// Let's check for the TriTagger
-			TriTaggerLexicons triLexicons = null;//new TriTaggerLexicons(Configuration.tritaggerLexicon, true);
-	        if(!Configuration.getInstance().containsKey("tritaggerlexicon"))
-	        {
-	            TriTaggerResources triResources = new TriTaggerResources();
-	    		if( triResources.isNgrams == null ) throw new Exception("Could not locate model ngram");
-	    		if( triResources.isLambda == null ) throw new Exception( "Could not locate lambdas");
-	    		if( triResources.isFrequency == null ) throw new Exception("Could not locate model frequency");
-	    		System.out.println("[i] Reading Tritagger lexicon from IceNLP resource.");
-	    		triLexicons = new TriTaggerLexicons(triResources, true);
-	        }
-	        else
-	        {
-	        	String tritaggerLexicon = Configuration.getInstance().getValue("tritaggerlexicon");
-	        	System.out.println("[i] Reading Tritagger lexicon from " + tritaggerLexicon + '.');
-	        	triLexicons = new TriTaggerLexicons(tritaggerLexicon, true);
-	        }
-	        
-			facade.createTriTagger(triLexicons);
-	        if(Configuration.getInstance().containsKey("tritagger"))
-	        {
-	        	if(Configuration.getInstance().getValue("tritagger").toLowerCase().equals("true"))
-	        	{
-	        		facade.useTriTagger(true);
-	        		System.out.println("[i] Tritagger is used with IceTagger.");
-	        	}
-	        }
+			if(Configuration.getInstance().containsKey("tritagger"))
+			{
+				if(Configuration.getInstance().getValue("tritagger").equals("true"))
+				{
+					TriTaggerLexicons triLexicons = null;
+			        if(!Configuration.getInstance().containsKey("tritaggerlexicon"))
+			        {
+			            TriTaggerResources triResources = new TriTaggerResources();
+			    		if( triResources.isNgrams == null ) throw new Exception("Could not locate model ngram");
+			    		if( triResources.isLambda == null ) throw new Exception( "Could not locate lambdas");
+			    		if( triResources.isFrequency == null ) throw new Exception("Could not locate model frequency");
+			    		System.out.println("[i] Reading Tritagger lexicon from IceNLP resource.");
+			    		triLexicons = new TriTaggerLexicons(triResources, true);
+			        }
+			        else
+			        {
+			        	String tritaggerLexicon = Configuration.getInstance().getValue("tritaggerlexicon");
+			        	System.out.println("[i] Reading Tritagger lexicon from " + tritaggerLexicon + '.');
+			        	triLexicons = new TriTaggerLexicons(tritaggerLexicon, true);
+			        	
+			        }
+			        facade.createTriTagger(triLexicons);
+			        facade.useTriTagger(true);
+		        	System.out.println("[i] Tritagger is ready.");
+				}
+			}
 		}
 		
 		catch (Exception e) 
