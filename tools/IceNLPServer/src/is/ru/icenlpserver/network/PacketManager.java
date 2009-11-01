@@ -7,7 +7,6 @@ public class PacketManager
 {
 	private PacketManager(){}
 	
-	
 	public static Packet createQuitPacket()
 	{
 		byte[] data = new byte[512];
@@ -20,7 +19,6 @@ public class PacketManager
 		
 		return new Packet(data);
 	}
-	
 	
 	public static Packet createTagAnswerSizePacket(int numPackets)
 	{

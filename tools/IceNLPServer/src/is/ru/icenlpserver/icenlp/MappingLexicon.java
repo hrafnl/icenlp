@@ -20,7 +20,7 @@ public class MappingLexicon
 	private HashMap<String,  List<Pair<String, String>>> lemmaExceptionMap;
 	
 	// Hash map for lexeme exceptions.
-	private HashMap<String,  List<Pair<String, String>>> lexemeExceptionMap;
+	private HashMap<String, List<Pair<String, String>>> lexemeExceptionMap;
 	
 	public MappingLexicon(String mapperFile) throws IOException 
 	{	
@@ -43,7 +43,7 @@ public class MappingLexicon
 				try
 				{
 					// We found a exception rule in the lexicon file.
-					if(strLine.toLowerCase().startsWith("lemma="))
+					if(strLine.toLowerCase().startsWith("lemma=") || strLine.toLowerCase().startsWith("lexeme="))
 					{
 						if(strLine.matches("LEMMA=[^\t]+\t[^\t]+\t[^\t]+"))
 						{
@@ -97,6 +97,11 @@ public class MappingLexicon
 			}
 			lineNum +=1;
 		}
+	
+		// Print out number of rules read.
+		System.out.println("[i] Number of mapping rules: " + this.tagMaps.size());
+		System.out.println("[i] Number of lexeme exception rules: " + this.lexemeExceptionMap.size());
+		System.out.println("[i] Number of lemma exception rules: " + this.lemmaExceptionMap.size());
 	}
 
 	public String lookupTagmap(String tag, boolean ignoreCase) 
@@ -110,7 +115,6 @@ public class MappingLexicon
 		return null;
 	}
 	
-
 	public List<Pair<String, String>> getExceptionRulesForLemma(String lemma)
 	{
 		if(!this.lemmaExceptionMap.containsKey(lemma))
