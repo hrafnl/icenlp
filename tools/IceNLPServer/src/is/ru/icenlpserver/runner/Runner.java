@@ -108,7 +108,7 @@ public class Runner
 			else if(args[0].matches("(?i)--(config|c)=.+"))
 			{
 				System.out.println("[i] using config file: IceNLPServer.conf");
-				if(!loadConfig(args[0]))
+				if(!loadConfig(args[0].split("=")[1]))
 					return;
 			}
 			else

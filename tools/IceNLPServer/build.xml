@@ -1,48 +1,73 @@
-<project name="IceNLPServer" basedir="." default="clean-build">
-	
+<project name="IceNLPServer" basedir="." default="clean-distribution">
+	<description>
+		ANT build script for the IceNLP Server project.
+	</description>
+
 	<property name="src.dir" value="src"/>
+	<property name="build.dir" value="build"/>
+	<property name="classes.dir" value="${build.dir}/classes"/>
+	<property name="jar.dir" value="jar"/>
+	<property name="conf.dir" value="conf"/>
 	<property name="dist.dir" value="dist"/>
-    <property name="build.dir" value="build"/>
-    <property name="classes.dir" value="${build.dir}/classes"/>
-    <property name="jar.dir" value="dist"/>
-    <property name="main-class" value="is.ru.icenlpserver.runner.Runner"/>
-    <property name="IceNLPCoreFolder" value="../../dist/"/>
-
-	 <path id="files-classpath">  
-        <fileset dir="${IceNLPCoreFolder}" >  
-	         <include name="*.jar"/>  
-	     </fileset>  
-	 </path> 
-
-    <target name="clean">
-        <delete dir="${build.dir}"/>
-    </target>
 	
-	<target name="compile">
-        <mkdir dir="build/classes"/>
-        <javac srcdir="src" destdir="build/classes">
-        	         <classpath>  
-        	             <path refid="files-classpath" />  
-        	     </classpath>
-        </javac>
-    </target>
-	
-	<target name="jar" depends="compile">
-        <mkdir dir="${jar.dir}"/>
-        <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
-            <manifest>
-                <attribute name="Main-Class" value="${main-class}"/>
-                <attribute name="Class-Path" value="IceNLPCore.jar ../../dist/IceNLPCore.jar ../../../dist/IceNLPCore.jar" />
-            </manifest>
-        </jar>
-        <echo file="${jar.dir}/runServer.sh" append="false">#\!/bin/sh
-        java -jar ${ant.project.name}.jar $$*
-        </echo>
-        <copy file="conf/IceNLPServer.conf" todir="${jar.dir}"/>
-        <chmod perm="+x" dir="${jar.dir}" includes="**/*.sh" /> 
+	<property name="main-class" value="is.ru.icenlpserver.runner.Runner"/>
+	<property name="IceNLPCoreFolder" value="../../dist/"/>
+	<property name="runner.name" value="RunServer"/>
 
-</target>
-    <target name="clean-build" depends="clean,jar">
-        <delete dir="${build.dir}"/>
-    </target>
+	<path id="files-classpath">  
+            <fileset dir="${IceNLPCoreFolder}" >  
+	        <include name="*.jar"/>  
+	    </fileset>  
+        </path> 
+
+	<target name="clean" description="Removes build- and jar-dir.">
+        	<delete dir="${build.dir}"/>
+		<delete dir="${jar.dir}"/>
+	</target>
+
+	<target name="clean-all" description="Removes build-, jar- and distribution dir.">
+ 		<delete dir="${build.dir}"/>
+		<delete dir="${jar.dir}"/>
+		<delete dir="${dist.dir}"/>
+	</target>
+
+	<target name="compile" description="Builds the source to ${classes.dir}">
+		<mkdir dir="${classes.dir}"/>
+		<javac srcdir="src" destdir="${classes.dir}">
+			<classpath>  
+				<path refid="files-classpath" />  
+			</classpath>
+		</javac>
+	</target>
+	
+	<target name="jar" depends="compile" description="Creates a JAR from the source.">
+		<mkdir dir="${jar.dir}"/>
+		<jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
+			<manifest>
+				<attribute name="Main-Class" value="${main-class}"/>
+				<attribute name="Class-Path" value="IceNLPCore.jar ../../dist/IceNLPCore.jar ../../../dist/IceNLPCore.jar" />
+			</manifest>
+		</jar>
+	</target>
+	
+	<target name="distribution" depends="jar" description="Creates distribution folder and moves all files relevant to the distribution.">
+		<mkdir dir="${dist.dir}"/>
+		<copy todir="${dist.dir}">
+			<fileset dir="${jar.dir}" />
+		</copy>
+
+		<copy todir="${dist.dir}/config">
+			<fileset dir="${conf.dir}" />
+		</copy>
+
+		<echo file="${dist.dir}/${runner.name}.sh" append="false">#\!/bin/sh
+java -jar ${ant.project.name}.jar --config=config/IceNLPServer.conf
+		</echo>
+		
+		<echo file="${dist.dir}/${runner.name}.bat" append="false">java -Xmx256M -jar ${ant.project.name}.jar --config=config/IceNLPServer.conf</echo>
+	
+		<chmod perm="+x" dir="${dist.dir}" includes="**/*.sh" />
+	</target>
+	
+	<target name="clean-distribution" depends="distribution,clean"/>
 </project>
