@@ -13,19 +13,21 @@ import is.ru.icenlpserver.icenlp.IceNLPSingletonService;
 import is.ru.icenlpserver.icenlp.icetagger.IceTaggerConfigrationException;
 import is.ru.icenlpserver.network.NetworkThread;
 
+/**
+ * Runner contains the main function for the program.
+ * @author hlynurs
+ */
 public class Runner 
 {	
 	public static boolean loadConfig(String location)
 	{
-		
 		FileInputStream fstream = null;
 		DataInputStream in = null;
 		BufferedReader br = null;
 		
+		// Open the configuration file and read through it.
 		try
 		{
-			// Let's open up the configuration file and read
-			// through it.
 			fstream = new FileInputStream(location);
 			in = new DataInputStream(fstream);
 			br = new BufferedReader(new InputStreamReader(in));			
@@ -36,14 +38,12 @@ public class Runner
 			return false;
 		}
 		
-		// Let's go through the configuration file.
 		String strLine;
 		try 
 		{
 			int lineNumber = 1;
 			while ((strLine = br.readLine()) != null)
 			{	
-				// We don't want to look at comments
 				if(!strLine.startsWith("#") && !strLine.startsWith("//") && strLine.length() > 0)
 				{
 					if(strLine.length() >= 3 && strLine.contains("="))
@@ -86,10 +86,12 @@ public class Runner
 	
 	public static void main(String[] args) 
 	{		
-		// Let's announce the name of the server.
+		// Announce the name of the server.
 		System.out.println(">> IceNLPServer 1.0");
 		
-		// We will read the default config file.
+		// If there is no argument in the argument array then we will try
+		// to read the default configuration file which is located in the
+		// same folder as the JAR.
 		if(args.length == 0)
 		{
 			System.out.println("[i] using default config file: IceNLPServer.conf");
@@ -97,12 +99,12 @@ public class Runner
 				return;
 		}
 		
-		// We will read the config file that is passed in through args.
+		// We will read the configuration file that is passed in through args.
 		else if(args.length == 1)
 		{
 			if(args[0].matches("(?i)--(help|h)"))
 			{
-				System.out.println("Help menu");
+				printHelp();
 				return;
 			}
 			else if(args[0].matches("(?i)--(config|c)=.+"))
@@ -113,13 +115,13 @@ public class Runner
 			}
 			else
 			{
-				System.out.println("Help menu");
+				printHelp();
 				return;
 			}
 		}
 		else
 		{
-			System.out.println("Help menu");
+			printHelp();
 			return;
 		}
 		
@@ -137,8 +139,7 @@ public class Runner
 			return;
 		}
 	
-		
-		// Let's start the network thread.
+		// Start the network thread.
 		nt = new NetworkThread();
 		thread = new Thread(nt);
 		thread.start();
@@ -151,5 +152,13 @@ public class Runner
 		             nt.cleanUp();
 		    }
 		});
+	}
+	
+	public static void printHelp()
+	{
+		System.out.println("to start server: java -jar IceNLPServer.jar");
+		System.out.println("arguments:");
+		System.out.println("  --c=, --config=            configuration file to use.");
+		System.out.println("  --h=, --help=              displays help.");
 	}
 }
