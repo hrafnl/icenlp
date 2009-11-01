@@ -9,7 +9,7 @@
 	<property name="jar.dir" value="jar"/>
 	<property name="conf.dir" value="conf"/>
 	<property name="dist.dir" value="dist"/>
-	
+	<property name="docs.dir" value="documents" />	
 	<property name="main-class" value="is.ru.icenlpserver.runner.Runner"/>
 	<property name="IceNLPCoreFolder" value="../../dist/"/>
 	<property name="runner.name" value="RunServer"/>
@@ -54,6 +54,7 @@
 		<mkdir dir="${dist.dir}"/>
 		<copy todir="${dist.dir}">
 			<fileset dir="${jar.dir}" />
+			<fileset dir="${docs.dir}" />
 		</copy>
 
 		<copy todir="${dist.dir}/config">
