@@ -24,10 +24,12 @@ package is.iclt.icenlp.facade;
 import is.iclt.icenlp.core.icemorphy.IceMorphy;
 import is.iclt.icenlp.core.icetagger.IceTagger;
 import is.iclt.icenlp.core.icetagger.IceTaggerLexicons;
+import is.iclt.icenlp.core.icetagger.IceTaggerResources;
 import is.iclt.icenlp.core.lemmald.Lemmald;
 import is.iclt.icenlp.core.tokenizer.*;
 import is.iclt.icenlp.core.tritagger.TriTaggerLexicons;
 import is.iclt.icenlp.core.tritagger.TriTagger;
+import is.iclt.icenlp.core.tritagger.TriTaggerResources;
 import is.iclt.icenlp.core.utils.*;
 
 import java.io.IOException;
@@ -65,6 +67,12 @@ public class IceTaggerFacade
         initIceTagger(iceLexicons);
     }
 
+    public IceTaggerFacade(IceTaggerLexicons iceLexicons, Lexicon tokenizerLexicon, IceTagger.HmmModelType mType) throws IOException
+    {
+        this(iceLexicons, tokenizerLexicon);
+        initHMM(mType);
+    }
+
     public IceTaggerFacade(IceTaggerLexicons iceLexicons, Lexicon tokenizerLexicon,  int lineFormat) throws IOException
     {
         segmentizer = new Segmentizer(tokenizerLexicon, lineFormat);
@@ -76,6 +84,13 @@ public class IceTaggerFacade
 
     }
 
+    public IceTaggerFacade(IceTagger.HmmModelType mType) throws IOException
+    {
+        //this(iceLexicons, tokLexicon);
+        this(new IceTaggerLexicons(new IceTaggerResources()), new Lexicon(new TokenizerResources().isLexicon));
+        initHMM(mType);
+    }
+
     public IceTaggerFacade(IceTaggerLexicons iceLexicons, Lexicon tokenizerLexicon, Lexicon mapperLexicon, boolean preLoadlemmald) throws IOException
     {
         this(iceLexicons,tokenizerLexicon);
@@ -84,7 +99,16 @@ public class IceTaggerFacade
             Lemmald.getInstance();
     }
 
-
+    private void initHMM(IceTagger.HmmModelType mType) throws IOException
+    {
+          if (mType != IceTagger.HmmModelType.none) {
+                // Create an instance of TriTagger
+                TriTaggerResources triResources = new TriTaggerResources();
+                TriTaggerLexicons triLexicons = new TriTaggerLexicons(triResources, true);
+                this.createTriTagger(triLexicons);
+                this.setModelType(mType);
+        }
+    }
 
     private void initIceTagger(IceTaggerLexicons iceLexicons) {
 

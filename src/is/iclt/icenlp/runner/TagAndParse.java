@@ -25,6 +25,7 @@ import is.iclt.icenlp.facade.IceTaggerFacade;
 import is.iclt.icenlp.facade.IceParserFacade;
 import is.iclt.icenlp.core.icetagger.IceTaggerLexicons;
 import is.iclt.icenlp.core.icetagger.IceTaggerResources;
+import is.iclt.icenlp.core.icetagger.IceTagger;
 import is.iclt.icenlp.core.tritagger.TriTaggerLexicons;
 import is.iclt.icenlp.core.tritagger.TriTaggerResources;
 import is.iclt.icenlp.core.tokenizer.Sentences;
@@ -55,7 +56,7 @@ public class TagAndParse implements ActionListener {
     private IceParserFacade parser;
     private String modelPath="../../ngrams/models/";
 
-    public TagAndParse() throws IOException
+    /*public TagAndParse() throws IOException
     {
         System.out.println("Loading dictionaries ...");
         TokenizerResources tokResources = new TokenizerResources();
@@ -72,6 +73,15 @@ public class TagAndParse implements ActionListener {
         TriTaggerLexicons triLexicons = new TriTaggerLexicons(triResources, true);
         tagger.createTriTagger(triLexicons);
 
+        parser = new IceParserFacade();
+
+   }*/
+
+   public TagAndParse() throws IOException
+   {
+        System.out.println("Loading dictionaries ...");
+
+        tagger = new IceTaggerFacade(IceTagger.HmmModelType.startend);
         parser = new IceParserFacade();
 
    }
