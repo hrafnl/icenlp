@@ -1,5 +1,11 @@
 package is.ru.icenlpclient.network;
 
+/**
+ * Constains static function that converts
+ * java basic types into bytes and vice
+ * versa.
+ * @author hlynurs
+ */
 public class ByteConverter 
 {
 	/***
@@ -17,7 +23,12 @@ public class ByteConverter
 		}
 		return bytes;
 	}	
-	
+	/**
+	 * Converts 4 bytes into an integer number.
+	 * @param data byte array.
+	 * @param begin index where the byte begins.
+	 * @return integer number.
+	 */
 	public static int bytesToInt(byte[] data, int begin)
 	{
 		int opCode = 0;

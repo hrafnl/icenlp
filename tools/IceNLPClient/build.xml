@@ -1,34 +1,56 @@
-<project name="IceNLPClient" basedir="." default="clean-build">	
-    <property name="src.dir" value="src"/>
-    <property name="build.dir" value="build"/>
-    <property name="classes.dir" value="${build.dir}/classes"/>
-    <property name="dist.dir" value="dist"/>
-    <property name="main-class" value="is.runner.Runner"/>
+<project name="IceNLPClient" basedir="." default="distribute-clean">	
+	<description>
+		ANT build script for the IceNLP server project. 
+	</description>
 	
-    <target name="clean">
-        <delete dir="${build.dir}"/>
-    </target>
+	<property name="src.dir" value="src"/>
+    	<property name="build.dir" value="build"/>
+    	<property name="classes.dir" value="${build.dir}/classes"/>
+    	<property name="jar.dir" value="jar" />
+    	<property name="dist.dir" value="dist"/>
+    	<property name="main-class" value="is.runner.Runner"/>
 	
-	<target name="compile">
-        <mkdir dir="build/classes"/>
-        <javac srcdir="src" destdir="build/classes">
-        </javac>
-    </target>
+	<target name="clean" description="Removes build- and jar-dir">
+		<delete dir="${build.dir}"/>
+		<delete dir="${jar.dir}" />
+	</target>
+
+	<target name="clean-all" description="Remove build-, jar- and distribution dir.">
+	 	<delete dir="${build.dir}"/>
+ 		<delete dir="${jar.dir}"/>
+ 		<delete dir="${dist.dir}"/>
+	</target>
+
 	
-	<target name="jar" depends="compile">
-        <mkdir dir="${dist.dir}"/>
-        <jar destfile="${dist.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
-            <manifest>
-                <attribute name="Main-Class" value="${main-class}"/>
-            </manifest>
-        </jar>
-        <echo file="${dist.dir}/runClient.sh" append="false">#\!/bin/sh
-                java -jar ${ant.project.name}.jar --port=1234 --host=localhost $$*
-        </echo>        
-        <chmod perm="+x" dir="${dist.dir}" includes="**/*.sh" />
+	<target name="compile" description="Builds the source.">
+        	<mkdir dir="${classes.dir}"/>
+		<javac srcdir="src" destdir="${classes.dir}" />
+	</target>
+	
+	<target name="jar" depends="compile" description="Creates jar files for the project.">
+        	<mkdir dir="${jar.dir}"/>
+        	<jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
+            		<manifest>
+                		<attribute name="Main-Class" value="${main-class}"/>
+            		</manifest>
+        	</jar>
         </target>
 	
-	<target name="clean-build" depends="clean,jar">
-        <delete dir="${build.dir}"/>
-    </target>
+
+	<target name="distribute" depends="jar" description="Creates distribution folder and moves all files that are relevant to the distribution into that folder.">
+		<mkdir dir="${dist.dir}" />
+		<copy todir="${dist.dir}">
+			<fileset dir="${jar.dir}"/>
+		</copy>
+
+ 		<echo file="${dist.dir}/RunClient.sh" append="false">#\!/bin/sh
+java -jar ${ant.project.name}.jar --port=1234 --host=localhost</echo>
+
+		<echo file="${dist.dir}/RunClient.bat" append="false">java -Xmx256M -jar ${ant.project.name}.jar --port=1234 --host=localhost</echo>
+
+
+		<chmod perm="+x" dir="${dist.dir}" includes="**/*.sh" />
+	</target>
+
+	<target name="distribute-clean" depends="distribute,clean" />
 </project>
