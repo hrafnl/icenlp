@@ -54,7 +54,6 @@
 		<mkdir dir="${dist.dir}"/>
 		<copy todir="${dist.dir}">
 			<fileset dir="${jar.dir}" />
-			<fileset dir="${docs.dir}" />
 		</copy>
 
 		<copy todir="${dist.dir}/config">
