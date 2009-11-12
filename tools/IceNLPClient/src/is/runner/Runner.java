@@ -44,16 +44,21 @@ public class Runner
 		try
 		{
 			// Let's read from the std-in
-			String in;
+			String inLine;
+			List<String> lines = new LinkedList<String>();
 			InputStreamReader reader = new InputStreamReader(System.in);
 			BufferedReader br = new BufferedReader(reader);
 			
-			in = br.readLine();
+			while ((inLine = br.readLine()) != null)
+				lines.add(inLine);
 			
 			Socket socket = null;
 			socket = new Socket(host, port);
-			String out = tagString(in, socket);
-			System.out.println(out);
+			for(String s : lines)
+			{
+				String out = tagString(s, socket);
+				System.out.println(out);
+			}
 		}
 		catch(Exception ex)
 		{
