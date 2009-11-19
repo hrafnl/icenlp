@@ -22,14 +22,12 @@
 package is.iclt.icenlp.runner;
 
 import is.iclt.icenlp.facade.IceTaggerFacade;
+import is.iclt.icenlp.facade.TriTaggerFacade;
 import is.iclt.icenlp.facade.IceParserFacade;
 import is.iclt.icenlp.core.icetagger.IceTaggerLexicons;
-import is.iclt.icenlp.core.icetagger.IceTaggerResources;
 import is.iclt.icenlp.core.icetagger.IceTagger;
 import is.iclt.icenlp.core.tritagger.TriTaggerLexicons;
-import is.iclt.icenlp.core.tritagger.TriTaggerResources;
 import is.iclt.icenlp.core.tokenizer.Sentences;
-import is.iclt.icenlp.core.tokenizer.TokenizerResources;
 import is.iclt.icenlp.core.utils.Lexicon;
 import is.iclt.icenlp.core.utils.FileEncoding;
 
@@ -51,37 +49,23 @@ public class TagAndParse implements ActionListener {
     private JTextArea textInput;
     private JTextArea textTagged;
     private JTextArea textParsed;
-    private JCheckBox checkIncludeFunc, checkPhrasePerLine, checkTokenPerLine, checkTriTagger;
+    private JCheckBox checkIncludeFunc, checkPhrasePerLine, checkTokenPerLine;
+    // checkTriTagger=true if use TriTagger with IceTagger
+    // checkOnlYTriTagger=true if only use TriTagger for tagging (not IceTagger)
+    private JCheckBox checkTriTagger, checkOnlyTriTagger;
     private IceTaggerFacade tagger;
+    private TriTaggerFacade tritagger;
     private IceParserFacade parser;
     private String modelPath="../../ngrams/models/";
 
-    /*public TagAndParse() throws IOException
-    {
-        System.out.println("Loading dictionaries ...");
-        TokenizerResources tokResources = new TokenizerResources();
-        Lexicon tokLexicon = new Lexicon(tokResources.isLexicon);
-
-        IceTaggerResources iceResources = new IceTaggerResources();
-        IceTaggerLexicons iceLexicons = new IceTaggerLexicons(iceResources);
-
-        tagger = new IceTaggerFacade(iceLexicons, tokLexicon);
-
-        // Create an instance of TriTagger
-        System.out.println("Loading TriTagger ...");
-        TriTaggerResources triResources = new TriTaggerResources();
-        TriTaggerLexicons triLexicons = new TriTaggerLexicons(triResources, true);
-        tagger.createTriTagger(triLexicons);
-
-        parser = new IceParserFacade();
-
-   }*/
 
    public TagAndParse() throws IOException
    {
         System.out.println("Loading dictionaries ...");
 
+        // When running IceTagger without help from the HMM model then supply the parameter IceTagger.HmmModelType.none
         tagger = new IceTaggerFacade(IceTagger.HmmModelType.startend);
+        tritagger = new TriTaggerFacade();
         parser = new IceParserFacade();
 
    }
@@ -111,7 +95,7 @@ public class TagAndParse implements ActionListener {
             JFrame.setDefaultLookAndFeelDecorated(true);
 
             //Create and set up the window.
-            frame = new JFrame("Greining texta - mörkun (IceTagger) og þáttun (IceParser)");
+            frame = new JFrame("Greining texta - mörkun (IceTagger/TriTagger) og þáttun (IceParser)");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setBounds(30,30,200,300);
 
@@ -210,8 +194,10 @@ public class TagAndParse implements ActionListener {
                 JScrollPane scrollingArea3 = new JScrollPane(textParsed);
                 //textParsed.setPreferredSize(textDimension);
 
-                checkTriTagger = new JCheckBox("Nota HMM markara");
+                checkTriTagger = new JCheckBox("Nota HMM markara með IceTagger");
                 checkTriTagger.setSelected(true); // turn  the check box on or off
+                checkOnlyTriTagger = new JCheckBox("Nota eingöngu HMM markara");
+                checkOnlyTriTagger.setSelected(false); // turn  the check box on or off
                 checkIncludeFunc = new JCheckBox("Setningafræðileg hlutverk");
                 checkIncludeFunc.setSelected(true); // turn  the check box on or off
                 checkPhrasePerLine = new JCheckBox("Liðir í sér línu");
@@ -226,10 +212,13 @@ public class TagAndParse implements ActionListener {
 
                 JPanel checkBoxPanel = new JPanel(new FlowLayout());
                 checkBoxPanel.add(checkTriTagger);
-                checkBoxPanel.add(checkTokenPerLine);
-                checkBoxPanel.add(checkIncludeFunc);
-                checkBoxPanel.add(checkPhrasePerLine);
+                checkBoxPanel.add(checkOnlyTriTagger);
+                JPanel checkBoxPanel2 = new JPanel(new FlowLayout());
+                checkBoxPanel2.add(checkTokenPerLine);
+                checkBoxPanel2.add(checkIncludeFunc);
+                checkBoxPanel2.add(checkPhrasePerLine);
                 pane.add(checkBoxPanel, BorderLayout.CENTER);
+                pane.add(checkBoxPanel2, BorderLayout.CENTER);
                 pane.add(tagButton, BorderLayout.CENTER);
                 pane.add(scrollingArea,BorderLayout.CENTER);
                 pane.add(labTagging, BorderLayout.WEST);
@@ -243,8 +232,12 @@ public class TagAndParse implements ActionListener {
 
    public Sentences tagText(String text) throws IOException
    {
-        tagger.useTriTagger(checkTriTagger.isSelected());   // use TriTagger?
-        return tagger.tag(text);
+        if (checkOnlyTriTagger.isSelected())
+            return tritagger.tag(text);
+        else {
+            tagger.useTriTagger(checkTriTagger.isSelected());   // use TriTagger with IceTagger?
+            return tagger.tag(text);
+        }
    }
 
    private void loadFile(String fileName) throws IOException{
