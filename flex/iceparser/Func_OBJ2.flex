@@ -89,6 +89,7 @@ VP = {OpenVP}(" "|s)~({CloseVP}|{CloseVPs})
 VPInf = {OpenVPi}~{CloseVPi}
 VPPast = {OpenVPp}~{CloseVPp}
 PP = {OpenPP}~{ClosePP}
+AdvP = {OpenAdvP}~{CloseAdvP}
 //NPOblique = {OpenNP}[adg]~{CloseNP}
 NPOblique = {NPAcc}|{NPDat}|{NPGen}
 NPsOblique = {NPsAcc}|{NPsDat}|{NPsGen}
@@ -104,9 +105,9 @@ AccObj = {NPAcc} | {NPsAcc}
 DatObj = {NPDat} | {NPsDat}
 
 CloseObj = "*OBJ"[<>]"}"
-/* Intervening PP is possible: bera okkur [PP á brýn PP] bókmenntasmekk */
-VerbDatObjAccObj = ({VP}|{VPInf}){WhiteSpace}+{NPDObj}{WhiteSpace}+({PP}{WhiteSpace}+)?{AccObj}
-VerbAccObjDatObj = ({VP}|{VPInf}){WhiteSpace}+{NPAObj}{WhiteSpace}+({PP}{WhiteSpace}+)?{DatObj}
+/* Intervening PP or AdvP is possible: bera okkur [PP á brýn PP] bókmenntasmekk */
+VerbDatObjAccObj = ({VP}|{VPInf}){WhiteSpace}+{NPDObj}{WhiteSpace}+(({PP}|{AdvP}){WhiteSpace}+)?{AccObj}
+VerbAccObjDatObj = ({VP}|{VPInf}){WhiteSpace}+{NPAObj}{WhiteSpace}+(({PP}|{AdvP}){WhiteSpace}+)?{DatObj}
 
 VPPastCompl = {OpenComp}{WhiteSpace}+{OpenVPp}~{CloseVPp}{WhiteSpace}+{CloseComp} 
 
@@ -140,6 +141,9 @@ VerbSubjObjNom = {VPDat}{WhiteSpace}+{FuncSubjectOblique}{WhiteSpace}+{NomSubjec
 			if (newStr.contains("PP]")) {	
 				StringSearch.splitString(newStr,"PP]", true, 3);		
 			}
+			else if (newStr.contains("AdvP]")) {	
+				StringSearch.splitString(newStr,"AdvP]", true, 5);		
+			}
 			else {
 				/* Find where the FuncObject phrase ended and insert the OBJ label */
 				StringSearch.splitString(newStr,"*IOBJ<}", false, 7);		
@@ -152,6 +156,9 @@ VerbSubjObjNom = {VPDat}{WhiteSpace}+{FuncSubjectOblique}{WhiteSpace}+{NomSubjec
 			
 			if (matchedStr.contains("PP]")) {	
 				StringSearch.splitString(matchedStr,"PP]", true, 3);		
+			}
+			else if (matchedStr.contains("AdvP]")) {	
+				StringSearch.splitString(matchedStr,"AdvP]", true, 5);		
 			}
 			else {
 				/* Find where the FuncObject phrase ended and insert the IOBJ label */

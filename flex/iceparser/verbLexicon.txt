@@ -1,224 +1,224 @@
 /* The following regluar expression cover verbs which demand oblique case subjects (aukafallssagnir) */
 
-VerbBe =	[eE]r(t|u[mğ]?)? | [vV](ar(st)?|oru[mğ]?) | [ss]é(rt|u[mğ]?)? | [vV]ær(ir?|u[mğ]?) |
-		[vV]erğ(ur|um|i(ğ|r)?|a)? | [vV]arğ(st)? | [uU]rğu[mğ]? | [yY]rğ(ir?|u[mğ]?) | [vV]ertu |
+VerbBe =	[eE]r(t|u[mÃ°]?)? | [vV](ar(st)?|oru[mÃ°]?) | [ss]Ã©(rt|u[mÃ°]?)? | [vV]Ã¦r(ir?|u[mÃ°]?) |
+		[vV]erÃ°(ur|um|i(Ã°|r)?|a)? | [vV]arÃ°(st)? | [uU]rÃ°u[mÃ°]? | [yY]rÃ°(ir?|u[mÃ°]?) | [vV]ertu |
 
 /* Verbs that demand complements */
-		[hH](eit(i(r|ğ)?|um|a) | é(t((u(m|ğ)?)? |ir?) | st))	|		/* heita */
-		[kK](all(ast|ist)|öll(umst|uğum?st))			|		/* kallast */
+		[hH](eit(i(r|Ã°)?|um|a) | Ã©(t((u(m|Ã°)?)? |ir?) | st))	|		/* heita */
+		[kK](all(ast|ist)|Ã¶ll(umst|uÃ°um?st))			|		/* kallast */
 		[rR]eynd?(ist|um?st|ast)			|			/* reynast */
-		[vV]ir[ğt](ist|um?st|ast)			|			/* virğast */
-		[şŞ](yk(i(r|ğ|st)?|j(um(st)?|a(st)?)) | [óæ]tt(i(r|st)?|u(ğ|m?(st)?)?))	/* şykja */
+		[vV]ir[Ã°t](ist|um?st|ast)			|			/* virÃ°ast */
+		[Ã¾Ã](yk(i(r|Ã°|st)?|j(um(st)?|a(st)?)) | [Ã³Ã¦]tt(i(r|st)?|u(Ã°|m?(st)?)?))	/* Ã¾ykja */
 	
 
-arEnding = a(r|ği?)|i		/* dámar */
-stEnding = (a(ği)?|i)st
+arEnding = a(r|Ã°i?)|i		/* dÃ¡mar */
+stEnding = (a(Ã°i)?|i)st
 
 /* Verbs which demand dative subjects */
 VerbDat = 	
-	[aA]uğn{stEnding}					|	/* auğnast		*/
-	[áÁ]skotn{stEnding}					|	/* áskotnast		*/
+	[aA]uÃ°n{stEnding}					|	/* auÃ°nast		*/
+	[Ã¡Ã]skotn{stEnding}					|	/* Ã¡skotnast		*/
 	
 	[bB]atn{arEnding}					|	/* batna		*/
-	[bB](eri?|ar|æri|oriğ)					|	/* ber			*/
-	[bB]([ae]rst|[æo]rist)					|	/* berast		*/
+	[bB](eri?|ar|Ã¦ri|oriÃ°)					|	/* ber			*/
+	[bB]([ae]rst|[Ã¦o]rist)					|	/* berast		*/
 	[bB]ir(tist|st)						|	/* birtast		*/
-	[bB](ığ(ur|st)|jóği(st)?|auğ(st)?|yği(st)?|oği(ğ|st))	|	/* bjóğa/bjóğast	*/
+	[bB](Ã½Ã°(ur|st)|jÃ³Ã°i(st)?|auÃ°(st)?|yÃ°i(st)?|oÃ°i(Ã°|st))	|	/* bjÃ³Ã°a/bjÃ³Ã°ast	*/
 	[bB]land{stEnding}					|	/* blandast (hugur)	*/
-	[bB]læ(ğir?|ddi|tt)					|	/* blæğa		*/
-	[bB]löskr(ar|(ağ)?i?)					|	/* blöskra		*/
-	[bB]ragğ{stEnding}					|	/* bragğast		*/
-	[bB]r(eg(ğ(ur|i(st)?)|st))|á(st)?|ygği(st)?|ugği(ğ|st)	|	/* bregğa/bregğast	*/
-	[bB]r(enn(ur|i)|ann|ynni|unniğ)				|	/* brenna		*/
-	[bB](ır|úiğ?|jó|yggi)					|	/* búa			*/
-	[bB]æ(tt?ist|st)					|	/* bætast		*/
+	[bB]lÃ¦(Ã°ir?|ddi|tt)					|	/* blÃ¦Ã°a		*/
+	[bB]lÃ¶skr(ar|(aÃ°)?i?)					|	/* blÃ¶skra		*/
+	[bB]ragÃ°{stEnding}					|	/* bragÃ°ast		*/
+	[bB]r(eg(Ã°(ur|i(st)?)|st))|Ã¡(st)?|ygÃ°i(st)?|ugÃ°i(Ã°|st)	|	/* bregÃ°a/bregÃ°ast	*/
+	[bB]r(enn(ur|i)|ann|ynni|unniÃ°)				|	/* brenna		*/
+	[bB](Ã½r|ÃºiÃ°?|jÃ³|yggi)					|	/* bÃºa			*/
+	[bB]Ã¦(tt?ist|st)					|	/* bÃ¦tast		*/
 	
 	[dD]apr{stEnding}					|	/* daprast		*/
-	[dD]ám{arEnding}					|	/* dáma			*/
-	[dD](ett(ur|i)|att|ytti|ottiğ)				|	/* dettta		*/
-	[dD]r(ıpur|júpi|aup|ypi|opiğ)				|	/* drjúpa		*/
-	[dD](ug(ir?|ği|ağ)|ygği)				|	/* duga			*/
+	[dD]Ã¡m{arEnding}					|	/* dÃ¡ma			*/
+	[dD](ett(ur|i)|att|ytti|ottiÃ°)				|	/* dettta		*/
+	[dD]r(Ã½pur|jÃºpi|aup|ypi|opiÃ°)				|	/* drjÃºpa		*/
+	[dD](ug(ir?|Ã°i|aÃ°)|ygÃ°i)				|	/* duga			*/
 	[dD]v(el(ji)?st|[ae]ld?ist)				|	/* dveljast		*/
 	[dD](yl(ji)?st|[uy]ld?ist)				|	/* dyljast		*/
 	
 	[eE]ln{arEnding}					|	/* elna			*/
 	[eE]n([dt]i)?st						|	/* endast		*/
 	
-	[fF](ellur|alliğ?|élli?)				|       /* falla		*/
-	[fF](ellst|allist|élli?st)				|       /* fallast (hendur)	*/
-	[fF]([eó]r(st)?|[aæ]ri(st|ğ)?) 				|	/* fara/farast 		*/
+	[fF](ellur|alliÃ°?|Ã©lli?)				|       /* falla		*/
+	[fF](ellst|allist|Ã©lli?st)				|       /* fallast (hendur)	*/
+	[fF]([eÃ³]r(st)?|[aÃ¦]ri(st|Ã°)?) 				|	/* fara/farast 		*/
 	[fF]arn{stEnding}					|       /* farnast		*/
 	[fF]atl?{stEnding}					|       /* fatast/fatlast	*/
 	[fF]eila{arEnding}					|	/* feila		*/
 	[fF]est(ist)?						|	/* festast		*/
-	[fF]én{stEnding}					|       /* fénast		*/
+	[fF]Ã©n{stEnding}					|       /* fÃ©nast		*/
 	[fF](inni?|ann|[uy]ndi)st				|       /* finnast		*/
 	[fF]ip{stEnding}					|       /* fipast		*/
-	[fF]jölg{arEnding}					|	/* fjölga		*/
-	/* [fF]leyg(ir?|ği|t)					| */	/* fleygja (fram)	*/
-	[fF]lj(ıgur|júgi|aug|ygi|ogiğ)				|	/* fljúga		*/
+	[fF]jÃ¶lg{arEnding}					|	/* fjÃ¶lga		*/
+	/* [fF]leyg(ir?|Ã°i|t)					| */	/* fleygja (fram)	*/
+	[fF]lj(Ã½gur|jÃºgi|aug|ygi|ogiÃ°)				|	/* fljÃºga		*/
 	/* [fF]ylg(ir?|di|t)					|	/* fylgja		*/ */
-	[fF]yrig([eæ]fi?st|afst)				|	/* fyrirgefa		*/
-	[fF]æ((ğ|dd)i?st)					|	/* fæğast		*/
-	[fF]ækk{arEnding}					|	/* fækka		*/
-	[fF]örl({arEnding}|{stEnding})				|	/* förla/förlast	*/
+	[fF]yrig([eÃ¦]fi?st|afst)				|	/* fyrirgefa		*/
+	[fF]Ã¦((Ã°|dd)i?st)					|	/* fÃ¦Ã°ast		*/
+	[fF]Ã¦kk{arEnding}					|	/* fÃ¦kka		*/
+	[fF]Ã¶rl({arEnding}|{stEnding})				|	/* fÃ¶rla/fÃ¶rlast	*/
 	
 	[gG]agn{stEnding}					|	/* gagnast		*/
-	[gG]((e(ng(ur|iğ?))|kk)|angi)				|	/* ganga		*/
-	[gG]eğj{stEnding}					|	/* geğjast		*/
-	[gG][aeæ]fi?st						|	/* gefast		*/
+	[gG]((e(ng(ur|iÃ°?))|kk)|angi)				|	/* ganga		*/
+	[gG]eÃ°j{stEnding}					|	/* geÃ°jast		*/
+	[gG][aeÃ¦]fi?st						|	/* gefast		*/
 	[gG]r(em(st|[jd]ist) | amd?ist)				|	/* gremjast		*/
 	[gG]reyp(t?i)?st 					|	/* greypast		*/
-	[gG]ræ(ği?st|ddist)					|	/* græğast		*/
+	[gG]rÃ¦(Ã°i?st|ddist)					|	/* grÃ¦Ã°ast		*/
 	
-	[hH][aeé]l(di)?st 					|	/* haldast 		*/
+	[hH][aeÃ©]l(di)?st 					|	/* haldast 		*/
 	[hH]efn(d?i)?st 					|	/* hefnast 		*/
 	[hH]eils{stEnding} 					|	/* heilsast 		*/
 	[hH]ent{arEnding} 					|	/* henta 		*/
 	[hH]eppn{stEnding} 					|	/* heppnast 		*/
-	[hH]eyr(ğ?i)?st 					|	/* heyrast 		*/
+	[hH]eyr(Ã°?i)?st 					|	/* heyrast 		*/
 	[hH]itn{arEnding} 					|	/* henta 		*/
-	[hH]l(eypur|aupiğ?|jóp|ypi) 				|	/* hlaupa (kapp) 	*/
+	[hH]l(eypur|aupiÃ°?|jÃ³p|ypi) 				|	/* hlaupa (kapp) 	*/
 	[hH]lekk(t?i)?st 					|	/* hlekkjast 		*/
 	[hH]lotn{stEnding} 					|	/* hlotnast 		*/
-	[hH]lın{arEnding} 					|	/* hlınar 		*/
+	[hH]lÃ½n{arEnding} 					|	/* hlÃ½nar 		*/
 	[hH]nign{arEnding} 					|	/* hnignar 		*/
 	[hH]rak{arEnding} 					|	/* hrakar 		*/
-	[hH]r(ıs|jósi|aus|ysi|osiğ) 				|	/* hrjósa (hugur) 	*/
-	[hH]ugkvæm(d?i)?st 					|	/* hugkvæmast 		*/
+	[hH]r(Ã½s|jÃ³si|aus|ysi|osiÃ°) 				|	/* hrjÃ³sa (hugur) 	*/
+	[hH]ugkvÃ¦m(d?i)?st 					|	/* hugkvÃ¦mast 		*/
 	[hH]ugn{stEnding} 					|	/* hugnast 		*/
-	[hH]æf(ğ?ir?|t) 					|	/* hæfa 		*/
-	[hH]æg(ğ?ir?|t) 					|	/* hægja 		*/
-	[hH]ætt(ir?)? 						|	/* hættir (til) 	*/
+	[hH]Ã¦f(Ã°?ir?|t) 					|	/* hÃ¦fa 		*/
+	[hH]Ã¦g(Ã°?ir?|t) 					|	/* hÃ¦gja 		*/
+	[hH]Ã¦tt(ir?)? 						|	/* hÃ¦ttir (til) 	*/
 	
-	[kK](emur|om(iğ?)?|æmi) 				|	/* kemur 		*/
-	[kK]óln{arEnding} 					|	/* kólna 		*/
-	[kK]yng(ir?|di|t) 					|	/* kyngir (niğur) 	*/
+	[kK](emur|om(iÃ°?)?|Ã¦mi) 				|	/* kemur 		*/
+	[kK]Ã³ln{arEnding} 					|	/* kÃ³lna 		*/
+	[kK]yng(ir?|di|t) 					|	/* kyngir (niÃ°ur) 	*/
 	
-	[lL]án{stEnding} 					|	/* lánast 		*/
-	[lL]áğ?i?st 						|	/* lást 		*/
-	[lL]ei(ğ|dd)i?st 					|	/* leiğast 		*/
-	[lL]eyf(ğ?ist|st) 					|	/* leyfast 		*/
-	[lL]étt(ir?)?						|       /* létta		*/
+	[lL]Ã¡n{stEnding} 					|	/* lÃ¡nast 		*/
+	[lL]Ã¡Ã°?i?st 						|	/* lÃ¡st 		*/
+	[lL]ei(Ã°|dd)i?st 					|	/* leiÃ°ast 		*/
+	[lL]eyf(Ã°?ist|st) 					|	/* leyfast 		*/
+	[lL]Ã©tt(ir?)?						|       /* lÃ©tta		*/
 	[lL]inn(ir?|ti?)					|       /* linna		*/
-	[lL](íğ(ur|i|i?st)|ei(ğ(st)?|ddist)|iği(ğ|st)?)		| 	/* líğa/íğast		*/
-	[lL]íka{arEnding}					|       /* líka			*/
-	[lL](í(st|tist)|eist|itist)				| 	/* lítast		*/
-	[lL](ıkur|júki|auk|yki|okiğ)				|	/* ljúka		*/
-	[lL](ıstur|jósti|aust|ysti|ostiğ) 			|	/* ljósta 		*/
+	[lL](Ã­Ã°(ur|i|i?st)|ei(Ã°(st)?|ddist)|iÃ°i(Ã°|st)?)		| 	/* lÃ­Ã°a/Ã­Ã°ast		*/
+	[lL]Ã­ka{arEnding}					|       /* lÃ­ka			*/
+	[lL](Ã­(st|tist)|eist|itist)				| 	/* lÃ­tast		*/
+	[lL](Ã½kur|jÃºki|auk|yki|okiÃ°)				|	/* ljÃºka		*/
+	[lL](Ã½stur|jÃ³sti|aust|ysti|ostiÃ°) 			|	/* ljÃ³sta 		*/
 	[lL]ykt{arEnding}					|       /* lykta		*/
 	[lL]yn(dir?|ti?)					|       /* lynda		*/
-	[lL]ær(ğ?i)?st 						|	/* lærast 		*/
+	[lL]Ã¦r(Ã°?i)?st 						|	/* lÃ¦rast 		*/
 	
-	[mM]iğ{arEnding}					|       /* lykta		*/
-	[mM]isf([eó]rst|[aæ]rist)				|	/* misfarast		*/
+	[mM]iÃ°{arEnding}					|       /* lykta		*/
+	[mM]isf([eÃ³]rst|[aÃ¦]rist)				|	/* misfarast		*/
 	[mM]isheppn{stEnding}					|	/* misheppnast		*/
-	[mM]isheyr(ğ?i)?st					|	/* misheyrast		*/
-	[mM]islíka{arEnding}					|       /* mislíka		*/
-	[mM]issın(d?i)?st					|       /* missınast		*/
-	[mM]ist([eó]kst|[aæe]kist)				|       /* mistakast		*/
+	[mM]isheyr(Ã°?i)?st					|	/* misheyrast		*/
+	[mM]islÃ­ka{arEnding}					|       /* mislÃ­ka		*/
+	[mM]issÃ½n(d?i)?st					|       /* missÃ½nast		*/
+	[mM]ist([eÃ³]kst|[aÃ¦e]kist)				|       /* mistakast		*/
 	[mM]un{arEnding}					|       /* muna			*/
 	
-	[nN]æg(ir?|ği|t)					|	/* nægja		*/
+	[nN]Ã¦g(ir?|Ã°i|t)					|	/* nÃ¦gja		*/
 	
-	[oO]fb(ığur|jóği|auğ|yği|oğiğ)				|	/* ofbjóğa		*/
-	[óÓ]{arEnding}						|	/* óa			*/
+	[oO]fb(Ã½Ã°ur|jÃ³Ã°i|auÃ°|yÃ°i|oÃ°iÃ°)				|	/* ofbjÃ³Ã°a		*/
+	[Ã³Ã“]{arEnding}						|	/* Ã³a			*/
 	
 	[rR]at{stEnding}					|	/* ratast		*/
 	[rR]eikn{stEnding}					|	/* reiknast		*/
-	[rR]én{arEnding}					|	/* réna			*/
+	[rR]Ã©n{arEnding}					|	/* rÃ©na			*/
 	[rR]ign(ir?|di|t)					|	/* rigna		*/
-	[rR](ísi?|eis|isiğ?)					|	/* rísa			*/
+	[rR](Ã­si?|eis|isiÃ°?)					|	/* rÃ­sa			*/
 	
-	[sS]árn{arEnding}					|	/* sárna		*/
+	[sS]Ã¡rn{arEnding}					|	/* sÃ¡rna		*/
 	[sS]eink{arEnding}					|	/* seinka		*/
-	[sS](em(ur|ji|di)|am(di|iğ))					/* semur		*/
+	[sS](em(ur|ji|di)|am(di|iÃ°))					/* semur		*/
 	[sS]inn{stEnding}					|	/* sinnast		*/
 	[sS]jatn{arEnding}					|	/* sjatna		*/
-	[sS](ést|(já|æ)ist|ást)					|	/* sjást		*/
-	[sS]kán{arEnding}					|	/* skána		*/
+	[sS](Ã©st|(jÃ¡|Ã¦)ist|Ã¡st)					|	/* sjÃ¡st		*/
+	[sS]kÃ¡n{arEnding}					|	/* skÃ¡na		*/
 	[sS]keik{arEnding}					|	/* skeika		*/
 	[sS]kil(st|[jd]?ist)					|	/* skiljast		*/
-	[sS]kjátl{stEnding}					|	/* skjátlast		*/
+	[sS]kjÃ¡tl{stEnding}					|	/* skjÃ¡tlast		*/
 	[sS]kol{arEnding}					|	/* skola		*/
 	[sS]krik{arEnding}					|	/* skrika		*/
-	[sS]n(ıst|(ú|er)ist)					|	/* snúast (hugur)	*/
+	[sS]n(Ã½st|(Ãº|er)ist)					|	/* snÃºast (hugur)	*/
 	[sS]ortn{arEnding}					|	/* sortna		*/
-	[sS]taf{arEnding}					|	/* stafa (hætta ağ)	*/
-	[sS]t(endur|andi|óğ|æği|ağiğ)				|	/* standa (á sama)	*/
-	[sS]t(íg(ur|i)|eig|igiğ?)				|	/* stígur (til höfuğs)	*/
-	[sS]t(ekkur|ökk(vi)?|ykki|okkiğ)			|	/* stekkur (bros)	*/
-	[sS]úrn{arEnding}					|	/* súrna		*/
+	[sS]taf{arEnding}					|	/* stafa (hÃ¦tta aÃ°)	*/
+	[sS]t(endur|andi|Ã³Ã°|Ã¦Ã°i|aÃ°iÃ°)				|	/* standa (Ã¡ sama)	*/
+	[sS]t(Ã­g(ur|i)|eig|igiÃ°?)				|	/* stÃ­gur (til hÃ¶fuÃ°s)	*/
+	[sS]t(ekkur|Ã¶kk(vi)?|ykki|okkiÃ°)			|	/* stekkur (bros)	*/
+	[sS]Ãºrn{arEnding}					|	/* sÃºrna		*/
 	[sS]velg(d?i)?st					|	/* svelgjast		*/
 	[sS]vip{arEnding}					|	/* svipa (til)		*/
-	[sS]v(íğ(ur|i)|eiğ|iğiğ?)				|	/* svíğa		*/
-	[sS]ın(d?ist|st) 					|	/* sınast 		*/
-	[sS](ækt?ist|ó(tti)?st) 				|	/* sækjast 		*/
-	[sS]æm(ir?|di|t) 					|	/* sæma 		*/
+	[sS]v(Ã­Ã°(ur|i)|eiÃ°|iÃ°iÃ°?)				|	/* svÃ­Ã°a		*/
+	[sS]Ã½n(d?ist|st) 					|	/* sÃ½nast 		*/
+	[sS](Ã¦kt?ist|Ã³(tti)?st) 				|	/* sÃ¦kjast 		*/
+	[sS]Ã¦m(ir?|di|t) 					|	/* sÃ¦ma 		*/
 	
-	[tT]([eó]kst | [aeæ]kist) 				|	/* takast 		*/
+	[tT]([eÃ³]kst | [aeÃ¦]kist) 				|	/* takast 		*/
 	[tT](el(ji)?st|[ae]ld?ist) 				|	/* teljast (til) 	*/
 	
-	[vV]arğ							|	/* mér varğ		*/
-	[vV](ef(ji)?st|[ae]fğ?ist)	  			|	/* vefjast		*/
+	[vV]arÃ°							|	/* mÃ©r varÃ°		*/
+	[vV](ef(ji)?st|[ae]fÃ°?ist)	  			|	/* vefjast		*/
 	[vV]egn{arEnding}					|	/* vegna		*/
 	[vV]eit(ir?|ti?)	  				|	/* veita		*/
 	[vV]ersn{arEnding}					|	/* versna		*/
-	[vV]iğk(emur|om(i?ğ)?|æmi)				|	/* viğkoma		*/
-	[vV]iğv(ík(ur|i)|éki?|ikiğ)				|	/* viğvíkja		*/
+	[vV]iÃ°k(emur|om(i?Ã°)?|Ã¦mi)				|	/* viÃ°koma		*/
+	[vV]iÃ°v(Ã­k(ur|i)|Ã©ki?|ikiÃ°)				|	/* viÃ°vÃ­kja		*/
 	[vV](inni?st|annst)					|	/* vinnast		*/
 	[yYuU]nnist						|	/* vinnast		*/
 	[vV]itn{stEnding}					|	/* vitnast		*/
 	[vV]olgn{arEnding}					|	/* volgna		*/
-	[vV]ökn{arEnding}					|	/* vökna		*/
+	[vV]Ã¶kn{arEnding}					|	/* vÃ¶kna		*/
 	
-	[yY]firs(ést|jái?st|æist)				|	/* yfirsjást		*/
+	[yY]firs(Ã©st|jÃ¡i?st|Ã¦ist)				|	/* yfirsjÃ¡st		*/
 	[yY]ln{arEnding}					|	/* ylna			*/
 	
-	[şŞ]ok{arEnding}					|	/* şoka			*/
-	[şŞ]ókn{stEnding}					|	/* şóknast		*/
-	[şŞ](ykir?|[óæ]tti?)						/* şykja		*/
+	[Ã¾Ã]ok{arEnding}					|	/* Ã¾oka			*/
+	[Ã¾Ã]Ã³kn{stEnding}					|	/* Ã¾Ã³knast		*/
+	[Ã¾Ã](ykir?|[Ã³Ã¦]tti?)						/* Ã¾ykja		*/
 		
 /* Verbs which demand accusative subjects */
 VerbAcc = 	
-	[bB]r(est(ur|i)|ast|ysti|ostiğ)				|	/* bresta		*/
+	[bB]r(est(ur|i)|ast|ysti|ostiÃ°)				|	/* bresta		*/
 	[dD]reym(ir?|di|t)					|	/* dreyma		*/
-	[fF]ıs(ir?|ti|t)					|	/* fısir		*/
+	[fF]Ã½s(ir?|ti|t)					|	/* fÃ½sir		*/
 	[gG]rein(ir?|di|t)					|	/* greinir		*/
-	[gG]r(íp(ur|i)|eip|ipiğ?)				|	/* grípa		*/
+	[gG]r(Ã­p(ur|i)|eip|ipiÃ°?)				|	/* grÃ­pa		*/
 	[gG]run{arEnding}					|	/* gruna		*/
 	[hH]ryll(ir?|ti?)					|	/* hrylla		*/
 	[hH]ungr{arEnding}					|	/* hungra		*/
 	[kK]itl{arEnding}					|	/* kitla		*/
-	[kK]líg(j{arEnding}|i)					|	/* klígja		*/
-	[kK]læ(j{arEnding}|i)					|	/* klæja		*/
+	[kK]lÃ­g(j{arEnding}|i)					|	/* klÃ­gja		*/
+	[kK]lÃ¦(j{arEnding}|i)					|	/* klÃ¦ja		*/
 	[kK]repp(ir?|ti|t)					|	/* kreppa		*/
 	[lL]ang{arEnding}					|	/* langa		*/
 	[lL]eng(ir?|di|t)					|	/* lengja		*/
 	[lL]yst(ir?|i)?						|	/* lysta		*/
-	[lL]æg(ir?|ğ?i|t)					|	/* lægja		*/
+	[lL]Ã¦g(ir?|Ã°?i|t)					|	/* lÃ¦gja		*/
 	([m|M]is|[rR]ang)?[mM]inn(ir?|ti?|i)			|	/* (mis)minnir		*/
 	[mM]un{arEnding}					|	/* muna			*/
-	[óÓ]r{arEnding}						|	/* órar			*/
+	[Ã³Ã“]r{arEnding}						|	/* Ã³rar			*/
 	[rR]ag{arEnding}					|	/* raga			*/
-	[rR]ám{arEnding}					|	/* ráma			*/
-	[rR](ek(ur|iğ?)|ak|æki)					|	/* reka			*/
+	[rR]Ã¡m{arEnding}					|	/* rÃ¡ma			*/
+	[rR](ek(ur|iÃ°?)|ak|Ã¦ki)					|	/* reka			*/
 	[sS]ak{arEnding}					|	/* saka			*/
-	[sS]et(ur|t(ji|ti?))					|	/* setur (hljóğan)	*/
-	[sS]k(efur|afiğ?|óf|æfi)				|	/* skefur		*/
+	[sS]et(ur|t(ji|ti?))					|	/* setur (hljÃ³Ã°an)	*/
+	[sS]k(efur|afiÃ°?|Ã³f|Ã¦fi)				|	/* skefur		*/
 	[sS]skipt(ir?)?						|	/* skipta		*/
 	[sS]kort(ir?)?						|	/* skorta		*/
-	[sS]toğ{arEnding}					|	/* stoğa		*/
+	[sS]toÃ°{arEnding}					|	/* stoÃ°a		*/
 	[sS]undl{arEnding}					|	/* sundla		*/
 	[sS]veng(ir?|di|t)					|	/* svengja		*/
 	[sS]vim{arEnding}					|	/* svima		*/
-	[sS]v(íğ(ur|i)|eiğ|iğiğ?)				|	/* svíğa		*/
+	[sS]v(Ã­Ã°(ur|i)|eiÃ°|iÃ°iÃ°?)				|	/* svÃ­Ã°a		*/
 	[sS]yfj{arEnding}					|	/* syfja		*/
 	[uU]ndr{arEnding}					|	/* undra		*/
 	[vV]anhag{arEnding}					|	/* vanhagar (um)	*/
 	[vV]ant{arEnding}					|	/* vantar		*/	
-	[vV]arğ{arEnding}					|	/* varğar (um)		*/	
-	[vV]erk(ja(r|ği?)|i)					|	/* verkjar		*/
-	[şŞ]rj(ıtur|óti|aut|yti|otiğ)				|	/* şrjóta		*/
-	[şŞ](v(erri?|arr)|yrri|orriğ)				|	/* şverra		*/
-	[şŞ]yrst(ir?)?							/* şyrsta		*/
+	[vV]arÃ°{arEnding}					|	/* varÃ°ar (um)		*/	
+	[vV]erk(ja(r|Ã°i?)|i)					|	/* verkjar		*/
+	[Ã¾Ã]rj(Ã½tur|Ã³ti|aut|yti|otiÃ°)				|	/* Ã¾rjÃ³ta		*/
+	[Ã¾Ã](v(erri?|arr)|yrri|orriÃ°)				|	/* Ã¾verra		*/
+	[Ã¾Ã]yrst(ir?)?							/* Ã¾yrsta		*/
