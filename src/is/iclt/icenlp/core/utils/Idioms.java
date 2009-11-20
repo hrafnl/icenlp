@@ -23,6 +23,7 @@ package is.iclt.icenlp.core.utils;
 
 import is.iclt.icenlp.core.utils.Lexicon;
 import is.iclt.icenlp.core.tokenizer.TokenTags;
+import is.iclt.icenlp.core.tokenizer.Token.MWECode;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,7 +47,6 @@ public class Idioms extends Lexicon
        super(in);
        dummyToken = new TokenTags(); 
     }
-
 
 	/**
 	 * Finds idioms in the supplied vector. Replaces the tags of the idioms tokens with the one found in the idioms lexicon.
@@ -103,6 +103,16 @@ public class Idioms extends Lexicon
 					if( k + i < tokens.size() )
 					{
 						tok = (TokenTags)tokens.get( k + i );
+						if(k == 0)
+						{
+							//System.out.println("First: " + tok.lexeme);
+							tok.mweCode = MWECode.begins;
+						}
+						if(k+1 == tagStrings.length)
+						{
+							//System.out.println("last: " + tok.lexeme);
+							tok.mweCode = MWECode.ends;
+						}
 						tok.setTag( tagStrings[k] );
 					}
 				}

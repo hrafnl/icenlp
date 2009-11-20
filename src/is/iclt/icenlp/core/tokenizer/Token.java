@@ -37,20 +37,25 @@ public class Token {
                 tcLArrow, tcRArrow, tcPlus, tcStar, tcDollar, tcAnd, tcNumberSign, tcEqualSign,
                 tcPlusMinus, tcUnderscore, tcArrow, tcLCurlyBracket, tcRCurlyBracket
                 }
+    
+    public enum MWECode {begins, ends, none}
    
     public String lexeme;               // The lexeme
     public TokenCode tokenCode;         // The token code
+    public MWECode mweCode;
 
     public Token()
     {
-        lexeme = null;
-        tokenCode = TokenCode.tcNone;
+        this.lexeme = null;
+        this.tokenCode = TokenCode.tcNone;
+        
     }
 
     public Token(String str, TokenCode tc)
     {
-        lexeme = str;
-        tokenCode = tc;
+        this.lexeme = str;
+        this.tokenCode = tc;
+        this.mweCode = MWECode.none;
     }
 
     public boolean isQuote()
