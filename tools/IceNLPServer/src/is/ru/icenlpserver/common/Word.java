@@ -1,23 +1,28 @@
 package is.ru.icenlpserver.common;
 
+import is.iclt.icenlp.core.tokenizer.Token.MWECode;
+
 /**
  * Represents word within a sentence and keps
  * information about it: Lexeme, part-of-speech tag
  * and the lemma.
  * @author hlynurs
  */
+
 public class Word 
 {
 	// Member variables.
 	private String lexeme;
 	private String tag;
 	private String lemma;
+	public MWECode mweCode;
 	
 	// Constructor for the class.
-	public Word(String lexeme, String tag) 
+	public Word(String lexeme, String tag, MWECode mweCode) 
 	{
 		this.lexeme = lexeme;
 		this.tag = tag;
+		this.mweCode = mweCode;
 	}
 	
 	/**
@@ -68,11 +73,23 @@ public class Word
 	}
 	
 	/**
-	 * Setter function fot the lemma member variable.
+	 * Setter function for the lemma member variable.
 	 * @param lemma String object that contains the lemma.
 	 */
 	public void setLemma(String lemma) 
 	{
 		this.lemma = lemma;
 	}
+	
+	/**
+	 * Setter function for the MWECode member
+	 * variable.
+	 * @return MWEcode.
+	 */
+	public MWECode getMWECode()
+	{
+		return this.mweCode;
+	}
+	
+	
 }

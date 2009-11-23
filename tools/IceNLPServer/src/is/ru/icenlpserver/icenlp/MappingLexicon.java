@@ -20,7 +20,11 @@ public class MappingLexicon
 	private HashMap<String,  List<Pair<String, String>>> lemmaExceptionMap;
 	
 	// Hash map for lexeme exceptions.
+	private HashMap<String, String> MWEMap;
+	
+	// Hash map for MWE
 	private HashMap<String, List<Pair<String, String>>> lexemeExceptionMap;
+	
 	
 	public MappingLexicon(String mapperFile) throws IOException 
 	{	
@@ -28,6 +32,10 @@ public class MappingLexicon
 		this.tagMaps = new HashMap<String, String>();
 		this.lemmaExceptionMap = new HashMap<String, List<Pair<String, String>>>();
 		this.lexemeExceptionMap = new HashMap<String, List<Pair<String, String>>>();
+		this.MWEMap = new HashMap<String, String>();
+		
+		// test for MWE.
+		//this.MWEMap.put("að_fjalla_um", "<MAJOR_TEST>");
 
 		// Let's read in the mapperFile
 		FileInputStream fstream = new FileInputStream(mapperFile);
@@ -43,7 +51,8 @@ public class MappingLexicon
 				try
 				{
 					// We found a exception rule in the lexicon file.
-					if(strLine.toLowerCase().startsWith("lemma=") || strLine.toLowerCase().startsWith("lexeme="))
+					if(strLine.toLowerCase().startsWith("lemma=") || strLine.toLowerCase().startsWith("lexeme=") || 
+							strLine.toLowerCase().startsWith("mwe="))
 					{
 						if(strLine.matches("LEMMA=[^\t]+\t[^\t]+\t[^\t]+"))
 						{
@@ -69,9 +78,16 @@ public class MappingLexicon
 							this.lexemeExceptionMap.get(str[0]).add(pair);
 						}
 						
+						// If the line contains a MWE rule.
+						else if(strLine.matches("MWE=[^\t]+\t[^\t]+"))
+						{
+							String[] str = strLine.substring(4).split("\t");
+							this.MWEMap.put(str[0], str[1]);
+						}
+						
 						else
 						{
-							System.out.println("[x] Error in exception rule in mapping file " + mapperFile + " on ine " + lineNum);
+							System.out.println("[x] Error in exception rule in mapping file " + mapperFile + " on line " + lineNum);
 							System.out.println("Rule was: " + strLine);
 						}
 					}
@@ -102,6 +118,7 @@ public class MappingLexicon
 		System.out.println("[i] Number of mapping rules: " + this.tagMaps.size());
 		System.out.println("[i] Number of lexeme exception rules: " + this.lexemeExceptionMap.size());
 		System.out.println("[i] Number of lemma exception rules: " + this.lemmaExceptionMap.size());
+		System.out.println("[i] Number of MWE rules: " + this.MWEMap.size());
 	}
 
 	public String lookupTagmap(String tag, boolean ignoreCase) 
@@ -140,4 +157,19 @@ public class MappingLexicon
 		
 		return this.lexemeExceptionMap.get(lexeme);
 	}
+	
+	public boolean hasMapForMWE(String mweString)
+	{
+		return this.MWEMap.containsKey(mweString);
+	}
+	
+	public String getMapForMWE(String mweString)
+	{
+		return this.MWEMap.get(mweString);
+	}
+	
+	
+	
+	
+	
 }

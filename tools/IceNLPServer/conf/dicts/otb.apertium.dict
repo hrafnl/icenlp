@@ -671,3 +671,5 @@ LEMMA=uns	cnj	cnjsub
 LEMMA=ýmist	cnj	cnjsub
 LEMMA=þarsem	cnj	cnjsub
 LEMMA=þótt	cnj	cnjsub
+MWE=að_fjalla_um	<EMTREM>
+MWE=eins_og	<EXTRRRR>

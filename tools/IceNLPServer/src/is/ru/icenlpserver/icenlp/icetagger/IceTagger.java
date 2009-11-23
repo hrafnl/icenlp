@@ -3,6 +3,8 @@ package is.ru.icenlpserver.icenlp.icetagger;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import is.iclt.icenlp.core.icetagger.IceTaggerLexicons;
 import is.iclt.icenlp.core.icetagger.IceTaggerResources;
 import is.iclt.icenlp.core.lemmald.Lemmald;
@@ -11,9 +13,11 @@ import is.iclt.icenlp.core.tokenizer.Sentence;
 import is.iclt.icenlp.core.tokenizer.Sentences;
 import is.iclt.icenlp.core.tokenizer.Token;
 import is.iclt.icenlp.core.tokenizer.TokenizerResources;
+import is.iclt.icenlp.core.tokenizer.Token.MWECode;
 import is.iclt.icenlp.core.tritagger.TriTaggerLexicons;
 import is.iclt.icenlp.core.tritagger.TriTaggerResources;
 import is.iclt.icenlp.core.utils.Lexicon;
+import is.iclt.icenlp.core.utils.WordList;
 import is.iclt.icenlp.facade.IceTaggerFacade;
 import is.ru.icenlpserver.common.Configuration;
 import is.ru.icenlpserver.common.Pair;
@@ -150,7 +154,7 @@ public class IceTagger implements IIceTagger
 				for(Token token : s.getTokens())
 				{
 					IceTokenTags t = ((IceTokenTags)token);
-					wordList.add(new Word(t.lexeme, t.getFirstTagStr()));
+					wordList.add(new Word(t.lexeme, t.getFirstTagStr(), t.mweCode));
 				}
 			}
 			
@@ -194,7 +198,7 @@ public class IceTagger implements IIceTagger
 					}
 				}
 			}
-			
+
 			// Go over lexeme exception rules.
 			if(this.mappingLexicon != null)
 			{
@@ -216,9 +220,53 @@ public class IceTagger implements IIceTagger
 					}
 				}
 			}
+
+			// Go over the MWE expression
+			for(int i = 0; i < wordList.size(); i++)
+			{
+				if(wordList.get(i).mweCode == MWECode.begins)
+				{
+					// the index of the words begins at index begins:
+					int begins = i;
+					int ends = 0;
+					
+					String mweStr = wordList.get(i).getLexeme();
+					int j = i;
+					while(j < wordList.size())
+					{	
+						if(wordList.get(j).mweCode == MWECode.ends)
+						{
+							// The words ends at there.
+							ends = j;
+							i = j;
+							break;
+						}
+						if(j+1 < wordList.size())
+							mweStr += "_" + wordList.get(j+1).getLexeme();
+
+						j += 1;	
+					}
+					
+					if(this.mappingLexicon.hasMapForMWE(mweStr))
+					{	
+						String lemma = "";
+						String lexeme = "";
+						
+						for(i = (ends - begins); i>= 0; i--)
+						{
+							lemma += wordList.get(begins).getLemma() + " ";
+							lexeme += wordList.get(begins).getLexeme() + " ";
+							wordList.remove(begins);
+						}
+						Word w = new Word(lexeme, this.mappingLexicon.getMapForMWE(mweStr), MWECode.none);
+						w.setLemma(lemma);
+						wordList.add(begins, w);
+					}
+				}
+			}
 			
 			// Create output string that will be sent to the client.
-			String output ="";
+			String output = "";
 			
 			// If we have not set any tagging output
 			if(this.taggingOutputForamt == null)
@@ -246,6 +294,7 @@ public class IceTagger implements IIceTagger
 						output = output + part;
 					}	
 			}
+
 			return output;
 		} 
 		
