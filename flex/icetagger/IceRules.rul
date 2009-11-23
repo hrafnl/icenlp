@@ -92,7 +92,9 @@ RULE prevToken.isOnlyWordClass(DEMPRONOUN) && currToken.isNoun()
 	&& (nextToken == null || !nextToken.isNoun())  ;
 // choose the verb    tunglið óð í skýjum
 RULE prevToken.isOnlyWordClass(NOUN) && currToken.isVerb() 
-	&& nextToken != null && nextToken.isOnlyWordClass(PREP) ;	
+	&& nextToken != null && nextToken.isOnlyWordClass(PREP) ;
+// Remove strong declension if weak exists and article preceeds
+RULE tag.isAdjectiveStrong() && currToken.isAdjectiveWeak() &&  prevToken.isOnlyWordClass(ARTICLE) ;	
 
 ELSE
 IF nextToken != null ;

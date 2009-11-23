@@ -466,6 +466,8 @@ public class IceTagger
 				newTag.setPersonGender( prevTag.getPersonGenderLetter() );
 				newTag.setNumber( prevTag.getNumberLetter() );
 				newTag.setCase( prevTag.getCaseLetter() );
+                if (currToken.hasArticle())
+                    newTag.addArticle();
 				currToken.addTag( newTag );
 				if( logger != null )
 					logger.log( "ForceAgreement: Changed " + currToken.lexeme + " used: " + prevToken.lexeme );

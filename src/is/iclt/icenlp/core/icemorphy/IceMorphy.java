@@ -35,18 +35,15 @@ import java.util.ArrayList;
  * @author Hrafn Loftsson
  */
 public class IceMorphy {
-    private enum MorphoClass
+    public enum MorphoClass
     { NounMasculine1, NounMasculine2, NounMasculine3, NounMasculine4, NounMasculine5,
       NounMasculine6, NounMasculine7, NounMasculine8, NounMasculine9, NounMasculine10,
       NounFeminine1,  NounFeminine2, NounFeminine3,  NounFeminine4,  NounFeminine5, NounFeminine6,
       NounNeuter1,  NounNeuter2, NounNeuter3,  NounNeuter4,
       Adj1, Adj2, Adj3, Adj4, Adj5,
-      VerbActive1, VerbActive2, VerbActive3, VerbActive4, VerbActive5,
+      VerbActive1, VerbActive2, VerbActive3, VerbActive4, VerbActive5, VerbActive6,
       VerbMiddle1, VerbMiddle2, None
     }
-    private enum Mood {Indicative, Subjunctive, Imperative, IndicativeSubjunctive};
-    private enum Voice {Active, Middle};
-    //private enum Person {First, Second, Third, FirstSecond, FirstThird, SecondThird};
     private IceLog logger = null;    // Logfile file
 	private Lexicon dictionary;     // a big dictionaryOtb
     private Lexicon dictionaryBase; // base dictionary
@@ -59,6 +56,7 @@ public class IceMorphy {
     private String[] searchStrings;
     private int searchStringSize=36;
     private IceTokenTags dummyToken;
+    private MorphoRules morphoRules; // A list of records containing morphological info
 
     private static final int suffixLength = 5; // The "normal" length of suffixes used for lookup
 	private static final int maxSuffixLength = 10; // The maxium length of suffixes used for lookup
@@ -100,6 +98,7 @@ public class IceMorphy {
 		this.prefixes = prefixes;
 		dummyToken = new IceTokenTags( "dymmyToken", Token.TokenCode.tcNone );
         searchStrings = new String[searchStringSize+1];
+        morphoRules = new MorphoRules();
     }
 
 
@@ -164,6 +163,7 @@ public class IceMorphy {
 				searchStrings[6] = searchStrings[2] + "nn";
 				searchStrings[7] = searchStrings[3] + "num";
 				searchStrings[8] = searchStrings[4] + "ns";
+				/* The plural is NOT indicative of wek masculne declension
 				searchStrings[9] = root + "ar";    // skólar
 				searchStrings[10] = root + "a";
 				searchStrings[11] = root + "um";
@@ -172,6 +172,7 @@ public class IceMorphy {
 				searchStrings[14] = searchStrings[10] + "na";
 				searchStrings[15] = root + "unum";
 				searchStrings[16] = searchStrings[12] + "nna";
+				*/
 				break;
 			case NounMasculine3:
 				searchStrings[1] = root + "ur";    // galdur
@@ -690,8 +691,8 @@ public class IceMorphy {
 				searchStrings[23] = root + "andi";   // reyn-andi
 				break;
 			case VerbActive3:
-				searchStrings[1] = root + "i";   // ég ben-di
-				searchStrings[2] = root + "ir";  // þú/hann ben-dir
+				searchStrings[1] = root + "di";   // ég ben-di
+				searchStrings[2] = root + "dir";  // þú/hann ben-dir
 				searchStrings[3] = root + "dum";  // við ben-dum
 				searchStrings[4] = root + "dið";  // þið ben-dið
 				searchStrings[5] = root + "da";   // þeir ben-da
@@ -730,6 +731,20 @@ public class IceMorphy {
 				searchStrings[10] = root + "du"; // þeir þyng-du
 				searchStrings[11] = root + "dist"; //  þyng-dist
 				searchStrings[12] = root + "jandi"; //  þyng-jandi
+				break;
+            case VerbActive6:
+				searchStrings[1] = root + "ði";   // ég vir-ði
+				searchStrings[2] = root + "ðir";  // þú/hann vir-ðir
+				searchStrings[3] = root + "ðum";  // við vir-ðum
+				searchStrings[4] = root + "ðið";  // þið vir-ðið
+				searchStrings[5] = root + "ða";   // þeir vir-ða
+				searchStrings[6] = root + "ti";  // ég/hann vir-ti
+				searchStrings[7] = root + "tir"; // þú vir-tir
+				searchStrings[8] = root + "tum"; // við vir-tum
+				searchStrings[9] = root + "tuð"; // þið vir-tuð
+				searchStrings[10] = root + "tu"; // þeir vir-tu
+				searchStrings[11] = root + "tist"; //  vir-tist
+				searchStrings[12] = root + "tandi";   // vir-tandi
 				break;
 				// ágerast
 			case VerbMiddle1:
@@ -1079,6 +1094,7 @@ public class IceMorphy {
 			addAdjectiveTag( tok, IceTag.cNeuter, IceTag.cPlural, IceTag.cDative, IceTag.cWeak, IceTag.cPositive );
 			addAdjectiveTag( tok, IceTag.cNeuter, IceTag.cPlural, IceTag.cGenitive, IceTag.cWeak, IceTag.cPositive );
 		}
+        //else if( (tok.isAdjectiveWeak() || tok.isAdjectiveStrong()) && tok.isAdjectivePositive() && tok.lexeme.endsWith( "a" ) ) // blauta
         else if( tok.isAdjectiveWeak() && tok.isAdjectivePositive() && tok.lexeme.endsWith( "a" ) ) // blauta
 		{
 			found = true;
@@ -1601,7 +1617,7 @@ public class IceMorphy {
 	}
 
     private boolean searchVerb( String root, MorphoClass mClass, IceTokenTags currToken,
-                                Mood mood, Voice voice,
+                                MorphoRuleVerb.Mood mood, MorphoRuleVerb.Voice voice,
                                 char tenseLetter, char personLetter, char numberLetter, char personLetter2, char numberLetter2, boolean isUnknown )
 	{
 		String tagStr, searchStr = null;
@@ -1628,7 +1644,7 @@ public class IceMorphy {
                       {
 						if( personLetter != IceTag.cGenderUnspec )
 						{
-							if( mood == Mood.Imperative )
+							if( mood == MorphoRuleVerb.Mood.Imperative )
 							{
 								dumTag = new IceTag( IceTag.tagVerbImperative );
 								dumTag.setTense( tenseLetter );
@@ -1636,13 +1652,13 @@ public class IceMorphy {
 								dumTag.setNumber( numberLetter );
 								currToken.addTag( dumTag );
 							}
-							if( mood == Mood.Indicative || mood == Mood.IndicativeSubjunctive)
+							if( mood == MorphoRuleVerb.Mood.Indicative || mood == MorphoRuleVerb.Mood.IndicativeSubjunctive)
 							{
 								dumTag = new IceTag( IceTag.tagVerb );
 								dumTag.setTense( tenseLetter );
 								dumTag.setPersonGender( personLetter );
 								dumTag.setNumber( numberLetter );
-                                if (voice == Voice.Middle)
+                                if (voice == MorphoRuleVerb.Voice.Middle)
                                     dumTag.setVoice(IceTag.cMiddle);
                                 currToken.addTag( dumTag );
 								// Add another person?
@@ -1654,13 +1670,13 @@ public class IceMorphy {
 									currToken.addTag( dumTag3 );
 								}
 							}
-							if( mood == Mood.Subjunctive || mood == Mood.IndicativeSubjunctive)
+							if( mood == MorphoRuleVerb.Mood.Subjunctive || mood == MorphoRuleVerb.Mood.IndicativeSubjunctive)
 							{
 								dumTag2 = new IceTag( IceTag.tagVerbSubjunctive );
 								dumTag2.setTense( tenseLetter );
 								dumTag2.setPersonGender( personLetter );
 								dumTag2.setNumber( numberLetter );
-                                if (voice == Voice.Middle)
+                                if (voice == MorphoRuleVerb.Voice.Middle)
                                     dumTag2.setVoice(IceTag.cMiddle);
                                 currToken.addTag( dumTag2 );
 								if( personLetter2 != IceTag.cGenderUnspec )
@@ -1719,550 +1735,174 @@ public class IceMorphy {
 		return found;
 	}
 
-	public boolean verbAnalysis( IceTokenTags currToken, IceTokenTags prevToken, boolean isUnknown )
-	{
-		String lex, root;
-		boolean found = false;
 
-		lex = currToken.lexeme;
-		int len = lex.length();
+    // Checks if the token is unambiguously a verb infinitive form or present participle
+    public boolean verbInfinitiveOrPresentParticpleOnly( IceTokenTags currToken, IceTokenTags prevToken)
+    {
+        String lex;
+        lex = currToken.lexeme;
+        int len = lex.length();
 
-		if( lex.endsWith( "a" ) && !lex.endsWith( "aða" ) )
-		{
-			if( prevToken != null && prevToken.isInfinitive() && isUnknown )
-			{
-				currToken.addInfinitiveVerbForm();
-				currToken.setUnknownType( IceTokenTags.UnknownType.ending );
-				found = true;
-			}
-			else
-			{
-				// þeir/ég borða
-				root = lex.substring( 0, len - 1 );
-				found = searchVerb( root, MorphoClass.VerbActive1, currToken, Mood.Indicative, Voice.Active, IceTag.cPresent, IceTag.cThirdPerson, IceTag.cPlural, IceTag.cFirstPerson, IceTag.cSingular, isUnknown );   // search for the past tense
-				if( !found )  // if found in this case then the verb is only the infinitive
-					found = searchVerb( root, MorphoClass.VerbActive2, currToken, Mood.Indicative, Voice.Active, IceTag.cPresent, IceTag.cGenderUnspec, IceTag.cPlural, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown );   // search for the past tense
-				if( !found )
-					found = searchVerb( root, MorphoClass.VerbActive5, currToken, Mood.Indicative, Voice.Active, IceTag.cPresent, IceTag.cGenderUnspec, IceTag.cPlural, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown );   // search for the past tense
-				if( !found && lex.endsWith( "ja" ) )   // ræsk-ja, þyng-ja
-				{
-					root = lex.substring( 0, len - 2 );
-					found = searchVerb( root, MorphoClass.VerbActive5, currToken, Mood.Indicative, Voice.Active, IceTag.cPresent, IceTag.cGenderUnspec, IceTag.cPlural, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown );   // search for the past tense
-				}
-
-				// Add the infinitive tag
-				if( found && isUnknown )
-					currToken.addTagFront( IceTag.tagVerbInfActive );
-			}
-		}
-		// present participle
+        boolean found=false;
+        // Check obvious case
+        if( lex.endsWith( "a" ) && !lex.endsWith( "aða" ) )
+        {
+           if( prevToken != null && prevToken.isInfinitive())
+           {
+              currToken.addInfinitiveVerbForm();
+              currToken.setUnknownType( IceTokenTags.UnknownType.ending );
+              found = true;
+              if( logger != null )
+                     logger.log( "Verb analysis infinitive only: " + currToken.lexeme + " " + currToken.allTagStrings() );
+           }
+        }
+        // present participle
 		else if( lex.endsWith( "andi" ) )
 		{
 			// espandi, hlaupandi
-			root = lex.substring( 0, len - 4 );   // espa, hlaupa
-			found = searchVerb( root, MorphoClass.VerbActive1, currToken, Mood.Indicative, Voice.Active, IceTag.cPresent, IceTag.cGenderUnspec, IceTag.cSingular, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown );
-			if( found && isUnknown)
+			String root = lex.substring( 0, len - 4 );   // espa, hlaupa
+			found = searchVerb( root, MorphoClass.VerbActive1, currToken, MorphoRuleVerb.Mood.Indicative, MorphoRuleVerb.Voice.Active, IceTag.cPresent, IceTag.cGenderUnspec, IceTag.cSingular, IceTag.cGenderUnspec, IceTag.cSingular, true );
+			if( found)
 			{  // present participle
 				currToken.addAllTags( IceTag.tagAdjectivesIndeclineable );
 				currToken.addTag( IceTag.tagVerbPresentPart );
-			}
-		}
-		else if( lex.endsWith( "mdar" ) )
-		{
-			// gleymdar, skemmdar
-			root = lex.substring( 0, len - 2 );   // gleym is root
-			found = searchVerb( root, MorphoClass.VerbActive1, currToken, Mood.Indicative, Voice.Active, IceTag.cPresent, IceTag.cGenderUnspec, IceTag.cSingular, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown );
-			if( found && isUnknown)
-			{  // past participle
-				addPastParticipleTag( currToken, IceTag.cFeminine, IceTag.cSingular, IceTag.cNominative );
-			}
-		}
-		else if( lex.endsWith( "ngdar" ) )
-		{
-			// flengdar, hengdar
-			root = lex.substring( 0, len - 3 );   // fleng is root
-			found = searchVerb( root, MorphoClass.VerbActive5, currToken, Mood.Indicative, Voice.Active, IceTag.cPresent, IceTag.cGenderUnspec, IceTag.cSingular, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown );
-			if( found && isUnknown)
-			{  // past participle
-				addPastParticipleTag( currToken, IceTag.cFeminine, IceTag.cPlural, IceTag.cNominative );
-			}
-		}
+                currToken.setUnknownType( IceTokenTags.UnknownType.morpho);
+                if( logger != null )
+                     logger.log( "Verb analysis present participle only: " + currToken.lexeme + " " + currToken.allTagStrings() );
 
-				else if (lex.endsWith("aður"))
-				{
-					// borð-aður
-					root = lex.substring(0,len-4);
-					found = searchVerb(root, MorphoClass.VerbActive1, currToken, Mood.Indicative, Voice.Active, IceTag.cPresent, IceTag.cGenderUnspec, IceTag.cSingular, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown);
-					if (found && isUnknown) {  // past participle
-						addPastParticipleTag(currToken, IceTag.cMasculine, IceTag.cSingular, IceTag.cNominative);
-					}
-				}
+			}
+		}
+        return found;
+    }
 
-				else if (lex.endsWith("aðir"))
-				{
-					// borð-aðir
-					root = lex.substring(0,len-4);
-					found = searchVerb(root, MorphoClass.VerbActive1, currToken, Mood.Indicative, Voice.Active, IceTag.cPresent, IceTag.cGenderUnspec, IceTag.cSingular, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown);
-					if (found && isUnknown) {  // past participle
-						addPastParticipleTag(currToken, IceTag.cMasculine, IceTag.cPlural, IceTag.cNominative);
-					}
-				}
-				else if (lex.endsWith("aðar"))
-				{
-					// borð-aðar
-					root = lex.substring(0,len-4);
-					found = searchVerb(root, MorphoClass.VerbActive1, currToken, Mood.Indicative, Voice.Active, IceTag.cPresent, IceTag.cGenderUnspec, IceTag.cSingular, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown);
-					if (found && isUnknown) {   // past participle
-						addPastParticipleTag(currToken, IceTag.cFeminine, IceTag.cPlural, IceTag.cNominative);
-					}
-				}
-				else if (lex.endsWith("uð"))
-				{
-					// borð-uð
-					root = lex.substring(0,len-2);
-					found = searchVerb(root, MorphoClass.VerbActive1, currToken, Mood.Indicative, Voice.Active, IceTag.cPresent, IceTag.cGenderUnspec, IceTag.cSingular, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown);
-					if (found && isUnknown) {  // past participle
-						addPastParticipleTag(currToken, IceTag.cFeminine, IceTag.cSingular, IceTag.cNominative);
-                        addPastParticipleTag(currToken, IceTag.cNeuter, IceTag.cPlural, IceTag.cNominative);
-                    }
-				} 
-		else if( (lex.endsWith( "dirðu" ) || lex.endsWith( "ðirðu" )) && len > 8 )
-		{    // reyn-dirðu, horf-ðirðu
-			root = lex.substring( 0, len - 5 );
-			found = searchVerb( root, MorphoClass.VerbActive1, currToken, Mood.Indicative, Voice.Active, IceTag.cPast, IceTag.cSecondPerson, IceTag.cSingular, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown );
-		}
-		else if( (lex.endsWith( "irðu" ) || lex.endsWith( "arðu" ) || lex.endsWith( "urðu" )) && len > 7 )
-		{    // svar-arðu, met-urðu, heyr-irðu
-			root = lex.substring( 0, len - 4 );
-			found = searchVerb( root, MorphoClass.VerbActive1, currToken, Mood.Indicative, Voice.Active, IceTag.cPresent, IceTag.cSecondPerson, IceTag.cSingular, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown );
-		}
-		else if( lex.endsWith( "ar" ) && !(lex.endsWith( "aðar" ) && len > 6) )
-		{    // þú/hann borð-ar    the present
-			root = lex.substring( 0, len - 2 );
-			found = searchVerb( root, MorphoClass.VerbActive1, currToken, Mood.Indicative, Voice.Active, IceTag.cPresent, IceTag.cThirdPerson, IceTag.cSingular, IceTag.cSecondPerson, IceTag.cSingular, isUnknown );
-		}
-		else if( lex.endsWith( "ddum" ) )
-		{    // við meiddum    the past
-			root = lex.substring( 0, len - 4 );
-			found = searchVerb( root, MorphoClass.VerbActive4, currToken, Mood.IndicativeSubjunctive, Voice.Active, IceTag.cPast, IceTag.cFirstPerson, IceTag.cPlural, IceTag.cGenderUnspec, IceTag.cPlural, isUnknown );
-		}
-		else if( lex.endsWith( "ttum" ) )
-		{    // við breyt-tum    the past
-			root = lex.substring( 0, len - 3 );
-			found = searchVerb( root, MorphoClass.VerbActive2, currToken, Mood.IndicativeSubjunctive, Voice.Active, IceTag.cPast, IceTag.cFirstPerson, IceTag.cPlural, IceTag.cGenderUnspec, IceTag.cPlural, isUnknown );
-		}
-        else if( lex.endsWith( "uðum" ) )
-	    {    // borð-uðum    the past
-				root = lex.substring( 0, len - 4 );
-				found = searchVerb( root, MorphoClass.VerbActive1, currToken, Mood.IndicativeSubjunctive, Voice.Active, IceTag.cPast, IceTag.cFirstPerson, IceTag.cPlural, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown );
-		}
 
-        else if( lex.endsWith( "dum" ) || lex.endsWith( "tum" ) || lex.endsWith( "ðum" ) )
-		{    // við reyn-dum, fyll-tum    the past
-			root = lex.substring( 0, len - 3 );
-			found = searchVerb( root, MorphoClass.VerbActive2, currToken, Mood.IndicativeSubjunctive, Voice.Active, IceTag.cPast, IceTag.cFirstPerson, IceTag.cPlural, IceTag.cGenderUnspec, IceTag.cPlural, isUnknown );
-			if( !found )
-				found = searchVerb( root, MorphoClass.VerbActive5, currToken, Mood.IndicativeSubjunctive, Voice.Active, IceTag.cPast, IceTag.cFirstPerson, IceTag.cPlural, IceTag.cGenderUnspec, IceTag.cPlural, isUnknown );
-			if( !found && lex.endsWith( "tum" ) )   // breyt-um
-			{
-				root = lex.substring( 0, len - 2 );
-				found = searchVerb( root, MorphoClass.VerbActive2, currToken, Mood.IndicativeSubjunctive, Voice.Active, IceTag.cPresent, IceTag.cThirdPerson, IceTag.cSingular, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown );
-				if( !found )
-				{
-					// hir-tum, hir-ða
-					root = lex.substring( 0, len - 3 ) + "ð";
-					found = searchVerb( root, MorphoClass.VerbActive2, currToken, Mood.IndicativeSubjunctive, Voice.Active, IceTag.cPast, IceTag.cFirstPerson, IceTag.cPlural, IceTag.cGenderUnspec, IceTag.cPlural, isUnknown );
-				}
-				if( !found ) // köstum, glötum
-				{
-					root = lex.substring( 0, len - 2 );
-					// u-hljóðvarp, köstum-kasta
-					root = hljodVarp( root, 'ö', 'a' );
-					if( root != null )
-					{
-						found = searchVerb( root, MorphoClass.VerbActive1, currToken, Mood.IndicativeSubjunctive, Voice.Active, IceTag.cPresent, IceTag.cThirdPerson, IceTag.cPlural, IceTag.cGenderUnspec, IceTag.cPlural, isUnknown );
-					}
-				}
-			}
-			if( !found && lex.endsWith( "ðum" ) )   // greið-um
-			{
-				root = lex.substring( 0, len - 2 );
-				found = searchVerb( root, MorphoClass.VerbActive2, currToken, Mood.IndicativeSubjunctive, Voice.Active, IceTag.cPresent, IceTag.cThirdPerson, IceTag.cSingular, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown );
-			}
-		}
-		else if( lex.endsWith( "dduð" ) )
-		{    // þið meidduð    the past
-			root = lex.substring( 0, len - 4 );
-			found = searchVerb( root, MorphoClass.VerbActive4, currToken, Mood.IndicativeSubjunctive, Voice.Active, IceTag.cPast, IceTag.cSecondPerson, IceTag.cPlural, IceTag.cGenderUnspec, IceTag.cPlural, isUnknown );
-		}
-		else if( lex.endsWith( "ttuð" ) )
-		{    // þið breyt-tuð    the past
-			root = lex.substring( 0, len - 3 );
-			found = searchVerb( root, MorphoClass.VerbActive2, currToken, Mood.IndicativeSubjunctive, Voice.Active, IceTag.cPast, IceTag.cSecondPerson, IceTag.cPlural, IceTag.cGenderUnspec, IceTag.cPlural, isUnknown );
-		}
-		else if( lex.endsWith( "duð" ) || lex.endsWith( "tuð" ) || lex.endsWith( "ðuð" ) )
-		{    // þið reyn-duð, fyll-tuð    the past
-			root = lex.substring( 0, len - 3 );
-			found = searchVerb( root, MorphoClass.VerbActive2, currToken, Mood.IndicativeSubjunctive, Voice.Active, IceTag.cPast, IceTag.cSecondPerson, IceTag.cPlural, IceTag.cGenderUnspec, IceTag.cPlural, isUnknown );
-			if( !found )
-				found = searchVerb( root, MorphoClass.VerbActive5, currToken, Mood.IndicativeSubjunctive, Voice.Active, IceTag.cPast, IceTag.cSecondPerson, IceTag.cPlural, IceTag.cGenderUnspec, IceTag.cPlural, isUnknown );
-		}
-		else if( lex.endsWith( "ddu" ) )
-		{    // þeir meiddu    the past
-			root = lex.substring( 0, len - 3 );
-			found = searchVerb( root, MorphoClass.VerbActive4, currToken, Mood.IndicativeSubjunctive, Voice.Active, IceTag.cPast, IceTag.cThirdPerson, IceTag.cPlural, IceTag.cGenderUnspec, IceTag.cPlural, isUnknown );
-		}
-		else if( lex.endsWith( "ttu" ) )
-		{    // þeir breyt-tu    the past
-			root = lex.substring( 0, len - 2 );
-			found = searchVerb( root, MorphoClass.VerbActive2, currToken, Mood.IndicativeSubjunctive, Voice.Active, IceTag.cPast, IceTag.cThirdPerson, IceTag.cPlural, IceTag.cGenderUnspec, IceTag.cPlural, isUnknown );
-		}
-		else if( lex.endsWith( "uðu" ) )
-		{    // borð-uðu    the past
-			root = lex.substring( 0, len - 3 );
-			found = searchVerb( root, MorphoClass.VerbActive1, currToken, Mood.IndicativeSubjunctive, Voice.Active, IceTag.cPast, IceTag.cThirdPerson, IceTag.cPlural, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown );
-		}
-		else if( lex.endsWith( "aðu" ) )
-		{    // borð-aðu    the imperative
-			root = lex.substring( 0, len - 3 );
-			found = searchVerb( root, MorphoClass.VerbActive1, currToken, Mood.Imperative, Voice.Active, IceTag.cPresent, IceTag.cSecondPerson, IceTag.cSingular, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown );
-		}
-		else if( lex.endsWith( "stu" ) && isUnknown )
-		{    // fórstu, straukstu
-			root = lex.substring( 0, len - 1 ); // Trick, search for fórst, straukst
-			dummyToken.clearTags();
-			dummyToken.lexeme = root;
-			dictionaryTokenLookup( dummyToken, false );
-			if( !dummyToken.noTags() && dummyToken.isVerbAny() )
-			{
-				IceTag tag = new IceTag( IceTag.tagVerbSecondSingular );
-				tag.setTense( IceTag.cPast );
-				currToken.addTag( tag );
-				found = true;
-				currToken.setUnknownType( IceTokenTags.UnknownType.morpho );
-			}
-		}
-		else if( lex.endsWith( "du" ) || lex.endsWith( "tu" ) || lex.endsWith( "ðu" ) )
-		{    // þeir reyn-du, fyll-tu, lif-ðu    the past
-			int count = 1;
-			root = lex.substring( 0, len - 2 );
-			// u-hljóðvarp, földu - fel
-			String newRoot = hljodVarp( root, 'ö', 'e' );
-			if( newRoot != null )
-				count = 2;
+    public boolean verbInfinitiveAnalysis ( IceTokenTags currToken)
+    {
+        String lex, root;
+        boolean found = false;
 
-			for( int i = 1; i <= count && !found; i++ )
-			{
-				if( i == 2 )
-					root = newRoot;
-
-				found = searchVerb( root, MorphoClass.VerbActive2, currToken, Mood.IndicativeSubjunctive, Voice.Active, IceTag.cPast, IceTag.cThirdPerson, IceTag.cPlural, IceTag.cGenderUnspec, IceTag.cPlural, isUnknown );
-				if( !found )
-					found = searchVerb( root, MorphoClass.VerbActive5, currToken, Mood.IndicativeSubjunctive, Voice.Active, IceTag.cPast, IceTag.cThirdPerson, IceTag.cPlural, IceTag.cGenderUnspec, IceTag.cPlural, isUnknown );
-			}
-		}
-		else if( lex.endsWith( "aði" ) )
-		{    // borð-aði    the past
-			root = lex.substring( 0, len - 3 );
-			found = searchVerb( root, MorphoClass.VerbActive1, currToken, Mood.IndicativeSubjunctive, Voice.Active, IceTag.cPast, IceTag.cThirdPerson, IceTag.cSingular, IceTag.cFirstPerson, IceTag.cSingular, isUnknown );
-		}
-		else if( lex.endsWith( "aðir" ) )
-		{    // borð-aðir    the past
-			root = lex.substring( 0, len - 4 );
-			found = searchVerb( root, MorphoClass.VerbActive1, currToken, Mood.IndicativeSubjunctive, Voice.Active, IceTag.cPast, IceTag.cSecondPerson, IceTag.cSingular, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown );
-		}
-		else if( lex.endsWith( "uðuð" ) )
-		{    // borð-uðuð    the past
-			root = lex.substring( 0, len - 4 );
-			found = searchVerb( root, MorphoClass.VerbActive1, currToken, Mood.IndicativeSubjunctive, Voice.Active, IceTag.cPast, IceTag.cSecondPerson, IceTag.cPlural, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown );
-		}
-
-		else if( lex.endsWith( "um" ) )
-		{    // við borð-um    the present
-			int count = 1;
-			root = lex.substring( 0, len - 2 );
-			// u-hljóðvarp, köstum - kast
-			String newRoot = hljodVarp( root, 'ö', 'a' );
-			if( newRoot != null )
-				count = 2;
-
-			for( int i = 1; i <= count && !found; i++ )
-			{
-				if( i == 2 )
-					root = newRoot;
-				found = searchVerb( root, MorphoClass.VerbActive1, currToken, Mood.Indicative, Voice.Active, IceTag.cPresent, IceTag.cFirstPerson, IceTag.cPlural, IceTag.cGenderUnspec, IceTag.cPlural, isUnknown );
-			}
-		}
-		else if( lex.endsWith( "ið" ) ) // borð-ið
-		{
-			root = lex.substring( 0, len - 2 );
-			found = searchVerb( root, MorphoClass.VerbActive1, currToken, Mood.Indicative, Voice.Active, IceTag.cPresent, IceTag.cSecondPerson, IceTag.cPlural, IceTag.cGenderUnspec, IceTag.cPlural, isUnknown );
-		}
-		else if( lex.endsWith( "iði" ) ) // ætl-iði
-		{
-			root = lex.substring( 0, len - 3 );
-			found = searchVerb( root, MorphoClass.VerbActive1, currToken, Mood.Indicative, Voice.Active, IceTag.cPresent, IceTag.cSecondPerson, IceTag.cPlural, IceTag.cGenderUnspec, IceTag.cPlural, isUnknown );
-		}
-		else if( lex.endsWith( "að" ) )
-		{    // borðað    the past participle
-			// borðað
-			root = lex.substring( 0, len - 2 );
-			found = searchVerb( root, MorphoClass.VerbActive1, currToken, Mood.Indicative, Voice.Active, IceTag.cPresent, IceTag.cGenderUnspec, IceTag.cPlural, IceTag.cGenderUnspec, IceTag.cPlural, isUnknown );
-			//found = searchVerbPastPart(lex.substring(0,len-1), currToken, IceTag.cNeuter, IceTag.cSingular, IceTag.cNominative);
-			if( found && isUnknown)   // add supine and past participle
-			{
-				currToken.addTag( IceTag.tagVerbSupine );
-				addPastParticipleTag( currToken, IceTag.cNeuter, IceTag.cSingular, IceTag.cNominative );
-			}
-		}
-		else if( lex.endsWith( "rt" ) || lex.endsWith( "mt" ) || lex.endsWith( "nt" ) || lex.endsWith( "gt" ) ||
-		         lex.endsWith( "kt" ) || lex.endsWith( "lt" ) || lex.endsWith( "pt" ) || lex.endsWith( "tt" ) /*|| lex.endsWith( "st" )*/ )
-		{
-			if( lex.endsWith( "tt" ) )
-			{ //flett
-				root = lex;
-				found = searchVerb( root, MorphoClass.VerbActive2, currToken, Mood.Indicative, Voice.Active, IceTag.cPresent, IceTag.cGenderUnspec, IceTag.cSingular, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown );
-				if( !found ) // snætt
-				{
-					root = lex.substring( 0, len - 2 ) + "ð";   // snæð is root
-					found = searchVerb( root, MorphoClass.VerbActive2, currToken, Mood.Indicative, Voice.Active, IceTag.cPresent, IceTag.cGenderUnspec, IceTag.cSingular, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown );
-				}
-			}
-			else if( lex.endsWith( "kt" ) || lex.endsWith( "gt" ) )
-			{ //vanrækt, smeygt => vanrækja, smeygja
-				// smeygt, vanrækt
-				root = lex.substring( 0, len - 1 );   // smeyg is root
-				found = searchVerb( root, MorphoClass.VerbActive5, currToken, Mood.Indicative, Voice.Active, IceTag.cPresent, IceTag.cGenderUnspec, IceTag.cSingular, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown );
-			}
-			else
-			{
-				// kúrt, kennt, glápt
-				root = lex.substring( 0, len - 1 );   // kúr is root
-				found = searchVerb( root, MorphoClass.VerbActive2, currToken, Mood.Indicative, Voice.Active, IceTag.cPresent, IceTag.cGenderUnspec, IceTag.cSingular, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown );
-			}
-			if( found && isUnknown)
-			{  // add supine and past participle
-				currToken.addTag( IceTag.tagVerbSupine );
-				addPastParticipleTag( currToken, IceTag.cNeuter, IceTag.cSingular, IceTag.cNominative );
-			}
-		}
-		else if( lex.endsWith( "nd" ) )
-		{
-			// kennd
-			root = lex.substring( 0, len - 1 );   // kenn is root
-			found = searchVerb( root, MorphoClass.VerbActive2, currToken, Mood.Indicative, Voice.Active, IceTag.cPresent, IceTag.cGenderUnspec, IceTag.cSingular, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown );
-			if( found && isUnknown)
-			{   // past participle
-				addPastParticipleTag( currToken, IceTag.cFeminine, IceTag.cSingular, IceTag.cNominative );
-			}
-		}
-		else if( lex.endsWith( "endir" ) )  // active
-		{
-			// þú/hann sendir
-			root = lex.substring( 0, len - 2 );   // sen is root
-			found = searchVerb( root, MorphoClass.VerbActive3, currToken, Mood.Indicative, Voice.Active, IceTag.cPresent, IceTag.cThirdPerson, IceTag.cSingular, IceTag.cSecondPerson, IceTag.cSingular, isUnknown );
-		}
-		else if( lex.endsWith( "entir" ) )  // active
-		{
-			// þú/hann sentir
-			root = lex.substring( 0, len - 2 );   // sen is root
-			found = searchVerb( root, MorphoClass.VerbActive3, currToken, Mood.IndicativeSubjunctive, Voice.Active, IceTag.cPast, IceTag.cThirdPerson, IceTag.cSingular, IceTag.cSecondPerson, IceTag.cSingular, isUnknown );
-		}
-		else if( lex.endsWith( "ttir" ) )
-		{    // hætt-ir, sætt-ir    the present
-			root = lex.substring( 0, len - 2 );
-			found = searchVerb( root, MorphoClass.VerbActive2, currToken, Mood.IndicativeSubjunctive, Voice.Active, IceTag.cPresent, IceTag.cThirdPerson, IceTag.cSingular, IceTag.cSecondPerson, IceTag.cSingular, isUnknown );
-			if( !found )
-			{
-				root = lex.substring( 0, len - 3 ); // breyt-tir
-				found = searchVerb( root, MorphoClass.VerbActive2, currToken, Mood.IndicativeSubjunctive, Voice.Active, IceTag.cPast, IceTag.cSecondPerson, IceTag.cSingular, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown );
-			}
-		}
-		else if( lex.endsWith( "ðir" ) )   // herð-ir
-		{
-			root = lex.substring( 0, len - 2 );
-			found = searchVerb( root, MorphoClass.VerbActive1, currToken, Mood.IndicativeSubjunctive, Voice.Active, IceTag.cPresent, IceTag.cThirdPerson, IceTag.cSingular, IceTag.cSecondPerson, IceTag.cSingular, isUnknown );
-			if( !found ) // could be past tens, horf-ðir
-			{
-				root = lex.substring( 0, len - 3 );
-				found = searchVerb( root, MorphoClass.VerbActive2, currToken, Mood.IndicativeSubjunctive, Voice.Active, IceTag.cPast, IceTag.cSecondPerson, IceTag.cSingular, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown );
-			}
-		}
-		else if( lex.endsWith( "dir" ) || lex.endsWith( "tir" ) ) // active, reyndir, fylltir
-		{
-			// þú reyndir
-			root = lex.substring( 0, len - 3 );
-			found = searchVerb( root, MorphoClass.VerbActive2, currToken, Mood.IndicativeSubjunctive, Voice.Active, IceTag.cPast, IceTag.cSecondPerson, IceTag.cSingular, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown );
-			if( !found )
-				found = searchVerb( root, MorphoClass.VerbActive5, currToken, Mood.IndicativeSubjunctive, Voice.Active, IceTag.cPast, IceTag.cSecondPerson, IceTag.cSingular, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown );
-			if( !found && lex.endsWith( "tir" ) )
-			{
-				root = lex.substring( 0, len - 2 ); // þú/hann breyt-ir
-				found = searchVerb( root, MorphoClass.VerbActive2, currToken, Mood.IndicativeSubjunctive, Voice.Active, IceTag.cPresent, IceTag.cThirdPerson, IceTag.cSingular, IceTag.cSecondPerson, IceTag.cSingular, isUnknown );
-			}
-		}
-		else if( lex.endsWith( "endi" ) )   // active
-		{
-			// ég sendi
-			root = lex.substring( 0, len - 2 );   // sen is root
-			found = searchVerb( root, MorphoClass.VerbActive3, currToken, Mood.Indicative, Voice.Active, IceTag.cPresent, IceTag.cFirstPerson, IceTag.cSingular, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown );
-		}
-		else if( lex.endsWith( "enti" ) )  // active
-		{
-			// ég senti
-			root = lex.substring( 0, len - 2 );   // sen is root
-			found = searchVerb( root, MorphoClass.VerbActive3, currToken, Mood.IndicativeSubjunctive, Voice.Active, IceTag.cPast, IceTag.cFirstPerson, IceTag.cSingular, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown );
-		}
-		else if( lex.endsWith( "ddi" ) ) // active
-		{
-			// ég meiddi
-			root = lex.substring( 0, len - 3 );
-			found = searchVerb( root, MorphoClass.VerbActive4, currToken, Mood.IndicativeSubjunctive, Voice.Active, IceTag.cPast, IceTag.cThirdPerson, IceTag.cSingular, IceTag.cFirstPerson, IceTag.cSingular, isUnknown );
-		}
-		else if( lex.endsWith( "tti" ) ) // active
-		{
-			// ég/hann breytti
-			root = lex.substring( 0, len - 2 );
-			found = searchVerb( root, MorphoClass.VerbActive2, currToken, Mood.IndicativeSubjunctive, Voice.Active, IceTag.cPast, IceTag.cThirdPerson, IceTag.cSingular, IceTag.cFirstPerson, IceTag.cSingular, isUnknown );
-		}
-		else if( lex.endsWith( "di" ) || lex.endsWith( "ti" ) || lex.endsWith( "ði" ) ) // active
-		{
-			// ég reyndi
-			root = lex.substring( 0, len - 2 );
-			found = searchVerb( root, MorphoClass.VerbActive2, currToken, Mood.IndicativeSubjunctive, Voice.Active, IceTag.cPast, IceTag.cThirdPerson, IceTag.cSingular, IceTag.cFirstPerson, IceTag.cSingular, isUnknown );
-			if( !found )
-				found = searchVerb( root, MorphoClass.VerbActive5, currToken, Mood.IndicativeSubjunctive, Voice.Active, IceTag.cPast, IceTag.cThirdPerson, IceTag.cSingular, IceTag.cFirstPerson, IceTag.cSingular, isUnknown );
-			if( !found && lex.endsWith( "ti" ) )
-			{
-				root = lex.substring( 0, len - 1 ); //breyt-i
-				found = searchVerb( root, MorphoClass.VerbActive2, currToken, Mood.IndicativeSubjunctive, Voice.Active, IceTag.cPresent, IceTag.cFirstPerson, IceTag.cSingular, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown );
-			}
-			if( !found && lex.endsWith( "ði" ) )
-			{
-				root = lex.substring( 0, len - 1 ); //greið-i
-				found = searchVerb( root, MorphoClass.VerbActive2, currToken, Mood.IndicativeSubjunctive, Voice.Active, IceTag.cPresent, IceTag.cFirstPerson, IceTag.cSingular, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown );
-			}
-			// ígrundi - ígrunda
-			if( !found )
-			{
-				root = lex.substring( 0, len - 1 ); //ígrund-i
-				found = searchVerb( root, MorphoClass.VerbActive1, currToken, Mood.Subjunctive, Voice.Active, IceTag.cPresent, IceTag.cThirdPerson, IceTag.cSingular, IceTag.cFirstPerson, IceTag.cSingular, isUnknown );
-			}
-		}
-		else if( lex.endsWith( "ir" ) )
-		{    // reyn-ir, fyll-ir    the present
-			root = lex.substring( 0, len - 2 );
-			found = searchVerb( root, MorphoClass.VerbActive2, currToken, Mood.Indicative, Voice.Active, IceTag.cPresent, IceTag.cThirdPerson, IceTag.cSingular, IceTag.cSecondPerson, IceTag.cSingular, isUnknown );
-		}
-		else if( lex.endsWith( "mdur" ) )
-		{
-			// gleymdur, skemmdur
-			root = lex.substring( 0, len - 2 );   // gleym is root
-			found = searchVerb( root, MorphoClass.VerbActive1, currToken, Mood.Indicative, Voice.Active, IceTag.cPresent, IceTag.cGenderUnspec, IceTag.cSingular, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown );
-			if( found && isUnknown)
-			{  // past participle
-				addPastParticipleTag( currToken, IceTag.cMasculine, IceTag.cSingular, IceTag.cNominative );
-			}
-		}
-		else if( lex.endsWith( "ngdur" ) )
-		{
-			// flengdur, hengdur
-			root = lex.substring( 0, len - 3 );   // fleng is root
-			found = searchVerb( root, MorphoClass.VerbActive5, currToken, Mood.Indicative, Voice.Active, IceTag.cPresent, IceTag.cGenderUnspec, IceTag.cSingular, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown );
-			if( found && isUnknown)
-			{   // past participle
-				addPastParticipleTag( currToken, IceTag.cMasculine, IceTag.cSingular, IceTag.cNominative );
-			}
-		}
-        else if( lex.endsWith( "ður" ) )
-		{
-			// tryggður
-			root = lex.substring( 0, len - 3 );   // trygg is root
-			found = searchVerb( root, MorphoClass.VerbActive4, currToken, Mood.Indicative, Voice.Active, IceTag.cPresent, IceTag.cGenderUnspec, IceTag.cSingular, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown );
-			if( found && isUnknown)
-			{   // past participle
-				addPastParticipleTag( currToken, IceTag.cMasculine, IceTag.cSingular, IceTag.cNominative );
-			}
-		}
-        else if( lex.endsWith( "ur" ) )
-		{    // bindur    the present
-			root = lex.substring( 0, len - 2 );
-			found = searchVerb( root, MorphoClass.VerbActive1, currToken, Mood.Indicative, Voice.Active, IceTag.cPresent, IceTag.cThirdPerson, IceTag.cSingular, IceTag.cSecondPerson, IceTag.cSingular, isUnknown );
-		}
-		else if( lex.endsWith( "gg" ) )
-		{    // legg,hegg    the present
-			root = lex;
-			found = searchVerb( root, MorphoClass.VerbActive5, currToken, Mood.Indicative, Voice.Active, IceTag.cPresent, IceTag.cFirstPerson, IceTag.cSingular, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown );
-		}
-		else if( lex.endsWith( "i" ) ) // active and subjunctive
-		{
-			// ég reyni, þótt ég reyni
-			root = lex.substring( 0, len - 1 );
-			found = searchVerb( root, MorphoClass.VerbActive2, currToken, Mood.IndicativeSubjunctive, Voice.Active, IceTag.cPresent, IceTag.cFirstPerson, IceTag.cSingular, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown );
-			// Add 3. person subjunctive
-			if( found && isUnknown)   // þótt hann reyni
-			{
-				IceTag tag = new IceTag( IceTag.tagVerbSubjunctive );
-				tag.setTense( IceTag.cPresent );
-				tag.setPersonGender( IceTag.cThirdPerson );
-				tag.setNumber( IceTag.cSingular );
-				currToken.addTag( tag );
-			}
-			if( !found )
-			{
-				// stimpli - stimpla
-				found = searchVerb( root, MorphoClass.VerbActive1, currToken, Mood.Subjunctive, Voice.Active, IceTag.cPresent, IceTag.cThirdPerson, IceTag.cSingular, IceTag.cFirstPerson, IceTag.cSingular, isUnknown );
-			}
-		}
-        else if ( lex.endsWith( "ast" ))
-		{
-			// ágerast
-            root = lex.substring( 0, len - 3 );
-			found = searchVerb( root, MorphoClass.VerbMiddle1, currToken, Mood.Indicative, Voice.Middle, IceTag.cPresent, IceTag.cThirdPerson, IceTag.cPlural, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown );
-            // Add infinitive tag
-			if( found && isUnknown)   // þótt hann reyni
-                currToken.addInfinitiveVerbForm();
-        }
-        else if ( lex.endsWith( "ðist" ))
-		{
-			// ágerðist
-            root = lex.substring( 0, len - 4 );
-			found = searchVerb( root, MorphoClass.VerbMiddle1, currToken, Mood.Indicative, Voice.Middle, IceTag.cPast, IceTag.cFirstPerson, IceTag.cSingular, IceTag.cSecondPerson, IceTag.cSingular, isUnknown );
-            // Add 3. person subjunctive
-			if( found && isUnknown)   // þótt hann reyni
-			{
-				IceTag tag = new IceTag( IceTag.tagVerbMiddle );
-				tag.setTense( IceTag.cPast );
-				tag.setPersonGender( IceTag.cThirdPerson );
-				tag.setNumber( IceTag.cSingular );
-				currToken.addTag( tag );
-			}
-        }
-        else if ( lex.endsWith( "ist" ))
-		{
-			// ágerist
-            root = lex.substring( 0, len - 3 );
-			found = searchVerb( root, MorphoClass.VerbMiddle1, currToken, Mood.Indicative, Voice.Middle, IceTag.cPresent, IceTag.cSecondPerson, IceTag.cSingular, IceTag.cGenderUnspec, IceTag.cSingular, isUnknown );
-        }
-        //else if( !lex.endsWith( "ast" ) && !lex.endsWith( "ist" ) && lex.endsWith( "st" ) )
-        else if(lex.endsWith( "st" ) )
+        lex = currToken.lexeme;
+        int len = lex.length();
+        // Loop trough the morphological records and use a record if the ending matches
+        for (int i=0; i<= morphoRules.listVerb.size()-1 && !found; i++)
         {
-            root = lex.substring( 0, len - 2 );
-			found = searchVerb( root, MorphoClass.VerbMiddle2, currToken, Mood.Indicative, Voice.Middle, IceTag.cPresent, IceTag.cFirstPerson, IceTag.cSingular, IceTag.cSecondPerson, IceTag.cSingular, isUnknown );
-            // Add 3. person subjunctive and supine
-			if( found && isUnknown)  
-			{
-				IceTag tag = new IceTag( IceTag.tagVerbMiddle );
-				tag.setTense( IceTag.cPresent );
-				tag.setPersonGender( IceTag.cThirdPerson );
-				tag.setNumber( IceTag.cSingular );
-				currToken.addTag( tag );
-                currToken.addTag( IceTag.tagVerbSupineMiddle );
-            }
+             MorphoRuleVerb rec = morphoRules.listVerb.get(i);
+
+             if (lex.matches(".*"+rec.ending+"$") && (len > rec.subtractForLookup)) {
+               root = lex.substring( 0, len - rec.subtractForLookup);
+               found = searchVerb( root, rec.morphoClass, currToken, rec.mood, rec.voice, rec.tense, IceTag.cGenderUnspec, ' ', IceTag.cGenderUnspec, ' ', true );
+
+               if( found )
+		       {
+			        if( logger != null )
+				        logger.log( "Verb analysis infinitive: " + currToken.lexeme + " " + currToken.allTagStrings() );
+
+                    if (rec.voice == MorphoRuleVerb.Voice.Active)
+                        currToken.addTagFront( IceTag.tagVerbInfActive );
+                    else
+                        currToken.addTagFront( IceTag.tagVerbInfMiddle );
+			        currToken.setUnknownType( IceTokenTags.UnknownType.morpho );
+		       }
+             }
+        }
+        return found;
+    }
+
+
+    public boolean verbFiniteAnalysis ( IceTokenTags currToken)
+    {
+        String lex, root;
+        boolean found = false;
+
+        lex = currToken.lexeme;
+        int len = lex.length();
+        // Loop trough the morphological records and use a record if the ending matches
+        boolean done = false;
+        for (int i=0; i<= morphoRules.listVerbFinite.size()-1 && !done; i++)
+        {
+             MorphoRuleVerbFinite rec = morphoRules.listVerbFinite.get(i);
+
+             if (lex.matches(".*"+rec.ending+"$") && (len > rec.subtractForLookup)) {
+               root = lex.substring( 0, len - rec.subtractForLookup);
+               found = searchVerb( root, rec.morphoClass, currToken, rec.mood, rec.voice, rec.tense, rec.person1, rec.number1, rec.person2, rec.number2, true );
+
+               if (found && rec.ending.equals("st"))    // Hack to add middle supine form!
+                    currToken.addTag( IceTag.tagVerbSupineMiddle );
+
+               if (!found && rec.morphoClass == IceMorphy.MorphoClass.VerbActive1 && lex.matches(".[dtð]?um$")) {
+                    // u-hljóðvarp, köstum-kasta
+					String newRoot = hljodVarp( root, 'ö', 'a' );
+					if( newRoot != null )
+						found = searchVerb( newRoot, rec.morphoClass, currToken, rec.mood, rec.voice, rec.tense, rec.person1, rec.number1, rec.person2, rec.number2, true );
+               }
+
+               if( found )
+		       {
+			        if( logger != null )
+				        logger.log( "Verb analysis finite: " + currToken.lexeme + " " + currToken.allTagStrings() );
+			        currToken.setUnknownType( IceTokenTags.UnknownType.morpho );
+                    done = !rec.searchAgainWhenFound;
+		       }
+             }
+        }
+        return found;
+    }
+
+    public boolean verbPastParticipleAnalysis ( IceTokenTags currToken)
+    {
+        String lex, root;
+        boolean found = false;
+
+        lex = currToken.lexeme;
+        int len = lex.length();
+        boolean done=false;
+        // Loop trough the morphological records and use a record if the ending matches
+        for (int i=0; i<= morphoRules.listVerbPastParticiple.size()-1 && !done; i++)
+        {
+             MorphoRuleVerbPastParticiple rec = morphoRules.listVerbPastParticiple.get(i);
+
+             if (lex.matches(".*"+rec.ending+"$") && (len > rec.subtractForLookup)) {
+               root = lex.substring( 0, len - rec.subtractForLookup);
+               found = searchVerb( root, rec.morphoClass, currToken, rec.mood, rec.voice, rec.tense, IceTag.cGenderUnspec, ' ', IceTag.cGenderUnspec, ' ', true );
+
+               if( found )
+		       {
+			        if( logger != null )
+				        logger.log( "Verb analysis past participle: " + currToken.lexeme + " " + currToken.allTagStrings() );
+
+                    if (rec.supine)
+                        currToken.addTag( IceTag.tagVerbSupine );
+                    addPastParticipleTag(currToken, rec.gender, rec.number, rec.theCase);
+			        currToken.setUnknownType( IceTokenTags.UnknownType.morpho );
+                    done = !rec.searchAgainWhenFound;
+		       }
+             }
+        }
+        return found;
+    }
+
+    // Guesses the tag profile for potential verbs
+    public boolean verbAnalysis( IceTokenTags currToken, IceTokenTags prevToken)
+    {
+        if (currToken.lexeme.endsWith("aða"))
+            return false;
+
+        boolean found1=false, found2=false, found3=false, found4=false;
+        found1 = verbInfinitiveOrPresentParticpleOnly(currToken, prevToken);
+
+        if (!found1) {
+           found2 = verbInfinitiveAnalysis(currToken);
+           found3 = verbFiniteAnalysis(currToken);
+           found4 = verbPastParticipleAnalysis(currToken);
+           if (found3)
+              generateMissingVerb(currToken);
         }
 
-        return (found);
-	}
+        return (found1 || found2 || found3 || found4);
+
+    }
+
+
 
 	public boolean isForeignLexeme( String lex )
 	{
@@ -2794,6 +2434,8 @@ public class IceMorphy {
 			end = searchStringSize;
 		else if( mClass == MorphoClass.NounMasculine1 )
 			end = 20;
+        else if( mClass == MorphoClass.NounMasculine2 )
+            end = 8;
 		else if( mClass == MorphoClass.NounFeminine1 )
 			end = 18;
 		else
@@ -3031,35 +2673,18 @@ public class IceMorphy {
 		return false;
 	}
 
-	/*
- * Does lookup for the word without the article
- */
-	private boolean suffixAnalysisArticle( IceTokenTags currToken, boolean isProperNoun )
-	{
-		String lex, root;
-		IceTag.WordClass wordClass = IceTag.WordClass.wcNoun;
 
-		boolean found = false;
-		if( isProperNoun )
-			wordClass = IceTag.WordClass.wcProperNoun;
+ private boolean checkSpecialCasesArticle (IceTokenTags currToken)
+ {
+     String lex, root;
+     IceTag.WordClass wordClass = IceTag.WordClass.wcNoun;
 
-		lex = currToken.lexeme;
-		int len = lex.length();
+     boolean found = false;
+     lex = currToken.lexeme;
+     int len = lex.length();
 
-		if( lex.endsWith( "urinn" ) && (wordClass == IceTag.WordClass.wcNoun) )    // hestur-inn
-		{
-			addNounTag( currToken, IceTag.cMasculine, IceTag.cSingular, IceTag.cNominative, true );
-			found = true;
-		}
-		else if( lex.endsWith( "arinn" ) )    // kennar-inn, gítar-inn
-		{
-			root = lex.substring( 0, len - 3 );
-			found = searchSuffixCases( root, MorphoClass.NounMasculine8, currToken, wordClass, true, true, false, false, IceTag.cMasculine, IceTag.cSingular, true, IceTag.cNoDeclension );
-			if( !found )
-				found = searchSuffixCases( root, MorphoClass.NounMasculine2, currToken, wordClass, true, false, false, false, IceTag.cMasculine, IceTag.cSingular, true, IceTag.cNoDeclension );
-		}
-		else if( lex.endsWith( "inn" ) && len > 3 )
-		{   // hest-inn
+     if( lex.endsWith( "inn" ) && len > 3 )
+     {   // aðil-inn
 			// first check if weak masculine noun
 			root = lex.substring( 0, len - 3 );
 			found = checkWeakMasculineNoun( root );
@@ -3067,6 +2692,7 @@ public class IceMorphy {
 				addNounTag( currToken, IceTag.cMasculine, IceTag.cSingular, IceTag.cNominative, true );
 			else
 			{
+                // Then check for a special masculine noun
 				found = checkSpecialMasculineNoun( root );
 				if( found )
 				{
@@ -3074,243 +2700,10 @@ public class IceMorphy {
 					addNounTag( currToken, IceTag.cMasculine, IceTag.cSingular, IceTag.cAccusative, true );
 				}
 			}
-			if( !found )
-				found = searchSuffixCases( root, MorphoClass.NounMasculine1, currToken, wordClass, false, true, false, false, IceTag.cMasculine, IceTag.cSingular, true, IceTag.cNoDeclension );
-			if( !found )
-				found = searchSuffixCases( root, MorphoClass.NounMasculine2, currToken, wordClass, true, false, false, false, IceTag.cMasculine, IceTag.cSingular, true, IceTag.cNoDeclension );
-		}
-		else if( lex.endsWith( "nn" ) && len > 2 )
-		{      // skóla-nn
-			root = lex.substring( 0, len - 2 );
-			if( !checkNormalMasculineNoun( root ) )
-				found = searchSuffixCases( root, MorphoClass.NounMasculine2, currToken, wordClass, false, true, false, false, IceTag.cMasculine, IceTag.cSingular, true, IceTag.cNoDeclension );
-		}
-		else
-		if( (lex.endsWith( "junum" ) || lex.endsWith( "unum" ) || lex.endsWith( "ónum" ) || lex.endsWith( "ánum" ) || lex.endsWith( "únum" )) && len > 5 )
-		{
-			if( lex.endsWith( "junum" ) )
-				root = lex.substring( 0, len - 5 ); // dekk-junum
-			else
-				root = lex.substring( 0, len - 4 ); // hest-unum, skónum, fánum
-			int count = 1;
-			// u-hljóðvarp, kökunum - kaka
-			String newRoot = hljodVarp( root, 'ö', 'a' );
-			if( newRoot != null )
-				count = 2;
-
-			for( int i = 1; i <= count && !found; i++ )
-			{
-				if( i == 2 )
-					root = newRoot;
-
-				found = searchSuffixCases( root, MorphoClass.NounMasculine1, currToken, wordClass, false, false, true, false, IceTag.cMasculine, IceTag.cPlural, true, IceTag.cNoDeclension );
-				if( !found )
-					found = searchSuffixCases( root, MorphoClass.NounFeminine1, currToken, wordClass, false, false, true, false, IceTag.cFeminine, IceTag.cPlural, true, IceTag.cNoDeclension );
-				if( !found )
-					found = searchSuffixCases( root, MorphoClass.NounFeminine2, currToken, wordClass, false, false, true, false, IceTag.cFeminine, IceTag.cPlural, true, IceTag.cNoDeclension );
-				if( !found )
-					found = searchSuffixCases( root, MorphoClass.NounNeuter1, currToken, wordClass, false, false, true, false, IceTag.cNeuter, IceTag.cPlural, true, IceTag.cNoDeclension );
-				if( !found )
-					found = searchSuffixCases( root, MorphoClass.NounNeuter4, currToken, wordClass, false, false, true, false, IceTag.cNeuter, IceTag.cPlural, true, IceTag.cNoDeclension );
-			}
-		}
-		else if( lex.endsWith( "inum" ) && len > 4 )
-		{
-			root = lex.substring( 0, len - 4 ); // hest-inum
-			found = searchSuffixCases( root, MorphoClass.NounMasculine1, currToken, wordClass, false, false, true, false, IceTag.cMasculine, IceTag.cSingular, true, IceTag.cNoDeclension );
-		}
-		else if( lex.endsWith( "anum" ) && len > 4 )
-		{
-			root = lex.substring( 0, len - 4 ); // skól-anum
-			if( !checkNormalMasculineNoun( root ) )
-				found = searchSuffixCases( root, MorphoClass.NounMasculine2, currToken, wordClass, false, false, true, false, IceTag.cMasculine, IceTag.cSingular, true, IceTag.cNoDeclension );
-		}
-		else if( lex.endsWith( "num" ) && len > 3 )
-		{
-			root = lex.substring( 0, len - 3 ); // bílnum, handleggnum
-			found = searchSuffixCases( root, MorphoClass.NounMasculine1, currToken, wordClass, false, false, true, false, IceTag.cMasculine, IceTag.cSingular, true, IceTag.cNoDeclension );
-		}
-
-		else if( lex.endsWith( "ins" ) && len > 5 )
-		{                    // hests-ins, svíns-ins
-			root = lex.substring( 0, len - 4 ); // hest-sins
-			found = searchSuffixCases( root, MorphoClass.NounMasculine1, currToken, wordClass, false, false, false, true, IceTag.cMasculine, IceTag.cSingular, true, IceTag.cNoDeclension );
-			if( !found )
-			{
-				root = lex.substring( 0, len - 4 ); // svín-sins
-				found = searchSuffixCases( root, MorphoClass.NounNeuter1, currToken, wordClass, false, false, false, true, IceTag.cNeuter, IceTag.cSingular, true, IceTag.cNoDeclension );
-			}
-			if( !found ) // gerpis-ins
-			{
-				root = lex.substring( 0, len - 5 );
-				found = searchSuffixCases( root, MorphoClass.NounNeuter2, currToken, wordClass, false, false, false, true, IceTag.cNeuter, IceTag.cSingular, true, IceTag.cNoDeclension );
-			}
-		}
-		else if( lex.endsWith( "ans" ) && len > 3 )
-		{   // skól-ans
-			root = lex.substring( 0, len - 3 );
-			if( !checkNormalMasculineNoun( root ) )
-				found = searchSuffixCases( root, MorphoClass.NounMasculine2, currToken, wordClass, false, false, false, true, IceTag.cMasculine, IceTag.cSingular, true, IceTag.cNoDeclension );
-		}
-		else if( (lex.endsWith( "arnir" ) || lex.endsWith( "irnir" )) && len > 5 )
-		{  // hestar-nir, gest-irnir
-			root = lex.substring( 0, len - 5 );
-			found = searchSuffixCases( root, MorphoClass.NounMasculine1, currToken, wordClass, true, false, false, false, IceTag.cMasculine, IceTag.cPlural, true, IceTag.cNoDeclension );
-		}
-
-		else if( lex.endsWith( "una" ) && len > 3 )
-		{
-			root = lex.substring( 0, len - 3 );  // svip-una
-			found = searchSuffixCases( root, MorphoClass.NounFeminine1, currToken, wordClass, false, true, false, false, IceTag.cFeminine, IceTag.cSingular, true, IceTag.cNoDeclension );
-		}
-
-		else if( lex.endsWith( "ina" ) && len > 3 )
-		{
-			root = lex.substring( 0, len - 3 );  // von-ina
-			found = searchSuffixCases( root, MorphoClass.NounFeminine2, currToken, wordClass, false, true, false, false, IceTag.cFeminine, IceTag.cSingular, true, IceTag.cNoDeclension );
-
-			if( !found ) // kæti-na
-			{
-				root = lex.substring( 0, len - 2 );  // kæti-na
-				found = searchSuffixCases( root, MorphoClass.NounFeminine4, currToken, wordClass, false, true, false, false, IceTag.cFeminine, IceTag.cSingular, true, IceTag.cNoDeclension );
-			}
-			if( !found ) // gesti-na
-			{
-				root = lex.substring( 0, len - 3 );  // gest-ina
-				found = searchSuffixCases( root, MorphoClass.NounMasculine1, currToken, wordClass, false, true, false, false, IceTag.cMasculine, IceTag.cPlural, true, IceTag.cNoDeclension );
-			}
-		}
-
-		else if( lex.endsWith( "nna" ) && len > 4 )
-		{                     // hest-anna
-			root = lex.substring( 0, len - 4 );
-			found = searchSuffixCases( root, MorphoClass.NounMasculine1, currToken, wordClass, false, false, false, true, IceTag.cMasculine, IceTag.cPlural, true, IceTag.cNoDeclension );
-			if( !found )   // súpa-nna
-				found = searchSuffixCases( root, MorphoClass.NounFeminine1, currToken, wordClass, false, false, false, true, IceTag.cFeminine, IceTag.cPlural, true, IceTag.cNoDeclension );
-			if( !found )  // svína-nna
-				found = searchSuffixCases( root, MorphoClass.NounNeuter1, currToken, wordClass, false, false, false, true, IceTag.cNeuter, IceTag.cPlural, true, IceTag.cNoDeclension );
-			if( !found )   // skól-anna
-			{
-				if( !checkNormalMasculineNoun( root ) )
-					found = searchSuffixCases( root, MorphoClass.NounMasculine2, currToken, wordClass, false, false, false, true, IceTag.cMasculine, IceTag.cPlural, true, IceTag.cNoDeclension );
-			}
-			if( !found )   // vona-nna
-				found = searchSuffixCases( root, MorphoClass.NounFeminine2, currToken, wordClass, false, false, false, true, IceTag.cFeminine, IceTag.cPlural, true, IceTag.cNoDeclension );
-			if( !found )  // efna-nna
-				found = searchSuffixCases( root, MorphoClass.NounNeuter2, currToken, wordClass, false, false, false, true, IceTag.cNeuter, IceTag.cPlural, true, IceTag.cNoDeclension );
-			if( !found && lex.endsWith( "nanna" ) && len > 5 )
-			{  // súp-nanna
-				root = lex.substring( 0, len - 5 );
-				found = searchSuffixCases( root, MorphoClass.NounFeminine1, currToken, wordClass, false, false, false, true, IceTag.cFeminine, IceTag.cPlural, true, IceTag.cNoDeclension );
-			}
-		}
-		else if( (lex.endsWith( "na" ) && !lex.endsWith( "ona" )) && len > 3 )
-		{                     // hesta-na, súpu-na
-			root = lex.substring( 0, len - 3 );  // hesta-na
-			found = searchSuffixCases( root, MorphoClass.NounMasculine1, currToken, wordClass, false, true, false, false, IceTag.cMasculine, IceTag.cPlural, true, IceTag.cNoDeclension );
-			if( !found )   // súpu-na
-				found = searchSuffixCases( root, MorphoClass.NounFeminine1, currToken, wordClass, false, true, false, false, IceTag.cFeminine, IceTag.cSingular, true, IceTag.cNoDeclension );
-		}
-		else if( lex.endsWith( "in" ) && len > 2 )
-		{
-			root = lex.substring( 0, len - 2 );  // von-in
-			found = searchSuffixCases( root, MorphoClass.NounFeminine2, currToken, wordClass, true, false, false, false, IceTag.cFeminine, IceTag.cSingular, true, IceTag.cNoDeclension );
-			if( !found ) // meining-in
-				found = searchSuffixCases( root, MorphoClass.NounFeminine3, currToken, wordClass, true, false, false, false, IceTag.cFeminine, IceTag.cSingular, true, IceTag.cNoDeclension );
-			if( !found ) // svín-in
-				found = searchSuffixCases( root, MorphoClass.NounNeuter1, currToken, wordClass, true, true, false, false, IceTag.cNeuter, IceTag.cPlural, true, IceTag.cNoDeclension );
-			if( !found )  // gerp-in
-			{
-				root = lex.substring( 0, len - 2 );  // gerp-in
-				found = searchSuffixCases( root, MorphoClass.NounNeuter2, currToken, wordClass, true, true, false, false, IceTag.cNeuter, IceTag.cPlural, true, IceTag.cNoDeclension );
-			}
-			if( !found )    // kæti-n
-			{
-				root = lex.substring( 0, len - 1 );
-				found = searchSuffixCases( root, MorphoClass.NounFeminine4, currToken, wordClass, true, false, false, false, IceTag.cFeminine, IceTag.cSingular, true, IceTag.cNoDeclension );
-			}
-		}
-		else if( lex.endsWith( "an" ) && len > 2 )
-		{     // súpa-n
-			root = lex.substring( 0, len - 2 );
-			found = searchSuffixCases( root, MorphoClass.NounFeminine1, currToken, wordClass, true, false, false, false, IceTag.cFeminine, IceTag.cSingular, true, IceTag.cNoDeclension );
-		}
-		else if( lex.endsWith( "nni" ) && len > 4 )
-		{  // súp-unni
-			root = lex.substring( 0, len - 4 );
-			found = searchSuffixCases( root, MorphoClass.NounFeminine1, currToken, wordClass, false, false, true, false, IceTag.cFeminine, IceTag.cSingular, true, IceTag.cNoDeclension );
-			if( !found )    // von-inni
-			{
-				root = lex.substring( 0, len - 4 );
-				found = searchSuffixCases( root, MorphoClass.NounFeminine2, currToken, wordClass, false, false, true, false, IceTag.cFeminine, IceTag.cSingular, true, IceTag.cNoDeclension );
-			}
-            if( !found )    // kæti-nni
-			{
-				root = lex.substring( 0, len - 3 );
-				found = searchSuffixCases( root, MorphoClass.NounFeminine4, currToken, wordClass, false, false, true, false, IceTag.cFeminine, IceTag.cSingular, true, IceTag.cNoDeclension );
-			}
-        }
-		else if( lex.endsWith( "nnar" ) && len > 5 )
-		{   // súpu-nnar
-			root = lex.substring( 0, len - 5 );
-			found = searchSuffixCases( root, MorphoClass.NounFeminine1, currToken, wordClass, false, false, false, true, IceTag.cFeminine, IceTag.cSingular, true, IceTag.cNoDeclension );
-			if( !found )    // vonar-innar
-			{
-				if( len >= 7 )
-				{
-					root = lex.substring( 0, len - 7 );
-					found = searchSuffixCases( root, MorphoClass.NounFeminine2, currToken, wordClass, false, false, false, true, IceTag.cFeminine, IceTag.cSingular, true, IceTag.cNoDeclension );
-				}
-			}
-		}
-
-        else if( lex.endsWith( "urnar" ) && len > 5 )
-		{ // súpur-nar
-			root = lex.substring( 0, len - 5 );
-			found = searchSuffixCases( root, MorphoClass.NounFeminine1, currToken, wordClass, true, true, false, false, IceTag.cFeminine, IceTag.cPlural, true, IceTag.cNoDeclension );
-		}
-
-		else if( lex.endsWith( "irnar" ) || lex.endsWith( "arnar" ) )    // vonir-nar
-		{
-			root = lex.substring( 0, len - 5 );
-			found = searchSuffixCases( root, MorphoClass.NounFeminine2, currToken, wordClass, true, true, false, false, IceTag.cFeminine, IceTag.cPlural, true, IceTag.cNoDeclension );
-
-		}
-		else if( lex.endsWith( "ið" ) && len > 2 )
-		{    // svín-ið
-			root = lex.substring( 0, len - 2 );
-			found = searchSuffixCases( root, MorphoClass.NounNeuter1, currToken, wordClass, true, true, false, false, IceTag.cNeuter, IceTag.cSingular, true, IceTag.cNoDeclension );
-			// veski-ð
-			if( !found )
-				found = searchSuffixCases( root, MorphoClass.NounNeuter2, currToken, wordClass, true, true, false, false, IceTag.cNeuter, IceTag.cSingular, true, IceTag.cNoDeclension );
-		}
-		else if( lex.endsWith( "inu" ) && len > 3 )
-		{  // svín-inu
-			root = lex.substring( 0, len - 3 );
-			found = searchSuffixCases( root, MorphoClass.NounNeuter1, currToken, wordClass, false, false, true, false, IceTag.cNeuter, IceTag.cSingular, true, IceTag.cNoDeclension );
-			if( !found )   // veski-nu, sælgæti-nu
-			{
-				root = lex.substring( 0, len - 3 );
-				found = searchSuffixCases( root, MorphoClass.NounNeuter2, currToken, wordClass, false, false, true, false, IceTag.cNeuter, IceTag.cSingular, true, IceTag.cNoDeclension );
-			}
-		}
-
-		if( found )
-		{
-			if( currToken.numTags() > 0 )
-			{
-				if( logger != null )
-					logger.log( "SUFFIX article: " + currToken.lexeme + " " + currToken.allTagStrings() );
-				//currToken.setMorpho(true);
-				currToken.setUnknownType( IceTokenTags.UnknownType.morpho );
-				return true;
-			}
-			else
-				found = false;
-		}
-
-		return found;
-	}
+     }
+         
+     return found;
+ }
 
 
 	private String checkTag( String tagStr, IceTag.WordClass wordClass, char genderLetter, char caseLetter, char numLetter, char declension )
@@ -3340,1161 +2733,143 @@ public class IceMorphy {
 		return tagStr;
 	}
 
+ /*
+ * Carries out an analysis for a word with an article using a guessed stem
+ */
+    private boolean suffixAnalysisArticle( IceTokenTags currToken, boolean isProperNoun )
+    {
+        String lex, root;
+        boolean article=true;
+        IceTag.WordClass wordClass = IceTag.WordClass.wcNoun;
 
-	private boolean suffixAnalysisCases( IceTokenTags currToken, boolean isProperNoun )
-	{
-		String lex, root;
-		boolean found = false;
+        boolean found = false;
+        if( isProperNoun )
+            wordClass = IceTag.WordClass.wcProperNoun;
 
-		IceTag.WordClass wordClass = IceTag.WordClass.wcNoun;
-		if( isProperNoun )
-			wordClass = IceTag.WordClass.wcProperNoun;
+        lex = currToken.lexeme;
+        int len = lex.length();
 
-		lex = currToken.lexeme;
-		if( lex.endsWith( "-" ) )
-			lex = lex.substring( 0, lex.length() - 1 );
-		int len = lex.length();
+        found = checkSpecialCasesArticle(currToken);
 
-		if( lex.endsWith( "inn" ) )        // krist-inn
-		{
-			root = lex.substring( 0, len - 3 );
-			found = searchSuffixCases( root, MorphoClass.Adj2, currToken, IceTag.WordClass.wcAdj, true, true, false, false, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cStrong );
-		}
-		else if( lex.endsWith( "in" ) )        // krist-in
-		{
-			root = lex.substring( 0, len - 2 );
-			found = searchSuffixCases( root, MorphoClass.Adj2, currToken, IceTag.WordClass.wcAdj, true, false, false, false, IceTag.cFeminine, IceTag.cSingular, false, IceTag.cStrong );
-		}
-		else if( lex.endsWith( "ins" ) )        // krist-ins
-		{
-			root = lex.substring( 0, len - 3 );
-			found = searchSuffixCases( root, MorphoClass.Adj2, currToken, IceTag.WordClass.wcAdj, false, false, false, true, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cStrong );
-			if( found )
-				found = searchSuffixCases( root, MorphoClass.Adj2, currToken, IceTag.WordClass.wcAdj, false, false, false, true, IceTag.cNeuter, IceTag.cSingular, false, IceTag.cStrong );
-		}
-		else if( lex.endsWith( "ið" ) )        // krist-ið
-		{
-			root = lex.substring( 0, len - 2 );
-			found = searchSuffixCases( root, MorphoClass.Adj2, currToken, IceTag.WordClass.wcAdj, true, true, false, false, IceTag.cNeuter, IceTag.cSingular, false, IceTag.cStrong );
-			// frið,smið,hlið
-			if( !found )
-			{
-				root = lex;
-				found = searchSuffixCases( root, MorphoClass.NounMasculine1, currToken, wordClass, false, true, false, false, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cNoDeclension );
-				if( !found )
-					found = searchSuffixCases( root, MorphoClass.NounNeuter1, currToken, wordClass, true, true, false, false, IceTag.cNeuter, IceTag.cSingular, false, IceTag.cNoDeclension );
-			}
-		}
-		else if( lex.endsWith( "na" ) )
-		{ // krist-na
-			root = lex.substring( 0, len - 2 );
-			found = searchSuffixCases( root, MorphoClass.Adj2, currToken, IceTag.WordClass.wcAdj, false, true, false, false, IceTag.cNeuter, IceTag.cSingular, false, IceTag.cStrong );
-		}
-		else if( lex.endsWith( "inni" ) )        // krist-inni
-		{
-			root = lex.substring( 0, len - 4 );
-			found = searchSuffixCases( root, MorphoClass.Adj2, currToken, IceTag.WordClass.wcAdj, false, false, true, false, IceTag.cFeminine, IceTag.cSingular, false, IceTag.cStrong );
-		}
-		else if( lex.endsWith( "innar" ) )        // krist-innar
-		{
-			root = lex.substring( 0, len - 5 );
-			found = searchSuffixCases( root, MorphoClass.Adj2, currToken, IceTag.WordClass.wcAdj, false, false, false, true, IceTag.cFeminine, IceTag.cSingular, false, IceTag.cStrong );
-		}
-		else if( lex.endsWith( "nu" ) )
-		{
-			// þéttrið-nu dative is þéttrið-ið nominative
-			root = lex.substring( 0, len - 2 );
-			found = searchSuffixCases( root, MorphoClass.Adj2, currToken, IceTag.WordClass.wcAdj, false, false, true, false, IceTag.cNeuter, IceTag.cSingular, false, IceTag.cStrong );
-			// krist-nu, weak
-			if( !found )
-			{
-				root = lex.substring( 0, len - 2 );
-				found = searchSuffixCases( root, MorphoClass.Adj2, currToken, IceTag.WordClass.wcAdj, false, true, true, true, IceTag.cFeminine, IceTag.cSingular, false, IceTag.cWeak );
-			}
-		}
+        if (!found) {
+          // Loop trough the morphological records and use a record if the ending matches
+          for (int i=0; i<= morphoRules.listNounArticle.size()-1 && !found; i++)
+          {
+             MorphoRuleNounAdjective rec = morphoRules.listNounArticle.get(i);
+             if (lex.matches(".+"+rec.ending+"$") && (len > rec.subtractForLookup)) {
+               root = lex.substring( 0, len - rec.subtractForLookup);
+               //if (root.length() > 1)
+               found = searchSuffixCases(root, rec.morphoClass, currToken, wordClass, rec.nominative, rec.accusative, rec.dative, rec.genitive, rec.gender, rec.number, article, IceTag.cNoDeclension);
+             }
+          }
+        }
 
-		else if( lex.endsWith( "aðan" ) )
-		{
-			// hor-aðan
-			root = lex.substring( 0, len - 4 );
-			found = searchSuffixCases( root, MorphoClass.Adj4, currToken, IceTag.WordClass.wcAdj, false, true, false, false, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cStrong );
-		}
-		else if( lex.endsWith( "an" ) )
-		{
-			// þreytt-an accusative is þreytt-ur nominative, þreytt-um dative, þreytt-s genitive
-			root = lex.substring( 0, len - 2 );
-			found = searchSuffixCases( root, MorphoClass.Adj1, currToken, IceTag.WordClass.wcAdj, false, true, false, false, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cStrong );
-			if( !found )
-				found = searchSuffixCases( root, MorphoClass.Adj5, currToken, IceTag.WordClass.wcAdj, false, true, false, false, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cStrong );
-		}
-		else if( lex.endsWith( "aður" ) )
-		{
-			if( len > 4 )
-			{
-				// hor-aður
-				root = lex.substring( 0, len - 4 );
-				found = searchSuffixCases( root, MorphoClass.Adj4, currToken, IceTag.WordClass.wcAdj, true, false, false, false, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cStrong );
-			}
-			if( !found ) // iðnað-ur
-			{
-				root = lex.substring( 0, len - 2 );
-				found = searchSuffixCases( root, MorphoClass.NounMasculine1, currToken, wordClass, true, false, false, false, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cNoDeclension );
-			}
-		}
-		else if( lex.endsWith( "að" ) )
-		{
-			// hor-að
-			root = lex.substring( 0, len - 2 );
-			found = searchSuffixCases( root, MorphoClass.Adj4, currToken, IceTag.WordClass.wcAdj, true, true, false, false, IceTag.cNeuter, IceTag.cSingular, false, IceTag.cStrong );
-		}
-
-		else if( lex.endsWith( "ur" ) )
-		{
-			// hest-ur genitive is hest-ur nominative
-			root = lex.substring( 0, len - 2 );
-			found = searchSuffixCases( root, MorphoClass.NounMasculine1, currToken, wordClass, true, false, false, false, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cNoDeclension );
-			if( !found )
-			{
-				// gald-ur
-				root = lex.substring( 0, len - 2 );
-				found = searchSuffixCases( root, MorphoClass.NounMasculine3, currToken, wordClass, true, true, false, false, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cNoDeclension );
-			}
-
-			if( !found )
-			{
-				// hreið-ur nominative
-				root = lex.substring( 0, len - 2 );
-				found = searchSuffixCases( root, MorphoClass.NounNeuter3, currToken, wordClass, true, true, false, false, IceTag.cNeuter, IceTag.cSingular, false, IceTag.cNoDeclension );
-			}
-			// fallegur nominative
-			if( !found )
-			{
-				root = lex.substring( 0, len - 2 );
-				found = searchSuffixCases( root, MorphoClass.Adj1, currToken, IceTag.WordClass.wcAdj, true, false, false, false, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cStrong );
-			}
-
-		}
-		else if( lex.endsWith( "egt" ) )
-		{
-			// fallegt nominative
-			root = lex.substring( 0, len - 1 );
-			found = searchSuffixCases( root, MorphoClass.Adj1, currToken, IceTag.WordClass.wcAdj, true, true, false, false, IceTag.cNeuter, IceTag.cSingular, false, IceTag.cStrong );
-		}
-		else if( lex.endsWith( "eg" ) )
-		{
-			// falleg nominative
-			root = lex.substring( 0, len - 1 );
-			found = searchSuffixCases( root, MorphoClass.Adj1, currToken, IceTag.WordClass.wcAdj, true, false, false, false, IceTag.cFeminine, IceTag.cSingular, false, IceTag.cStrong );
-		}
-		else if( lex.endsWith( "rar" ) )
-		{
-			// þreytt-rar genitive is þreytt nominative
-			root = lex.substring( 0, len - 3 );
-			found = searchSuffixCases( root, MorphoClass.Adj1, currToken, IceTag.WordClass.wcAdj, false, false, false, true, IceTag.cFeminine, IceTag.cSingular, false, IceTag.cStrong );
-			if( !found && len > 4 )
-			{
-				// hor-aðrar
-				root = lex.substring( 0, len - 4 );
-				found = searchSuffixCases( root, MorphoClass.Adj4, currToken, IceTag.WordClass.wcAdj, true, false, false, false, IceTag.cFeminine, IceTag.cSingular, false, IceTag.cStrong );
-			}
-			if( !found )    // lif-rar
-			{
-				root = lex.substring( 0, len - 3 );
-				found = searchSuffixCases( root, MorphoClass.NounFeminine6, currToken, wordClass, false, false, false, true, IceTag.cFeminine, IceTag.cSingular, false, IceTag.cNoDeclension );
-			}
-		}
-		else if( lex.endsWith( "gar" ) )
-		// meining-ar genitive is meining nomintaive
-		{
-			root = lex.substring( 0, len - 2 );
-			found = searchSuffixCases( root, MorphoClass.NounFeminine3, currToken, wordClass, false, false, false, true, IceTag.cFeminine, IceTag.cSingular, false, IceTag.cNoDeclension );
-		}
-		else if( lex.endsWith( "ðar" ) )
-		{
-			// hernað-ar genitive is hernað-ur nominative
-			root = lex.substring( 0, len - 2 );
-			found = searchSuffixCases( root, MorphoClass.NounMasculine1, currToken, wordClass, false, false, false, true, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cNoDeclension );
-			// hlið-ar genitive is hlið nominative
-			if( !found )
-			{
-				root = lex.substring( 0, len - 2 );
-				found = searchSuffixCases( root, MorphoClass.NounFeminine2, currToken, wordClass, false, false, false, true, IceTag.cFeminine, IceTag.cSingular, false, IceTag.cNoDeclension );
-			}
-		}
-		else if( lex.endsWith( "unar" ) )
-		{
-			// vorkunar
-			root = lex.substring( 0, len - 4 );
-			found = searchSuffixCases( root, MorphoClass.NounFeminine5, currToken, wordClass, false, false, false, true, IceTag.cFeminine, IceTag.cSingular, false, IceTag.cNoDeclension );
-		}
-		else if( lex.endsWith( "kkjar" ) )
-		{
-			// bekk-jar
-			root = lex.substring( 0, len - 3 );
-			found = searchSuffixCases( root, MorphoClass.NounMasculine9, currToken, wordClass, false, false, false, true, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cNoDeclension );
-		}
-		else if( lex.endsWith( "ar" ) )
-		{
-			// von-ar genitive is von nominative
-			root = lex.substring( 0, len - 2 );
-			found = searchSuffixCases( root, MorphoClass.NounFeminine2, currToken, wordClass, false, false, false, true, IceTag.cFeminine, IceTag.cSingular, false, IceTag.cNoDeclension );
-			// fundar,blundar genitive is fundur nominative
-			if( !found && len > 4 && lex.endsWith( "ndar" ) )
-				found = searchSuffixCases( root, MorphoClass.NounMasculine5, currToken, wordClass, false, false, false, true, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cNoDeclension );
-			if( !found )    // gítar
-			{
-				root = lex;
-				found = searchSuffixCases( root, MorphoClass.NounMasculine8, currToken, wordClass, true, true, false, false, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cNoDeclension );
-			}
-		}
-		else if( lex.endsWith( "num" ) )
-		{
-			// þéttriðn-um
-			root = lex.substring( 0, len - 3 );
-			found = searchSuffixCases( root, MorphoClass.Adj2, currToken, IceTag.WordClass.wcAdj, false, false, true, false, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cStrong );
-		}
-		else if( lex.endsWith( "uðum" ) )
-		{
-			// hor-uðum
-			root = lex.substring( 0, len - 4 );
-			found = searchSuffixCases( root, MorphoClass.Adj4, currToken, IceTag.WordClass.wcAdj, false, false, true, false, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cStrong );
-		}
-		else if( lex.endsWith( "um" ) )
-		{
-			// góð-um
-			root = lex.substring( 0, len - 2 );
-			found = searchSuffixCases( root, MorphoClass.Adj1, currToken, IceTag.WordClass.wcAdj, false, false, true, false, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cStrong );
-			if( !found )
-				found = searchSuffixCases( root, MorphoClass.Adj5, currToken, IceTag.WordClass.wcAdj, false, false, true, false, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cStrong );
-
-		}
-		else if( lex.endsWith( "un" ) )
-		{
-			// vorkun
-			root = lex.substring( 0, len - 2 );
-			found = searchSuffixCases( root, MorphoClass.NounFeminine5, currToken, wordClass, true, true, true, false, IceTag.cFeminine, IceTag.cSingular, false, IceTag.cNoDeclension );
-		}
-		else if( lex.endsWith( "urs" ) )
-		{
-			// hreið-urs genitive
-			root = lex.substring( 0, len - 3 );
-			found = searchSuffixCases( root, MorphoClass.NounNeuter3, currToken, wordClass, false, false, false, true, IceTag.cNeuter, IceTag.cSingular, false, IceTag.cNoDeclension );
-			if( !found )
-				found = searchSuffixCases( root, MorphoClass.NounMasculine3, currToken, wordClass, false, false, false, true, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cNoDeclension );
-		}
-		else if( lex.endsWith( "is" ) )
-		{
-			// merk-is genitive is merki nominative
-			root = lex.substring( 0, len - 2 );
-			found = searchSuffixCases( root, MorphoClass.NounNeuter2, currToken, wordClass, false, false, false, true, IceTag.cNeuter, IceTag.cSingular, false, IceTag.cNoDeclension );
-			if( !found )   // lífeyr-is
-				found = searchSuffixCases( root, MorphoClass.NounMasculine7, currToken, wordClass, false, false, false, true, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cNoDeclension );
-		}
-		else if( lex.endsWith( "aus" ) )
-		{
-			// hreyfingarlaus nominative masculine
-			root = lex;
-			found = searchSuffixCases( root, MorphoClass.Adj1, currToken, IceTag.WordClass.wcAdj, true, false, false, false, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cStrong );
-		}
-		else if( lex.endsWith( "urs" ) )
-		{
-			// gald-urs
-			root = lex.substring( 0, len - 2 );
-			found = searchSuffixCases( root, MorphoClass.NounMasculine3, currToken, wordClass, false, false, false, true, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cNoDeclension );
-		}
-		else if( lex.endsWith( "s" ) && !lex.endsWith( "ss" ) )
-		{
-			// hest-s genitive is hest-ur nominative
-			root = lex.substring( 0, len - 1 );
-			found = searchSuffixCases( root, MorphoClass.NounMasculine1, currToken, wordClass, false, false, false, true, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cNoDeclension );
-			if( !found && wordClass == IceTag.WordClass.wcProperNoun )
-				found = searchSuffixCases( root, MorphoClass.NounMasculine8, currToken, wordClass, false, false, false, true, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cNoDeclension );
-			// svín-s
-			if( !found )
-				found = searchSuffixCases( root, MorphoClass.NounNeuter1, currToken, wordClass, false, false, false, true, IceTag.cNeuter, IceTag.cSingular, false, IceTag.cNoDeclension );
-			if( !found )
-			{
-				// sérstaks
-				root = lex.substring( 0, len - 1 );
-				found = searchSuffixCases( root, MorphoClass.Adj1, currToken, IceTag.WordClass.wcAdj, false, false, false, true, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cStrong );
-				if( found )
-					addAdjectiveTag( currToken, IceTag.cNeuter, IceTag.cSingular, IceTag.cGenitive, IceTag.cStrong, IceTag.cPositive );
-			}
-			if( !found && len > 3 )
-			{
-				// hor-aðs
-				root = lex.substring( 0, len - 3 );
-				found = searchSuffixCases( root, MorphoClass.Adj4, currToken, IceTag.WordClass.wcAdj, false, false, false, true, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cStrong );
-
-				if( !found )
-				{
-					root = lex.substring( 0, len - 3 );
-					found = searchSuffixCases( root, MorphoClass.Adj4, currToken, IceTag.WordClass.wcAdj, false, false, false, true, IceTag.cNeuter, IceTag.cSingular, false, IceTag.cStrong );
-				}
-			}
-		}
-		else if( lex.endsWith( "andi" ) )
-		{ // atvinnurekand-i
-			root = lex.substring( 0, len - 1 );
-			found = searchSuffixCases( root, MorphoClass.NounMasculine10, currToken, wordClass, true, false, false, false, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cNoDeclension );
-		}
-		else if( lex.endsWith( "anda" ) )
-		{ // atvinnurekand-a
-			root = lex.substring( 0, len - 1 );
-			found = searchSuffixCases( root, MorphoClass.NounMasculine10, currToken, wordClass, false, true, true, true, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cNoDeclension );
-		}
-		else if( lex.endsWith( "a" ) )
-		{
-			// skól-a accusative/dative/genitive is skól-i nominative
-			root = lex.substring( 0, len - 1 );
-			if( !checkNormalMasculineNoun( root ) )
-				found = searchSuffixCases( root, MorphoClass.NounMasculine2, currToken, wordClass, false, true, true, true, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cNoDeclension );
-
-			if( !found )
-			{
-				// kon-a nominative
-				root = lex.substring( 0, len - 1 );
-				found = searchSuffixCases( root, MorphoClass.NounFeminine1, currToken, wordClass, true, false, false, false, IceTag.cFeminine, IceTag.cSingular, false, IceTag.cNoDeclension );
-			}
-			if( !found && lex.endsWith( "aða" ) && len > 3 )
-			{
-				// hor-aða
-				root = lex.substring( 0, len - 3 );
-				found = searchSuffixCases( root, MorphoClass.Adj4, currToken, IceTag.WordClass.wcAdj, false, true, false, false, IceTag.cFeminine, IceTag.cSingular, false, IceTag.cWeak );
-				// Could also be strong masculine plural horaðir-horaða-
-
-				if( found )
-					addAdjectiveTag( currToken, IceTag.cMasculine, IceTag.cPlural, IceTag.cAccusative, IceTag.cStrong, IceTag.cPositive );
-			}
-			// þreytt-a accusative is þreytt nominative
-			//if ((!found || wordClassLastFound == IceTag.wcNoun) && !lex.endsWith("asta") && !lex.endsWith("ra"))
-			if( !found && !lex.endsWith( "asta" ) && !lex.endsWith( "ra" ) )
-			{
-				root = lex.substring( 0, len - 1 );
-				found = searchSuffixCases( root, MorphoClass.Adj1, currToken, IceTag.WordClass.wcAdj, false, true, false, false, IceTag.cFeminine, IceTag.cSingular, false, IceTag.cStrong );
-				if( !found )
-					found = searchSuffixCases( root, MorphoClass.Adj5, currToken, IceTag.WordClass.wcAdj, false, true, false, false, IceTag.cFeminine, IceTag.cSingular, false, IceTag.cStrong );
-				// Could also be veak þreytta konan
-				// masculine  þreytti-þreytta-þreytta-þreytta
-				// neuter  þreytta-þreytta-þreytta-þreytta
-				if( found )
-				{
-					addAdjectiveTag( currToken, IceTag.cFeminine, IceTag.cSingular, IceTag.cNominative, IceTag.cWeak, IceTag.cPositive );
-					addAdjectiveTag( currToken, IceTag.cMasculine, IceTag.cSingular, IceTag.cAccusative, IceTag.cWeak, IceTag.cPositive );
-					addAdjectiveTag( currToken, IceTag.cMasculine, IceTag.cSingular, IceTag.cDative, IceTag.cWeak, IceTag.cPositive );
-					addAdjectiveTag( currToken, IceTag.cMasculine, IceTag.cSingular, IceTag.cGenitive, IceTag.cWeak, IceTag.cPositive );
-					addAdjectiveTag( currToken, IceTag.cNeuter, IceTag.cSingular, IceTag.cNominative, IceTag.cWeak, IceTag.cPositive );
-					addAdjectiveTag( currToken, IceTag.cNeuter, IceTag.cSingular, IceTag.cAccusative, IceTag.cWeak, IceTag.cPositive );
-					addAdjectiveTag( currToken, IceTag.cNeuter, IceTag.cSingular, IceTag.cDative, IceTag.cWeak, IceTag.cPositive );
-					addAdjectiveTag( currToken, IceTag.cNeuter, IceTag.cSingular, IceTag.cGenitive, IceTag.cWeak, IceTag.cPositive );
-				}
-			}
-
-		}
-		else if( lex.endsWith( "uðu" ) )
-		{
-			// hor-uðu
-			root = lex.substring( 0, len - 3 );
-			found = searchSuffixCases( root, MorphoClass.Adj4, currToken, IceTag.WordClass.wcAdj, false, false, true, false, IceTag.cNeuter, IceTag.cSingular, false, IceTag.cStrong );
-		}
-		else if( lex.endsWith( "uð" ) )
-		{
-			// jöfn-uð accusative is jöfnuð-ur nominative
-			root = lex;
-			found = searchSuffixCases( root, MorphoClass.NounMasculine1, currToken, wordClass, false, true, false, false, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cNoDeclension );
-			if( !found )
-			{
-				// hor-uð
-				root = lex.substring( 0, len - 2 );
-				found = searchSuffixCases( root, MorphoClass.Adj4, currToken, IceTag.WordClass.wcAdj, true, false, false, false, IceTag.cFeminine, IceTag.cSingular, false, IceTag.cStrong );
-				if( found )
-				{
-					addAdjectiveTag( currToken, IceTag.cNeuter, IceTag.cPlural, IceTag.cNominative, IceTag.cStrong, IceTag.cPositive );
-					addAdjectiveTag( currToken, IceTag.cNeuter, IceTag.cPlural, IceTag.cAccusative, IceTag.cStrong, IceTag.cPositive );
-				}
-			}
-		}
-
-		else if( lex.endsWith( "gð" ) || lex.endsWith( "rð" ) )
-		{
-			// ánægð og útkeyrð
-			root = lex;
-			found = searchSuffixCases( root, MorphoClass.Adj1, currToken, IceTag.WordClass.wcAdj, true, false, false, false, IceTag.cFeminine, IceTag.cSingular, false, IceTag.cStrong );
-			if( found ) // add neutuer plural
-			{
-				addAdjectiveTag( currToken, IceTag.cNeuter, IceTag.cPlural, IceTag.cNominative, IceTag.cStrong, IceTag.cPositive );
-				addAdjectiveTag( currToken, IceTag.cNeuter, IceTag.cPlural, IceTag.cAccusative, IceTag.cStrong, IceTag.cPositive );
-			}
-			if( lex.endsWith( "rð" ) )    // barð, arð
-			{
-				found = searchSuffixCases( root, MorphoClass.NounNeuter1, currToken, wordClass, true, true, false, false, IceTag.cNeuter, IceTag.cSingular, false, IceTag.cNoDeclension );
-				if( !found )
-					found = searchSuffixCases( root, MorphoClass.NounMasculine1, currToken, wordClass, false, true, false, false, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cNoDeclension );
-			}
-		}
-		else if( lex.endsWith( "ing" ) )
-		{
-			// meining
-			root = lex;
-			found = searchSuffixCases( root, MorphoClass.NounFeminine3, currToken, wordClass, true, false, false, false, IceTag.cFeminine, IceTag.cSingular, false, IceTag.cNoDeclension );
-		}
-		else if( lex.endsWith( "ingu" ) )
-		{
-			// meining-u accusative/dative is meining nominative
-			root = lex.substring( 0, len - 1 );
-			found = searchSuffixCases( root, MorphoClass.NounFeminine3, currToken, wordClass, false, true, true, false, IceTag.cFeminine, IceTag.cSingular, false, IceTag.cNoDeclension );
-
-		}
-		else if( lex.endsWith( "u" ) )
-		{
-			// fallegu
-			if( lex.endsWith( "gu" ) )
-			{
-				root = lex.substring( 0, len - 1 );
-				found = searchSuffixCases( root, MorphoClass.Adj1, currToken, IceTag.WordClass.wcAdj, false, false, true, false, IceTag.cNeuter, IceTag.cSingular, false, IceTag.cStrong );
-			}
-
-			if( !found )
-			{
-				// súp-u accusative/dative/genitive is súp-a nominative
-				root = lex.substring( 0, len - 1 );
-				found = searchSuffixCases( root, MorphoClass.NounFeminine1, currToken, wordClass, false, true, true, true, IceTag.cFeminine, IceTag.cSingular, false, IceTag.cNoDeclension );
-			}
-
-			// góð-u accusative/dative/genitive is góð-a nominative
-			// First search strong declension
-			if( !found )
-			{
-				root = lex.substring( 0, len - 1 );
-				found = searchSuffixCases( root, MorphoClass.Adj1, currToken, IceTag.WordClass.wcAdj, false, true, true, true, IceTag.cFeminine, IceTag.cSingular, false, IceTag.cWeak );
-
-				if( found )
-				// Generate the weak plural tags and strong neuter
-				{
-					addAdjectiveTag( currToken, IceTag.cNeuter, IceTag.cSingular, IceTag.cDative, IceTag.cStrong, IceTag.cPositive );
-
-					addAdjectiveTag( currToken, IceTag.cMasculine, IceTag.cPlural, IceTag.cNominative, IceTag.cWeak, IceTag.cPositive );
-					addAdjectiveTag( currToken, IceTag.cMasculine, IceTag.cPlural, IceTag.cAccusative, IceTag.cWeak, IceTag.cPositive );
-					addAdjectiveTag( currToken, IceTag.cMasculine, IceTag.cPlural, IceTag.cDative, IceTag.cWeak, IceTag.cPositive );
-					addAdjectiveTag( currToken, IceTag.cMasculine, IceTag.cPlural, IceTag.cGenitive, IceTag.cWeak, IceTag.cPositive );
-
-					addAdjectiveTag( currToken, IceTag.cFeminine, IceTag.cPlural, IceTag.cNominative, IceTag.cWeak, IceTag.cPositive );
-					addAdjectiveTag( currToken, IceTag.cFeminine, IceTag.cPlural, IceTag.cAccusative, IceTag.cWeak, IceTag.cPositive );
-					addAdjectiveTag( currToken, IceTag.cFeminine, IceTag.cPlural, IceTag.cDative, IceTag.cWeak, IceTag.cPositive );
-					addAdjectiveTag( currToken, IceTag.cFeminine, IceTag.cPlural, IceTag.cGenitive, IceTag.cWeak, IceTag.cPositive );
-
-					addAdjectiveTag( currToken, IceTag.cNeuter, IceTag.cPlural, IceTag.cNominative, IceTag.cWeak, IceTag.cPositive );
-					addAdjectiveTag( currToken, IceTag.cNeuter, IceTag.cPlural, IceTag.cAccusative, IceTag.cWeak, IceTag.cPositive );
-					addAdjectiveTag( currToken, IceTag.cNeuter, IceTag.cPlural, IceTag.cDative, IceTag.cWeak, IceTag.cPositive );
-					addAdjectiveTag( currToken, IceTag.cNeuter, IceTag.cPlural, IceTag.cGenitive, IceTag.cWeak, IceTag.cPositive );
-				}
-			}
-		}
-		else if( lex.endsWith( "i" ) )
-		{
-
-			if( lex.endsWith( "ri" ) && !lex.endsWith( "ari" ) && !lex.endsWith( "óri" ) ) // rule out stjóri
-			{
-				// hreið-ri dative
-				root = lex.substring( 0, len - 2 );
-				found = searchSuffixCases( root, MorphoClass.NounNeuter3, currToken, wordClass, false, false, true, false, IceTag.cNeuter, IceTag.cSingular, false, IceTag.cNoDeclension );
-
-				if( !found )
-				{
-					// gald-ri
-					root = lex.substring( 0, len - 2 );
-					found = searchSuffixCases( root, MorphoClass.NounMasculine3, currToken, wordClass, false, false, true, false, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cNoDeclension );
-				}
-				if( !found )
-				{
-					// þreytt-ri dative is þreytt nominative
-					root = lex.substring( 0, len - 2 );
-					found = searchSuffixCases( root, MorphoClass.Adj1, currToken, IceTag.WordClass.wcAdj, false, false, true, false, IceTag.cFeminine, IceTag.cSingular, false, IceTag.cStrong );
-				}
-				if( !found && lex.endsWith( "aðri" ) )
-				{
-					// hor-aðri
-					if( lex.length() >= 4 )
-					{
-						root = lex.substring( 0, len - 4 );
-						found = searchSuffixCases( root, MorphoClass.Adj4, currToken, IceTag.WordClass.wcAdj, false, false, true, false, IceTag.cFeminine, IceTag.cSingular, false, IceTag.cStrong );
-					}
-				}
-			}
-			if( !found )
-			{
-				// Special case for neuter
-				if( currToken.isOnlyWordClass( IceTag.WordClass.wcNoun ) && currToken.isOnlyGender( IceTag.cNeuter ) &&
-				    currToken.isNumber( IceTag.cSingular ) && currToken.isNumber( IceTag.cPlural ) )
-				{
-					// et: gerpi, gerpi, gerpi, gerpis   ft: gerpi, gerpi, gerpum, gerpa
-					found = true;
-					addNounTag( currToken, IceTag.cNeuter, IceTag.cSingular, IceTag.cNominative, false );
-					addNounTag( currToken, IceTag.cNeuter, IceTag.cSingular, IceTag.cAccusative, false );
-					addNounTag( currToken, IceTag.cNeuter, IceTag.cSingular, IceTag.cDative, false );
-					addNounTag( currToken, IceTag.cNeuter, IceTag.cPlural, IceTag.cNominative, false );
-					addNounTag( currToken, IceTag.cNeuter, IceTag.cPlural, IceTag.cAccusative, false );
-				}
-				if( !found )
-				{
-					// feiti nominative is feiti other cases
-					root = lex;
-					found = searchSuffixCases( root, MorphoClass.NounFeminine4, currToken, wordClass, true, true, true, true, IceTag.cFeminine, IceTag.cSingular, false, IceTag.cNoDeclension );
-				}
-				if( !found )
-				{
-					root = lex.substring( 0, len - 1 );
-					// hest-i dative is hest-ur nominative
-					boolean weak = checkWeakMasculineNoun( root );
-					if( !weak )
-						found = searchSuffixCases( root, MorphoClass.NounMasculine1, currToken, wordClass, false, false, true, false, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cNoDeclension );
-
-					if( !found )
-					{
-						// skól-i nominative is skól-a other cases
-						if( !checkNormalMasculineNoun( root ) )
-							found = searchSuffixCases( root, MorphoClass.NounMasculine2, currToken, wordClass, true, false, false, false, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cNoDeclension );
-					}
-				}
-				if( !found )
-				{
-					// hell-i  is hell-ir nominative
-					root = lex.substring( 0, len - 1 );
-					found = searchSuffixCases( root, MorphoClass.NounMasculine7, currToken, wordClass, false, true, true, false, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cNoDeclension );
-				}
-				if( !found )
-				{
-					// svín-i dative is svín nominative
-					root = lex.substring( 0, len - 1 );
-					found = searchSuffixCases( root, MorphoClass.NounNeuter1, currToken, wordClass, false, false, true, false, IceTag.cNeuter, IceTag.cSingular, false, IceTag.cNoDeclension );
-				}
-				if( !found )
-				{
-					// gerpi dative is gerpi nominative
-					root = lex.substring( 0, len - 1 );
-					found = searchSuffixCases( root, MorphoClass.NounNeuter2, currToken, wordClass, true, true, true, false, IceTag.cNeuter, IceTag.cSingular, false, IceTag.cNoDeclension );
-				}
-
-				// sveitt-i
-				// First search strong declension
-				if( !found && !lex.endsWith( "ari" ) )
-				{
-					root = lex.substring( 0, len - 1 );
-					found = searchSuffixCases( root, MorphoClass.Adj1, currToken, IceTag.WordClass.wcAdj, true, false, false, false, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cWeak );
-				}
-			}
-		}
-		else if( lex.endsWith( "ll" ) )
-		{
-			// heill
-			root = lex.substring( 0, len - 1 );
-			found = searchSuffixCases( root, MorphoClass.Adj5, currToken, IceTag.WordClass.wcAdj, true, false, false, false, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cStrong );
-
-			if( !found )
-			{
-				// stóll
-				root = lex.substring( 0, len - 1 );
-				found = searchSuffixCases( root, MorphoClass.NounMasculine6, currToken, wordClass, true, false, false, false, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cNoDeclension );
-			}
-			// ball, fall
-			if( !found )
-			{
-				root = lex;
-				found = searchSuffixCases( root, MorphoClass.NounNeuter1, currToken, wordClass, true, true, false, false, IceTag.cNeuter, IceTag.cSingular, false, IceTag.cNoDeclension );
-			}
-		}
-		else if( lex.endsWith( "kn" ) )
-		{
-			// fíkn, líkn, bákn, tákn
-			root = lex;
-			found = searchSuffixCases( root, MorphoClass.NounFeminine2, currToken, wordClass, true, true, true, false, IceTag.cFeminine, IceTag.cSingular, false, IceTag.cNoDeclension );
-			if( !found )
-				found = searchSuffixCases( root, MorphoClass.NounNeuter1, currToken, wordClass, true, true, false, false, IceTag.cNeuter, IceTag.cSingular, false, IceTag.cNoDeclension );
-		}
-		else if( lex.endsWith( "ng" ) )
-		{
-			// gang, lyng
-			root = lex;
-			found = searchSuffixCases( root, MorphoClass.NounMasculine1, currToken, wordClass, false, true, false, false, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cNoDeclension );
-			if( !found )
-				found = searchSuffixCases( root, MorphoClass.NounNeuter1, currToken, wordClass, true, true, false, false, IceTag.cNeuter, IceTag.cSingular, false, IceTag.cNoDeclension );
-		}
-		else if( lex.endsWith( "lf" ) )
-		{
-			// gólf, hólf, golf
-			root = lex;
-			found = searchSuffixCases( root, MorphoClass.NounNeuter1, currToken, wordClass, true, true, false, false, IceTag.cNeuter, IceTag.cSingular, false, IceTag.cNoDeclension );
-		}
-		else if( lex.endsWith( "l" ) )
-		{
-			// stól, pól, kjól
-			root = lex;
-			found = searchSuffixCases( root, MorphoClass.NounMasculine6, currToken, wordClass, false, true, false, false, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cNoDeclension );
-			// sól, sál
-			if( !found )
-			{
-				root = lex;
-				found = searchSuffixCases( root, MorphoClass.NounFeminine2, currToken, wordClass, true, true, true, false, IceTag.cFeminine, IceTag.cSingular, false, IceTag.cNoDeclension );
-
-			}
-			// fól, gól
-			if( !found )
-			{
-				root = lex;
-				found = searchSuffixCases( root, MorphoClass.NounNeuter1, currToken, wordClass, true, true, false, false, IceTag.cNeuter, IceTag.cSingular, false, IceTag.cNoDeclension );
-			}
-			// heil
-			if( !found )
-			{
-				root = lex;
-				found = searchSuffixCases( root, MorphoClass.Adj5, currToken, IceTag.WordClass.wcAdj, true, false, false, false, IceTag.cFeminine, IceTag.cSingular, false, IceTag.cStrong );
-			}
-		}
-		else if( lex.endsWith( "tt" ) )
-		{
-			// pott
-			root = lex;
-			found = searchSuffixCases( root, MorphoClass.NounMasculine1, currToken, wordClass, false, true, false, false, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cNoDeclension );
-			// gátt
-			if( !found )
-			{
-				root = lex;
-				found = searchSuffixCases( root, MorphoClass.NounFeminine2, currToken, wordClass, true, true, true, false, IceTag.cFeminine, IceTag.cSingular, false, IceTag.cNoDeclension );
-			}
-			// gott
-			if( !found )
-			{
-				root = lex;
-				found = searchSuffixCases( root, MorphoClass.NounNeuter1, currToken, wordClass, true, true, false, false, IceTag.cNeuter, IceTag.cSingular, false, IceTag.cNoDeclension );
-			}
-			// þreytt
-			if( !found )
-			{
-				root = lex;
-				found = searchSuffixCases( root, MorphoClass.Adj1, currToken, IceTag.WordClass.wcAdj, true, true, false, false, IceTag.cNeuter, IceTag.cSingular, false, IceTag.cStrong );
-				if( found )
-					addAdjectiveTag( currToken, IceTag.cFeminine, IceTag.cSingular, IceTag.cNominative, IceTag.cStrong, IceTag.cPositive );
-			}
-		}
-		else if( lex.endsWith( "kt" ) || lex.endsWith( "rt" ) )
-		{
-			// slakt, frekt, svart, bert, hert
-			root = lex.substring( 0, len - 1 );
-			found = searchSuffixCases( root, MorphoClass.Adj1, currToken, IceTag.WordClass.wcAdj, true, true, false, false, IceTag.cNeuter, IceTag.cSingular, false, IceTag.cStrong );
-		}
-		else if( lex.endsWith( "t" ) )
-		{
-			// hest
-			root = lex;
-			found = searchSuffixCases( root, MorphoClass.NounMasculine1, currToken, wordClass, false, true, false, false, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cNoDeclension );
-			// kúnst
-			if( !found )
-				found = searchSuffixCases( root, MorphoClass.NounFeminine2, currToken, wordClass, true, true, true, false, IceTag.cFeminine, IceTag.cSingular, false, IceTag.cNoDeclension );
-		}
-		else if( lex.endsWith( "bb" ) )
-		{
-			// stubb
-			root = lex;
-			found = searchSuffixCases( root, MorphoClass.NounMasculine1, currToken, wordClass, false, true, false, false, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cNoDeclension );
-			// gubb
-			if( !found )
-			{
-				root = lex;
-				found = searchSuffixCases( root, MorphoClass.NounNeuter1, currToken, wordClass, true, true, false, false, IceTag.cNeuter, IceTag.cSingular, false, IceTag.cNoDeclension );
-
-			}
-		}
-		else if( lex.endsWith( "pp" ) )
-		{
-			// kropp
-			root = lex;
-			found = searchSuffixCases( root, MorphoClass.NounMasculine1, currToken, wordClass, false, true, false, false, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cNoDeclension );
-		}
-		else if( lex.endsWith( "kk" ) )
-		{
-			// flokk
-            root = lex;
-			found = searchSuffixCases( root, MorphoClass.NounMasculine1, currToken, wordClass, false, true, false, false, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cNoDeclension );
-            // grikk, hrekk
-            if (found && (lex.endsWith( "ekk" ) || lex.endsWith( "ikk" )))
+        if( found )
+        {
+            if( currToken.numTags() > 0 )
             {
-                // Then add the accusative tag
-                String tagStr = currToken.getLastTagStr();
-                IceTag newTag = new IceTag(tagStr);
-                newTag.setCase(IceTag.cDative);
-                currToken.addTag(newTag);
-                //found = searchSuffixCases( root, MorphoClass.NounMasculine9, currToken, wordClass, false, true, true, false, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cNoDeclension );
+                if( logger != null )
+                    logger.log( "SUFFIX article: " + currToken.lexeme + " " + currToken.allTagStrings() );
+                //currToken.setMorpho(true);
+                currToken.setUnknownType( IceTokenTags.UnknownType.morpho );
+                return true;
             }
-		}
-		else if( lex.endsWith( "m" ) )
-		{
-			// keim, Ásgrím
-			root = lex;
-			found = searchSuffixCases( root, MorphoClass.NounMasculine1, currToken, wordClass, false, true, false, false, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cNoDeclension );
-		}
-		else if( lex.endsWith( "p" ) )
-		{
-			// tap, skáp
-			root = lex;
-			found = searchSuffixCases( root, MorphoClass.NounNeuter1, currToken, wordClass, true, true, false, false, IceTag.cNeuter, IceTag.cSingular, false, IceTag.cNoDeclension );
-			if( !found )
-				found = searchSuffixCases( root, MorphoClass.NounMasculine1, currToken, wordClass, false, true, false, false, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cNoDeclension );
-		}
+            else
+                found = false;
+        }
 
-		else if( lex.endsWith( "d" ) || lex.endsWith( "ð" ) || lex.endsWith( "k" ) )
-		{
-			// mynd, sand, umdeild, barð, arð, lak, sek
-			root = lex;
-			if( !lex.endsWith( "ð" ) )
-				found = searchSuffixCases( root, MorphoClass.NounFeminine2, currToken, wordClass, true, true, true, false, IceTag.cFeminine, IceTag.cSingular, false, IceTag.cNoDeclension );
-			if( !found && !lex.endsWith( "æð" ) ) // samstæð, hliðstæð, conflict. with stæði
-				found = searchSuffixCases( root, MorphoClass.NounNeuter1, currToken, wordClass, true, true, false, false, IceTag.cNeuter, IceTag.cSingular, false, IceTag.cNoDeclension );
-			if( !found )
-				found = searchSuffixCases( root, MorphoClass.NounMasculine1, currToken, wordClass, false, true, false, false, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cNoDeclension );
+        return found;
+    }
 
-			if( !found )
-			{
-				found = searchSuffixCases( root, MorphoClass.Adj1, currToken, IceTag.WordClass.wcAdj, true, false, false, false, IceTag.cFeminine, IceTag.cSingular, false, IceTag.cStrong );
-				if( found )
-				{
-					addAdjectiveTag( currToken, IceTag.cNeuter, IceTag.cPlural, IceTag.cNominative, IceTag.cStrong, IceTag.cPositive );
-					addAdjectiveTag( currToken, IceTag.cNeuter, IceTag.cPlural, IceTag.cAccusative, IceTag.cStrong, IceTag.cPositive );
-				}
-			}
-		}
-		else if( lex.endsWith( "r" ) )
-		{
-			// bar, skúr, skór
-			root = lex;
-			found = searchSuffixCases( root, MorphoClass.NounMasculine4, currToken, wordClass, true, true, true, false, IceTag.cMasculine, IceTag.cSingular, false, IceTag.cNoDeclension );
-			// hár, tár
-			if( !found )
-				found = searchSuffixCases( root, MorphoClass.NounNeuter1, currToken, wordClass, true, true, false, false, IceTag.cNeuter, IceTag.cSingular, false, IceTag.cNoDeclension );
-		}
-		if( found )
-		{
-			if( logger != null )
-				logger.log( "Suffix analysis case: " + currToken.lexeme + " " + currToken.allTagStrings() );
-			currToken.setUnknownType( IceTokenTags.UnknownType.morpho );
-		}
-		//}
-		return found;
-	}
-
-
-	private boolean suffixAnalysisCasesPlural( IceTokenTags currToken )
-    //  Changes the word from plural to singular and does lookup
+    private boolean suffixAnalysisCases( IceTokenTags currToken, boolean isProperNoun )
 	{
 		String lex, root;
 		boolean found = false;
+        boolean article = false;
 
 		lex = currToken.lexeme;
 		if( lex.endsWith( "-" ) )
 			lex = lex.substring( 0, lex.length() - 1 );
 		int len = lex.length();
 
-		if( lex.endsWith( "ar" ) )
-		{
-			// þreytt-ar is þreytt in singular nominative
-			root = lex.substring( 0, len - 2 );
-			found = searchSuffixCases( root, MorphoClass.Adj1, currToken, IceTag.WordClass.wcAdj, true, true, false, false, IceTag.cFeminine, IceTag.cPlural, false, IceTag.cStrong );
-			if( !found ) // heil-ar
-				found = searchSuffixCases( root, MorphoClass.Adj5, currToken, IceTag.WordClass.wcAdj, true, true, false, false, IceTag.cFeminine, IceTag.cPlural, false, IceTag.cStrong );
-			if( !found )
-			{
-				// meining-ar is meining in singular mominative
-				root = lex.substring( 0, len - 2 );
-				found = searchSuffixCases( root, MorphoClass.NounFeminine3, currToken, IceTag.WordClass.wcNoun, true, true, false, false, IceTag.cFeminine, IceTag.cPlural, false, IceTag.cNoDeclension );
-			}
-			// hest-ar is hest-ur in singular nominative
-			if( !found )
-			{
-				root = lex.substring( 0, len - 2 );
-				found = searchSuffixCases( root, MorphoClass.NounMasculine1, currToken, IceTag.WordClass.wcNoun, true, false, false, false, IceTag.cMasculine, IceTag.cPlural, false, IceTag.cNoDeclension );
-			}
-			// skól-ar is skól-i in singular nominative
-			if( !found )
-			{
-				root = lex.substring( 0, len - 2 );
-				if( !checkNormalMasculineNoun( root ) )
-					found = searchSuffixCases( root, MorphoClass.NounMasculine2, currToken, IceTag.WordClass.wcNoun, true, false, false, false, IceTag.cMasculine, IceTag.cPlural, false, IceTag.cNoDeclension );
-			}
+        boolean done = false;
+        // Loop trough the morphological records and use a record if the ending matches
+        for (int i=0; i<= morphoRules.listNounAdjectiveSingular.size()-1 && !done; i++)
+        {
+             MorphoRuleNounAdjective rec = morphoRules.listNounAdjectiveSingular.get(i);
 
-			// maur-ar is maur in singular nominative
-			if( !found )
-			{
-				root = lex.substring( 0, len - 2 );
-				found = searchSuffixCases( root, MorphoClass.NounMasculine4, currToken, IceTag.WordClass.wcNoun, true, false, false, false, IceTag.cMasculine, IceTag.cPlural, false, IceTag.cNoDeclension );
-			}
-			// krist-nar is krist-in in singular nominative
-			if( !found )
-			{
-				root = lex.substring( 0, len - 3 );
-				found = searchSuffixCases( root, MorphoClass.Adj2, currToken, IceTag.WordClass.wcAdj, true, true, false, false, IceTag.cFeminine, IceTag.cPlural, false, IceTag.cStrong );
-			}
-			if( !found && lex.endsWith( "rar" ) )
-			{
-				// gald-rar
-				root = lex.substring( 0, len - 3 );
-				found = searchSuffixCases( root, MorphoClass.NounMasculine3, currToken, IceTag.WordClass.wcNoun, true, false, false, false, IceTag.cMasculine, IceTag.cPlural, false, IceTag.cNoDeclension );
-			}
+             // If the current token is a noun with an article then we skip analysing noun records
+             if (currToken.isOnlyWordClass(IceTag.WordClass.wcNoun) && currToken.hasArticle() && rec.wordClass == (IceTag.WordClass.wcNoun))
+                continue;
 
-		}
-		else if( lex.endsWith( "inna" ) )
-		{
-			// krist-nir is krist-inn in singular nominative
-			root = lex.substring( 0, len - 4 );
-			found = searchSuffixCases( root, MorphoClass.Adj2, currToken, IceTag.WordClass.wcAdj, false, false, false, true, IceTag.cMasculine, IceTag.cPlural, false, IceTag.cStrong );
-			if( found )
-			{
-				addAdjectiveTag( currToken, IceTag.cFeminine, IceTag.cPlural, IceTag.cGenitive, IceTag.cStrong, IceTag.cPositive );
-				addAdjectiveTag( currToken, IceTag.cNeuter, IceTag.cPlural, IceTag.cGenitive, IceTag.cStrong, IceTag.cPositive );
-			}
-		}
-		else if( lex.endsWith( "in" ) )
-		{
-			// krist-in is krist-ið in singular nominative
-			root = lex.substring( 0, len - 2 );
-			found = searchSuffixCases( root, MorphoClass.Adj2, currToken, IceTag.WordClass.wcAdj, true, true, false, false, IceTag.cNeuter, IceTag.cPlural, false, IceTag.cStrong );
-		}
 
-		else if( (lex.endsWith( "rra" ) || lex.endsWith( "ra" )) )
-		{   //hárra , þreyttra
-			// þreytt-ra is þreytt in singular nominative
-			if( lex.endsWith( "rra" ) )
-				root = lex.substring( 0, len - 3 );
-			else
-				root = lex.substring( 0, len - 2 );
-			found = searchSuffixCases( root, MorphoClass.Adj1, currToken, IceTag.WordClass.wcAdj, false, false, false, true, IceTag.cFeminine, IceTag.cPlural, false, IceTag.cStrong );
-			if( found )
-			{
-				addAdjectiveTag( currToken, IceTag.cMasculine, IceTag.cPlural, IceTag.cGenitive, IceTag.cStrong, IceTag.cPositive );
-				addAdjectiveTag( currToken, IceTag.cNeuter, IceTag.cPlural, IceTag.cGenitive, IceTag.cStrong, IceTag.cPositive );
-			}
-			// Could also be masculine and neuter!
-			if( !found )
-			{
-				found = searchSuffixCases( root, MorphoClass.Adj1, currToken, IceTag.WordClass.wcAdj, false, false, false, true, IceTag.cMasculine, IceTag.cPlural, false, IceTag.cStrong );
-				if( found )
-				{
-					addAdjectiveTag( currToken, IceTag.cFeminine, IceTag.cPlural, IceTag.cGenitive, IceTag.cStrong, IceTag.cPositive );
-					addAdjectiveTag( currToken, IceTag.cNeuter, IceTag.cPlural, IceTag.cGenitive, IceTag.cStrong, IceTag.cPositive );
-				}
-			}
-			if( !found )
-			{
-				found = searchSuffixCases( root, MorphoClass.Adj1, currToken, IceTag.WordClass.wcAdj, false, false, false, true, IceTag.cNeuter, IceTag.cPlural, false, IceTag.cStrong );
-				if( found )
-				{
-					addAdjectiveTag( currToken, IceTag.cFeminine, IceTag.cPlural, IceTag.cGenitive, IceTag.cStrong, IceTag.cPositive );
-					addAdjectiveTag( currToken, IceTag.cMasculine, IceTag.cPlural, IceTag.cGenitive, IceTag.cStrong, IceTag.cPositive );
-				}
-			}
-			if( !found ) // gald-ra
-			{
-				root = lex.substring( 0, len - 2 );
-				found = searchSuffixCases( root, MorphoClass.NounMasculine3, currToken, IceTag.WordClass.wcNoun, false, true, false, true, IceTag.cMasculine, IceTag.cPlural, false, IceTag.cNoDeclension );
-			}
+             //if (lex.endsWith(rec.ending) && (len > rec.subtractForLookup)) {
+             if (lex.matches(".*"+rec.ending+"$") && (len > rec.subtractForLookup)) {
+               root = lex.substring( 0, len - rec.subtractForLookup);
 
-		}
-		else if( lex.endsWith( "ga" ) )
-		{
-			// hug-a accusative/genitive is hug-ur nomintaive
-			root = lex.substring( 0, len - 1 );
-			found = searchSuffixCases( root, MorphoClass.NounMasculine5, currToken, IceTag.WordClass.wcNoun, false, true, false, true, IceTag.cMasculine, IceTag.cPlural, false, IceTag.cNoDeclension );
-			if( !found )
-			{
-				root = lex.substring( 0, len - 1 );
-				found = searchSuffixCases( root, MorphoClass.NounFeminine3, currToken, IceTag.WordClass.wcNoun, false, false, false, true, IceTag.cFeminine, IceTag.cPlural, false, IceTag.cNoDeclension );
-			}
-			// falleg-a menn accusative is fallegur singular nominative;
-			if( !found )
-			{
-				root = lex.substring( 0, len - 1 );
-				found = searchSuffixCases( root, MorphoClass.Adj1, currToken, IceTag.WordClass.wcAdj, false, true, false, false, IceTag.cMasculine, IceTag.cPlural, false, IceTag.cStrong );
-			}
-		}
+               IceTag.WordClass wordClass = rec.wordClass;
+               if ((wordClass == IceTag.WordClass.wcNoun) && isProperNoun)
+			        wordClass = IceTag.WordClass.wcProperNoun;
 
-		else if( lex.endsWith( "ja" ) )
-		{
-			// verkj-a genitive is verk-ur nominative;
-			root = lex.substring( 0, len - 2 );
-			found = searchSuffixCases( root, MorphoClass.NounMasculine1, currToken, IceTag.WordClass.wcNoun, false, false, false, true, IceTag.cMasculine, IceTag.cPlural, false, IceTag.cNoDeclension );
-			// merkj-a genitive is merki nominative;
-			if( !found )
-			{
-				root = lex.substring( 0, len - 2 );
-				found = searchSuffixCases( root, MorphoClass.NounNeuter2, currToken, IceTag.WordClass.wcNoun, false, false, false, true, IceTag.cNeuter, IceTag.cPlural, false, IceTag.cNoDeclension );
-			}
-		}
-		else if( lex.endsWith( "a" ) )
-		{
+               found = searchSuffixCases(root, rec.morphoClass, currToken, wordClass, rec.nominative, rec.accusative, rec.dative, rec.genitive, rec.gender, rec.number, article, rec.declension);
 
-			if( lex.endsWith( "aða" ) && len > 4 )
-			{ // horaða
-				// hor-aða
-				root = lex.substring( 0, len - 4 );
-				found = searchSuffixCases( root, MorphoClass.Adj4, currToken, IceTag.WordClass.wcAdj, false, true, false, false, IceTag.cFeminine, IceTag.cSingular, false, IceTag.cStrong );
-			}
-			if( !found && lex.endsWith( "ða" ) )
-			{
-				// búð-a genitive is búð nominative;
-				root = lex.substring( 0, len - 1 );
-				found = searchSuffixCases( root, MorphoClass.NounFeminine2, currToken, IceTag.WordClass.wcNoun, false, false, false, true, IceTag.cFeminine, IceTag.cPlural, false, IceTag.cNoDeclension );
-				// verkstæð-a genitive is verkstæð-i nomintaive
-				if( !found )
-				{
-					root = lex.substring( 0, len - 1 );
-					found = searchSuffixCases( root, MorphoClass.NounNeuter2, currToken, IceTag.WordClass.wcNoun, false, false, false, true, IceTag.cNeuter, IceTag.cPlural, false, IceTag.cNoDeclension );
-				}
-				// markað-a genitive is markað-ur nomintaive
-				if( !found )
-				{
-					root = lex.substring( 0, len - 1 );
-					found = searchSuffixCases( root, MorphoClass.NounMasculine5, currToken, IceTag.WordClass.wcNoun, false, false, false, true, IceTag.cMasculine, IceTag.cPlural, false, IceTag.cNoDeclension );
-				}
-			}
-			// hest-a accusative/genitive is hest-ur nominative;
-			root = lex.substring( 0, len - 1 );
-			if( !found )
-				found = searchSuffixCases( root, MorphoClass.NounMasculine1, currToken, IceTag.WordClass.wcNoun, false, true, false, true, IceTag.cMasculine, IceTag.cPlural, false, IceTag.cNoDeclension );
-			// skól-a
-			if( !found )
-			{
-				if( !checkNormalMasculineNoun( root ) )
-					found = searchSuffixCases( root, MorphoClass.NounMasculine2, currToken, IceTag.WordClass.wcNoun, false, true, false, true, IceTag.cMasculine, IceTag.cPlural, false, IceTag.cNoDeclension );
-			}
-			// svín-a genitive is svín nominative;
-			if( !found )
-			{
-				root = lex.substring( 0, len - 1 );
-				found = searchSuffixCases( root, MorphoClass.NounNeuter1, currToken, IceTag.WordClass.wcNoun, false, false, false, true, IceTag.cNeuter, IceTag.cPlural, false, IceTag.cNoDeclension );
-			}
-			// kvikind-a genitive is kvikindi nominative;
-			if( !found )
-			{
-				root = lex.substring( 0, len - 1 );
-				found = searchSuffixCases( root, MorphoClass.NounNeuter2, currToken, IceTag.WordClass.wcNoun, false, false, false, true, IceTag.cNeuter, IceTag.cPlural, false, IceTag.cNoDeclension );
-			}
-			// súp-a genitive is súpa nominative;
-			if( !found )
-			{
-				root = lex.substring( 0, len - 1 );
-				found = searchSuffixCases( root, MorphoClass.NounFeminine1, currToken, IceTag.WordClass.wcNoun, false, false, false, true, IceTag.cFeminine, IceTag.cPlural, false, IceTag.cNoDeclension );
-			}
-			// von-a genitive is von nominative;
-			if( !found )
-			{
-				root = lex.substring( 0, len - 1 );
-				found = searchSuffixCases( root, MorphoClass.NounFeminine2, currToken, IceTag.WordClass.wcNoun, false, false, false, true, IceTag.cFeminine, IceTag.cPlural, false, IceTag.cNoDeclension );
-			}
-			// sveitt-a menn accusative is fallegur singular nominative;
-			if( !found )
-			{
-				root = lex.substring( 0, len - 1 );
-				found = searchSuffixCases( root, MorphoClass.Adj1, currToken, IceTag.WordClass.wcAdj, false, true, false, false, IceTag.cMasculine, IceTag.cPlural, false, IceTag.cStrong );
-			}
-			if( !found && lex.endsWith( "na" ) && len > 4 )
-			{
-				// súp-na is súp-a in singular nominative
-				root = lex.substring( 0, len - 2 );
-				found = searchSuffixCases( root, MorphoClass.NounFeminine1, currToken, IceTag.WordClass.wcNoun, false, false, false, true, IceTag.cFeminine, IceTag.cPlural, false, IceTag.cNoDeclension );
-				if( !found )
-					// krist-na is krist-inn in singular nominative
-					found = searchSuffixCases( root, MorphoClass.Adj2, currToken, IceTag.WordClass.wcAdj, false, true, false, false, IceTag.cMasculine, IceTag.cPlural, false, IceTag.cStrong );
-			}
-
-		}
-		else if( lex.endsWith( "gjum" ) )
-		{  // engjum, hengjum
-			// engj-um is engi
-			root = lex.substring( 0, len - 3 );
-			found = searchSuffixCases( root, MorphoClass.NounNeuter2, currToken, IceTag.WordClass.wcNoun, false, false, true, false, IceTag.cNeuter, IceTag.cPlural, false, IceTag.cNoDeclension );
-
-		}
-		else if( lex.endsWith( "kkjum" ) )
-		{  // sekkjum, dekkjum
-			root = lex.substring( 0, len - 3 );
-			found = searchSuffixCases( root, MorphoClass.NounMasculine1, currToken, IceTag.WordClass.wcNoun, false, false, true, false, IceTag.cMasculine, IceTag.cPlural, false, IceTag.cNoDeclension );
-			if( !found )
-				found = searchSuffixCases( root, MorphoClass.NounNeuter1, currToken, IceTag.WordClass.wcNoun, false, false, true, false, IceTag.cNeuter, IceTag.cPlural, false, IceTag.cNoDeclension );
-		}
-		else if( lex.endsWith( "unum" ) )
-		{
-			// vitj-unum is vitj-un in singular nominative/accusative
-			root = lex.substring( 0, len - 4 );
-			found = searchSuffixCases( root, MorphoClass.NounFeminine5, currToken, IceTag.WordClass.wcNoun, false, false, true, false, IceTag.cFeminine, IceTag.cPlural, false, IceTag.cNoDeclension );
-		}
-
-		else if( lex.endsWith( "uðum" ) )    // hor-uðum
-		{
-			root = lex.substring( 0, len - 4 );
-			int count = 1;
-			// u-hljóðvarp
-			String newRoot = hljodVarp( root, 'ö', 'a' );
-			if( newRoot != null )
-				count = 2;
-
-			for( int i = 1; i <= count && !found; i++ )
-			{
-				if( i == 2 )
-					root = newRoot;
-
-				found = searchSuffixCases( root, MorphoClass.Adj4, currToken, IceTag.WordClass.wcAdj, false, false, true, false, IceTag.cMasculine, IceTag.cPlural, false, IceTag.cStrong );
-				// could also be feminine and neuter
-				if( found )
-				{
-					addAdjectiveTag( currToken, IceTag.cFeminine, IceTag.cPlural, IceTag.cDative, IceTag.cStrong, IceTag.cPositive );
-					addAdjectiveTag( currToken, IceTag.cNeuter, IceTag.cPlural, IceTag.cDative, IceTag.cStrong, IceTag.cPositive );
-				}
-			}
-		}
-
-		else if( lex.endsWith( "um" ) )
-		{
-			root = lex.substring( 0, len - 2 );
-			int count = 1;
-			// u-hljóðvarp
-			String newRoot = hljodVarp( root, 'ö', 'a' );
-			if( newRoot != null )
-				count = 2;
-
-			for( int i = 1; i <= count && !found; i++ )
-			{
-				if( i == 2 )
-					root = newRoot;
-
-				// góð-um is góð-ur in singular nominative
-				found = searchSuffixCases( root, MorphoClass.Adj1, currToken, IceTag.WordClass.wcAdj, false, false, true, false, IceTag.cMasculine, IceTag.cPlural, false, IceTag.cStrong );
-				if( !found )
-					found = searchSuffixCases( root, MorphoClass.Adj2, currToken, IceTag.WordClass.wcAdj, false, false, true, false, IceTag.cMasculine, IceTag.cPlural, false, IceTag.cStrong );
-				if( !found )
-					found = searchSuffixCases( root, MorphoClass.Adj5, currToken, IceTag.WordClass.wcAdj, false, false, true, false, IceTag.cMasculine, IceTag.cPlural, false, IceTag.cStrong );
-				// could also be feminine and neuter
-				if( found )
-				{
-					addAdjectiveTag( currToken, IceTag.cFeminine, IceTag.cPlural, IceTag.cDative, IceTag.cStrong, IceTag.cPositive );
-					addAdjectiveTag( currToken, IceTag.cNeuter, IceTag.cPlural, IceTag.cDative, IceTag.cStrong, IceTag.cPositive );
-				}
-				// hest-um is hest-ur in singular nominative
-
-				// súp-um is súp-u in singular dative
-				if( !found )
-					found = searchSuffixCases( root, MorphoClass.NounFeminine1, currToken, IceTag.WordClass.wcNoun, false, false, true, false, IceTag.cFeminine, IceTag.cPlural, false, IceTag.cNoDeclension );
-				// von-um is von in singular dative,
-				if( !found )
-					found = searchSuffixCases( root, MorphoClass.NounFeminine2, currToken, IceTag.WordClass.wcNoun, false, false, true, false, IceTag.cFeminine, IceTag.cPlural, false, IceTag.cNoDeclension );
-				// meining-um is meining in singular nominative,
-				if( !found )
-					found = searchSuffixCases( root, MorphoClass.NounFeminine3, currToken, IceTag.WordClass.wcNoun, false, false, true, false, IceTag.cFeminine, IceTag.cPlural, false, IceTag.cNoDeclension );
-				if( !found )
-					found = searchSuffixCases( root, MorphoClass.NounMasculine1, currToken, IceTag.WordClass.wcNoun, false, false, true, false, IceTag.cMasculine, IceTag.cPlural, false, IceTag.cNoDeclension );
-				// skól-um is skól-a in singular dative
-				if( !found )
-				{
-					if( !checkNormalMasculineNoun( root ) )
-						found = searchSuffixCases( root, MorphoClass.NounMasculine2, currToken, IceTag.WordClass.wcNoun, false, false, true, false, IceTag.cMasculine, IceTag.cPlural, false, IceTag.cNoDeclension );
-				}
-				// lán-um is lán
-				if( !found )
-					found = searchSuffixCases( root, MorphoClass.NounNeuter1, currToken, IceTag.WordClass.wcNoun, false, false, true, false, IceTag.cNeuter, IceTag.cPlural, false, IceTag.cNoDeclension );
-				// gerp-um is gerpi
-				if( !found )
-					found = searchSuffixCases( root, MorphoClass.NounNeuter2, currToken, IceTag.WordClass.wcNoun, false, false, true, false, IceTag.cNeuter, IceTag.cPlural, false, IceTag.cNoDeclension );
-				// staur-um is staur
-				if( !found )
-					found = searchSuffixCases( root, MorphoClass.NounMasculine4, currToken, IceTag.WordClass.wcNoun, false, false, true, false, IceTag.cMasculine, IceTag.cPlural, false, IceTag.cNoDeclension );
-			}
-		}
-
-		else if( lex.endsWith( "ndur" ) )
-		{
-			// áheyrend-ur is áheyrandi-i in singular nominative
-			root = lex.substring( 0, len - 2 );
-			found = searchSuffixCases( root, MorphoClass.NounMasculine2, currToken, IceTag.WordClass.wcNoun, true, true, false, false, IceTag.cMasculine, IceTag.cPlural, false, IceTag.cNoDeclension );
-		}
-		else if( lex.endsWith( "ur" ) )
-		{
-			// súp-ur is súp-a in singular nominative
-			root = lex.substring( 0, len - 2 );
-			found = searchSuffixCases( root, MorphoClass.NounFeminine1, currToken, IceTag.WordClass.wcNoun, true, true, false, false, IceTag.cFeminine, IceTag.cPlural, false, IceTag.cNoDeclension );
-
-		}
-
-		else if( lex.endsWith( "anir" ) )
-		{
-			// vitj-anir is vitjun in singular nominative/accusative
-			root = lex.substring( 0, len - 4 );
-			found = searchSuffixCases( root, MorphoClass.NounFeminine5, currToken, IceTag.WordClass.wcNoun, true, true, false, false, IceTag.cFeminine, IceTag.cPlural, false, IceTag.cNoDeclension );
-		}
-		else if( lex.endsWith( "ir" ) )
-		{
-			// von-ir is von in singular nominative/accusative
-			root = lex.substring( 0, len - 2 );
-			found = searchSuffixCases( root, MorphoClass.NounFeminine2, currToken, IceTag.WordClass.wcNoun, true, true, false, false, IceTag.cFeminine, IceTag.cPlural, false, IceTag.cNoDeclension );
-			// tug-ir is tug-ur in singular nominative
-			if( !found )
-			{
-				root = lex.substring( 0, len - 2 );
-				found = searchSuffixCases( root, MorphoClass.NounMasculine1, currToken, IceTag.WordClass.wcNoun, true, false, false, false, IceTag.cMasculine, IceTag.cPlural, false, IceTag.cNoDeclension );
-			}
-			// þreytt-ir is þreytt-ur in singular nominative
-			if( !found )
-			{
-				root = lex.substring( 0, len - 2 );
-				found = searchSuffixCases( root, MorphoClass.Adj1, currToken, IceTag.WordClass.wcAdj, true, false, false, false, IceTag.cMasculine, IceTag.cPlural, false, IceTag.cStrong );
-			}
-			// krist-nir is krist-inn in singular nominative
-			if( !found )
-			{
-				root = lex.substring( 0, len - 3 );
-				found = searchSuffixCases( root, MorphoClass.Adj2, currToken, IceTag.WordClass.wcAdj, true, false, false, false, IceTag.cMasculine, IceTag.cPlural, false, IceTag.cStrong );
-			}
-			if( !found )
-			{// heilir
-				root = lex.substring( 0, len - 2 );
-				found = searchSuffixCases( root, MorphoClass.Adj5, currToken, IceTag.WordClass.wcAdj, true, false, false, false, IceTag.cMasculine, IceTag.cPlural, false, IceTag.cStrong );
-			}
-
-		}
-
-		else if( lex.endsWith( "lf" ) )
-		{
-			// gólf, hólf, golf
-			root = lex;
-			found = searchSuffixCases( root, MorphoClass.NounNeuter1, currToken, IceTag.WordClass.wcNoun, true, true, false, false, IceTag.cNeuter, IceTag.cPlural, false, IceTag.cNoDeclension );
-		}
-		else if( lex.endsWith( "i" ) )
-		{
-			// special case for masculine plural words ending with "ir" in nominative
-			// gestir-gesti
-			root = lex + "r";
-			//String tagStr = dictionary.lookup( root, true );
-            String tagStr = dictionaryLookup( root, true );
-            if( tagStr == null )
-			{
-				root = lex + "rnir";
-				//tagStr = dictionary.lookup( root, true );
-                tagStr = dictionaryLookup( root, true );
-            }
-			if( tagStr != null &&
-			    (tagStr.equals( IceTag.tagNounMasculinePluralNominative ) || tagStr.equals( IceTag.tagNounMasculinePluralNominativeArticle )) )
-			{
-				addNounTag( currToken, IceTag.cMasculine, IceTag.cPlural, IceTag.cAccusative, false );
-				found = true;
-			}
-		}
-
-		//}
-		if( found )
-		{
-			if( logger != null )
-				logger.log( "Suffix analysis case plural: " + currToken.lexeme + " " + currToken.allTagStrings() );
-			currToken.setUnknownType( IceTokenTags.UnknownType.morpho );
-		}
+               if( found )
+		       {
+			        if( logger != null )
+				        logger.log( "Suffix analysis case: " + currToken.lexeme + " " + currToken.allTagStrings() );
+			        currToken.setUnknownType( IceTokenTags.UnknownType.morpho );
+                    done = !rec.searchAgainWhenFound;
+		       }
+             }
+        }
 		return found;
 	}
 
+
+    private boolean suffixAnalysisCasesPlural( IceTokenTags currToken )
+    //  Changes the word from plural to singular and does lookup
+    {
+        String lex, root;
+        boolean found = false;
+        boolean article = false;
+
+        lex = currToken.lexeme;
+        if( lex.endsWith( "-" ) )
+            lex = lex.substring( 0, lex.length() - 1 );
+        int len = lex.length();
+
+        boolean done = false;
+        // Loop trough the morphological records and use a record if the ending matches
+        for (int i=0; i<= morphoRules.listNounAdjectivePlural.size()-1 && !done; i++)
+        {
+             MorphoRuleNounAdjective rec = morphoRules.listNounAdjectivePlural.get(i);
+
+             // If the current token is a noun with an article then we skip analysing noun records
+             if (currToken.isOnlyWordClass(IceTag.WordClass.wcNoun) && currToken.hasArticle() && rec.wordClass == (IceTag.WordClass.wcNoun))
+                continue;
+
+             if (lex.matches(".*"+rec.ending+"$") && (len > rec.subtractForLookup)) {
+               root = lex.substring( 0, len - rec.subtractForLookup);
+               found = searchSuffixCases(root, rec.morphoClass, currToken, rec.wordClass, rec.nominative, rec.accusative, rec.dative, rec.genitive, rec.gender, rec.number, article, rec.declension);
+
+               if (!found && rec.ending.matches(".*(uð)?um$")) {
+                     // u-hljóðvarp ?
+			         String newRoot = hljodVarp( root, 'ö', 'a' );
+                     if (newRoot != null)
+                        found = searchSuffixCases(newRoot, rec.morphoClass, currToken, rec.wordClass, rec.nominative, rec.accusative, rec.dative, rec.genitive, rec.gender, rec.number, article, rec.declension);
+               }
+
+               if( found )
+		       {
+			        if( logger != null )
+				        logger.log( "Suffix analysis case plural: " + currToken.lexeme + " " + currToken.allTagStrings() );
+			        currToken.setUnknownType( IceTokenTags.UnknownType.morpho );
+                    done = !rec.searchAgainWhenFound;
+		       }
+             }
+        }
+        return found;
+    }
 
 	private void defaultTags( IceTokenTags currToken )
 	{
@@ -4515,8 +2890,8 @@ public class IceMorphy {
 		{
 			generateMissingAdj( currToken );
 			// Check if we can rule out weak declension
-			if( currToken.isAdjectiveWeak() && !isVowel( currToken.lexeme.charAt( currToken.lexeme.length() - 1 ) ) )
-				setDeclension( currToken, IceTag.cStrong );
+			//if( currToken.isAdjectiveWeak() && !isVowel( currToken.lexeme.charAt( currToken.lexeme.length() - 1 ) ) )
+			//	setDeclension( currToken, IceTag.cStrong );
 		}
 		else if( currToken.isOnlyWordClass( IceTag.WordClass.wcNoun ) )
 			generateMissingNoun( currToken );
@@ -4531,7 +2906,7 @@ public class IceMorphy {
 
 		if( (found || found2 || found3) ) // Possible adjective tags are numerous. Get them
             generateMissingTagsUnknown( currToken );
-
+            
 		return (found || found2 || found3);
 	}
 
@@ -4572,7 +2947,7 @@ public class IceMorphy {
 			// The next four statements should be commented out if only running the ending analyser
 
             if( !found )
-				verbFound = verbAnalysis( currToken, prevToken, true );
+                verbFound = verbAnalysis( currToken, prevToken);
 
 			if( !found )
 				found = morphoAnalysisSuffix( currToken, false );

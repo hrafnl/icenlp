@@ -24,6 +24,9 @@ package is.iclt.icenlp.core.icetagger;
 import is.iclt.icenlp.core.icemorphy.IceMorphyLexicons;
 
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
+import java.io.IOException;
 
 /**
  * Reads the resource files (lexicons) used by IceTagger from the .jar file.
@@ -46,6 +49,25 @@ public class IceTaggerResources {
             isVerbPrep = getClass().getResourceAsStream( dictPathTagger + IceTaggerLexicons.verbPrepDictionary );
             isVerbObj = getClass().getResourceAsStream( dictPathTagger + IceTaggerLexicons.verbObjDictionary );
             isVerbAdverb = getClass().getResourceAsStream( dictPathTagger + IceTaggerLexicons.verbAdverbDictionary );
-   
+            //System.out.println(getNumLines(isDictionary));
    }
+
+   private int getNumLines(InputStream is) {
+
+       int count = 0;
+       try {
+         BufferedReader bf = new BufferedReader(new InputStreamReader(is));
+
+         while (bf.readLine() != null)
+            count++;
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+        }
+        return count;
+    }
+
+
+
 }

@@ -511,11 +511,22 @@ private void setDefaults()
 
 	private void printHeader()
 	{
-		System.out.println( "************************************************" );
-		System.out.println( "*  IceTagger - A linguistic rule-based tagger  * " );
-		System.out.println( "*  Version 1.3                                 *" );
-		System.out.println( "*  Copyright (C) 2005-2009, Hrafn Loftsson     *" );
-		System.out.println( "************************************************" );
+		System.out.println("***********************************************");
+		System.out.println("* IceTagger - A linguistic rule-based tagger  *");
+        System.out.println("*  Version 1.3                                *");
+        System.out.println("*  Copyright (C) 2005-2009, Hrafn Loftsson    *" );
+        System.out.println("***********************************************");
+        /*
+        System.out.println( "***********************************************************");
+		System.out.println( "*  IceTagger - A linguistic rule-based tagger             *");
+        System.out.println( "*  Version 1.3, © 2005-2009, Hrafn Loftsson               *");                              *" );
+		System.out.println( "*                                                         *" );
+        System.out.println( "*  The default dictionaries are mainly derived from the   *" );
+        System.out.println( "*  Icelandic Frequency Dictionary corpus, and partly from *" );
+        System.out.println( "*  BIN - the Database of Modern Icelandic Inflections    *" );
+        System.out.println( "*  © Árni Magnússon Institute for Icelandic Studies       *" );
+        System.out.println( "***********************************************************");
+        */
 	}
 
 
