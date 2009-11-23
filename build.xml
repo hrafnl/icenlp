@@ -161,9 +161,9 @@
 			</fileset>
 
 			<doctitle>
-				<![CDATA[<h1>${javadoctitle}</h1>]]></doctitle>
+				<![CDATA[<h1>IceNLP</h1>]]></doctitle>
 		<bottom>
-			<![CDATA[<i>Copyright &#169; 2009 <a href="http://www.ru.is/faculty/hrafn/index_isl.htm" target="_top">Hrafn Loftsson</a>, <a href="http://www3.hi.is/~antoni/" target="_top">Anton Karl Ingason</a>
+			<![CDATA[<i>Copyright &#169; 2009 <a href="http://www.ru.is/faculty/hrafn/" target="_top">Hrafn Loftsson</a>, <a href="http://www3.hi.is/~antoni/" target="_top">Anton Karl Ingason</a>
 			</i>]]></bottom>
 		<link offline="true" href="http://java.sun.com/products/jdk/1.5/docs/api/" packagelistLoc="/tmp" />
 	</javadoc>

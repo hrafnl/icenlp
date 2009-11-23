@@ -26,12 +26,13 @@ import is.iclt.icenlp.core.utils.IceTag;
 import java.util.ArrayList;
 
 /**
- * Created by IntelliJ IDEA.
- * User: hrafn
- * Date: 21.11.2009
- * Time: 14:32:50
- * To change this template use File | Settings | File Templates.
+ * A class containing morphological rules used by IceMorphy for guessing
+ * the tag profile for unknown words.
+ *
+ * @author Hrafn Loftsson
  */
+
+
 public class MorphoRules {
     public ArrayList<MorphoRuleNounAdjective> listNounArticle;
     public ArrayList<MorphoRuleNounAdjective> listNounAdjectiveSingular;
@@ -50,6 +51,16 @@ public class MorphoRules {
     }
 
     public void createNounArticleRules() {
+    // Lets explain how IceMorpy uses these rules by using the first rule here as an example:
+    // MorphoRuleNounAdjective("urinn", 5, IceMorphy.MorphoClass.NounMasculine1, true, false, false, false, IceTag.cMasculine, IceTag.cSingular));
+    //
+    // If an unknown lexeme matches the regular expression "urinn", then IceMorphy guesses the stem
+    // by removing this 5 character suffix from the word.
+    // IceMorphy then generates all possible word forms based on the given morphological class (NounMasculine1).
+    // If a word form is found in the dictionary, then it is assumed that the unknown lexeme belongs to the same class.
+    // The tag profile is then created by using the additional information in the rule, i.e. info about the cases, gender, and number.
+    // For our given example, nominative, masucline, singular is given and the final tag created will thus be "nkeng"
+    //    
             
             listNounArticle = new ArrayList<MorphoRuleNounAdjective>();
             // hest-urinn
