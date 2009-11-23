@@ -21,6 +21,8 @@
  */
 package is.iclt.icenlp.core.tritagger;
 
+import is.iclt.icenlp.core.utils.FileEncoding;
+
 import java.util.*;
 import java.io.*;
 
@@ -50,10 +52,11 @@ public class Ngrams {
     {
 
         init1();
-        BufferedReader ngrams = new BufferedReader(new FileReader(fileName));
+        //BufferedReader ngrams = new BufferedReader(new FileReader(fileName));
+        BufferedReader ngrams = FileEncoding.getReader(fileName);
         loadNgrams(ngrams);
-        BufferedInputStream lambda = new BufferedInputStream(
-                                      new FileInputStream(lambdaFileName));
+
+        BufferedInputStream lambda = new BufferedInputStream(new FileInputStream(lambdaFileName));
         loadLambdas(lambda);
         init2();
 
@@ -65,7 +68,8 @@ public class Ngrams {
 			throw new NullPointerException( "InputStream was not initialized correctly (null)" );
 
         init1();
-        BufferedReader ngrams = new BufferedReader(new InputStreamReader(in_ngram));
+        //BufferedReader ngrams = new BufferedReader(new InputStreamReader(in_ngram));
+        BufferedReader ngrams = FileEncoding.getReader(in_ngram);
         loadNgrams(ngrams);
         BufferedInputStream lambda = new BufferedInputStream(in_lambda);
         loadLambdas(lambda);

@@ -21,6 +21,8 @@
  */
 package is.iclt.icenlp.core.tritagger;
 
+import is.iclt.icenlp.core.utils.FileEncoding;
+
 import java.util.HashMap;
 import java.util.Vector;
 import java.util.Iterator;
@@ -60,7 +62,8 @@ public class FreqLexicon {
     throws IOException
     {
         init1(format);
-        BufferedReader input = new BufferedReader(new FileReader(fileName));
+        //BufferedReader input = new BufferedReader(new FileReader(fileName));
+        BufferedReader input = FileEncoding.getReader(fileName);
         loadFile(input, createSuffixes);
         init2();
         suffixesCreated = createSuffixes;
@@ -73,7 +76,8 @@ public class FreqLexicon {
                throw new NullPointerException( "InputStream was not initialized correctly (null)" );
 
            init1(format);
-           BufferedReader input = new BufferedReader(new InputStreamReader(in));
+           //BufferedReader input = new BufferedReader(new InputStreamReader(in));
+           BufferedReader input = FileEncoding.getReader(in);
            loadFile(input, createSuffixes);
            init2();
            suffixesCreated = createSuffixes;

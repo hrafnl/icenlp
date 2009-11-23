@@ -184,6 +184,7 @@ public class RunTriTagger {
        System.out.println("and the optional parameters:");
        System.out.println("  -lf <1|2|3> (line format)");
        System.out.println("  -of <1|2> (output format)");
+       System.out.println("  -ss <upper|lower>" );
        System.out.println("  -b <backup dictionaryOtb>");
        System.out.println("  -p <idioms/phrases dictionary>");
        System.out.println("  -im (use IceMorphy)");
