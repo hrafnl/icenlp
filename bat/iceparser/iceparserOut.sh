@@ -16,6 +16,12 @@ date
 echo Input file: $1
 echo Output file: $2
 
+if [ "$3" = "-l" ]  # Phrase_per_line flag
+then
+  echo Writing output as one phrase per line 
+fi
+
+
 # The parser comprises the following transducers:
 # Preprocess:   preprocessing
 # Phrase_MWEP1: labels multiword expressions consisting of (prep, adverb) pairs
@@ -69,6 +75,12 @@ java -classpath $JAR $PACKAGE.Func_OBJ3 func_obj2.out > func_obj3.out
 java -classpath $JAR $PACKAGE.Func_SUBJ2 func_obj3.out > func_subj2.out
 java -classpath $JAR $PACKAGE.Clean2 func_subj2.out > clean2.out
 
-cp clean2.out $2
+if [ "$3" = "-l" ]  # phrase_per_line flag
+then
+	java -classpath $JAR $PACKAGE.Phrase_Per_Line clean2.out > phrase_per_line.out
+	cp phrase_per_line.out $2
+else
+	cp clean2.out $2
+fi
 
 date

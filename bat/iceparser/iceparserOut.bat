@@ -7,14 +7,17 @@
 @echo *                                                  *
 @echo ****************************************************
 
+@echo off
 REM When each transducer reads from standard input and writes to standard output (as is the case here)
 REM it uses the java.io.FileReader class which in turn uses the platforms default encoding automatically.
 REM This means that you have to make sure that the encoding of your input file matches the platform encoding.
 
 @echo Input file: %1%
 @echo Output file: %2%
+IF "%3%"=="" GOTO start
+IF "%3%" == "-l" @echo Writing output as one phrase per line 
 
-@echo off
+:start
 REM The parser comprises the following transducers:
 REM Preprocess:   preprocessing
 REM Phrase_MWEP1: labels multiword expressions consisting of (prep, adverb) pairs
@@ -69,4 +72,15 @@ java -classpath %JAR% %PACKAGE%.Func_OBJ3 func_obj2.out > func_obj3.out
 java -classpath %JAR% %PACKAGE%.Func_SUBJ2 func_obj3.out > func_subj2.out
 java -classpath %JAR% %PACKAGE%.Clean2 func_subj2.out > clean2.out
 
+@echo off
+IF "%3%"=="" GOTO clean
+IF NOT "%3%" == "-l" GOTO clean 
+
+java -classpath %JAR% %PACKAGE%.Phrase_Per_Line clean2.out > phrase_per_line.out
+copy phrase_per_line.out %2%
+goto end
+
+:clean
 copy clean2.out %2%
+
+:end
