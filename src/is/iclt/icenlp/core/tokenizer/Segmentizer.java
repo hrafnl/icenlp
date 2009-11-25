@@ -261,10 +261,10 @@ public class Segmentizer
             if( ch == '.' && !isPeriodEOS() )        // Is the period really marking EOS
 				endOfSentence = false;
             // Check for salati.»
-			else if( (ch == '.' || ch == '!' || ch == '?' /*|| ch == ':'*/) && (nextChar == '"' || nextChar == '«' || ch == '»') ) // || ch == '»'))
+			else if( (ch == '.' || ch == '!' || ch == '?' /*|| ch == ':'*/) && (nextChar == '"' || nextChar == '”' || nextChar == '“' || nextChar == '«' || ch == '»') ) // || ch == '»'))
 				endOfSentence = false;
 				// Check for like: "Elsku mamma," jörmuðu kiðlingarnir ....
-			else if( (ch == '"' || ch == '»') && currIndex > 1) {
+			else if( (ch == '"' || ch == '”' || ch == '“' || ch == '»') && currIndex > 1) {
                 char prevCh = currLine.charAt( currIndex - 2 );
                 if (prevCh != '.' && prevCh != '!' && prevCh != '?' && prevCh != ':')
 				    endOfSentence = false;
@@ -343,7 +343,7 @@ public class Segmentizer
 					}
 
 					if( ch == '.' || ch == '!' || ch == '?' //|| ch == ':'
-					    || ch == '"' || ch == '«' || ch == '»')    // Full stops
+					    || ch == '"' || ch == '”' || ch == '“'|| ch == '«' || ch == '»')    // Full stops
 					{
 						if( isFullStop( ch, isLastChar ) )
 						{

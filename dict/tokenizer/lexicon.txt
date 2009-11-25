@@ -65,6 +65,7 @@ sep.=ABBREV
 sbr.=ABBREV
 skv.=ABBREV
 sr.=ABBREV
+sl.=ABBREV
 s.l.=ABBREV
 s.s.=ABBREV
 t.a.m.=ABBREV
