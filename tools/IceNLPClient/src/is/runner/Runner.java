@@ -46,7 +46,7 @@ public class Runner
 			// Let's read from the std-in
 			String inLine;
 			List<String> lines = new LinkedList<String>();
-			InputStreamReader reader = new InputStreamReader(System.in);
+			InputStreamReader reader = new InputStreamReader(System.in, "UTF8");
 			BufferedReader br = new BufferedReader(reader);
 			
 			while ((inLine = br.readLine()) != null)
