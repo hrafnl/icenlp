@@ -254,12 +254,13 @@ public class IceTagger implements IIceTagger
 						
 						for(i = (ends - begins); i>= 0; i--)
 						{
-							lemma += wordList.get(begins).getLemma() + " ";
-							lexeme += wordList.get(begins).getLexeme() + " ";
+							lemma += wordList.get(begins).getLexeme() + " ";
 							wordList.remove(begins);
 						}
-						Word w = new Word(lexeme, this.mappingLexicon.getMapForMWE(mweStr), MWECode.none);
-						w.setLemma(lemma);
+						
+						// Where we are working with MWE, we overwrite the lemma with the lexeme.
+						Word w = new Word(lexeme.substring(0,lexeme.length()-1), this.mappingLexicon.getMapForMWE(mweStr), MWECode.none);
+						w.setLemma(lexeme.substring(0,lexeme.length()-1));
 						wordList.add(begins, w);
 					}
 				}
