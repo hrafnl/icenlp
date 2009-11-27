@@ -15,7 +15,7 @@ public class Runner
 {	
 	public static void printHelp()
 	{
-		System.out.println("IceNLPClient 1.0");
+		System.out.println("IceNLPClient");
 		System.out.println("\t --host|h= \t Connection host.");
 		System.out.println("\t --port|p= \t Connection port.");
 	}
@@ -56,7 +56,9 @@ public class Runner
 			socket = new Socket(host, port);
 			for(String s : lines)
 			{
-				String out = tagString(s, socket);
+				byte[] utf8Bytes = s.getBytes("UTF8");
+				String utf8 = new String(utf8Bytes, "UTF8");
+				String out = tagString(utf8, socket);
 				System.out.println(out);
 			}
 		}
@@ -74,7 +76,6 @@ public class Runner
 		Packet p = readFromStream(inStream);
 		if(p.getOpcode() == 3)
 		{
-			
 			int size = 0;
 			int numOfPacks = ByteConverter.bytesToInt(p.getData(), 4);
 			byte[] dataFromServer = new byte[numOfPacks * 512];
@@ -93,7 +94,6 @@ public class Runner
 			
 			String strServer = new String(dataFromServer, 0, size);
 			return strServer;
-			
 		}
 		else
 		{
@@ -120,7 +120,6 @@ public class Runner
 		return packet;
 	}
 	
-	
 	public static void createSentecePackets(OutputStream stream, String sentence)
 	{
 		try 
@@ -128,7 +127,7 @@ public class Runner
 			// list of packets that we will send.
 			List<Packet> packets = new LinkedList<Packet>();
 			
-			byte[] strBytes = sentence.getBytes();
+			byte[] strBytes = sentence.getBytes("UTF8");
 			int numberOfpackets = ((int) Math.floor((strBytes.length/504)))+1;
 			
 			// Let's create the packet that we will send first

@@ -87,14 +87,14 @@ public class Runner
 	public static void main(String[] args) 
 	{		
 		// Announce the name of the server.
-		System.out.println(">> IceNLPServer 1.0");
+		System.out.println(">> IceNLPServer");
 		
 		// If there is no argument in the argument array then we will try
 		// to read the default configuration file which is located in the
 		// same folder as the JAR.
 		if(args.length == 0)
 		{
-			System.out.println("[i] using default config file: IceNLPServer.conf");
+			System.out.println("Using default config file: IceNLPServer.conf");
 			if(!loadConfig("IceNLPServer.conf"))
 				return;
 		}
@@ -109,7 +109,7 @@ public class Runner
 			}
 			else if(args[0].matches("(?i)--(config|c)=.+"))
 			{
-				System.out.println("[i] using config file: IceNLPServer.conf");
+				System.out.println("Using config file: IceNLPServer.conf");
 				if(!loadConfig(args[0].split("=")[1]))
 					return;
 			}
@@ -135,7 +135,7 @@ public class Runner
 		}
 		catch (IceTaggerConfigrationException e) 
 		{
-			System.out.println("[x] configuration error: " + e.getMessage());
+			System.out.println("!! Configuration error: " + e.getMessage());
 			return;
 		}
 	

@@ -4,6 +4,7 @@ import is.ru.icenlpserver.icenlp.IceNLPSingletonService;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.List;
@@ -81,9 +82,21 @@ public class ClientThread implements Runnable
 					}
 					
 					String strFromClient = new String(stringData, 0 ,stringSize);
+					byte[] utf8Bytes;
+					try 
+					{
+						utf8Bytes = strFromClient.getBytes("UTF8");
+						strFromClient = new String(utf8Bytes, "UTF8");
+					} 
+					catch (UnsupportedEncodingException e1) 
+					{
+						this.alive = false;
+						System.out.println("!! Error while encoding string from client.");
+					}
+				
 					System.out.println(">> String from client: " + strFromClient);
 					
-					// Let's check out the output that the clients will be reciving and 
+					// Let's check out the output that the clients will be receiving and 
 					// let's create a replay for the client.
 					String taggedString = null;
 					try
