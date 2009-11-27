@@ -81,7 +81,7 @@ public class ClientThread implements Runnable
 					}
 					
 					String strFromClient = new String(stringData, 0 ,stringSize);
-					System.out.println(">> recived string from client: " + strFromClient);
+					System.out.println(">> String from client: " + strFromClient);
 					
 					// Let's check out the output that the clients will be reciving and 
 					// let's create a replay for the client.
@@ -92,7 +92,7 @@ public class ClientThread implements Runnable
 					}
 					catch (Exception e) 
 					{
-						System.out.println("[x] error in thread while getting IceNLP singleton instance" );
+						System.out.println("[x] Error in thread while getting IceNLP singleton instance" );
 					}
 		
 					// lets write the replay to the client.
@@ -110,7 +110,7 @@ public class ClientThread implements Runnable
 				
 				else if(opcode == 5)
 				{
-					System.out.println(">> clients is closing the connection");
+					System.out.println(">> Client is closing the connection");
 					this.alive = false;
 					break;
 				}
@@ -123,7 +123,7 @@ public class ClientThread implements Runnable
 			}
 		}
 		
-		System.out.println(">> Client thread is shuting down");
+		System.out.println(">> Client thread is shutting down");
 		try 
 		{
 			this.socket.close();

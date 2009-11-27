@@ -148,7 +148,7 @@ public class Runner
 		// with shutdown signal (CTRL+C)
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
-		             System.out.println("\nShuting server down..");
+		             System.out.println("\nShutting server down..");
 		             nt.cleanUp();
 		    }
 		});
