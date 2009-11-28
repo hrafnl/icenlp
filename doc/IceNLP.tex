@@ -660,6 +660,7 @@ This file has a number of attribute-value pairs whose values can be changed:
 \item \emph{LINE\_FORMAT}: See section \ref{sec:icetagger_usage}.
 \item \emph{OUTPUT\_FORMAT}: See section \ref{sec:icetagger_usage}.
 \item \emph{SENTENCE\_START}: See section \ref{sec:icetagger_usage}.
+\item \emph{CASE\_SENSITIVE}: \emph{yes|no}. The default is \emph{no} which means that \emph{TriTagger} does case-insensitive lookup into the main dictionary for the first word of a sentence. If that fails, the tagger tries case-sensitive lookup. If this parameter is set to \emph{yes}, then case-insensitive lookup is not performed. 
 \item \emph{NGRAM}: \emph{2}=bigrams, \emph{3}=trigrams.
 \item For typical use of TriTagger, the user does not need to provide values for the following parameters, because as a default the corresponding files are read directly from the \emph{IceNLPCore.jar} file:
 \begin{itemize}

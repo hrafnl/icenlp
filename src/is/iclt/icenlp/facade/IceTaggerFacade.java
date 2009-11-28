@@ -136,7 +136,7 @@ public class IceTaggerFacade
     {
         if (triTagger == null)
         {
-			triTagger = new TriTagger( sentenceStart, TriTagger.trigrams, triLexicons.ngrams, triLexicons.freqLexicon, null, null, null );
+			triTagger = new TriTagger( sentenceStart, false, TriTagger.trigrams, triLexicons.ngrams, triLexicons.freqLexicon, null, null, null );
             tagger.setTriTagger(triTagger);
         }
     }

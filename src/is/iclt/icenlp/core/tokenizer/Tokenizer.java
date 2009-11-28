@@ -371,7 +371,9 @@ public class Tokenizer
 		boolean abbrevFound = false;
 
 		while( Character.isLetterOrDigit( ch ) || ch == '-' || ch == '.' || ch == '_' || ch == '@'  ||
-		       (!strictTokenization && (ch == '/' || ch == '$' || ch == '^' || ch == '{' || ch == '}' || ch == '(' || ch == ')' || ch == '\'' || ch == '’')) ) // Single quote
+		      (!strictTokenization && (ch == '/' || ch == '$' || ch == '^' || ch == '{' || ch == '}' || ch == '(' || ch == ')' || ch == '\'' || ch == '’')) ) // Single quote
+              //(!strictTokenization && (ch == '/' || ch == '$' || ch == '^'  || ch == '\'' || ch == '’')) ) // Single quote
+
 		{
             if( i >= maxLexemeSize )
 		    {
@@ -648,10 +650,31 @@ public class Tokenizer
 								    getNumber( ch );
 							    else if( Character.isLetter( sentence.charAt( index + 1 ) ) )  // 'ann
 								    getWord( ch );
-							    else
+                                // HL: 28.11.2009, because of the Tiger corpus
+                                // May need this if Tiger corpus is not pretokenised
+							    /*else if (sentence.charAt(index+1)== '\'') {
+                                    currToken.lexeme = "''"; // two single quotes
+		                            currToken.tokenCode = Token.TokenCode.tcTwoSingleQuotes;
+                                    index++;
+                                }*/
+                                else
 								    setToken( ch, Token.TokenCode.tcSingleQuote );
                         }
 						break;
+                    /*
+                    case '`':
+                        if( index == sentence.length() - 1 || strictTokenization)
+                            setToken( ch, Token.TokenCode.tcBackQuote );
+                        // HL: 28.11.2009, because of the Tiger corpus
+					    else if (sentence.charAt(index+1)== '`') {
+                            currToken.lexeme = "``"; // two backquotes
+		                    currToken.tokenCode = Token.TokenCode.tcTwoBackQuotes;
+                            index++;
+                        }
+                        else
+					        setToken( ch, Token.TokenCode.tcBackQuote );
+                        break;
+                    */
 					case'(':
 						setToken( ch, Token.TokenCode.tcLParen );
 						break;

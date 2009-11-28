@@ -64,7 +64,7 @@ public class TriTaggerFacade {
 
     private void initTriTagger(TriTaggerLexicons triLexicons) {
        /* BackupLexicon, Phrases, Morpho are all null */
-       tagger = new TriTagger(sentenceStart, ngram, triLexicons.ngrams, triLexicons.freqLexicon, null, null, null);
+       tagger = new TriTagger(sentenceStart, false, ngram, triLexicons.ngrams, triLexicons.freqLexicon, null, null, null);
 }
 
     public Sentences tag( String text ) throws IOException

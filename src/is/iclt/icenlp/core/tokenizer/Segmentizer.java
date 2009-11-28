@@ -379,8 +379,7 @@ public class Segmentizer
 		return sentence;
 	}
 
-// The sentence occupies more than one line but only one token per line.
-
+    // The sentence occupies more than one line but only one token per line.
 	// An empty line is between sentences.  Brill format.
 	private String nextSentenceBrill()
 			throws IOException

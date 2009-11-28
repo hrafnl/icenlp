@@ -36,6 +36,7 @@ public class Token {
                 tcSlash,  tcBackSlash, tcUrl, tcLess, tcGreater, tcSingleQuote, tcMultiWord,
                 tcLArrow, tcRArrow, tcPlus, tcStar, tcDollar, tcAnd, tcNumberSign, tcEqualSign,
                 tcPlusMinus, tcUnderscore, tcArrow, tcLCurlyBracket, tcRCurlyBracket
+                //tcBackQuote, tcTwoSingleQuotes, tcTwoBackQuotes
                 }
     
     public enum MWECode {begins, ends, none}

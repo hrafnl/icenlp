@@ -43,29 +43,32 @@ import java.util.ArrayList;
  * @author Hrafn Loftsson
  */
 public class RunTriTagger {
-    private static TriTagger tagger;
-    private static Segmentizer segmentizer;
-    private static Tokenizer tokenizer;
-    private static String inputFile, outputFile, model;
-    private static String backupDictPath=null, idiomsDictPath=null, tokenDictPath=null;
-    private static String ngramStr, lineFormatStr, outputFormatStr, sentenceStartStr, strictTokenizationStr, iceMorphyStr ;
-    private static String morphoDictPath=null, morphoDictBasePath=null, prefixesDictPath=null;
-    private static String endingsBaseDictPath=null, endingsDictPath=null, endingsProperDictPath=null;
-    private static int sentenceStart;   // Sentences start with upper case or lower case letters?
-    private static boolean useIceMorphy=false;
-    private static boolean strictTokenization=true;
+    private TriTagger tagger;
+    private Segmentizer segmentizer;
+    private Tokenizer tokenizer;
+    private String inputFile, model;
+    private static String outputFile;
+    private String backupDictPath=null, idiomsDictPath=null, tokenDictPath=null;
+    private String ngramStr, lineFormatStr, outputFormatStr, sentenceStartStr, strictTokenizationStr, iceMorphyStr ;
+    private String morphoDictPath=null, morphoDictBasePath=null, prefixesDictPath=null;
+    private String endingsBaseDictPath=null, endingsDictPath=null, endingsProperDictPath=null;
+    private String caseSensitiveStr=null;
+    private int sentenceStart;   // Sentences start with upper case or lower case letters?
+    private boolean useIceMorphy=false;
+    private boolean strictTokenization=true;
     private boolean changedDefaultInputFormat=false;
     private boolean changedDefaultOutputFormat=false;
-    private static int lineFormat= Segmentizer.tokenPerLine;     // Default is one token per line
+    private int lineFormat= Segmentizer.tokenPerLine;     // Default is one token per line
     private static int outputFormat=Segmentizer.tokenPerLine;    // Default is one word/tag per line
-    private static int ngram=3;                                  // Default is trigrams
-    private static int numTokens=0, numUnknowns=0;
-    private static SimpleDateFormat dateFormatter;
+    private int ngram=3;                                  // Default is trigrams
+    private int numTokens=0, numUnknowns=0;
+    private SimpleDateFormat dateFormatter;
     protected static TriTaggerOutput triOutput = null;
     private Lexicon tokLex;
     private TriTaggerLexicons triLex=null;
     private IceMorphyLexicons morphLex=null;
     private boolean standardInputOutput=false;
+    private boolean caseSensitive=false;
 
     private void checkParameters()
     {
@@ -128,6 +131,9 @@ public class RunTriTagger {
             if (prefixesDictPath == null)
             { System.out.println("Parameter: " + "PREFIXES_DICT" + " is missing"); error = true; }
         }
+        if (caseSensitiveStr.equals("yes"))
+            caseSensitive=true;
+
         if (error)   {
             System.err.println("Exiting!");
             System.exit(0);
@@ -162,6 +168,7 @@ public class RunTriTagger {
         tokenDictPath = parameters.getProperty("TOKEN_DICT");
         strictTokenizationStr = parameters.getProperty("STRICT", "yes");
         iceMorphyStr = parameters.getProperty("ICEMORPHY", "no");
+        caseSensitiveStr = parameters.getProperty("CASE_SENSITIVE", "no");
 
         checkParameters();
         getFormat();
@@ -185,6 +192,7 @@ public class RunTriTagger {
        System.out.println("  -lf <1|2|3> (line format)");
        System.out.println("  -of <1|2> (output format)");
        System.out.println("  -ss <upper|lower>" );
+       System.out.println("  -cs (case sensitive)" );
        System.out.println("  -b <backup dictionaryOtb>");
        System.out.println("  -p <idioms/phrases dictionary>");
        System.out.println("  -im (use IceMorphy)");
@@ -207,6 +215,8 @@ public class RunTriTagger {
         ngram = Integer.parseInt(ngramStr);
         strictTokenization = strictTokenizationStr.equals("yes");
         useIceMorphy = iceMorphyStr.equals("yes");
+        caseSensitive = caseSensitiveStr.equals("yes");
+
     }
 
     private void getParameters (String args[])
@@ -259,6 +269,8 @@ public class RunTriTagger {
             strictTokenizationStr = "no";
           else if (args[i].equals("-im"))
             iceMorphyStr = "yes";
+          else if (args[i].equals("-cs"))
+            caseSensitiveStr = "yes";
         }
         getFormat();
     }
@@ -268,6 +280,7 @@ private void setDefaults ()
         lineFormatStr = "1";
         outputFormatStr = "1";
         sentenceStartStr = "upper";
+        caseSensitiveStr = "no";
         ngramStr = "3";
         tokenDictPath="../../dict/tokenizer/lexicon.txt";
         strictTokenizationStr = "no";
@@ -341,7 +354,10 @@ private void printInfoAfterTagging(int sentenceCount)
 
            if (!sentence.equals(""))
            {
-             tokenizer.tokenize(sentence);
+             if (lineFormat == Segmentizer.tokenPerLine)
+                tokenizer.tokenizeSplit( sentence );    // Only split on whitespace
+             else
+                tokenizer.tokenize(sentence);
 
              if (tokenizer.tokens.size() > 0)
              {
@@ -378,6 +394,9 @@ private void printInfoBeforeTagging()
         System.out.println( "Sentences start with an upper case letter" );
     else
         System.out.println( "Sentences start with a lower case letter" );
+    if( caseSensitive)
+        System.out.println( "Case sensitive at start of sentences" );
+
 }
 
 private void getTriTaggerLexicons() throws IOException
@@ -473,7 +492,7 @@ private void createAllObjects(int sentenceStart) throws IOException
             System.out.println("Using trigrams");
     }
 
-    tagger = new TriTagger(sentenceStart, ngram, triLex.ngrams, triLex.freqLexicon, myBackupLexicon, myPhrases, myMorpho);
+    tagger = new TriTagger(sentenceStart, caseSensitive, ngram, triLex.ngrams, triLex.freqLexicon, myBackupLexicon, myPhrases, myMorpho);
 }
 
 private void processParam(String args[]) throws IOException

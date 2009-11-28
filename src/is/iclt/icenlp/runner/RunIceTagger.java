@@ -670,7 +670,7 @@ private void setDefaults()
                     System.out.println("Loading default HMM ...");
             }
             getTriTaggerLexicons();
-            triTagger = new TriTagger( sentenceStart, TriTagger.trigrams, triLex.ngrams, triLex.freqLexicon, null, null, null );
+            triTagger = new TriTagger( sentenceStart, false, TriTagger.trigrams, triLex.ngrams, triLex.freqLexicon, null, null, null );
         }
 
         IceMorphy morphoAnalyzer = new IceMorphy(

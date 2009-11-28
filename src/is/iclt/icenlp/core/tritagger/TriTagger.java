@@ -63,11 +63,12 @@ public class TriTagger {
     public static final int sentenceStartUpperCase=0;
     public static final int sentenceStartLowerCase=1;
     private static int sentenceStart;
+    private boolean caseSensitive=false; // if true, then dont lookup using both upper case and lower case at the start of a sentence
 
     int numTags;                  // Number of tags in the tag set
     int statesInSentence=0;       // Number of tags in the sentence to be tagged
 
-    public TriTagger(int sentenceStartCode, int ngramType, Ngrams ngrams, FreqLexicon lex, FreqLexicon backup, Idioms id, IceMorphy mAnalyzer)
+    public TriTagger(int sentenceStartCode, boolean isCaseSensitive, int ngramType, Ngrams ngrams, FreqLexicon lex, FreqLexicon backup, Idioms id, IceMorphy mAnalyzer)
     {
 
         myNgrams = ngrams;
@@ -75,6 +76,7 @@ public class TriTagger {
         myBackupLexicon = backup;
         myIdioms = id;
         sentenceStart = sentenceStartCode;
+        caseSensitive = isCaseSensitive;
         numTags = myNgrams.getNumTags();
         myStateMap = new StateMap();
         setArraySizes();
@@ -237,9 +239,13 @@ public class TriTagger {
 
          if ((tokIndex == 0) && (sentenceStart == sentenceStartUpperCase))
          {
-             tagStr = myLexicon.lookupWord(tok.lexeme, true);       // First ignore case
-             if (tagStr == null) // The word then could be a proper noun
-                tagStr = myLexicon.lookupWord(tok.lexeme, false); // Now don't ignore case
+             if (!caseSensitive) { // Then lookup using both lower and upper case
+                tagStr = myLexicon.lookupWord(tok.lexeme, true);       // First ignore case
+                if (tagStr == null) // The word then could be a proper noun
+                    tagStr = myLexicon.lookupWord(tok.lexeme, false); // Now don't ignore case
+             }
+             else
+                 tagStr = myLexicon.lookupWord(tok.lexeme, false); // Now Don't ignore case
          }
          else
             tagStr = myLexicon.lookupWord(tok.lexeme, false);       // Don't ignore case
