@@ -151,7 +151,7 @@ public class RunIceMorphy {
         output.flush();
         input.close();
         output.close();
-        System.out.print( "Reading line nr: " + Integer.toString(linesRead) + "\r");
+        System.out.println( "Reading line nr: " + Integer.toString(linesRead) + "\r");
         //System.out.println("Read " + linesRead + " lines");
     }
 

@@ -33,8 +33,6 @@ import java.util.ArrayList;
  */
 public class Tokenizer
 {
-	private static final int ccLetter = 0;
-	private static final int ccDigit = 1;
 	private static final int maxLexemeSize = 256;
 	public static final int typeToken = 0;
 	public static final int typeTokenTags = 1;
@@ -45,7 +43,6 @@ public class Tokenizer
 	private Token currToken;
 	private String sentence;
 	private int index;
-	private int charCodeMap[];
 	private char[] lexeme;
 	private char[] letter;
 
@@ -60,7 +57,6 @@ public class Tokenizer
     public Tokenizer( int typeTok, boolean strict ) throws IOException
 	{
 		this.initialize( typeTok, strict );
-		initializeCharCodes();
 	}
 
     public Tokenizer( int typeTok, boolean strict, String lexiconFile ) throws IOException
@@ -68,21 +64,18 @@ public class Tokenizer
 		this.initialize( typeTok, strict );
 		lex = new Lexicon();
 		lex.load( lexiconFile);
-		initializeCharCodes();
 	}
 
     public Tokenizer( int typeTok, boolean strict, InputStream lexiconFile ) throws IOException, NullPointerException
 	{
 		this.initialize( typeTok, strict );
 		lex = new Lexicon( lexiconFile );
-		initializeCharCodes();
 	}
 
 	public Tokenizer( int typeIceTokenTags, boolean strictTokenization, Lexicon lexicon )
 	{
 		this.initialize( typeIceTokenTags, strictTokenization );
 		this.lex = lexicon;
-		this.initializeCharCodes();
 	}
 
 	public void initialize( int typeTok, boolean strict )
@@ -111,7 +104,7 @@ public class Tokenizer
 		findMultiWords = false;
 		sentence = "";
 		index = 0;
-		charCodeMap = new int[256];
+
 		letter = new char[1];        // temporary array
 		lexeme = new char[maxLexemeSize];      //  number of characters in a token
 		tokens = new ArrayList();       // number of tokens in a sentence
@@ -122,44 +115,13 @@ public class Tokenizer
 		findMultiWords = find;
 	}
 
-
-	private void initializeCharCodes()
-	{
-		int i;
-		// Initialize the character code map
-		for( i = 'a'; i <= 'z'; i++ ) charCodeMap[i] = ccLetter;
-		for( i = 'A'; i <= 'Z'; i++ ) charCodeMap[i] = ccLetter;
-		for( i = '0'; i <= '9'; i++ ) charCodeMap[i] = ccDigit;
-
-		// The special Icelandic characters
-		charCodeMap['Þ'] = ccLetter;
-		charCodeMap['þ'] = ccLetter;
-		charCodeMap['Ð'] = ccLetter;
-		charCodeMap['ð'] = ccLetter;
-		charCodeMap['Æ'] = ccLetter;
-		charCodeMap['æ'] = ccLetter;
-		charCodeMap['Ö'] = ccLetter;
-		charCodeMap['ö'] = ccLetter;
-		charCodeMap['Á'] = ccLetter;
-		charCodeMap['á'] = ccLetter;
-		charCodeMap['É'] = ccLetter;
-		charCodeMap['é'] = ccLetter;
-		charCodeMap['Í'] = ccLetter;
-		charCodeMap['í'] = ccLetter;
-		charCodeMap['Ó'] = ccLetter;
-		charCodeMap['ó'] = ccLetter;
-		charCodeMap['Ú'] = ccLetter;
-		charCodeMap['ú'] = ccLetter;
-		charCodeMap['Ý'] = ccLetter;
-		charCodeMap['ý'] = ccLetter;
-	}
-
+/*
 	private void clearLexeme()
 	{
 		for( int i = 0; i < lexeme.length; i++ )
 			lexeme[i] = '\0';
 	}
-
+*/
 
 	// Splits abbreviations that include more than one '.' into more than one token
 	public void splitAbbreviations()
@@ -369,10 +331,14 @@ public class Tokenizer
 		char nextCh;
 		boolean periodFound = false;
 		boolean abbrevFound = false;
+        boolean openBracket = false;
 
 		while( Character.isLetterOrDigit( ch ) || ch == '-' || ch == '.' || ch == '_' || ch == '@'  ||
-		      (!strictTokenization && (ch == '/' || ch == '$' || ch == '^' || ch == '{' || ch == '}' || ch == '(' || ch == ')' || ch == '\'' || ch == '’')) ) // Single quote
-              //(!strictTokenization && (ch == '/' || ch == '$' || ch == '^'  || ch == '\'' || ch == '’')) ) // Single quote
+		      (!strictTokenization && (ch == '/' || ch == '$' || ch == '^' || ch == '\'' || ch == '’' || // Single quote
+                                       ch == '[' || ch == '{' || ch == '(' ||
+                                       ((ch == ']'  || ch == '}'  || ch == ')') && openBracket)
+                                      ))
+              )
 
 		{
             if( i >= maxLexemeSize )
@@ -380,7 +346,14 @@ public class Tokenizer
 			    System.out.println( "FATAL ERROR - Word to long: " + (new String( lexeme, 0, i - 1 )) );
 			    System.exit( 1 );
 		    }
-            
+
+            if (!strictTokenization) {
+                if (ch == '[' || ch == '{' || ch == '(')
+                    openBracket = true;
+                else if (ch == ']' || ch == '}' || ch == ')')
+                    openBracket = false;
+            }
+
             lexeme[i] = ch;
 			lastch = ch;
 			index++;
@@ -472,7 +445,7 @@ public class Tokenizer
 		//char lastCh, firstCh = c;
         char ch = c;
         while( Character.isDigit( ch ) || Character.isLetter( ch ) ||
-		       ch == '½' || ch == '.' || ch == ',' || ch == '%' || ch == '$'  ||
+		       ch == '½' || ch == '.' || ch == ',' || ch == '%' || ch == '$'  || ch == '£' ||
 		       ch == '-' || ch == '_' || ch == '÷' || ch == '*' || ch == '+' || ch == '±' || ch == '/' ||
 		       (!strictTokenization && (
 				       ch == '°' || ch == '^' || ch == '_' ||
@@ -770,6 +743,18 @@ public class Tokenizer
 						}
 						else
 							setToken( ch, Token.TokenCode.tcDollar );
+						break;
+                    case'£':
+						if( index < sentence.length() - 1 )
+						{
+							chNext = sentence.charAt( index + 1 );
+							if( Character.isDigit( chNext ))
+							    getNumber( ch );
+							else
+								setToken( ch, Token.TokenCode.tcPound );
+						}
+						else
+							setToken( ch, Token.TokenCode.tcPound );
 						break;
 					case'&':
 						setToken( ch, Token.TokenCode.tcAnd );

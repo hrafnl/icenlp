@@ -42,7 +42,7 @@ public class MorphoRuleVerb extends MorphoRule {
 
     }
 
-    public MorphoRuleVerb(String ending, int subtractForLookup, IceMorphy.MorphoClass morphoClass, Mood mood, Voice voice, char tense) {
+    public MorphoRuleVerb(String ending, int subtractForLookup, MorphoRules.MorphoClass morphoClass, Mood mood, Voice voice, char tense) {
         super(ending, subtractForLookup, morphoClass);
         this.mood = mood;
         this.voice = voice;

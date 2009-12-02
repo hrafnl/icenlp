@@ -37,7 +37,7 @@ public class MorphoRuleVerbPastParticiple extends MorphoRuleVerbFinite {
     char theCase;
     boolean supine;
 
-    public MorphoRuleVerbPastParticiple(String ending, int subtractForLookup, IceMorphy.MorphoClass morphoClass, Mood mood, Voice voice, char tense,
+    public MorphoRuleVerbPastParticiple(String ending, int subtractForLookup, MorphoRules.MorphoClass morphoClass, Mood mood, Voice voice, char tense,
                                         char gender, char number, char theCase, boolean supine) {
         super(ending, subtractForLookup, morphoClass, mood, voice, tense, IceTag.cGenderUnspec, ' ', IceTag.cGenderUnspec, ' ');
         this.gender = gender;
@@ -46,7 +46,7 @@ public class MorphoRuleVerbPastParticiple extends MorphoRuleVerbFinite {
         this.supine = supine;
     }
 
-    public MorphoRuleVerbPastParticiple(String ending, int subtractForLookup, IceMorphy.MorphoClass morphoClass, Mood mood, Voice voice, char tense,
+    public MorphoRuleVerbPastParticiple(String ending, int subtractForLookup, MorphoRules.MorphoClass morphoClass, Mood mood, Voice voice, char tense,
                                         char gender, char number, char theCase, boolean supine, boolean searchAgain) {
         this(ending, subtractForLookup, morphoClass, mood, voice, tense, gender, number, theCase, supine);
         this.searchAgainWhenFound = searchAgain;

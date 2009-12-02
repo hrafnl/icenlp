@@ -34,14 +34,14 @@ public class MorphoRule {
 
     String ending;
     int subtractForLookup;
-    IceMorphy.MorphoClass morphoClass;
+    MorphoRules.MorphoClass morphoClass;
     boolean searchAgainWhenFound=false;
     
     public MorphoRule() {
 
     }
 
-    public MorphoRule(String ending, int subtractForLookup, IceMorphy.MorphoClass morphoClass)
+    public MorphoRule(String ending, int subtractForLookup, MorphoRules.MorphoClass morphoClass)
     {
 
         this.ending = ending;

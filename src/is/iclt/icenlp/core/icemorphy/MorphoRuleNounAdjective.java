@@ -41,7 +41,7 @@ public class MorphoRuleNounAdjective extends MorphoRule {
     char declension;
 
 
-public MorphoRuleNounAdjective(String ending, int subtractForLookup, IceMorphy.MorphoClass morphoClass,
+public MorphoRuleNounAdjective(String ending, int subtractForLookup, MorphoRules.MorphoClass morphoClass,
                         boolean nominative, boolean accusative, boolean dative, boolean genitive,
                         char gender, char number) {
 
@@ -54,7 +54,7 @@ public MorphoRuleNounAdjective(String ending, int subtractForLookup, IceMorphy.M
         this.number = number;
     }
 
-    public MorphoRuleNounAdjective(String ending, int subtractForLookup, IceMorphy.MorphoClass morphoClass, IceTag.WordClass wordClass,
+    public MorphoRuleNounAdjective(String ending, int subtractForLookup, MorphoRules.MorphoClass morphoClass, IceTag.WordClass wordClass,
                         boolean nominative, boolean accusative, boolean dative, boolean genitive,
                         char gender, char number, char declension) {
 
@@ -63,7 +63,7 @@ public MorphoRuleNounAdjective(String ending, int subtractForLookup, IceMorphy.M
         this.declension = declension;
     }
 
-    public MorphoRuleNounAdjective(String ending, int subtractForLookup, IceMorphy.MorphoClass morphoClass, IceTag.WordClass wordClass,
+    public MorphoRuleNounAdjective(String ending, int subtractForLookup, MorphoRules.MorphoClass morphoClass, IceTag.WordClass wordClass,
                         boolean nominative, boolean accusative, boolean dative, boolean genitive,
                         char gender, char number, char declension, boolean searchAgain) {
 

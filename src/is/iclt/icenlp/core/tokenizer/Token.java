@@ -35,7 +35,7 @@ public class Token {
                 tcWhitespace, tcAbbrev, tcUnknown, tcNone, tcExclamation, tcQuestion, tcPeriod,
                 tcSlash,  tcBackSlash, tcUrl, tcLess, tcGreater, tcSingleQuote, tcMultiWord,
                 tcLArrow, tcRArrow, tcPlus, tcStar, tcDollar, tcAnd, tcNumberSign, tcEqualSign,
-                tcPlusMinus, tcUnderscore, tcArrow, tcLCurlyBracket, tcRCurlyBracket
+                tcPlusMinus, tcUnderscore, tcArrow, tcLCurlyBracket, tcRCurlyBracket, tcPound
                 //tcBackQuote, tcTwoSingleQuotes, tcTwoBackQuotes
                 }
     

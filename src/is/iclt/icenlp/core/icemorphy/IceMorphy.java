@@ -35,15 +35,6 @@ import java.util.ArrayList;
  * @author Hrafn Loftsson
  */
 public class IceMorphy {
-    public enum MorphoClass
-    { NounMasculine1, NounMasculine2, NounMasculine3, NounMasculine4, NounMasculine5,
-      NounMasculine6, NounMasculine7, NounMasculine8, NounMasculine9, NounMasculine10,
-      NounFeminine1,  NounFeminine2, NounFeminine3,  NounFeminine4,  NounFeminine5, NounFeminine6,
-      NounNeuter1,  NounNeuter2, NounNeuter3,  NounNeuter4,
-      Adj1, Adj2, Adj3, Adj4, Adj5,
-      VerbActive1, VerbActive2, VerbActive3, VerbActive4, VerbActive5, VerbActive6,
-      VerbMiddle1, VerbMiddle2, None
-    }
     private IceLog logger = null;    // Logfile file
 	private Lexicon dictionary;     // a big dictionaryOtb
     private Lexicon dictionaryBase; // base dictionary
@@ -53,8 +44,6 @@ public class IceMorphy {
     private IceFrequency tagFreq;      // frequency of each tag according to some corpus
 	private WordList prefixes;         // a list of prefixes to look for
 	private ArrayList tokens;
-    private String[] searchStrings;
-    private int searchStringSize=36;
     private IceTokenTags dummyToken;
     private MorphoRules morphoRules; // A list of records containing morphological info
 
@@ -63,18 +52,6 @@ public class IceMorphy {
 	private static final int maxPersonNameLength = 10; // Maximum length of person names
 	private static final char[] vowels = { 'a', 'A', 'á', 'Á', 'e', 'E', 'é', 'É', 'i', 'I', 'í', 'Í',
 	                                       'o', 'O', 'ó', 'Ó', 'u', 'U', 'ú', 'Ú', 'y', 'Y', 'ý', 'Ý', 'æ', 'Æ', 'ö', 'Ö' };
-    static final int nominative = 0;
-	static final int accusative = 1;
-	static final int dative = 2;
-	static final int genitive = 3;
-
-	static final int masculine = 0;
-	static final int feminine = 1;
-	static final int neuter = 2;
-
-	static final int singular = 0;
-	static final int plural = 1;
-
     public IceMorphy( Lexicon bigLexicon,
                       Lexicon baseLexicon,
                       Trie endingsBase,
@@ -97,7 +74,7 @@ public class IceMorphy {
 
 		this.prefixes = prefixes;
 		dummyToken = new IceTokenTags( "dymmyToken", Token.TokenCode.tcNone );
-        searchStrings = new String[searchStringSize+1];
+        //searchStrings = new String[searchStringSize+1];
         morphoRules = new MorphoRules();
     }
 
@@ -121,649 +98,7 @@ public class IceMorphy {
         return tagFreq.maxFrequency( tags );   // get the tag with the maximum frequencey
 	}
 
-	private void setSearchStrings( String root, MorphoClass type )
-	{
-        for (int i=1; i<=searchStringSize; i++)
-                searchStrings[i]=null;
 
-        int len = root.length();
-		switch( type )
-		{
-			case NounMasculine1:
-				searchStrings[1] = root + "ur";    // hestur
-				searchStrings[2] = root;
-				searchStrings[3] = root + "i";
-				if( root.endsWith( "ð" ) ) // iðnað
-					searchStrings[4] = root + "ar";
-				else
-					searchStrings[4] = root + "s";
-				searchStrings[5] = searchStrings[1] + "inn";
-				searchStrings[6] = searchStrings[2] + "inn";
-				searchStrings[7] = searchStrings[3] + "num";
-				searchStrings[8] = searchStrings[4] + "ins";
-				searchStrings[9] = root + "ar";    // hestar
-				searchStrings[10] = root + "a";
-				searchStrings[11] = root + "um";
-				searchStrings[12] = root + "a";
-				searchStrings[13] = searchStrings[9] + "nir";    // nominative + article
-				searchStrings[14] = searchStrings[10] + "na";    // accusative + article
-				searchStrings[15] = root + "unum";
-				searchStrings[16] = searchStrings[12] + "nna";
-				searchStrings[17] = root + "ir";    // gestir
-				searchStrings[18] = root + "i";
-				searchStrings[19] = searchStrings[17] + "nir";
-				searchStrings[20] = searchStrings[18] + "na";
-				break;
-			case NounMasculine2:
-				searchStrings[1] = root + "i";    // skóli
-				searchStrings[2] = root + "a";
-				searchStrings[3] = searchStrings[2];
-				searchStrings[4] = searchStrings[2];
-				searchStrings[5] = searchStrings[1] + "nn";
-				searchStrings[6] = searchStrings[2] + "nn";
-				searchStrings[7] = searchStrings[3] + "num";
-				searchStrings[8] = searchStrings[4] + "ns";
-				/* The plural is NOT indicative of wek masculne declension
-				searchStrings[9] = root + "ar";    // skólar
-				searchStrings[10] = root + "a";
-				searchStrings[11] = root + "um";
-				searchStrings[12] = root + "a";
-				searchStrings[13] = searchStrings[9] + "nir";
-				searchStrings[14] = searchStrings[10] + "na";
-				searchStrings[15] = root + "unum";
-				searchStrings[16] = searchStrings[12] + "nna";
-				*/
-				break;
-			case NounMasculine3:
-				searchStrings[1] = root + "ur";    // galdur
-				searchStrings[2] = searchStrings[1];
-				searchStrings[3] = root + "ri";
-				searchStrings[4] = root + "urs";
-				searchStrings[5] = searchStrings[1] + "inn";
-				searchStrings[6] = searchStrings[2] + "inn";
-				searchStrings[7] = searchStrings[3] + "num";
-				searchStrings[8] = searchStrings[4] + "ins";
-				searchStrings[9] = root + "rar";    // galdrar
-				searchStrings[10] = root + "ra";
-				searchStrings[11] = root + "rum";
-				searchStrings[12] = root + "ra";
-				searchStrings[13] = searchStrings[9] + "nir";
-				searchStrings[14] = searchStrings[10] + "na";    // accusative + article
-				searchStrings[15] = root + "unum";
-				searchStrings[16] = searchStrings[12] + "nna";
-				break;
-			case NounMasculine4:
-				searchStrings[1] = root;          // maur
-				searchStrings[2] = searchStrings[1];
-				searchStrings[3] = searchStrings[1];
-				searchStrings[4] = root + "s";
-				searchStrings[5] = searchStrings[1] + "inn";
-				searchStrings[6] = searchStrings[2] + "inn";
-				searchStrings[7] = searchStrings[3] + "num";
-				searchStrings[8] = searchStrings[4] + "ins";
-				searchStrings[9] = root + "ar";    // maurar
-				searchStrings[10] = root + "a";
-				searchStrings[11] = root + "um";
-				searchStrings[12] = root + "a";
-				searchStrings[13] = searchStrings[9] + "nir";
-				searchStrings[14] = searchStrings[10] + "na";
-				searchStrings[15] = root + "unum";
-				searchStrings[16] = searchStrings[12] + "nna";
-				break;
-			case NounMasculine5:
-				searchStrings[1] = root + "ur";    // hugur, fundur
-				searchStrings[2] = root;
-				searchStrings[3] = root + "i";
-				searchStrings[4] = root + "ar";
-				searchStrings[5] = searchStrings[1] + "inn";
-				searchStrings[6] = searchStrings[2] + "inn";
-				searchStrings[7] = searchStrings[3] + "num";
-				searchStrings[8] = searchStrings[4] + "ins";
-				searchStrings[9] = root + "ar";    // hugar
-				searchStrings[10] = root + "a";
-				searchStrings[11] = root + "um";
-				searchStrings[12] = root + "a";
-				searchStrings[13] = searchStrings[9] + "nir";
-				searchStrings[14] = searchStrings[10] + "na";
-				searchStrings[15] = root + "unum";
-				searchStrings[16] = searchStrings[12] + "nna";
-				break;
-			case NounMasculine6:
-				searchStrings[1] = root + "l";    // stóll
-				searchStrings[2] = root;
-				searchStrings[3] = root + "i";
-				searchStrings[4] = root + "s";
-				searchStrings[5] = searchStrings[1] + "inn";
-				searchStrings[6] = searchStrings[2] + "inn";
-				searchStrings[7] = searchStrings[3] + "num";
-				searchStrings[8] = searchStrings[4] + "ins";
-				searchStrings[9] = root + "ar";    // stólar
-				searchStrings[10] = root + "a";
-				searchStrings[11] = root + "um";
-				searchStrings[12] = root + "a";
-				searchStrings[13] = searchStrings[9] + "nir";
-				searchStrings[14] = searchStrings[10] + "na";
-				searchStrings[15] = root + "unum";
-				searchStrings[16] = searchStrings[12] + "nna";
-				break;
-			case NounMasculine7:
-				searchStrings[1] = root + "ir";    // hellir
-				searchStrings[2] = root + "i";
-				searchStrings[3] = root + "i";
-				searchStrings[4] = root + "s";
-				searchStrings[5] = searchStrings[1] + "inn";
-				searchStrings[6] = searchStrings[2] + "nn";
-				searchStrings[7] = searchStrings[3] + "num";
-				searchStrings[8] = searchStrings[4] + "ins";
-				searchStrings[9] = root + "ar";    // hellar
-				searchStrings[10] = root + "a";
-				searchStrings[11] = root + "um";
-				searchStrings[12] = root + "a";
-				searchStrings[13] = searchStrings[9] + "nir";
-				searchStrings[14] = searchStrings[10] + "na";
-				searchStrings[15] = root + "unum";
-				searchStrings[16] = searchStrings[12] + "nna";
-				break;
-			case NounMasculine8:
-				searchStrings[1] = root;    // gítar, Örvar
-				searchStrings[2] = root;
-				searchStrings[3] = root + "i";
-				searchStrings[4] = root + "s";
-				searchStrings[5] = searchStrings[1] + "inn";
-				searchStrings[6] = searchStrings[2] + "inn";
-				searchStrings[7] = searchStrings[3] + "num";
-				searchStrings[8] = searchStrings[4] + "ins";
-				searchStrings[9] = root + "ar";    // gítar-ar
-				searchStrings[10] = root + "a";
-				searchStrings[11] = root + "um";
-				searchStrings[12] = root + "a";
-				searchStrings[13] = searchStrings[9] + "nir";
-				searchStrings[14] = searchStrings[10] + "na";
-				searchStrings[15] = root + "unum";
-				searchStrings[16] = searchStrings[12] + "nna";
-				break;
-			case NounMasculine9:
-				searchStrings[1] = root + "ur";    // bekkur
-				searchStrings[2] = root;
-				searchStrings[3] = root;
-				searchStrings[4] = root + "jar";
-				searchStrings[5] = searchStrings[1] + "inn";
-				searchStrings[6] = searchStrings[2] + "inn";
-				searchStrings[7] = searchStrings[3] + "num";
-				searchStrings[8] = searchStrings[4] + "ins";
-				searchStrings[9] = root + "ir";    // bekkir
-				searchStrings[10] = root + "i";
-				searchStrings[11] = root + "jum";
-				searchStrings[12] = root + "ja";
-				searchStrings[13] = searchStrings[9] + "nir";
-				searchStrings[14] = searchStrings[10] + "na";
-				searchStrings[15] = root + "junum";
-				searchStrings[16] = searchStrings[12] + "nna";
-				break;
-			case NounMasculine10:
-				String newRoot = root.substring( 0, root.length() - 3 ) + "end"; // atvinnurekend
-				searchStrings[1] = root + "i";    // atvinnurekand-i
-				searchStrings[2] = root + "a";
-				searchStrings[3] = root + "a";
-				searchStrings[4] = root + "a";
-				searchStrings[5] = root + "inn";
-				searchStrings[6] = root + "ann";
-				searchStrings[7] = root + "anum";
-				searchStrings[8] = root + "ans";
-				searchStrings[9] = newRoot + "ur";
-				searchStrings[10] = searchStrings[5];
-				searchStrings[11] = newRoot + "um";
-				searchStrings[12] = newRoot + "a";
-				searchStrings[13] = searchStrings[9] + "nir";
-				searchStrings[14] = searchStrings[10] + "na";
-				searchStrings[15] = newRoot + "unum";
-				searchStrings[16] = searchStrings[12] + "nna";
-				break;
-			case NounFeminine1:
-				searchStrings[1] = root + "a";    // kona
-				searchStrings[2] = root + "u";
-				searchStrings[3] = searchStrings[2];
-				searchStrings[4] = searchStrings[2];
-				searchStrings[5] = searchStrings[1] + "n";
-				searchStrings[6] = searchStrings[2] + "na";
-				searchStrings[7] = searchStrings[3] + "nni";
-				searchStrings[8] = searchStrings[4] + "nnar";
-				searchStrings[9] = root + "ur";    // konur
-				searchStrings[10] = root + "ur";
-				searchStrings[11] = root + "um";
-				searchStrings[12] = root + "a";    // til súpa
-				searchStrings[13] = searchStrings[9] + "nar";  // kon-ur-nar
-				searchStrings[14] = searchStrings[10] + "nar";
-				searchStrings[15] = root + "unum";
-				searchStrings[16] = searchStrings[12] + "nna";
-				searchStrings[17] = root + "na";    // til súpna, special genitive, plural
-				searchStrings[18] = searchStrings[17] + "nna";    // til súpna, special genitive, plural
-				break;
-			case NounFeminine2:
-				searchStrings[1] = root;          // von
-				searchStrings[2] = searchStrings[1];
-				searchStrings[3] = searchStrings[1];
-				searchStrings[4] = root + "ar";
-				searchStrings[5] = searchStrings[1] + "in";
-				searchStrings[6] = searchStrings[2] + "ina";
-				searchStrings[7] = searchStrings[3] + "inni";
-				searchStrings[8] = searchStrings[4] + "innar";
-				searchStrings[9] = root + "ir";    // vonir
-				searchStrings[10] = searchStrings[9];
-				searchStrings[11] = root + "um";
-				searchStrings[12] = root + "a";
-				searchStrings[13] = searchStrings[9] + "nar";    // nominative + article
-				searchStrings[14] = searchStrings[10] + "nar";    // accusative + article
-				searchStrings[15] = root + "unum";
-				searchStrings[16] = searchStrings[12] + "nna";
-				break;
-			case NounFeminine3:
-				searchStrings[1] = root;          // meining
-				searchStrings[2] = root + "u";
-				searchStrings[3] = searchStrings[2];
-				searchStrings[4] = root + "ar";
-				searchStrings[5] = searchStrings[1] + "in";
-				searchStrings[6] = searchStrings[2] + "na";
-				searchStrings[7] = searchStrings[3] + "nni";
-				searchStrings[8] = searchStrings[4] + "innar";
-				searchStrings[9] = root + "ar";    // meiningar
-				searchStrings[10] = searchStrings[9];
-				searchStrings[11] = root + "um";
-				searchStrings[12] = root + "a";
-				searchStrings[13] = searchStrings[9] + "nar";    // nominative + article
-				searchStrings[14] = searchStrings[10] + "nar";    // accusative + article
-				searchStrings[15] = root + "unum";
-				searchStrings[16] = searchStrings[12] + "nna";
-				break;
-			case NounFeminine4:
-				searchStrings[1] = root;          // kæti
-				searchStrings[2] = root;
-				searchStrings[3] = root;
-				searchStrings[4] = root;
-				searchStrings[5] = searchStrings[1] + "n";
-				searchStrings[6] = searchStrings[2] + "na";
-				searchStrings[7] = searchStrings[3] + "nni";
-				searchStrings[8] = searchStrings[4] + "nnar";
-				break;
-			case NounFeminine5:
-				searchStrings[1] = root + "un";          // vitj-un
-				searchStrings[2] = searchStrings[1];
-				searchStrings[3] = searchStrings[1];
-				searchStrings[4] = searchStrings[1] + "ar";
-				searchStrings[5] = searchStrings[1] + "in";
-				searchStrings[6] = searchStrings[2] + "ina";
-				searchStrings[7] = searchStrings[3] + "inni";
-				searchStrings[8] = searchStrings[4] + "innar";
-				searchStrings[9] = root + "anir";    // vitjanir
-				searchStrings[10] = searchStrings[9];
-				searchStrings[11] = root + "unum";
-				searchStrings[12] = root + "anna";
-				searchStrings[13] = searchStrings[9] + "nar";
-				searchStrings[14] = searchStrings[10] + "nar";
-				searchStrings[15] = root + "ununum";
-				searchStrings[16] = root + "ananna";
-				break;
-			case NounFeminine6:
-				searchStrings[1] = root;          // lif-ur
-				searchStrings[2] = root;
-				searchStrings[3] = root;
-				searchStrings[4] = root + "rar";
-				searchStrings[5] = searchStrings[1] + "rin";
-				searchStrings[6] = searchStrings[2] + "rina";
-				searchStrings[7] = searchStrings[3] + "rinni";
-				searchStrings[8] = searchStrings[4] + "innar";
-				break;
-			case NounNeuter1:
-				searchStrings[1] = root;         // svín
-				searchStrings[2] = root;
-				searchStrings[3] = root + "i";
-				searchStrings[4] = root + "s";
-				searchStrings[5] = searchStrings[1] + "ið";
-				searchStrings[6] = searchStrings[2] + "ið";
-				searchStrings[7] = searchStrings[3] + "nu";
-				searchStrings[8] = searchStrings[4] + "ins";
-				searchStrings[9] = root;           // svín
-				searchStrings[10] = root;
-				searchStrings[11] = root + "um";    //
-				searchStrings[12] = root + "a";     //
-				searchStrings[13] = searchStrings[9] + "in";    // nominative + article
-				searchStrings[14] = searchStrings[10] + "in";    // accusative + article
-				searchStrings[15] = root + "unum";
-				searchStrings[16] = searchStrings[12] + "nna";
-				break;
-			case NounNeuter2:
-				searchStrings[1] = root + "i";          // veski
-				searchStrings[2] = searchStrings[1];
-				searchStrings[3] = searchStrings[1];
-				searchStrings[4] = root + "is";
-				searchStrings[5] = searchStrings[1] + "ð";    // nominative + article
-				searchStrings[6] = searchStrings[2] + "ð";    // accusative + article
-				searchStrings[7] = searchStrings[3] + "nu";
-				searchStrings[8] = searchStrings[4] + "ins";
-				searchStrings[9] = root + "i";           // veski
-				searchStrings[10] = root + "i";
-				searchStrings[11] = root + "um";    //
-				searchStrings[12] = root + "a";     //
-				searchStrings[13] = searchStrings[9] + "n";
-				searchStrings[14] = searchStrings[10] + "n";
-				searchStrings[15] = root + "unum";
-				searchStrings[16] = searchStrings[12] + "nna";
-				break;
-			case NounNeuter3:
-				searchStrings[1] = root + "ur";   // fóð-ur
-				searchStrings[2] = searchStrings[1];
-				searchStrings[3] = root + "ri";
-				searchStrings[4] = root + "urs";
-				searchStrings[5] = root + "rið";
-				searchStrings[6] = root + "rið";
-				searchStrings[7] = searchStrings[3] + "nu";
-				searchStrings[8] = searchStrings[4] + "ins";
-				searchStrings[9] = searchStrings[1];       // fóður
-				searchStrings[10] = searchStrings[2];
-				searchStrings[11] = root + "rum";
-				searchStrings[12] = root + "ra";
-				searchStrings[13] = root + "rin";
-				searchStrings[14] = root + "rin";
-				searchStrings[15] = root + "runum";
-				searchStrings[16] = searchStrings[12] + "nna";
-				break;
-			case NounNeuter4:
-				searchStrings[1] = root + "a";          // hjarta, nýra
-				searchStrings[2] = searchStrings[1];
-				searchStrings[3] = searchStrings[1];
-				searchStrings[4] = searchStrings[1];
-				searchStrings[5] = searchStrings[1] + "að";
-				searchStrings[6] = searchStrings[2] + "að";
-				searchStrings[7] = searchStrings[3] + "anu";
-				searchStrings[8] = searchStrings[4] + "ans";
-				searchStrings[9] = root + "u";       // nýr-un
-				searchStrings[10] = searchStrings[2];
-				searchStrings[11] = root + "um";
-				searchStrings[12] = root + "a";
-				searchStrings[13] = root + "un";
-				searchStrings[14] = root + "un";
-				searchStrings[15] = root + "unum";
-				searchStrings[16] = searchStrings[12] + "nna";
-				break;
-
-			case Adj1:
-				if( root.endsWith( "á" ) )    // hár, grár, blár,
-					searchStrings[1] = root + "r";
-				else if( root.endsWith( "laus" ) )
-					searchStrings[1] = root;
-				else
-					searchStrings[1] = root + "ur";   // þreyttur
-				searchStrings[2] = root + "an";
-				searchStrings[3] = root + "um";
-				searchStrings[4] = root + "s";
-				searchStrings[5] = root;          // þreytt
-				searchStrings[6] = root + "a";
-				searchStrings[7] = root + "ri";
-				searchStrings[8] = root + "rar";
-				if( root.endsWith( "ð" ) )
-					searchStrings[9] = root.substring( 0, len - 1 ) + "tt"; // breið-ur, brei-tt
-				else if( root.endsWith( "tt" ) )
-					searchStrings[9] = root;                                // þreytt-ur, þreytt
-				else
-					searchStrings[9] = root + "t";
-				searchStrings[10] = searchStrings[9];
-				searchStrings[11] = root + "u";
-				searchStrings[12] = root + "s";
-
-				searchStrings[13] = root + "ir";    // þreyttir
-				searchStrings[14] = root + "a";
-				searchStrings[15] = root + "um";
-				searchStrings[16] = root + "ra";
-				searchStrings[17] = root + "ar";   // þreyttar
-				searchStrings[18] = root + "ar";
-				searchStrings[19] = root + "um";
-				searchStrings[20] = root + "ra";
-				searchStrings[21] = root;           // þreytt
-				searchStrings[22] = root;
-				searchStrings[23] = root + "um";
-				searchStrings[24] = root + "ra";
-
-				searchStrings[25] = root + "i";    // þreytt-i
-				searchStrings[26] = root + "a";
-				searchStrings[27] = root + "a";
-				searchStrings[28] = root + "a";
-				searchStrings[29] = root + "a";    // þreytt-a
-				searchStrings[30] = root + "u";    // þreytt-u
-				searchStrings[31] = root + "u";    // þreytt-u
-				searchStrings[32] = root + "u";    // þreytt-u
-				searchStrings[33] = root + "a";    // þreytt-a
-				searchStrings[34] = root + "a";    // þreytt-a
-				searchStrings[35] = root + "a";    // þreytt-a
-				searchStrings[36] = root + "a";    // þreytt-a
-
-				break;
-
-			case Adj2:
-				searchStrings[1] = root + "inn";   // þéttrið-inn, krist-inn
-				searchStrings[2] = searchStrings[1];
-				searchStrings[3] = root + "num";
-				searchStrings[4] = root + "ins";
-				searchStrings[5] = root + "in";    // þéttriðin
-				searchStrings[6] = root + "na";
-				searchStrings[7] = root + "inni";
-				searchStrings[8] = root + "innar";
-				searchStrings[9] = root + "ið";    // þéttrið-ið
-				searchStrings[10] = searchStrings[9];
-				searchStrings[11] = root + "nu";
-				searchStrings[12] = root + "ins";
-
-				searchStrings[13] = root + "nir";   // þéttrið-nir
-				searchStrings[14] = root + "na";
-				searchStrings[15] = root + "num";
-				searchStrings[16] = root + "inna";
-				searchStrings[17] = root + "nar";   // þéttrið-nar
-				searchStrings[18] = root + "nar";
-				searchStrings[19] = root + "num";
-				searchStrings[20] = root + "inna";
-				searchStrings[21] = root + "in";    // þéttrið-in
-				searchStrings[22] = root + "in";
-				searchStrings[23] = root + "num";
-				searchStrings[24] = root + "inna";
-				break;
-
-			case Adj3:
-				searchStrings[1] = root + "i";    // góði
-				searchStrings[2] = root + "a";
-				searchStrings[3] = searchStrings[2];
-				searchStrings[4] = searchStrings[2];
-				searchStrings[5] = root + "a";    // góða
-				searchStrings[6] = root + "u";
-				searchStrings[7] = searchStrings[6];
-				searchStrings[8] = searchStrings[6];
-				searchStrings[9] = root + "a";    // góða
-				searchStrings[10] = searchStrings[9];
-				searchStrings[11] = searchStrings[9];
-				searchStrings[12] = searchStrings[9];
-
-				searchStrings[13] = root + "u";
-				searchStrings[14] = root + "u";
-				searchStrings[15] = root + "u";
-				searchStrings[16] = root + "u";
-				searchStrings[17] = root + "u";
-				searchStrings[18] = root + "u";
-				searchStrings[19] = root + "u";
-				searchStrings[20] = root + "u";
-				searchStrings[21] = root + "u";
-				searchStrings[22] = root + "u";
-				searchStrings[23] = root + "u";
-				searchStrings[24] = root + "u";
-				break;
-
-			case Adj4:
-				searchStrings[1] = root + "aður";   // horaður
-				searchStrings[2] = root + "aðan";
-				searchStrings[3] = root + "uðum";
-				searchStrings[4] = root + "aðs";
-				searchStrings[5] = root + "uð";   // horuð
-				searchStrings[6] = root + "aða";
-				searchStrings[7] = root + "aðri";
-				searchStrings[8] = root + "aðrar";
-				searchStrings[9] = root + "að";   // horað
-				searchStrings[10] = searchStrings[9];
-				searchStrings[11] = root + "uðu";
-				searchStrings[12] = root + "aðs";
-
-				searchStrings[13] = root + "aðir"; // hor-aðir
-				searchStrings[14] = root + "aða";
-				searchStrings[15] = root + "uðum";
-				searchStrings[16] = root + "aðra";
-				searchStrings[17] = root + "aðar"; // hor-aðar
-				searchStrings[18] = root + "aðar";
-				searchStrings[19] = root + "uðum";
-				searchStrings[20] = root + "aðra";
-				searchStrings[21] = root + "uð";    // hor-uð
-				searchStrings[22] = root + "uð";
-				searchStrings[23] = root + "uðum";
-				searchStrings[24] = root + "aðra";
-				break;
-
-			case Adj5:
-				searchStrings[1] = root + "l";   // heil-l
-				searchStrings[2] = root + "an";
-				searchStrings[3] = root + "um";
-				searchStrings[4] = root + "s";
-				searchStrings[5] = root;        // heil
-				searchStrings[6] = root + "a";
-				searchStrings[7] = root + "ri";
-				searchStrings[8] = root + "rar";
-				searchStrings[9] = root + "t";   // heil-t
-				searchStrings[10] = searchStrings[9];
-				searchStrings[11] = root + "u";
-				searchStrings[12] = root + "s";
-
-				searchStrings[13] = root + "ir"; // heil-ir
-				searchStrings[14] = root + "a";
-				searchStrings[15] = root + "um";
-				searchStrings[16] = root + "ra";
-				searchStrings[17] = root + "ar"; // heil-ar
-				searchStrings[18] = root + "ar";
-				searchStrings[19] = root + "um";
-				searchStrings[20] = root + "ra";
-				searchStrings[21] = root;         // heil
-				searchStrings[22] = root;
-				searchStrings[23] = root + "um";
-				searchStrings[24] = root + "ra";
-				break;
-			case VerbActive1:
-				searchStrings[1] = root + "a";   // ég/þeir borð-a
-				searchStrings[2] = root + "ar";  // þú/hann borð-ar
-				searchStrings[3] = root + "um";  // við borð-um
-				searchStrings[4] = root + "ið";  // þið borð-ið
-				searchStrings[5] = root + "aði"; // ég/hann borð-aði
-				searchStrings[6] = root + "aðir"; // þú borð-aðir
-				searchStrings[7] = root + "uðum"; // við borð-uðum
-				searchStrings[8] = root + "uðuð"; // þið borð-uðuð
-				searchStrings[9] = root + "uðu"; //  þeir borð-uðuð
-				searchStrings[10] = root + "að"; //  borð-að
-				searchStrings[11] = root + "ist"; //  borð-ist
-				searchStrings[12] = root + "aðist"; //  borð-aðist
-				searchStrings[13] = root + "andi"; //  borð-andi
-
-				break;
-			case VerbActive2:
-				searchStrings[1] = root + "i";   // ég reyn-i
-				searchStrings[2] = root + "ir";  // þú/hann reyn-ir
-				searchStrings[3] = root + "um";  // við reyn-um
-				searchStrings[4] = root + "ið";  // þið reyn-ið
-				searchStrings[5] = root + "a";   // þeir reyn-a
-				searchStrings[6] = root + "di";  // ég/hann reyn-di
-				searchStrings[7] = root + "ti";  // ég/hann fyll-ti
-				searchStrings[8] = root + "ði";  // ég/hann lif-ði
-				searchStrings[9] = root + "dir"; // þú reyn-dir
-				searchStrings[10] = root + "tir"; // þú fyll-tir
-				searchStrings[11] = root + "ðir"; // þú lif-ðir
-				searchStrings[12] = root + "dum"; // við reyn-dum
-				searchStrings[13] = root + "tum"; // við fyll-tum
-				searchStrings[14] = root + "ðum"; // við lif-ðum
-				searchStrings[15] = root + "duð"; // þið reyn-duð
-				searchStrings[16] = root + "tuð"; // þið fyll-tuð
-				searchStrings[17] = root + "ðuð"; // þið lif-ðuð
-				searchStrings[18] = root + "du"; // þeir reyn-du
-				searchStrings[19] = root + "tu"; // þeir fyll-tu
-				searchStrings[20] = root + "ðu"; // þeir lif-ðu
-				searchStrings[21] = root + "ist"; //  reyn-ist
-				searchStrings[22] = root + "t";   // reyn-t
-				searchStrings[23] = root + "andi";   // reyn-andi
-				break;
-			case VerbActive3:
-				searchStrings[1] = root + "di";   // ég ben-di
-				searchStrings[2] = root + "dir";  // þú/hann ben-dir
-				searchStrings[3] = root + "dum";  // við ben-dum
-				searchStrings[4] = root + "dið";  // þið ben-dið
-				searchStrings[5] = root + "da";   // þeir ben-da
-				searchStrings[6] = root + "ti";  // ég/hann ben-ti
-				searchStrings[7] = root + "tir"; // þú ben-tir
-				searchStrings[8] = root + "tum"; // við ben-tum
-				searchStrings[9] = root + "tuð"; // þið ben-tuð
-				searchStrings[10] = root + "tu"; // þeir ben-tu
-				searchStrings[11] = root + "dist"; //  bend-ist
-				searchStrings[12] = root + "andi";   // reyn-andi
-				break;
-			case VerbActive4:
-				searchStrings[1] = root + "ði";   // ég bræ-ði
-				searchStrings[2] = root + "ðir";  // þú/hann bræ-ðir
-				searchStrings[3] = root + "ðum";  // við bræ-ðum
-				searchStrings[4] = root + "ðið";  // þið bræ-ðið
-				searchStrings[5] = root + "ða";   // þeir bræ-ða
-				searchStrings[6] = root + "ddi";  // ég/hann bræ-ddi
-				searchStrings[7] = root + "ddir"; // þú bræ-ddir
-				searchStrings[8] = root + "ddum"; // við bræ-ddum
-				searchStrings[9] = root + "dduð"; // þið bræ-dduð
-				searchStrings[10] = root + "ddu"; // þeir bræ-ddu
-				searchStrings[11] = root + "ðist"; //  bræ-ðist
-				searchStrings[12] = root + "ðandi";   // bræ-ðandi
-				break;
-			case VerbActive5:
-				searchStrings[1] = root + "i";   // ég þyng-i
-				searchStrings[2] = root + "ir";  // þú/hann þyng-ir
-				searchStrings[3] = root + "jum";  // við þyng-jum
-				searchStrings[4] = root + "ið";  // þið þyng-ið
-				searchStrings[5] = root + "ja";   // þeir þyng-ja
-				searchStrings[6] = root + "di";  // ég/hann þyng-di
-				searchStrings[7] = root + "dir"; // þú þyng-dir
-				searchStrings[8] = root + "dum"; // við þyng-dum
-				searchStrings[9] = root + "duð"; // þið þyng-duð
-				searchStrings[10] = root + "du"; // þeir þyng-du
-				searchStrings[11] = root + "dist"; //  þyng-dist
-				searchStrings[12] = root + "jandi"; //  þyng-jandi
-				break;
-            case VerbActive6:
-				searchStrings[1] = root + "ði";   // ég vir-ði
-				searchStrings[2] = root + "ðir";  // þú/hann vir-ðir
-				searchStrings[3] = root + "ðum";  // við vir-ðum
-				searchStrings[4] = root + "ðið";  // þið vir-ðið
-				searchStrings[5] = root + "ða";   // þeir vir-ða
-				searchStrings[6] = root + "ti";  // ég/hann vir-ti
-				searchStrings[7] = root + "tir"; // þú vir-tir
-				searchStrings[8] = root + "tum"; // við vir-tum
-				searchStrings[9] = root + "tuð"; // þið vir-tuð
-				searchStrings[10] = root + "tu"; // þeir vir-tu
-				searchStrings[11] = root + "tist"; //  vir-tist
-				searchStrings[12] = root + "tandi";   // vir-tandi
-				break;
-				// ágerast
-			case VerbMiddle1:
-                searchStrings[1] = root + "ist";   // ég/þú/hann/þið áger-ist
-                searchStrings[2] = root + "umst";  // við áger-umst
-				searchStrings[4] = root + "ast";  // þeir áger-ast
-                searchStrings[5] = root + "ðist";   // ég/þú/hann áger-ðist
-                searchStrings[6] = root + "ðumst";  // við áger-ðumst
-				searchStrings[7] = root + "ðust";  // þið/þeir áger-ðust
-                break;
-            // drepast
-			case VerbMiddle2:
-                searchStrings[1] = root + "st";   // ég/þú/hann drep-st
-                searchStrings[2] = root + "umst";  // við drep-umst
-				searchStrings[3] = root + "ist";  // þið drep-ist
-				searchStrings[4] = root + "ast";  // þeir drep-ast
-                break;
-        }
-	}
 
 	private String hljodVarp( String root, char transformedLetter, char rootLetter )
 	{
@@ -1616,7 +951,7 @@ public class IceMorphy {
 		addProperNounTag( currToken, gender, IceTag.cSingular, IceTag.cGenitive, IceTag.cPersonName );
 	}
 
-    private boolean searchVerb( String root, MorphoClass mClass, IceTokenTags currToken,
+    private boolean searchVerb( String root, MorphoRules.MorphoClass mClass, IceTokenTags currToken,
                                 MorphoRuleVerb.Mood mood, MorphoRuleVerb.Voice voice,
                                 char tenseLetter, char personLetter, char numberLetter, char personLetter2, char numberLetter2, boolean isUnknown )
 	{
@@ -1625,10 +960,11 @@ public class IceMorphy {
 		boolean found = false;
 		boolean done = false;
 
-		setSearchStrings( root, mClass );         // set the search strings
-		for( int i = 1; i <= 23 && !done; i++ )
+		morphoRules.setSearchStrings( root, mClass );         // set the search strings
+		//for( int i = 1; i <= 23 && !done; i++ )
+        for( int i = 0; i <= morphoRules.searchStringLastIndex && !done && morphoRules.searchStrings[i] != null; i++ )
 		{
-            searchStr = searchStrings[i];
+            searchStr = morphoRules.searchStrings[i];
 			if( searchStr != null )
 			{
                 tagStr = dictionaryLookup( searchStr, true );
@@ -1761,7 +1097,7 @@ public class IceMorphy {
 		{
 			// espandi, hlaupandi
 			String root = lex.substring( 0, len - 4 );   // espa, hlaupa
-			found = searchVerb( root, MorphoClass.VerbActive1, currToken, MorphoRuleVerb.Mood.Indicative, MorphoRuleVerb.Voice.Active, IceTag.cPresent, IceTag.cGenderUnspec, IceTag.cSingular, IceTag.cGenderUnspec, IceTag.cSingular, true );
+			found = searchVerb( root, MorphoRules.MorphoClass.VerbActive1, currToken, MorphoRuleVerb.Mood.Indicative, MorphoRuleVerb.Voice.Active, IceTag.cPresent, IceTag.cGenderUnspec, IceTag.cSingular, IceTag.cGenderUnspec, IceTag.cSingular, true );
 			if( found)
 			{  // present participle
 				currToken.addAllTags( IceTag.tagAdjectivesIndeclineable );
@@ -1829,7 +1165,7 @@ public class IceMorphy {
                if (found && rec.ending.equals("st"))    // Hack to add middle supine form!
                     currToken.addTag( IceTag.tagVerbSupineMiddle );
 
-               if (!found && rec.morphoClass == IceMorphy.MorphoClass.VerbActive1 && lex.matches(".[dtð]?um$")) {
+               if (!found && rec.morphoClass == MorphoRules.MorphoClass.VerbActive1 && lex.matches(".[dtð]?um$")) {
                     // u-hljóðvarp, köstum-kasta
 					String newRoot = hljodVarp( root, 'ö', 'a' );
 					if( newRoot != null )
@@ -2418,120 +1754,27 @@ public class IceMorphy {
 	  * Assumes the global variables str1-strX have already been set
 	  */
 
-	private boolean searchSuffixCases( String root, MorphoClass mClass, IceTokenTags currToken, IceTag.WordClass wordClass, boolean nom, boolean acc, boolean dat, boolean gen,
+	private boolean searchSuffixCases( String root, MorphoRules.MorphoClass mClass, IceTokenTags currToken, IceTag.WordClass wordClass, boolean nom, boolean acc, boolean dat, boolean gen,
 	                                   char genderLetter, char numberLetter, boolean article, char declLetter )
 	{
 		String tagStr = null, searchStr;
 		int index = 0;
 		char caseLetter = '*', numLetter = '*', declension = '*';
 		boolean found = false;
-		//IceTokenTags tmpTok = null;
 		boolean done = false;
-		int end = 0;
 
-		setSearchStrings( root, mClass );         // set the search strings
-		if( wordClass == IceTag.WordClass.wcAdj )
-			end = searchStringSize;
-		else if( mClass == MorphoClass.NounMasculine1 )
-			end = 20;
-        else if( mClass == MorphoClass.NounMasculine2 )
-            end = 8;
-		else if( mClass == MorphoClass.NounFeminine1 )
-			end = 18;
-		else
-			end = 16;
+		morphoRules.setSearchStrings( root, mClass );         // set the search strings
 
-		for( int i = 1; i <= end && !done; i++ )
+		for( int i = 0; i <= morphoRules.searchStringLastIndex && !done && morphoRules.searchStrings[i] != null; i++ )
 		{
 			index = i;
-			if( wordClass == IceTag.WordClass.wcAdj )
-			{
-				if( i <= 12 || i >= 25 )
-					numLetter = IceTag.cSingular;
-				else
-					numLetter = IceTag.cPlural;
-				if( i <= 24 )
-					declension = IceTag.cStrong;
-				else
-					declension = IceTag.cWeak;
-			}
-			else
-			{
-				if( i <= 8 )
-					numLetter = IceTag.cSingular;
-				else
-					numLetter = IceTag.cPlural;
-			}
+            searchStr = morphoRules.searchStrings[i];
+                        
+            numLetter = morphoRules.getNumber(wordClass, i);
+            if( wordClass == IceTag.WordClass.wcAdj )
+                declension = morphoRules.getDeclension(i);
+            caseLetter = morphoRules.getCase(mClass, index);
 
-            searchStr = searchStrings[i];
-            switch( i )
-			{
-				case 1:
-                case 5:
-                case 9:
-                case 13:
-                case 21:
-                case 25:
-                case 29:
-                case 33:
-                    caseLetter = IceTag.cNominative;
-					break;
-				case 2:
-                case 6:
-                case 10:
-                case 14:
-                case 22:
-                case 26:
-                case 30:
-                case 34:
-                    caseLetter = IceTag.cAccusative;
-					break;
-				case 3:
-                case 7:
-                case 11:
-                case 15:
-                case 23:
-                case 27:
-                case 31:
-                case 35:
-                    caseLetter = IceTag.cDative;
-					break;
-				case 4:
-                case 8:
-                case 12:
-                case 16:
-                case 24:
-                case 28:
-                case 32:
-                case 36:
-                    caseLetter = IceTag.cGenitive;
-					break;
-
-				case 17:
-					if( mClass == MorphoClass.NounFeminine1 )
-						caseLetter = IceTag.cGenitive;
-					else
-						caseLetter = IceTag.cNominative;
-					break;
-				case 18:
-					if( mClass == MorphoClass.NounFeminine1 )
-						caseLetter = IceTag.cGenitive;
-					else
-						caseLetter = IceTag.cAccusative;
-					break;
-				case 19:
-					if( mClass == MorphoClass.NounMasculine1 )
-						caseLetter = IceTag.cNominative;
-					else
-						caseLetter = IceTag.cDative;
-					break;
-				case 20:
-					if( mClass == MorphoClass.NounMasculine1 )
-						caseLetter = IceTag.cAccusative;
-					else
-						caseLetter = IceTag.cGenitive;
-					break;
-			}
 			if( searchStr != null )
 			{
 				if( wordClass == IceTag.WordClass.wcProperNoun )
@@ -2552,7 +1795,7 @@ public class IceMorphy {
 		{
 			dummyToken.clearTags();
 			dummyToken.setAllTags( tagStr );
-			if( ((index >= 5) && (index <= 8)) || ((index >= 13) && (index <= 20)) )
+            if (morphoRules.withArticle(index))
 				dummyToken.removeArticle();
 			dummyToken.removeAllBut( wordClass );
 

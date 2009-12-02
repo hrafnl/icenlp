@@ -35,7 +35,7 @@ public class MorphoRuleVerbFinite extends MorphoRuleVerb {
     char number2;
 
 
-    public MorphoRuleVerbFinite(String ending, int subtractForLookup, IceMorphy.MorphoClass morphoClass, Mood mood, Voice voice, char tense, char person1, char number1, char person2, char number2) {
+    public MorphoRuleVerbFinite(String ending, int subtractForLookup, MorphoRules.MorphoClass morphoClass, Mood mood, Voice voice, char tense, char person1, char number1, char person2, char number2) {
         super(ending, subtractForLookup, morphoClass, mood, voice, tense);
         this.person1 = person1;
         this.number1 = number1;
@@ -43,7 +43,7 @@ public class MorphoRuleVerbFinite extends MorphoRuleVerb {
         this.number2 = number2;
     }
 
-    public MorphoRuleVerbFinite(String ending, int subtractForLookup, IceMorphy.MorphoClass morphoClass, Mood mood, Voice voice, char tense, char person1, char number1, char person2, char number2, boolean searchAgain) {
+    public MorphoRuleVerbFinite(String ending, int subtractForLookup, MorphoRules.MorphoClass morphoClass, Mood mood, Voice voice, char tense, char person1, char number1, char person2, char number2, boolean searchAgain) {
         this(ending, subtractForLookup, morphoClass, mood, voice, tense, person1, number1, person2, number2);
         this.searchAgainWhenFound = searchAgain;
     }
