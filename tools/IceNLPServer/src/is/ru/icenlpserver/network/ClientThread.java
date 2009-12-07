@@ -81,19 +81,26 @@ public class ClientThread implements Runnable
 						}
 					}
 					
-					String strFromClient = new String(stringData, 0 ,stringSize);
-					byte[] utf8Bytes;
+					String strFromClient = null;
+					String strNew = null;
 					try 
 					{
-						utf8Bytes = strFromClient.getBytes("UTF8");
-						strFromClient = new String(utf8Bytes, "UTF8");
-					} 
-					catch (UnsupportedEncodingException e1) 
-					{
-						this.alive = false;
-						System.out.println("!! Error while encoding string from client.");
+						
+						strFromClient = new String(stringData,0, stringSize, "UTF8");
+						
+						//MAC HACK
+						//byte[] utf8Bytes = strFromClient.getBytes("UTF8");
+						//strNew = new String(utf8Bytes, "UTF8"); 
 					}
-				
+			
+					
+					catch (UnsupportedEncodingException e2)
+					{
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					}
+					//strFromClient = strNew;
+					
 					System.out.println(">> String from client: " + strFromClient);
 					
 					// Let's check out the output that the clients will be receiving and 
@@ -102,6 +109,8 @@ public class ClientThread implements Runnable
 					try
 					{
 						taggedString = IceNLPSingletonService.getInstance().tagText(strFromClient);
+						//System.out.println(">> String from IceNLP: " + taggedString);
+						
 					}
 					catch (Exception e) 
 					{
@@ -155,11 +164,13 @@ public class ClientThread implements Runnable
 	
 	
 	// Function for sending the replay to the client.
-	private void writeReplyString(String replay) throws IOException
+	private void writeReplyString(String reply) throws IOException
 	{	
+		//System.out.println("write replyString: " + reply);
 		List<Packet> packets = new LinkedList<Packet>();
 		
-		byte[] strBytes = replay.getBytes();
+		byte[] strBytes = reply.getBytes("UTF8");
+		//System.out.println("strBytes:" + strBytes.toString());
 		int numberOfpackets = ((int) Math.floor((strBytes.length/504)))+1;
 		
 		// Let's add the initial packet to the collection

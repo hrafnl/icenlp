@@ -149,11 +149,15 @@ public class IceTagger implements IIceTagger
 		try 
 		{
 			Sentences sentences = facade.tag(text);
+			
 			for(Sentence s : sentences.getSentences())
 			{
 				for(Token token : s.getTokens())
 				{
 					IceTokenTags t = ((IceTokenTags)token);
+					//MAC HACK
+					//byte[] utf8Bytes = t.getFirstTagStr().getBytes("UTF8");
+					//String tagNew = new String(utf8Bytes, "UTF8"); 
 					wordList.add(new Word(t.lexeme, t.getFirstTagStr(), t.mweCode));
 				}
 			}
