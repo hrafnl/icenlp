@@ -73,4 +73,23 @@ public class Configuration
 		
 		return instance;
 	}
+	
+	/***
+	 * Checks whether we are running the server in debug mode.
+	 * This is used in many places in other parts of the code
+	 * so we put this functionality into a function. 
+	 * @return True of "debug" is set to "true" in the configuration
+	 * file, otherwise it is false.
+	 */
+	public boolean debugMode()
+	{
+		if(this.config.containsKey("debug"))
+		{
+			if(this.config.get("debug").equals("true"))
+			{
+				return true;
+			}
+		}
+		return false;
+	}	
 }

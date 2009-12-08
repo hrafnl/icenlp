@@ -5,6 +5,7 @@ import is.ru.icenlpserver.common.Pair;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
@@ -13,6 +14,10 @@ import java.util.List;
 
 public class MappingLexicon 
 {
+	// Enumeration for block sections in the mapping file.
+	public enum BLOCK_TYPE {not_set, tagmaps, mwe, tagmapping, lemma, mwe_rename}
+	
+	
 	// Hash map for direct tags mappings.
 	private HashMap<String, String> tagMaps;
 
@@ -25,14 +30,22 @@ public class MappingLexicon
 	// Hash map for MWE
 	private HashMap<String, List<Pair<String, String>>> lexemeExceptionMap;
 	
+	// Hash map for mwe rename rules.
+	private HashMap<String, Pair<String, String>> mweRenameMap;
 	
-	public MappingLexicon(String mapperFile) throws IOException 
+	
+	public MappingLexicon(String mapperFile) throws Exception 
 	{	
+
 		// Let's initialize the maps.
+		
+		
+		// This map is used for the tag mapping.
 		this.tagMaps = new HashMap<String, String>();
 		this.lemmaExceptionMap = new HashMap<String, List<Pair<String, String>>>();
 		this.lexemeExceptionMap = new HashMap<String, List<Pair<String, String>>>();
 		this.MWEMap = new HashMap<String, String>();
+		this.mweRenameMap = new HashMap<String, Pair<String, String>>();
 		
 		// test for MWE.
 		//this.MWEMap.put("að_fjalla_um", "<MAJOR_TEST>");
@@ -44,73 +57,122 @@ public class MappingLexicon
 		String strLine;
 		int lineNum = 1;
 		
+		//String entryType = null;
+		BLOCK_TYPE type = BLOCK_TYPE.not_set;
+		
 		while ((strLine = br.readLine()) != null) 
 		{
-			if(strLine.length() != 0)
+			
+			if(strLine.length() != 0 && !strLine.startsWith("#"))
+			{
+				if(type == BLOCK_TYPE.not_set && !strLine.matches("\\[[a-zA-Z]+\\]"))
 				{
-				try
+					System.out.println(">> Error in config file, line: " + lineNum + ". Entry is not under any section.");
+					System.err.println(strLine + ": " + strLine);
+					break;
+				}
+				
+				// are we getting a new block? 
+				else if(strLine.matches("\\[[a-zA-Z-]+\\]"))
 				{
-					// We found a exception rule in the lexicon file.
-					if(strLine.toLowerCase().startsWith("lemma=") || strLine.toLowerCase().startsWith("lexeme=") || 
-							strLine.toLowerCase().startsWith("mwe="))
-					{
-						if(strLine.matches("LEMMA=[^\t]+\t[^\t]+\t[^\t]+"))
-						{
-							String[] str = strLine.substring(6).split("\t");
-							if(!this.lemmaExceptionMap.containsKey(str[0]))
-							{
-								List< Pair<String, String> > emptyPairList = new LinkedList< Pair<String, String> >();
-								this.lemmaExceptionMap.put(str[0], emptyPairList);
-							}
-							Pair<String, String> pair = new Pair<String, String>(str[1], str[2]);
-							this.lemmaExceptionMap.get(str[0]).add(pair);
-						}
-						
-						else if(strLine.matches("LEXEME=[^\t]+\t[^\t]+\t[^\t]+"))
-						{	
-							String[] str = strLine.substring(6).split("\t");
-							if(!this.lexemeExceptionMap.containsKey(str[0]))
-							{
-								List< Pair<String, String> > emptyPairList = new LinkedList< Pair<String, String> >();
-								this.lexemeExceptionMap.put(str[0], emptyPairList);
-							}
-							Pair<String, String> pair = new Pair<String, String>(str[1], str[2]);
-							this.lexemeExceptionMap.get(str[0]).add(pair);
-						}
-						
-						// If the line contains a MWE rule.
-						else if(strLine.matches("MWE=[^\t]+\t[^\t]+"))
-						{
-							String[] str = strLine.substring(4).split("\t");
-							this.MWEMap.put(str[0], str[1]);
-						}
-						
-						else
-						{
-							System.out.println("[x] Error in exception rule in mapping file " + mapperFile + " on line " + lineNum);
-							System.out.println("Rule was: " + strLine);
-						}
-					}
+					String entryType = strLine.substring(1, strLine.length()-1);
+					
+					if(entryType.toLowerCase().equals("tagmapping"))
+						type = BLOCK_TYPE.tagmapping;
+					
+					else if(entryType.toLowerCase().equals("lemma"))
+						type = BLOCK_TYPE.lemma;	
+					
+					else if(entryType.toLowerCase().equals("mwe"))
+						type = BLOCK_TYPE.mwe;	
+					
+					else if(entryType.toLowerCase().equals("mwe-rename"))
+						type = BLOCK_TYPE.mwe_rename;
+					
 					else
 					{
-						if(strLine.matches("[^\t]+\t[^\t]+"))
-						{
-							String key = strLine.split("\t")[0];
-							String value = strLine.split("\t")[1];
-							this.tagMaps.put(key, value);
-						}
-						else
-						{
-							System.out.println("[x] Error in mapping rule in mapping file " + mapperFile + " on ine " + lineNum);
-						}
+						System.out.println(">> Error in config file, unknow block name " + entryType);
+						break;
 					}
-					
 				}
-				catch (Exception e) 
+				
+				else
 				{
-					System.out.println(e);
+					switch (type) 
+					{
+						case tagmapping:
+							if(strLine.matches("[^@]+@[^@]+"))
+							{
+								String key = strLine.split("@")[0];
+								String value = strLine.split("@")[1];
+								this.tagMaps.put(key, value);
+								break;
+							}
+							else
+							{
+								System.out.println("[!!!]: Error in config at line " + lineNum + ". Invalid tagmapping.");
+								System.out.println(lineNum + ": " + strLine);
+								break;
+							}
+
+
+						case lemma:
+							if(strLine.matches("[^@]+@[^@]+@[^@]+"))
+							{	
+								String[] str = strLine.split("@");
+								if(!this.lemmaExceptionMap.containsKey(str[0]))
+								{
+									List< Pair<String, String> > emptyPairList = new LinkedList< Pair<String, String> >();
+									this.lemmaExceptionMap.put(str[0], emptyPairList);
+								}
+								Pair<String, String> pair = new Pair<String, String>(str[1], str[2]);
+								this.lemmaExceptionMap.get(str[0]).add(pair);
+								break;
+							}
+							else
+							{
+								System.out.println("[!!!]: Error in config at line " + lineNum + ". Invalid lemma entry.");
+								System.out.println(lineNum + ": " + strLine);
+								break;	
+							}
+						
+						case mwe:
+							if(strLine.matches("[^@]+@[^@]+"))
+							{
+								String[] str = strLine.split("@");
+								this.MWEMap.put(str[0], str[1]);
+								break;
+							}
+							
+							else
+							{
+								System.out.println("[!!!]: Error in config at line " + lineNum + ". Invalid MWE entry.");
+								System.out.println(lineNum + ": " + strLine);
+								break;
+							}
+						
+						case mwe_rename:
+							if(strLine.matches("[^@]+@[^@]+@[^@]+"))
+							{
+								String[] strings = strLine.split("@");
+								this.mweRenameMap.put(strings[0], new Pair<String, String>(strings[1], strings[2]));
+								break;
+							}
+							else
+							{
+								System.out.println("[!!!]: Error in config at line " + lineNum + ". Invalid MWE-RENAME entry.");
+								System.out.println(lineNum + ": " + strLine);
+								break;
+							}
+							
+
+						default:
+							break;
+					}
 				}
 			}
+			
+			// Increase the line counter by one.
 			lineNum +=1;
 		}
 	
@@ -119,6 +181,8 @@ public class MappingLexicon
 		System.out.println("[i] Number of lexeme exception rules: " + this.lexemeExceptionMap.size());
 		System.out.println("[i] Number of lemma exception rules: " + this.lemmaExceptionMap.size());
 		System.out.println("[i] Number of MWE rules: " + this.MWEMap.size());
+		System.out.println("[i] Number of MWE rename rules: " + this.mweRenameMap.size());
+
 	}
 
 	public String lookupTagmap(String tag, boolean ignoreCase) 
@@ -170,6 +234,25 @@ public class MappingLexicon
 	
 	
 	
+	/***
+	 * Check if a given lexeme contains a Lexeme rename rule.
+	 * This is used to rename multi word expressions.
+	 * @param lexeme
+	 * @return true if the lexeme has a rename rule, false otherwise.
+	 */
+	public boolean hasRenameRuleForLexeme(String lexeme)
+	{
+		return this.mweRenameMap.containsKey(lexeme);
+	}
 	
-	
+	/***
+	 * Get the rename rule for a given lexeme.
+	 * @param lexeme
+	 * @return Pair<String, String> that contains the new lexeme/lemma and
+	 * the new tag.
+	 */
+	public Pair<String, String> getRenameRuleForLexeme(String lexeme)
+	{
+		return this.mweRenameMap.get(lexeme);
+	}
 }

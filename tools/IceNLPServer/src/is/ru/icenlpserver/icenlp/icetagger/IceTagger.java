@@ -31,6 +31,10 @@ public class IceTagger implements IIceTagger
 	private MappingLexicon mappingLexicon = null;
 	private String taggingOutputForamt = null;
 	private boolean lemmatize = false;
+	
+	// todo: make this flag configurable.
+	private boolean debugOutput = true;
+	
 	public IceTagger() throws IceTaggerConfigrationException
 	{
 		try
@@ -45,6 +49,9 @@ public class IceTagger implements IIceTagger
 				
 				System.out.println("[i] tagging output format: " + this.taggingOutputForamt + '.');
 			}
+			
+			// Check for debug output.
+			this.debugOutput = Configuration.getInstance().debugMode();
 			
 			// Loading IceTagger lexicons.
 			IceTaggerLexicons iceLexicons = null;
@@ -168,7 +175,9 @@ public class IceTagger implements IIceTagger
 					word.setLemma(this.lemmald.lemmatize(word.getLexeme(), word.getTag()).getLemma());
 			}
 			
-			// If there is any mapper then we will use it.
+			// If there is any mappingLexicon set
+			
+			// let's go through the tag mapping and check if there is any TAGMAPPING for that word.
 			if(this.mappingLexicon != null)
 			{
 				for(Word word : wordList)
@@ -176,6 +185,8 @@ public class IceTagger implements IIceTagger
 					String mappedTag = mappingLexicon.lookupTagmap(word.getTag(), false);
 					if(mappedTag != null)
 						word.setTag(mappedTag);
+					
+					// TODO: should we have the old tag or add a new NOT MAPPED, should this be configurable?
 					else
 						word.setTag("<NOT MAPPED>");
 				}
@@ -195,6 +206,9 @@ public class IceTagger implements IIceTagger
 						{
 							if(word.getTag().matches(".*" +pair.one +".*"))
 							{
+								if(this.debugOutput)
+									System.out.println("[debug] applied Lemma exception rule for the lemma " + word.getLemma());
+								
 								word.setTag(word.getTag().replaceFirst(pair.one, pair.two));
 								break;
 							}
@@ -203,7 +217,7 @@ public class IceTagger implements IIceTagger
 				}
 			}
 
-			// Go over lexeme exception rules.
+			// Go over Lexeme Exception rules.
 			if(this.mappingLexicon != null)
 			{
 				for(Word word : wordList)
@@ -217,6 +231,9 @@ public class IceTagger implements IIceTagger
 						{
 							if(word.getTag().matches(".*" +pair.one +".*"))
 							{
+								if(this.debugOutput)
+									System.out.println("[debug] applied Lexeme exception rule for the lexeme " + word.getLexeme());
+								
 								word.setTag(word.getTag().replaceFirst(pair.one, pair.two));
 								break;
 							}
@@ -253,6 +270,9 @@ public class IceTagger implements IIceTagger
 					
 					if(this.mappingLexicon.hasMapForMWE(mweStr))
 					{	
+						if(this.debugOutput)
+							System.out.println("[debug] applied MWE rule for the mwe " + mweStr);
+						
 						String lemma = "";
 						String lexeme = "";
 						
@@ -269,6 +289,28 @@ public class IceTagger implements IIceTagger
 					}
 				}
 			}
+			
+			// Go over MWE-RENAME rules.
+			//TODO: refactor to for each...
+			if(this.mappingLexicon != null)
+			{
+				
+				for(Word word : wordList)
+				{
+					if(this.mappingLexicon.hasRenameRuleForLexeme(word.getLexeme()))
+					{
+						Pair<String, String> pair = this.mappingLexicon.getRenameRuleForLexeme(word.getLexeme());
+						
+						word.setLemma(pair.one);
+						word.setLexeme(pair.one);
+						word.setTag(pair.two);
+						
+						if(this.debugOutput)
+							System.out.println("[debug] applied MWE-RENAME rule to word " + word.getLexeme());
+					}	
+				}
+			}
+
 			
 			// Create output string that will be sent to the client.
 			String output = "";

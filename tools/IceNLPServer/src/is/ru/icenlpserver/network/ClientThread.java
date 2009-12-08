@@ -1,5 +1,6 @@
 package is.ru.icenlpserver.network;
 
+import is.ru.icenlpserver.common.Configuration;
 import is.ru.icenlpserver.icenlp.IceNLPSingletonService;
 import java.io.IOException;
 import java.io.InputStream;
@@ -101,8 +102,10 @@ public class ClientThread implements Runnable
 					}
 					//strFromClient = strNew;
 					
-					System.out.println(">> String from client: " + strFromClient);
-					
+					if(Configuration.getInstance().debugMode())
+					{
+						System.out.println("[debug] String from client: " + strFromClient);
+					}
 					// Let's check out the output that the clients will be receiving and 
 					// let's create a replay for the client.
 					String taggedString = null;
@@ -132,7 +135,10 @@ public class ClientThread implements Runnable
 				
 				else if(opcode == 5)
 				{
-					System.out.println(">> Client is closing the connection");
+					if(Configuration.getInstance().debugMode())
+					{
+						System.out.println("[debug] Client is closing the connection");
+					}
 					this.alive = false;
 					break;
 				}
@@ -145,7 +151,11 @@ public class ClientThread implements Runnable
 			}
 		}
 		
-		System.out.println(">> Client thread is shutting down");
+		if(Configuration.getInstance().debugMode())
+		{
+			System.out.println("[debug] Client thread is shutting down");
+		}
+		
 		try 
 		{
 			this.socket.close();
