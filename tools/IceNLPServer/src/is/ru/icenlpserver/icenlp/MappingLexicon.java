@@ -5,8 +5,6 @@ import is.ru.icenlpserver.common.Pair;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -30,7 +28,7 @@ public class MappingLexicon
 	// Hash map for MWE
 	private HashMap<String, List<Pair<String, String>>> lexemeExceptionMap;
 	
-	// Hash map for mwe rename rules.
+	// Hash map for MWE rename rules.
 	private HashMap<String, Pair<String, String>> mweRenameMap;
 	
 	
@@ -101,10 +99,10 @@ public class MappingLexicon
 					switch (type) 
 					{
 						case tagmapping:
-							if(strLine.matches("[^@]+@[^@]+"))
+							if(strLine.matches("\\S+\\s+\\S+"))
 							{
-								String key = strLine.split("@")[0];
-								String value = strLine.split("@")[1];
+								String key = strLine.split("\\s+")[0];
+								String value = strLine.split("\\s+")[1];
 								this.tagMaps.put(key, value);
 								break;
 							}
@@ -117,9 +115,9 @@ public class MappingLexicon
 
 
 						case lemma:
-							if(strLine.matches("[^@]+@[^@]+@[^@]+"))
+							if(strLine.matches("\\S+\\s+\\S+\\s+\\S+"))
 							{	
-								String[] str = strLine.split("@");
+								String[] str = strLine.split("\\s+");
 								if(!this.lemmaExceptionMap.containsKey(str[0]))
 								{
 									List< Pair<String, String> > emptyPairList = new LinkedList< Pair<String, String> >();
@@ -137,9 +135,9 @@ public class MappingLexicon
 							}
 						
 						case mwe:
-							if(strLine.matches("[^@]+@[^@]+"))
+							if(strLine.matches("\\S+\\s+\\S+"))
 							{
-								String[] str = strLine.split("@");
+								String[] str = strLine.split("\\s+");
 								this.MWEMap.put(str[0], str[1]);
 								break;
 							}
@@ -152,9 +150,9 @@ public class MappingLexicon
 							}
 						
 						case mwe_rename:
-							if(strLine.matches("[^@]+@[^@]+@[^@]+"))
+							if(strLine.matches("\\S+\\s+\\S+\\s+\\S+"))
 							{
-								String[] strings = strLine.split("@");
+								String[] strings = strLine.split("\\s+");
 								this.mweRenameMap.put(strings[0], new Pair<String, String>(strings[1], strings[2]));
 								break;
 							}

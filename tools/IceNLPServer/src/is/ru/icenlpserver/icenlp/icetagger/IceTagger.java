@@ -3,7 +3,6 @@ package is.ru.icenlpserver.icenlp.icetagger;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import is.iclt.icenlp.core.icetagger.IceTaggerLexicons;
 import is.iclt.icenlp.core.icetagger.IceTaggerResources;
@@ -17,7 +16,6 @@ import is.iclt.icenlp.core.tokenizer.Token.MWECode;
 import is.iclt.icenlp.core.tritagger.TriTaggerLexicons;
 import is.iclt.icenlp.core.tritagger.TriTaggerResources;
 import is.iclt.icenlp.core.utils.Lexicon;
-import is.iclt.icenlp.core.utils.WordList;
 import is.iclt.icenlp.facade.IceTaggerFacade;
 import is.ru.icenlpserver.common.Configuration;
 import is.ru.icenlpserver.common.Pair;
@@ -301,8 +299,8 @@ public class IceTagger implements IIceTagger
 					{
 						Pair<String, String> pair = this.mappingLexicon.getRenameRuleForLexeme(word.getLexeme());
 						
-						word.setLemma(pair.one);
-						word.setLexeme(pair.one);
+						word.setLemma(pair.one.replace('_', ' '));
+						word.setLemma(pair.one.replace('_', ' '));
 						word.setTag(pair.two);
 						
 						if(this.debugOutput)
