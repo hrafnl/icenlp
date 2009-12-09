@@ -15,51 +15,47 @@ public class MappingLexicon
 	// Enumeration for block sections in the mapping file.
 	public enum BLOCK_TYPE {not_set, tagmaps, mwe, tagmapping, lemma, mwe_rename}
 	
-	
 	// Hash map for direct tags mappings.
 	private HashMap<String, String> tagMaps;
 
 	// Hash map for exceptions.
-	private HashMap<String,  List<Pair<String, String>>> lemmaExceptionMap;
+	private HashMap<String,  List<Pair<String, String>>> lemmaExceptionRuleMap;
 	
 	// Hash map for lexeme exceptions.
-	private HashMap<String, String> MWEMap;
+	private HashMap<String, String> mweRuleMap;
 	
 	// Hash map for MWE
-	private HashMap<String, List<Pair<String, String>>> lexemeExceptionMap;
+	private HashMap<String, List<Pair<String, String>>> lexemeExceptionRuleMap;
 	
 	// Hash map for MWE rename rules.
-	private HashMap<String, Pair<String, String>> mweRenameMap;
+	private HashMap<String, Pair<String, String>> mweRenameRuleMap;
 	
 	
+	/***
+	 * Constructor for MappingLexicon.
+	 * @param mapperFile Location to a mapping file that the class
+	 * reads from.
+	 * @throws Exception
+	 */
 	public MappingLexicon(String mapperFile) throws Exception 
 	{	
-
-		// Let's initialize the maps.
-		
-		// This map is used for the tag mapping.
+		// Initialize the maps.
 		this.tagMaps = new HashMap<String, String>();
-		this.lemmaExceptionMap = new HashMap<String, List<Pair<String, String>>>();
-		this.lexemeExceptionMap = new HashMap<String, List<Pair<String, String>>>();
-		this.MWEMap = new HashMap<String, String>();
-		this.mweRenameMap = new HashMap<String, Pair<String, String>>();
+		this.lemmaExceptionRuleMap = new HashMap<String, List<Pair<String, String>>>();
+		this.lexemeExceptionRuleMap = new HashMap<String, List<Pair<String, String>>>();
+		this.mweRuleMap = new HashMap<String, String>();
+		this.mweRenameRuleMap = new HashMap<String, Pair<String, String>>();
 		
-		// test for MWE.
-		//this.MWEMap.put("að_fjalla_um", "<MAJOR_TEST>");
-
-		// Let's read in the mapperFile
+		// Read in the mapperFile
 		FileInputStream fstream = new FileInputStream(mapperFile);
 		DataInputStream in = new DataInputStream(fstream);
 		BufferedReader br = new BufferedReader(new InputStreamReader(in));
-		String strLine;
+		String strLine = null;
 		int lineNum = 1;
-		
-		//String entryType = null;
 		BLOCK_TYPE type = BLOCK_TYPE.not_set;
 		
 		while ((strLine = br.readLine()) != null) 
 		{
-			
 			if(strLine.length() != 0 && !strLine.startsWith("#"))
 			{
 				if(type == BLOCK_TYPE.not_set && !strLine.matches("\\[[a-zA-Z]+\\]"))
@@ -117,13 +113,13 @@ public class MappingLexicon
 							if(strLine.matches("\\S+\\s+\\S+\\s+\\S+"))
 							{	
 								String[] str = strLine.split("\\s+");
-								if(!this.lemmaExceptionMap.containsKey(str[0]))
+								if(!this.lemmaExceptionRuleMap.containsKey(str[0]))
 								{
 									List< Pair<String, String> > emptyPairList = new LinkedList< Pair<String, String> >();
-									this.lemmaExceptionMap.put(str[0], emptyPairList);
+									this.lemmaExceptionRuleMap.put(str[0], emptyPairList);
 								}
 								Pair<String, String> pair = new Pair<String, String>(str[1], str[2]);
-								this.lemmaExceptionMap.get(str[0]).add(pair);
+								this.lemmaExceptionRuleMap.get(str[0]).add(pair);
 								break;
 							}
 							else
@@ -137,7 +133,7 @@ public class MappingLexicon
 							if(strLine.matches("\\S+\\s+\\S+"))
 							{
 								String[] str = strLine.split("\\s+");
-								this.MWEMap.put(str[0], str[1]);
+								this.mweRuleMap.put(str[0], str[1]);
 								break;
 							}
 							
@@ -152,7 +148,7 @@ public class MappingLexicon
 							if(strLine.matches("\\S+\\s+\\S+\\s+\\S+"))
 							{
 								String[] strings = strLine.split("\\s+");
-								this.mweRenameMap.put(strings[0], new Pair<String, String>(strings[1], strings[2]));
+								this.mweRenameRuleMap.put(strings[0], new Pair<String, String>(strings[1], strings[2]));
 								break;
 							}
 							else
@@ -168,20 +164,24 @@ public class MappingLexicon
 					}
 				}
 			}
-			
-			// Increase the line counter by one.
 			lineNum +=1;
 		}
 	
 		// Print out number of rules read.
 		System.out.println("[i] Number of mapping rules: " + this.tagMaps.size());
-		System.out.println("[i] Number of lexeme exception rules: " + this.lexemeExceptionMap.size());
-		System.out.println("[i] Number of lemma exception rules: " + this.lemmaExceptionMap.size());
-		System.out.println("[i] Number of MWE rules: " + this.MWEMap.size());
-		System.out.println("[i] Number of MWE rename rules: " + this.mweRenameMap.size());
+		System.out.println("[i] Number of lexeme exception rules: " + this.lexemeExceptionRuleMap.size());
+		System.out.println("[i] Number of lemma exception rules: " + this.lemmaExceptionRuleMap.size());
+		System.out.println("[i] Number of MWE rules: " + this.mweRuleMap.size());
+		System.out.println("[i] Number of MWE rename rules: " + this.mweRenameRuleMap.size());
 
 	}
 
+	/**
+	 * Returns the mapping tag for a given tag.
+	 * @param tag that will be searched for.
+	 * @param ignoreCase ignore the case of the incoming tag.
+	 * @return a mapping for tag if found, null otherwise.
+	 */
 	public String lookupTagmap(String tag, boolean ignoreCase) 
 	{
 		if(ignoreCase)
@@ -193,43 +193,53 @@ public class MappingLexicon
 		return null;
 	}
 	
+	/**
+	 * Checks if there exist tag exception rules for a given lemma.
+	 * @param lemma Lemma that will be used to look up exceptions.
+	 * @return List of rule pairs, the first part is the tag that must appear in the tag
+	 * string the other part is the tag that will be used to override the part that
+	 * was found.
+	 */
 	public List<Pair<String, String>> getExceptionRulesForLemma(String lemma)
 	{
-		if(!this.lemmaExceptionMap.containsKey(lemma))
+		if(!this.lemmaExceptionRuleMap.containsKey(lemma))
 			return null;
 		
-		return this.lemmaExceptionMap.get(lemma);
+		return this.lemmaExceptionRuleMap.get(lemma);
 	}
 		
+	/**
+	 * Checks if there exist an exception rule for a given lemma.
+	 * @param lexeme Lemma that will be searched for.
+	 * @return True if there exist rules for the lemma, false otherwise.
+	 */
 	public boolean hasExceptionRulesForLemma(String lexeme)
 	{
-		return this.lemmaExceptionMap.containsKey(lexeme);
+		return this.lemmaExceptionRuleMap.containsKey(lexeme);
 	}
 	
 	public boolean hasExceptionRulesForLexeme(String lexeme)
 	{
-		return this.lexemeExceptionMap.containsKey(lexeme);
+		return this.lexemeExceptionRuleMap.containsKey(lexeme);
 	}
 	
 	public List<Pair<String, String>> getExceptionRulesForLexeme(String lexeme)
 	{
-		if(!this.lexemeExceptionMap.containsKey(lexeme))
+		if(!this.lexemeExceptionRuleMap.containsKey(lexeme))
 			return null;
 		
-		return this.lexemeExceptionMap.get(lexeme);
+		return this.lexemeExceptionRuleMap.get(lexeme);
 	}
 	
 	public boolean hasMapForMWE(String mweString)
 	{
-		return this.MWEMap.containsKey(mweString);
+		return this.mweRuleMap.containsKey(mweString);
 	}
 	
 	public String getMapForMWE(String mweString)
 	{
-		return this.MWEMap.get(mweString);
+		return this.mweRuleMap.get(mweString);
 	}
-	
-	
 	
 	/***
 	 * Check if a given lexeme contains a Lexeme rename rule.
@@ -239,7 +249,7 @@ public class MappingLexicon
 	 */
 	public boolean hasRenameRuleForLexeme(String lexeme)
 	{
-		return this.mweRenameMap.containsKey(lexeme);
+		return this.mweRenameRuleMap.containsKey(lexeme);
 	}
 	
 	/***
@@ -250,6 +260,6 @@ public class MappingLexicon
 	 */
 	public Pair<String, String> getRenameRuleForLexeme(String lexeme)
 	{
-		return this.mweRenameMap.get(lexeme);
+		return this.mweRenameRuleMap.get(lexeme);
 	}
 }

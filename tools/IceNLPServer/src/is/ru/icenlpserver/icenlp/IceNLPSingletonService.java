@@ -7,7 +7,7 @@ import is.ru.icenlpserver.icenlp.icetagger.IceTaggerConfigrationException;
 /***
  * IceNLPSingletonService is a singleton
  * service that thread can communicate
- * to for serving incoming tagging requests.
+ * to for serving incoming requests.
  * @author hlynurs
  */
 public class IceNLPSingletonService 
@@ -45,6 +45,14 @@ public class IceNLPSingletonService
         return instance_;
 	}
 	
+	/***
+	 * Function that passes the string to icetagger for
+	 * analysis. The string will be tagged and returned
+	 * to caller.
+	 * @param text that one wants to analyze.
+	 * @return The same text tagged with the tagset defined
+	 * in the mapping file.
+	 */
 	public String tagText(String text)
 	{
 		return icetagger.tag(text).replace("\n", "");

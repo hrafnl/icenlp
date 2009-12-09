@@ -196,9 +196,6 @@ public class IceTagger implements IIceTagger
 				for(Token token : s.getTokens())
 				{
 					IceTokenTags t = ((IceTokenTags)token);
-					//MAC HACK
-					//byte[] utf8Bytes = t.getFirstTagStr().getBytes("UTF8");
-					//String tagNew = new String(utf8Bytes, "UTF8"); 
 					wordList.add(new Word(t.lexeme, t.getFirstTagStr(), t.mweCode));
 				}
 			}
@@ -209,8 +206,7 @@ public class IceTagger implements IIceTagger
 					word.setLemma(this.lemmald.lemmatize(word.getLexeme(), word.getTag()).getLemma());
 			}
 			
-			// If there is any mappingLexicon set
-			
+
 			// let's go through the tag mapping and check if there is any TAGMAPPING for that word.
 			if(this.mappingLexicon != null)
 			{
@@ -240,11 +236,8 @@ public class IceTagger implements IIceTagger
 						}
 					}
 				}
-			}
 			
-			// Go over Lemma Exception rules.
-			if(this.mappingLexicon != null)
-			{
+				// Go over Lemma Exception rules.
 				for(Word word : wordList)
 				{
 					String lookupWord = word.getLemma();
@@ -260,16 +253,13 @@ public class IceTagger implements IIceTagger
 									System.out.println("[debug] applied Lemma exception rule for the lemma " + word.getLemma());
 								
 								word.setTag(word.getTag().replaceFirst(pair.one, pair.two));
-								break;
 							}
 						}
 					}
 				}
-			}
-
-			// Go over Lexeme Exception rules.
-			if(this.mappingLexicon != null)
-			{
+				
+				
+				// Go over Lexeme Exception rules.
 				for(Word word : wordList)
 				{
 					String lookupWord = word.getLexeme();
@@ -285,66 +275,61 @@ public class IceTagger implements IIceTagger
 									System.out.println("[debug] applied Lexeme exception rule for the lexeme " + word.getLexeme());
 								
 								word.setTag(word.getTag().replaceFirst(pair.one, pair.two));
-								break;
 							}
 						}
 					}
 				}
-			}
-
-			// Go over the MWE expression
-			for(int i = 0; i < wordList.size(); i++)
-			{
-				if(wordList.get(i).mweCode == MWECode.begins)
+				
+		
+				// Go over the MWE expression
+				for(int i = 0; i < wordList.size(); i++)
 				{
-					// the index of the words begins at index begins:
-					int begins = i;
-					int ends = 0;
-					
-					String mweStr = wordList.get(i).getLexeme();
-					int j = i;
-					while(j < wordList.size())
-					{	
-						if(wordList.get(j).mweCode == MWECode.ends)
-						{
-							// The words ends at there.
-							ends = j;
-							i = j;
-							break;
-						}
-						if(j+1 < wordList.size())
-							mweStr += "_" + wordList.get(j+1).getLexeme();
+					if(wordList.get(i).mweCode == MWECode.begins)
+					{
+						// the index of the words begins at index begins:
+						int begins = i;
+						int ends = 0;
+						
+						String mweStr = wordList.get(i).getLexeme();
+						int j = i;
+						while(j < wordList.size())
+						{	
+							if(wordList.get(j).mweCode == MWECode.ends)
+							{
+								// The words ends at there.
+								ends = j;
+								i = j;
+								break;
+							}
+							if(j+1 < wordList.size())
+								mweStr += "_" + wordList.get(j+1).getLexeme();
 
-						j += 1;	
-					}
-					
-					if(this.mappingLexicon.hasMapForMWE(mweStr))
-					{	
-						if(this.debugOutput)
-							System.out.println("[debug] applied MWE rule for the mwe " + mweStr);
-						
-						String lemma = "";
-						String lexeme = "";
-						
-						for(i = (ends - begins); i>= 0; i--)
-						{
-							lemma += wordList.get(begins).getLexeme() + " ";
-							wordList.remove(begins);
+							j += 1;	
 						}
 						
-						// Where we are working with MWE, we overwrite the lemma with the lexeme.
-						Word w = new Word(lexeme.substring(0,lexeme.length()-1), this.mappingLexicon.getMapForMWE(mweStr), MWECode.none);
-						w.setLemma(lexeme.substring(0,lexeme.length()-1));
-						wordList.add(begins, w);
+						if(this.mappingLexicon.hasMapForMWE(mweStr))
+						{	
+							if(this.debugOutput)
+								System.out.println("[debug] applied MWE rule for the mwe " + mweStr);
+							
+							String lemma = "";
+							String lexeme = "";
+							
+							for(i = (ends - begins); i>= 0; i--)
+							{
+								lemma += wordList.get(begins).getLexeme() + " ";
+								wordList.remove(begins);
+							}
+							
+							// Where we are working with MWE, we overwrite the lemma with the lexeme.
+							Word w = new Word(lexeme.substring(0,lexeme.length()-1), this.mappingLexicon.getMapForMWE(mweStr), MWECode.none);
+							w.setLemma(lexeme.substring(0,lexeme.length()-1));
+							wordList.add(begins, w);
+						}
 					}
 				}
-			}
-			
-			// Go over MWE-RENAME rules.
-			//TODO: refactor to for each...
-			if(this.mappingLexicon != null)
-			{
 				
+				// Go over MWE-RENAME rules.
 				for(Word word : wordList)
 				{
 					if(this.mappingLexicon.hasRenameRuleForLexeme(word.getLexeme()))
@@ -360,7 +345,6 @@ public class IceTagger implements IIceTagger
 					}	
 				}
 			}
-
 			
 			// Create output string that will be sent to the client.
 			String output = "";

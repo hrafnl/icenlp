@@ -90,6 +90,4 @@ public class Word
 	{
 		return this.mweCode;
 	}
-	
-	
 }
