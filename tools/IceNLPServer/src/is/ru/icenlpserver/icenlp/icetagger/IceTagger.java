@@ -29,14 +29,54 @@ public class IceTagger implements IIceTagger
 	private MappingLexicon mappingLexicon = null;
 	private String taggingOutputForamt = null;
 	private boolean lemmatize = false;
+	private boolean leave_not_found_tag_unchanged = false;
+	private String not_found_tag = null;
+	private Configuration configuration;
+	
+	
 	
 	// todo: make this flag configurable.
 	private boolean debugOutput = true;
 	
 	public IceTagger() throws IceTaggerConfigrationException
 	{
+		// Store the reference to the configuration in member to
+		// minimize function calls to getInstance().
+		this.configuration = Configuration.getInstance();
+		
 		try
 		{
+			
+			// check for not found tag. If there is no unfound_tag set in the
+			// configuration file we use a default one: <NOT MAPPED>.
+			if(this.configuration.containsKey("unfound_tag"))
+				this.not_found_tag = this.configuration.getValue("unfound_tag");
+			else
+				this.not_found_tag = "<NOT MAPPED>";
+			
+			
+			//Check for leave_not_found_tag_unchanged in the configuration file.
+			if(this.configuration.containsKey("leave_not_found_tag_unchanged"))
+			{
+				if(this.configuration.getValue("leave_not_found_tag_unchanged").equals("true"))	
+				{
+					this.leave_not_found_tag_unchanged = true;
+					System.out.println("[i] unfound tags in tagmapping will be left unchanged if not found in mapping collection.");
+				}
+				else if(this.configuration.getValue("leave_not_found_tag_unchanged").equals("false"))
+				{
+					this.leave_not_found_tag_unchanged = false;
+					System.out.println("[i] unfound tags in tagmapping will be marked with " + this.not_found_tag);
+					
+				}
+				else
+				{
+					System.out.println("[x] leave_not_found_tag_unchanged can either be true or false. Set to default (true).");
+					this.leave_not_found_tag_unchanged = true;
+				}
+			}
+			
+			
 			// Check for the tagging output
 			if(Configuration.getInstance().containsKey("taggingoutputformat"))
 			{
@@ -184,9 +224,11 @@ public class IceTagger implements IIceTagger
 					if(mappedTag != null)
 						word.setTag(mappedTag);
 					
-					// TODO: should we have the old tag or add a new NOT MAPPED, should this be configurable?
 					else
-						word.setTag("<NOT MAPPED>");
+					{
+						if(!this.leave_not_found_tag_unchanged)
+							word.setTag(this.not_found_tag);
+					}
 				}
 			}
 			

@@ -37,7 +37,6 @@ public class MappingLexicon
 
 		// Let's initialize the maps.
 		
-		
 		// This map is used for the tag mapping.
 		this.tagMaps = new HashMap<String, String>();
 		this.lemmaExceptionMap = new HashMap<String, List<Pair<String, String>>>();
