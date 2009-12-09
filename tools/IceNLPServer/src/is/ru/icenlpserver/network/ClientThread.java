@@ -83,15 +83,9 @@ public class ClientThread implements Runnable
 					}
 					
 					String strFromClient = null;
-					String strNew = null;
 					try 
 					{
-						
-						strFromClient = new String(stringData,0, stringSize, "UTF8");
-						
-						//MAC HACK
-						//byte[] utf8Bytes = strFromClient.getBytes("UTF8");
-						//strNew = new String(utf8Bytes, "UTF8"); 
+						strFromClient = new String(stringData,0, stringSize, "UTF8"); 
 					}
 			
 					
@@ -100,7 +94,6 @@ public class ClientThread implements Runnable
 						// TODO Auto-generated catch block
 						e2.printStackTrace();
 					}
-					//strFromClient = strNew;
 					
 					if(Configuration.getInstance().debugMode())
 					{
@@ -112,7 +105,8 @@ public class ClientThread implements Runnable
 					try
 					{
 						taggedString = IceNLPSingletonService.getInstance().tagText(strFromClient);
-						//System.out.println(">> String from IceNLP: " + taggedString);
+						if(Configuration.getInstance().debugMode())
+							System.out.println("[debug] Reply string from IceNLP that will be sent to client is: " + taggedString);
 						
 					}
 					catch (Exception e) 
@@ -191,7 +185,12 @@ public class ClientThread implements Runnable
 			packets.add(p);
 		
 		// Let's send the packets to the client.
+		if(Configuration.getInstance().debugMode())
+			System.out.println("[debug] sending " + packets.size() + " packets to client.");
 		this.writeToClient(packets);
+		
+		if(Configuration.getInstance().debugMode())
+			System.out.println("[debug] data sent to client.");
 	}
 	
 	

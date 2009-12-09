@@ -32,13 +32,13 @@ public class NetworkThread implements Runnable
 			if(Configuration.getInstance().containsKey("host"))
 				host = Configuration.getInstance().getValue("host");
 			
-			InetSocketAddress address = new InetSocketAddress(host, 1234);
-			
 			// Find the network port that the server will use.
 			String port = "1234";
 			if(Configuration.getInstance().containsKey("port"))
 				port = Configuration.getInstance().getValue("port");
 			
+			
+			InetSocketAddress address = new InetSocketAddress(host, Integer.parseInt(port));
 			this.serverSocket = new ServerSocket(Integer.parseInt(port), 10,address.getAddress());
 		
 			System.out.println("[i] Server hostname: " + host);
@@ -61,7 +61,9 @@ public class NetworkThread implements Runnable
 			try 
 			{
 				Socket socket = this.serverSocket.accept();
-				System.out.println("[i] incoming connection from a client " +  socket.getInetAddress().getCanonicalHostName());
+				if(Configuration.getInstance().debugMode())
+					System.out.println("[debug] connection from host " +  socket.getInetAddress().getCanonicalHostName());
+				
 				// Let's create a new thread for the connection.
 				new Thread(new ClientThread(socket)).start();
 			} 

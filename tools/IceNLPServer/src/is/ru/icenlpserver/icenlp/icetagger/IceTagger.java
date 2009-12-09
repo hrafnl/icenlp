@@ -32,10 +32,6 @@ public class IceTagger implements IIceTagger
 	private boolean leave_not_found_tag_unchanged = false;
 	private String not_found_tag = null;
 	private Configuration configuration;
-	
-	
-	
-	// todo: make this flag configurable.
 	private boolean debugOutput = true;
 	
 	public IceTagger() throws IceTaggerConfigrationException
@@ -43,10 +39,10 @@ public class IceTagger implements IIceTagger
 		// Store the reference to the configuration in member to
 		// minimize function calls to getInstance().
 		this.configuration = Configuration.getInstance();
+		this.debugOutput = this.configuration.debugMode();
 		
 		try
 		{
-			
 			// check for not found tag. If there is no unfound_tag set in the
 			// configuration file we use a default one: <NOT MAPPED>.
 			if(this.configuration.containsKey("unfound_tag"))
@@ -78,9 +74,9 @@ public class IceTagger implements IIceTagger
 			
 			
 			// Check for the tagging output
-			if(Configuration.getInstance().containsKey("taggingoutputformat"))
+			if(this.configuration.containsKey("taggingoutputformat"))
 			{
-				this.taggingOutputForamt = Configuration.getInstance().getValue("taggingoutputformat");
+				this.taggingOutputForamt = this.configuration.getValue("taggingoutputformat");
 				
 				if(this.taggingOutputForamt.contains("[LEMMA]"))
 					this.lemmatize = true;
@@ -89,11 +85,11 @@ public class IceTagger implements IIceTagger
 			}
 			
 			// Check for debug output.
-			this.debugOutput = Configuration.getInstance().debugMode();
+			this.debugOutput = this.configuration.debugMode();
 			
 			// Loading IceTagger lexicons.
 			IceTaggerLexicons iceLexicons = null;
-			if(!Configuration.getInstance().containsKey("icelexiconsdir"))
+			if(!this.configuration.containsKey("icelexiconsdir"))
 			{
 		        IceTaggerResources iceResources = new IceTaggerResources();
 		        if( iceResources.isDictionaryBase == null ) throw new Exception("Could not locate base dictionary");
@@ -112,7 +108,7 @@ public class IceTagger implements IIceTagger
 			}
 			else
 			{
-				String iceLexiconDirs = Configuration.getInstance().getValue("IceLexiconsDir");
+				String iceLexiconDirs = this.configuration.getValue("IceLexiconsDir");
 
 				if(!iceLexiconDirs.endsWith("/"))
 					iceLexiconDirs = iceLexiconDirs + '/';
@@ -122,7 +118,7 @@ public class IceTagger implements IIceTagger
 			
 			// Loading tokenizer lexicon.
 			Lexicon tokLexicon = null;//new Lexicon(Configuration.tokenizerLexicon);
-			if(!Configuration.getInstance().containsKey("tokenizerlexicon"))
+			if(!this.configuration.containsKey("tokenizerlexicon"))
 			{
 				TokenizerResources tokResources = new TokenizerResources();
 		        if (tokResources.isLexicon == null) throw new Exception( "Could not locate token dictionary");
@@ -131,15 +127,15 @@ public class IceTagger implements IIceTagger
 			}
 			else
 			{
-				String tokenLexicon = Configuration.getInstance().getValue("tokenizerlexicon");
+				String tokenLexicon = this.configuration.getValue("tokenizerlexicon");
 				System.out.println("[i] Reading Tokenizer lexicon from " + tokenLexicon + '.');
 				tokLexicon = new Lexicon(tokenLexicon);
 			}
 			
 			// If the user wants to use the mapper lexicon we must build one.
-			if(Configuration.getInstance().containsKey("mappinglexicon"))
+			if(this.configuration.containsKey("mappinglexicon"))
 			{
-				String mappingLexicon = Configuration.getInstance().getValue("mappinglexicon");
+				String mappingLexicon = this.configuration.getValue("mappinglexicon");
 				System.out.println("[i] Reading mapping lexicon from: " + mappingLexicon + '.');
 				this.mappingLexicon = new MappingLexicon(mappingLexicon);
 			}
@@ -153,12 +149,12 @@ public class IceTagger implements IIceTagger
 			facade = new IceTaggerFacade(iceLexicons, tokLexicon);
 			
 			// Let's check for the TriTagger
-			if(Configuration.getInstance().containsKey("tritagger"))
+			if(this.configuration.containsKey("tritagger"))
 			{
-				if(Configuration.getInstance().getValue("tritagger").equals("true"))
+				if(this.configuration.getValue("tritagger").equals("true"))
 				{
 					TriTaggerLexicons triLexicons = null;
-			        if(!Configuration.getInstance().containsKey("tritaggerlexicon"))
+			        if(!this.configuration.containsKey("tritaggerlexicon"))
 			        {
 			            TriTaggerResources triResources = new TriTaggerResources();
 			    		if( triResources.isNgrams == null ) throw new Exception("Could not locate model ngram");
@@ -169,7 +165,7 @@ public class IceTagger implements IIceTagger
 			        }
 			        else
 			        {
-			        	String tritaggerLexicon = Configuration.getInstance().getValue("tritaggerlexicon");
+			        	String tritaggerLexicon = this.configuration.getValue("tritaggerlexicon");
 			        	System.out.println("[i] Reading Tritagger lexicon from " + tritaggerLexicon + '.');
 			        	triLexicons = new TriTaggerLexicons(tritaggerLexicon, true);
 			        	
@@ -222,12 +218,26 @@ public class IceTagger implements IIceTagger
 				{
 					String mappedTag = mappingLexicon.lookupTagmap(word.getTag(), false);
 					if(mappedTag != null)
+					{
+						if(this.debugOutput)
+							System.out.println("[debug] tagmapping rule applied: " + word.getTag() + " -> " + mappedTag);
+						
 						word.setTag(mappedTag);
+					}
 					
 					else
 					{
 						if(!this.leave_not_found_tag_unchanged)
+						{
+							if(this.debugOutput)
+								System.out.println("[debug] tagmapping rule applied: " + word.getTag() + " -> " + this.not_found_tag);
 							word.setTag(this.not_found_tag);
+						}
+						else
+						{
+							if(this.debugOutput)
+								System.out.println("[debug] tagmapping rule applied: Leaving " + word.getTag() + " unchanged.");	
+						}
 					}
 				}
 			}
