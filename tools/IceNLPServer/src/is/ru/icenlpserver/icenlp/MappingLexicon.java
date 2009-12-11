@@ -13,7 +13,7 @@ import java.util.List;
 public class MappingLexicon 
 {
 	// Enumeration for block sections in the mapping file.
-	public enum BLOCK_TYPE {not_set, tagmaps, mwe, tagmapping, lemma, mwe_rename}
+	public enum BLOCK_TYPE {not_set, tagmaps, mwe, tagmapping, lemma, mwe_rename, lexeme, test}
 	
 	// Hash map for direct tags mappings.
 	private HashMap<String, String> tagMaps;
@@ -58,7 +58,7 @@ public class MappingLexicon
 		{
 			if(strLine.length() != 0 && !strLine.startsWith("#"))
 			{
-				if(type == BLOCK_TYPE.not_set && !strLine.matches("\\[[a-zA-Z]+\\]"))
+				if(type == BLOCK_TYPE.not_set && !strLine.matches("\\[[a-zA-Z-]+\\]"))
 				{
 					System.out.println(">> Error in config file, line: " + lineNum + ". Entry is not under any section.");
 					System.err.println(strLine + ": " + strLine);
@@ -74,7 +74,12 @@ public class MappingLexicon
 						type = BLOCK_TYPE.tagmapping;
 					
 					else if(entryType.toLowerCase().equals("lemma"))
-						type = BLOCK_TYPE.lemma;	
+						type = BLOCK_TYPE.lemma;
+
+					
+					else if(entryType.toLowerCase().equals("lexeme"))
+						type = BLOCK_TYPE.lexeme;
+	
 					
 					else if(entryType.toLowerCase().equals("mwe"))
 						type = BLOCK_TYPE.mwe;	
@@ -129,6 +134,27 @@ public class MappingLexicon
 								break;	
 							}
 						
+						case lexeme:
+							if(strLine.matches("\\S+\\s+\\S+\\s+\\S+"))
+							{
+								String[] str = strLine.split("\\s+");
+								if(!this.lexemeExceptionRuleMap.containsKey(str[0]))
+								{
+									List< Pair<String, String> > emptyPairList = new LinkedList< Pair<String, String> >();
+									this.lexemeExceptionRuleMap.put(str[0], emptyPairList);
+								}
+								Pair<String, String> pair = new Pair<String, String>(str[1], str[2]);
+								this.lexemeExceptionRuleMap.get(str[0]).add(pair);
+								break;
+							}
+							else
+							{
+								System.out.println("[!!!]: Error in config at line " + lineNum + ". Invalid lexeme entry.");
+								System.out.println(lineNum + ": " + strLine);
+								break;		
+							}
+						
+	
 						case mwe:
 							if(strLine.matches("\\S+\\s+\\S+"))
 							{
@@ -157,10 +183,6 @@ public class MappingLexicon
 								System.out.println(lineNum + ": " + strLine);
 								break;
 							}
-							
-
-						default:
-							break;
 					}
 				}
 			}
@@ -173,7 +195,6 @@ public class MappingLexicon
 		System.out.println("[i] Number of lemma exception rules: " + this.lemmaExceptionRuleMap.size());
 		System.out.println("[i] Number of MWE rules: " + this.mweRuleMap.size());
 		System.out.println("[i] Number of MWE rename rules: " + this.mweRenameRuleMap.size());
-
 	}
 
 	/**

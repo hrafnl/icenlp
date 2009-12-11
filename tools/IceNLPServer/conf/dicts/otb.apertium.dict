@@ -649,44 +649,54 @@ lhfþof <adj><pst><nt><pl><dat><idk>
 
 
 [LEMMA]
-vera vblex vbser
-hafa vblex vbhaver
-geta vblex vbaux
-mjög adv preadv
-og cnj cnjcoo
-eða cnj cnjcoo
-en cnj cnjcoo
-enn cnj cnjcoo
-svona cnj cnjcoo
-né cnj cnjcoo
-ef cnj cnjsub
-að cnj cnjsub
-þegar cnj cnjsub
-sem cnj cnjsub
-meðan cnj cnjsub
-nema cnj cnjsub
-síðan cnj cnjsub
-þó cnj cnjsub
-svo cnj cnjadv
-annaðhvort cnj cnjsub
-bæði cnj cnjsub
-einsog cnj cnjsub
-ellegar cnj cnjsub
-er cnj cnjsub
-eð cnj cnjsub
-fyrst cnj cnjsub
-heldur cnj cnjsub
-hvorki cnj cnjsub
-hvort cnj cnjsub
-tilað cnj cnjsub
-uns cnj cnjsub
-ýmist cnj cnjsub
-þarsem cnj cnjsub
-þótt cnj cnjsub
+###############################################################
+# This section contains tag mapping exception rules for lemmata.
+# The rules are on the form: lemma mapped_tag newtag
+###############################################################
+vera <vblex> <vbser>
+hafa <vblex> <vbhaver>
+geta <vblex> <vbaux>
+
+[LEXEME]
+###############################################################
+# This section contains tag mapping exception rules for lexemes.
+# The rules are on the form: lexeme mapped_tag newtag
+###############################################################
+mjög <adv> <preadv>
+og <cnj> <cnjcoo>
+eða <cnj> <cnjcoo>
+en <cnj> <cnjcoo>
+enn <cnj> <cnjcoo>
+svona <cnj> <cnjcoo>
+né <cnj> <cnjcoo>
+ef <cnj> <cnjsub>
+að <cnj> <cnjsub>
+þegar <cnj> <cnjsub>
+sem <cnj> <cnjsub>
+meðan <cnj> <cnjsub>
+nema <cnj> <cnjsub>
+síðan <cnj> <cnjsub>
+þó <cnj> <cnjsub>
+svo <cnj> <cnjadv>
+annaðhvort <cnj> <cnjsub>
+bæði <cnj> <cnjsub>
+einsog <cnj> <cnjsub>
+ellegar <cnj> <cnjsub>
+er <cnj> <cnjsub>
+eð <cnj> <cnjsub>
+fyrst <cnj> <cnjsub>
+heldur <cnj> <cnjsub>
+hvorki <cnj> <cnjsub>
+hvort <cnj> <cnjsub>
+tilað <cnj> <cnjsub>
+uns <cnj> <cnjsub>
+ýmist <cnj> <cnjsub>
+þarsem <cnj> <cnjsub>
+þótt <cnj> <cnjsub>
 
 [MWE]
-að_fjalla_um <EMTREM>
-eins_og <EXTRRRR>
+hins_vegar <adv>
+eins_og <adv>
 
 [MWE-RENAME]
 ########################################
