@@ -40,9 +40,7 @@ public class ClientThread implements Runnable
 			e.printStackTrace();
 		}
 	}
-	
-	@Override
-	
+		
 	// The client thread will work as follows:
 	// 0 opcode means 
 	public void run() 

@@ -183,7 +183,7 @@ public class IceTagger implements IIceTagger
 		}
 	}
 	
-	@Override
+
 	public String tag(String text) 
 	{
 		List<Word> wordList = new LinkedList<Word>();
