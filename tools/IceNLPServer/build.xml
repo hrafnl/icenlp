@@ -61,7 +61,7 @@
 		</copy>
 
 		<echo file="${dist.dir}/${runner.name}.sh" append="false">#\!/bin/sh
-java -Xms64m -Xmx512m -jar ${ant.project.name}.jar --config=config/IceNLPServer.conf
+java -Xms64m -Xmx512m -Dfile.encoding=UTF-8 -jar ${ant.project.name}.jar --config=config/IceNLPServer.conf
 		</echo>
 		
 		<echo file="${dist.dir}/${runner.name}.bat" append="false">java -Xmx256M -jar ${ant.project.name}.jar --config=config/IceNLPServer.conf</echo>

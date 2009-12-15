@@ -117,7 +117,7 @@ public class IceTagger implements IIceTagger
 			}
 			
 			// Loading tokenizer lexicon.
-			Lexicon tokLexicon = null;//new Lexicon(Configuration.tokenizerLexicon);
+			Lexicon tokLexicon = null;
 			if(!this.configuration.containsKey("tokenizerlexicon"))
 			{
 				TokenizerResources tokResources = new TokenizerResources();
@@ -204,9 +204,8 @@ public class IceTagger implements IIceTagger
 			{
 				for(Word word: wordList)
 					word.setLemma(this.lemmald.lemmatize(word.getLexeme(), word.getTag()).getLemma());
-			}
+			}			
 			
-
 			// let's go through the tag mapping and check if there is any TAGMAPPING for that word.
 			if(this.mappingLexicon != null)
 			{

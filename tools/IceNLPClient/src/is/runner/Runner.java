@@ -43,7 +43,7 @@ public class Runner
 		}
 		try
 		{
-			// Let's read from the std-in
+			// Let's read from the std.
 			String inLine;
 			List<String> lines = new LinkedList<String>();
 			InputStreamReader reader = new InputStreamReader(System.in, "UTF8");
@@ -55,12 +55,7 @@ public class Runner
 			Socket socket = null;
 			socket = new Socket(host, port);
 			for(String s : lines)
-			{
-				byte[] utf8Bytes = s.getBytes("UTF8");
-				String utf8 = new String(utf8Bytes, "UTF8");
-				String out = tagString(utf8, socket);
-				System.out.println(out);
-			}
+				System.out.println(tagString(s, socket));
 		}
 		catch(Exception ex)
 		{
@@ -97,7 +92,7 @@ public class Runner
 		}
 		else
 		{
-			System.out.println(">> error replay from server was wrong.");
+			System.out.println(">> Error, reply from server was wrong.");
 			return "";
 		}
 	}
