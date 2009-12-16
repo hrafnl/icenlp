@@ -22,48 +22,25 @@
 package is.iclt.icenlp.core.icetagger;
 
 import is.iclt.icenlp.core.tokenizer.IceTokenTags;
-import is.iclt.icenlp.core.lemmald.LemmaResult;
+import is.iclt.icenlp.core.utils.MapperLexicon;
 
-import java.io.IOException;
 
 /**
  * Generates the output for IceTagger in Apertium format.
  * @author Hrafn Loftsson
  */
-public class IceTaggerOutputApertium extends IceTaggerOutput{
-
-    public IceTaggerOutputApertium(int outFormat, String wordTagSeparator, boolean useFullOutput, boolean useFullDisambiguation, String tagMapFile, boolean showLemma) throws IOException
+public class IceTaggerOutputApertium extends IceTaggerOutput
+{
+    
+	public IceTaggerOutputApertium(int outFormat, String wordTagSeparator, boolean useFullOutput, boolean useFullDisambiguation, String tagMapFile, boolean showLemma) throws Exception
     {
-        super(outFormat, wordTagSeparator, useFullOutput, useFullDisambiguation, tagMapFile, showLemma);
+        // we can send null into tagmapfile parameter to skip
+    	// creaton of tagmap file with the old lexicon file.
+    	//super(outFormat, wordTagSeparator, useFullOutput, useFullDisambiguation, null, showLemma);    	
     }
 
     public String buildOutput( IceTokenTags tok, int index, int numTokens )
     {
-        String str, tag, mappedTag;
-        String lemma="";
-
-        tag = tok.getFirstTagStr();
-
-        if (myTagMap != null)
-            mappedTag = getMappedTag(tag);
-        else
-            mappedTag = tag;
-
-        // Add the lemma?
-        if (myLemmald != null) {
-            LemmaResult lemmaResult = myLemmald.lemmatize(tok.lexeme,tag);
-            lemma = lemmaResult.getLemma();
-            //lemma = myLemmald.getLemma(tok.lexeme, tag);
-        }
-
-        // Special handling for the verbs "vera", "hafa" and "geta"
-        if (mappedTag.matches(".*<vblex>.*")) {
-            if (lemma.equalsIgnoreCase("vera")) {mappedTag = mappedTag.replaceFirst("vblex","vbser");}
-            else if (lemma.equalsIgnoreCase("hafa")) {mappedTag = mappedTag.replaceFirst("vblex","vbhaver");}
-            else if (lemma.equalsIgnoreCase("geta")) {mappedTag = mappedTag.replaceFirst("vblex","vaux");}
-        }
-        // Apertium þarf ekki orðið sjálft, eingöngu lemmuna
-        str = "^" + lemma + mappedTag + "$ ";
-        return str;
+    	return "";
     }
 }

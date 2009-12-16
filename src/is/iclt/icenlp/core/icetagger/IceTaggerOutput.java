@@ -47,7 +47,7 @@ public class IceTaggerOutput {
 	private final String morphoStr = "<MORPHO>";
 	private final String endingStr = "<ENDING>";
 	private final String compoundStr = "<COMPOUND>";
-    private final String tagNotFoundInMap = "<NOT MAPPED>";
+    protected final String tagNotFoundInMap = "<NOT MAPPED>";
 
     public IceTaggerOutput()
     {
@@ -67,7 +67,7 @@ public class IceTaggerOutput {
         // A lemmatizer if needed
         if (showLemma) {
            //myLemmald = new Lemmald(lemmatizerFile);
-           myLemmald = Lemmald.newInstance();
+           myLemmald = Lemmald.getInstance();
         }
     }
 

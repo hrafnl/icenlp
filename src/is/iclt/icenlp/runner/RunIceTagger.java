@@ -50,9 +50,9 @@ import java.util.Date;
 public class RunIceTagger
 {
 	private String inputFile;
-    private String outputFile;
+    protected String outputFile;
     private String logFile;
-    private String fileList=null;
+    protected String fileList=null;
     private String tokenDictPath = null;
 	private String baseDictPath, dictPath, prefixesDictPath, idiomsDictPath;
 	private String verbPrepDictPath, verbObjDictPath, verbAdverbDictPath;
@@ -61,7 +61,7 @@ public class RunIceTagger
     private String modelStr, modelTypeStr;
     private String fullOutputStr, lemmatizeStr;
     private Lexicon tokLex;
-    private boolean standardInputOutput=false;
+    protected boolean standardInputOutput=false;
     protected boolean fullOutput = false;
 	private boolean baseTagging = false;
     private boolean changedDefaultInputFormat=false;
@@ -77,7 +77,7 @@ public class RunIceTagger
     private IceTagger tagger;
 	private Segmentizer segmentizer;
 	protected Tokenizer tokenizer;
-	private IceLog logger = null;               // Log object
+	protected IceLog logger = null;               // Log object
 	protected int numUnknowns = 0;              // Number of unknowns
 	protected int numTokens = 0;                // Number of tokens
     private SimpleDateFormat dateFormatter;
@@ -368,8 +368,7 @@ private void setDefaults()
 
 
 
-	protected void printResults(BufferedWriter outFile)
-			throws IOException
+	protected void printResults(BufferedWriter outFile) throws IOException
 	{
 		ArrayList tokens = tokenizer.tokens;
 		int size = tokens.size();
@@ -389,6 +388,8 @@ private void setDefaults()
 		// And empty line between sentences
 		outFile.newLine();
 	}
+	
+	
 
 	private void printResultsBaseTagging(BufferedWriter outFile)
 			throws IOException
@@ -435,7 +436,7 @@ private void setDefaults()
     }
 
     // Reads a list of files and tags each file separately
-    private void tagAllFiles()  throws IOException
+    protected void tagAllFiles()  throws IOException
     {
         BufferedWriter output;
         BufferedReader input = FileEncoding.getReader(fileList);
@@ -458,7 +459,7 @@ private void setDefaults()
         input.close();
     }
 
-    private void tagText(BufferedWriter outFile)
+    protected void tagText(BufferedWriter outFile)
 			throws IOException
 	{
 		String sentence;
@@ -699,7 +700,8 @@ private void setDefaults()
         tagger.initStatistics();
     }
 
-    protected void performTagging() throws IOException{
+    protected void performTagging() throws IOException
+    {
         if (standardInputOutput) {
             BufferedWriter out = FileEncoding.getWriter(System.out);
             tagText(out);
@@ -753,7 +755,7 @@ private void setDefaults()
         }
     }
 
-    public static void main( String args[] ) throws IOException
+    public static void main( String args[] ) throws Exception
 	{
         RunIceTagger runner = new RunIceTagger();
         Date before = runner.initialize(args);
