@@ -60,7 +60,7 @@
 			<fileset dir="${conf.dir}" />
 		</copy>
 
-        <copy file="../../dict/icetagger/otb.apertium.dict" todir="${dist.dir}/conf/dicts"/>
+        <copy file="../../dict/icetagger/otb.apertium.dict" todir="${dist.dir}/config/dicts"/>
 
 
 		<echo file="${dist.dir}/${runner.name}.sh" append="false">#\!/bin/sh
