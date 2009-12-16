@@ -21,7 +21,6 @@
  */
 package is.iclt.icenlp.runner;
 
-import is.iclt.icenlp.core.icetagger.IceTaggerOutputApertium;
 import is.iclt.icenlp.core.lemmald.LemmaResult;
 import is.iclt.icenlp.core.lemmald.Lemmald;
 import is.iclt.icenlp.core.tokenizer.IceTokenTags;
