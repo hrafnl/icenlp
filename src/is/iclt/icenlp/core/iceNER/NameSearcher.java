@@ -529,7 +529,8 @@ public class NameSearcher {
            {
                for(int i=nIndex; i<=nStop; i++)
                {
-                   if(!(!m_sTextArray[i][2].isEmpty()|| isInsicnificant(m_sTextArray[i][1])||isConjunction(m_sTextArray[i][1])))
+                   //if(!(!m_sTextArray[i][2].isEmpty()|| isInsicnificant(m_sTextArray[i][1])||isConjunction(m_sTextArray[i][1])))
+                   if(!(m_sTextArray[i][2].length()!=0 || isInsicnificant(m_sTextArray[i][1])||isConjunction(m_sTextArray[i][1])))
                    {
                        m_sTextArray[i][2] = sTag;
                    }
