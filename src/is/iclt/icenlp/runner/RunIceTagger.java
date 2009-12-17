@@ -376,6 +376,7 @@ private void setDefaults()
 		for( int i = 0; i < size; i++ )
 		{
 			IceTokenTags tok = (IceTokenTags)tokens.get( i );
+            // Strange place to count this.  Can we move this somewhere else?
 			numTokens++;
             if( tok.isUnknown() )
 			    numUnknowns++;

@@ -104,15 +104,9 @@ public class Idioms extends Lexicon
 					{
 						tok = (TokenTags)tokens.get( k + i );
 						if(k == 0)
-						{
-							//System.out.println("First: " + tok.lexeme);
 							tok.mweCode = MWECode.begins;
-						}
-						if(k+1 == tagStrings.length)
-						{
-							//System.out.println("last: " + tok.lexeme);
+						if(k == tagStrings.length-1)
 							tok.mweCode = MWECode.ends;
-						}
 						tok.setTag( tagStrings[k] );
 					}
 				}

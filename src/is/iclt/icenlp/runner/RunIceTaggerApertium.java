@@ -46,12 +46,14 @@ import java.util.List;
 public class RunIceTaggerApertium extends RunIceTagger
 {
 	private MapperLexicon mappingLexicon;
+    private Lemmald lemmald;
 	
 
 	public static void main( String args[] ) throws Exception
 	{
         RunIceTaggerApertium runner = new RunIceTaggerApertium();
         Date before = runner.initialize(args);
+        runner.lemmald = Lemmald.getInstance();
         runner.mappingLexicon = new MapperLexicon(runner.tagMapFile, false);
 
         // Perform the tagging
@@ -65,15 +67,21 @@ public class RunIceTaggerApertium extends RunIceTagger
 		List<Word> wordList = new LinkedList<Word>();
 		
 		// Get instance of lemmald
-		Lemmald myLemmald = Lemmald.getInstance();
+		//Lemmald myLemmald = Lemmald.getInstance();
 	
 		// create word objects and add them to the wordlist.
 		for(Object o : tokenizer.tokens)
 		{
+
 			IceTokenTags t = ((IceTokenTags)o);
-			wordList.add(new Word(t.lexeme, myLemmald.lemmatize(t.lexeme, t.getFirstTagStr()).getLemma(), t.getFirstTagStr(), t.mweCode));
+            // Strange place to count this.  Can we move this somewhere else?
+            numTokens++;
+            if( t.isUnknown() )
+			    numUnknowns++;
+
+			wordList.add(new Word(t.lexeme, this.lemmald.lemmatize(t.lexeme, t.getFirstTagStr()).getLemma(), t.getFirstTagStr(), t.mweCode));
 		}
-		
+
 		// Lets look for tag mappings in the wordList.
 		for(Word word : wordList)
 		{
@@ -83,7 +91,7 @@ public class RunIceTaggerApertium extends RunIceTagger
 			else
 				word.setTag("<NOT MAPPED>");
 		}
-		
+
         // Go over Lemma Exception rules.
         for(Word word : wordList)
         {
@@ -101,7 +109,7 @@ public class RunIceTaggerApertium extends RunIceTagger
                 }
             }
         }
-        
+
         // Go over Lexeme Exception rules.
         for(Word word : wordList)
         {
@@ -144,19 +152,18 @@ public class RunIceTaggerApertium extends RunIceTagger
 
                     j += 1;
                 }
-
                 if(this.mappingLexicon.hasMapForMWE(mweStr))
                 {
-                    String lemma = "";
                     String lexeme = "";
 
                     for(i = (ends - begins); i>= 0; i--)
                     {
-                        lemma += wordList.get(begins).getLexeme() + " ";
+                        lexeme += wordList.get(begins).getLexeme() + " ";
                         wordList.remove(begins);
                     }
-
+                    //System.out.println("orð er: " + lexeme);
                     // Where we are working with MWE, we overwrite the lemma with the lexeme.
+                    // lexeme.length()-1 because of the additional space at then end
                     Word w = new Word(lexeme.substring(0,lexeme.length()-1), this.mappingLexicon.getMapForMWE(mweStr), MWECode.none);
                     w.setLemma(lexeme.substring(0,lexeme.length()-1));
                     wordList.add(begins, w);
@@ -179,10 +186,17 @@ public class RunIceTaggerApertium extends RunIceTagger
         // Create output string that will be sent to the client.
         String output = "";
 
-        for(Word word: wordList)
-            output = output + "^" + word.getLemma() + word.getTag() + "$ ";
+        for(Word word: wordList)  {
+            if( outputFormat == Segmentizer.tokenPerLine ) {
+                outFile.write("^" + word.getLemma() + word.getTag() + "$ ");
+                outFile.newLine();
+            }
+            else
+                output = output + "^" + word.getLemma() + word.getTag() + "$ ";
+        }
 
-		outFile.write( output );
+        if( outputFormat != Segmentizer.tokenPerLine )
+            outFile.write( output );
 		outFile.newLine();
 	}
 }
