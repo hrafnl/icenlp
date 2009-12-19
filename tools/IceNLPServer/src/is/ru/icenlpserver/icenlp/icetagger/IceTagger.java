@@ -63,7 +63,6 @@ public class IceTagger implements IIceTagger
 				{
 					this.leave_not_found_tag_unchanged = false;
 					System.out.println("[i] unfound tags in tagmapping will be marked with " + this.not_found_tag);
-					
 				}
 				else
 				{
@@ -137,7 +136,7 @@ public class IceTagger implements IIceTagger
 			{
 				String mappingLexicon = this.configuration.getValue("mappinglexicon");
 				System.out.println("[i] Reading mapping lexicon from: " + mappingLexicon + '.');
-				this.mapperLexicon = new MapperLexicon(mappingLexicon, this.configuration.debugMode());
+				this.mapperLexicon = new MapperLexicon(mappingLexicon, true, this.leave_not_found_tag_unchanged, this.configuration.debugMode(), this.not_found_tag);
 			}
 			
 			if(this.lemmatize)
