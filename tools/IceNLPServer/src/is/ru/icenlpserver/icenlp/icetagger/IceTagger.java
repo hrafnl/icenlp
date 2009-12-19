@@ -12,11 +12,9 @@ import is.iclt.icenlp.core.tokenizer.Sentence;
 import is.iclt.icenlp.core.tokenizer.Sentences;
 import is.iclt.icenlp.core.tokenizer.Token;
 import is.iclt.icenlp.core.tokenizer.TokenizerResources;
-import is.iclt.icenlp.core.tokenizer.Token.MWECode;
 import is.iclt.icenlp.core.tritagger.TriTaggerLexicons;
 import is.iclt.icenlp.core.tritagger.TriTaggerResources;
 import is.iclt.icenlp.core.utils.Lexicon;
-import is.iclt.icenlp.core.utils.Pair;
 import is.iclt.icenlp.core.utils.Word;
 import is.iclt.icenlp.facade.IceTaggerFacade;
 import is.ru.icenlpserver.common.Configuration;
@@ -32,14 +30,12 @@ public class IceTagger implements IIceTagger
 	private boolean leave_not_found_tag_unchanged = false;
 	private String not_found_tag = null;
 	private Configuration configuration;
-	private boolean debugOutput = true;
 	
 	public IceTagger() throws IceTaggerConfigrationException
 	{
 		// Store the reference to the configuration in member to
 		// minimize function calls to getInstance().
 		this.configuration = Configuration.getInstance();
-		this.debugOutput = this.configuration.debugMode();
 		
 		try
 		{
@@ -82,10 +78,7 @@ public class IceTagger implements IIceTagger
 				
 				System.out.println("[i] tagging output format: " + this.taggingOutputForamt + '.');
 			}
-			
-			// Check for debug output.
-			this.debugOutput = this.configuration.debugMode();
-			
+						
 			// Loading IceTagger lexicons.
 			IceTaggerLexicons iceLexicons = null;
 			if(!this.configuration.containsKey("icelexiconsdir"))
@@ -205,144 +198,9 @@ public class IceTagger implements IIceTagger
 					word.setLemma(this.lemmald.lemmatize(word.getLexeme(), word.getTag()).getLemma());
 			}			
 			
-			// let's go through the tag mapping and check if there is any TAGMAPPING for that word.
-			if(this.mapperLexicon != null)
-			{
-				for(Word word : wordList)
-				{
-					String mappedTag = mapperLexicon.lookupTagmap(word.getTag(), false);
-					if(mappedTag != null)
-					{
-						if(this.debugOutput)
-							System.out.println("[debug] tagmapping rule applied: " + word.getTag() + " -> " + mappedTag);
-						
-						word.setTag(mappedTag);
-					}
-					
-					else
-					{
-						if(!this.leave_not_found_tag_unchanged)
-						{
-							if(this.debugOutput)
-								System.out.println("[debug] tagmapping rule applied: " + word.getTag() + " -> " + this.not_found_tag);
-							word.setTag(this.not_found_tag);
-						}
-						else
-						{
-							if(this.debugOutput)
-								System.out.println("[debug] tagmapping rule applied: Leaving " + word.getTag() + " unchanged.");	
-						}
-					}
-				}
+			// Apply mapping rules to the word list.s
+			this.mapperLexicon.processWordList(wordList);
 			
-				// Go over Lemma Exception rules.
-				for(Word word : wordList)
-				{
-					String lookupWord = word.getLemma();
-	
-					if(this.mapperLexicon.hasExceptionRulesForLemma(lookupWord))
-					{
-						List<Pair<String, String>> rules = this.mapperLexicon.getExceptionRulesForLemma(lookupWord);
-						for(Pair<String, String> pair : rules)
-						{
-							if(word.getTag().matches(".*" +pair.one +".*"))
-							{
-								if(this.debugOutput)
-									System.out.println("[debug] applied Lemma exception rule for the lemma " + word.getLemma());
-								
-								word.setTag(word.getTag().replaceFirst(pair.one, pair.two));
-							}
-						}
-					}
-				}
-				
-				
-				// Go over Lexeme Exception rules.
-				for(Word word : wordList)
-				{
-					String lookupWord = word.getLexeme();
-	
-					if(this.mapperLexicon.hasExceptionRulesForLexeme(lookupWord))
-					{
-						List<Pair<String, String>> rules = this.mapperLexicon.getExceptionRulesForLexeme(lookupWord);
-						for(Pair<String, String> pair : rules)
-						{
-							if(word.getTag().matches(".*" +pair.one +".*"))
-							{
-								if(this.debugOutput)
-									System.out.println("[debug] applied Lexeme exception rule for the lexeme " + word.getLexeme());
-								
-								word.setTag(word.getTag().replaceFirst(pair.one, pair.two));
-							}
-						}
-					}
-				}
-				
-		
-				// Go over the MWE expression
-				for(int i = 0; i < wordList.size(); i++)
-				{
-					if(wordList.get(i).mweCode == MWECode.begins)
-					{
-						// the index of the words begins at index begins:
-						int begins = i;
-						int ends = 0;
-						
-						String mweStr = wordList.get(i).getLexeme();
-						int j = i;
-						while(j < wordList.size())
-						{	
-							if(wordList.get(j).mweCode == MWECode.ends)
-							{
-								// The words ends at there.
-								ends = j;
-								i = j;
-								break;
-							}
-							if(j+1 < wordList.size())
-								mweStr += "_" + wordList.get(j+1).getLexeme();
-
-							j += 1;	
-						}
-						
-						if(this.mapperLexicon.hasMapForMWE(mweStr))
-						{	
-							if(this.debugOutput)
-								System.out.println("[debug] applied MWE rule for the mwe " + mweStr);
-							
-							String lemma = "";
-							String lexeme = "";
-							
-							for(i = (ends - begins); i>= 0; i--)
-							{
-								lemma += wordList.get(begins).getLexeme() + " ";
-								wordList.remove(begins);
-							}
-							
-							// Where we are working with MWE, we overwrite the lemma with the lexeme.
-							Word w = new Word(lexeme.substring(0,lexeme.length()-1), this.mapperLexicon.getMapForMWE(mweStr), MWECode.none);
-							w.setLemma(lexeme.substring(0,lexeme.length()-1));
-							wordList.add(begins, w);
-						}
-					}
-				}
-				
-				// Go over MWE-RENAME rules.
-				for(Word word : wordList)
-				{
-					if(this.mapperLexicon.hasRenameRuleForLexeme(word.getLexeme()))
-					{
-						Pair<String, String> pair = this.mapperLexicon.getRenameRuleForLexeme(word.getLexeme());
-						
-						word.setLemma(pair.one.replace('_', ' '));
-						word.setLemma(pair.one.replace('_', ' '));
-						word.setTag(pair.two);
-						
-						if(this.debugOutput)
-							System.out.println("[debug] applied MWE-RENAME rule to word " + word.getLexeme());
-					}	
-				}
-			}
 			
 			// Create output string that will be sent to the client.
 			String output = "";

@@ -12,7 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * MapperLexicon reads a tagMapFile that contains tag-mapping rules, lemma exception rules
+ * MappingLexicon reads a mapping file that contains tag-mapping rules, lemma exception rules
  * lexeme exception rules, MWE rules and rename-MWE rules. These rules can then be applied
  * to a collection of word objects.
  * @author hlynurs
@@ -54,7 +54,7 @@ public class MappingLexicon
 	 * member variables and sets the to the values that are passed via the constructor.
 	 * Then the mapping file is read and rules are added to the rule maps that are kept
 	 * in memory.
-	 * @param tagMapFile A full path to the mapping file.
+	 * @param mappingFile A full path to the mapping file.
 	 * @param showLexiconStatusOutput Flag to controls whether we print overview of the rules
 	 * that were read from the mapping file.
 	 * @param leaveNotFoundTagUnchanged Flag to controls whether tag that do not have
@@ -64,7 +64,7 @@ public class MappingLexicon
 	 * and a given tag does not have any mapping tag. 
 	 * @throws Exception If mapping file is not found.
 	 */
-	public MappingLexicon(String tagMapFile, 
+	public MappingLexicon(String mappingFile, 
 			boolean showLexiconStatusOutput,
 			boolean leaveNotFoundTagUnchanged,
 			boolean showAppliedActions,
@@ -79,7 +79,7 @@ public class MappingLexicon
 		this.showAppliedActions = showAppliedActions;
 		this.notFoundMappingTag = notFoundMappingTag;
 		
-		readConfigFile(tagMapFile);
+		readConfigFile(mappingFile);
 	
 		if(showLexiconStatusOutput)
 		{
@@ -91,16 +91,15 @@ public class MappingLexicon
 		}
 	}
 
-
 	/**
 	 * Reads the rules from the mapping file.
-	 * @param tagMapFile
-	 * @throws FileNotFoundException
-	 * @throws IOException
+	 * @param mappingFile A full path to the mapping file.
+	 * @throws FileNotFoundException If the mapping file cannot be found.
+	 * @throws IOException If the mapping file cannot be read.
 	 */
-	private void readConfigFile(String tagMapFile) throws FileNotFoundException, IOException 
+	private void readConfigFile(String mappingFile) throws FileNotFoundException, IOException 
 	{
-		FileInputStream fstream = new FileInputStream(tagMapFile);
+		FileInputStream fstream = new FileInputStream(mappingFile);
 		DataInputStream in = new DataInputStream(fstream);
 		BufferedReader br = new BufferedReader(new InputStreamReader(in));
 		String strLine = null;
@@ -166,7 +165,6 @@ public class MappingLexicon
 								break;
 							}
 
-
 						case lemma:
 							if(strLine.matches("\\S+\\s+\\S+\\s+\\S+"))
 							{	
@@ -207,7 +205,6 @@ public class MappingLexicon
 								break;		
 							}
 						
-	
 						case mwe:
 							if(strLine.matches("\\S+\\s+\\S+"))
 							{
@@ -242,96 +239,12 @@ public class MappingLexicon
 			lineNum +=1;
 		}
 	}
-
-	/**
-	 * Returns the mapping tag for a given tag.
-	 * @param tag that will be searched for.
-	 * @param ignoreCase ignore the case of the incoming tag.
-	 * @return a mapping for tag if found, null otherwise.
-	 */
-	public String lookupTagmap(String tag, boolean ignoreCase) 
-	{
-		if(ignoreCase)
-			tag = tag.toLowerCase();
-		
-		if(this.tagMaps.containsKey(tag))
-			return this.tagMaps.get(tag);
-		
-		return null;
-	}
+	
 	
 	/**
-	 * Checks if there exist tag exception rules for a given lemma.
-	 * @param lemma Lemma that will be used to look up exceptions.
-	 * @return List of rule pairs, the first part is the tag that must appear in the tag
-	 * string the other part is the tag that will be used to override the part that
-	 * was found.
+	 * Goes through the incoming word list and applies relevant rules. 
+	 * @param wordList List of word objects.
 	 */
-	public List<Pair<String, String>> getExceptionRulesForLemma(String lemma)
-	{
-		if(!this.lemmaExceptionRuleMap.containsKey(lemma))
-			return null;
-		
-		return this.lemmaExceptionRuleMap.get(lemma);
-	}
-		
-	/**
-	 * Checks if there exist an exception rule for a given lemma.
-	 * @param lexeme Lemma that will be searched for.
-	 * @return True if there exist rules for the lemma, false otherwise.
-	 */
-	public boolean hasExceptionRulesForLemma(String lexeme)
-	{
-		return this.lemmaExceptionRuleMap.containsKey(lexeme);
-	}
-	
-	public boolean hasExceptionRulesForLexeme(String lexeme)
-	{
-		return this.lexemeExceptionRuleMap.containsKey(lexeme);
-	}
-	
-	public List<Pair<String, String>> getExceptionRulesForLexeme(String lexeme)
-	{
-		if(!this.lexemeExceptionRuleMap.containsKey(lexeme))
-			return null;
-		
-		return this.lexemeExceptionRuleMap.get(lexeme);
-	}
-	
-	public boolean hasMapForMWE(String mweString)
-	{
-		return this.mweRuleMap.containsKey(mweString);
-	}
-	
-	public String getMapForMWE(String mweString)
-	{
-		return this.mweRuleMap.get(mweString);
-	}
-	
-	/***
-	 * Check if a given lexeme contains a Lexeme rename rule.
-	 * This is used to rename multi word expressions.
-	 * @param lexeme
-	 * @return true if the lexeme has a rename rule, false otherwise.
-	 */
-	public boolean hasRenameRuleForLexeme(String lexeme)
-	{
-		return this.mweRenameRuleMap.containsKey(lexeme);
-	}
-	
-	/***
-	 * Get the rename rule for a given lexeme.
-	 * @param lexeme
-	 * @return Pair<String, String> that contains the new lexeme/lemma and
-	 * the new tag.
-	 */
-	public Pair<String, String> getRenameRuleForLexeme(String lexeme)
-	{
-		return this.mweRenameRuleMap.get(lexeme);
-	}
-	
-	
-	
 	public void processWordList(List<Word> wordList)
 	{
 		// let's go through the tag mapping and check if there is any TAGMAPPING for that word.
@@ -404,7 +317,6 @@ public class MappingLexicon
 			}
 		}
 		
-		
         // Go over the MWE expression
         for(int i = 0; i < wordList.size(); i++)
         {
@@ -466,5 +378,65 @@ public class MappingLexicon
 					System.out.println("[debug] applied MWE-RENAME rule to word " + word.getLexeme());
             }
         }
+	}
+	
+
+	private String lookupTagmap(String tag, boolean ignoreCase) 
+	{
+		if(ignoreCase)
+			tag = tag.toLowerCase();
+		
+		if(this.tagMaps.containsKey(tag))
+			return this.tagMaps.get(tag);
+		
+		return null;
+	}
+	
+	private List<Pair<String, String>> getExceptionRulesForLemma(String lemma)
+	{
+		if(!this.lemmaExceptionRuleMap.containsKey(lemma))
+			return null;
+		
+		return this.lemmaExceptionRuleMap.get(lemma);
+	}
+	
+	private boolean hasExceptionRulesForLemma(String lemma)
+	{
+		return this.lemmaExceptionRuleMap.containsKey(lemma);
+	}
+	
+	private boolean hasExceptionRulesForLexeme(String lexeme)
+	{
+		return this.lexemeExceptionRuleMap.containsKey(lexeme);
+	}
+	
+	private List<Pair<String, String>> getExceptionRulesForLexeme(String lexeme)
+	{
+		if(!this.lexemeExceptionRuleMap.containsKey(lexeme))
+			return null;
+		
+		return this.lexemeExceptionRuleMap.get(lexeme);
+	}
+	
+	private boolean hasMapForMWE(String mweString)
+	{
+		return this.mweRuleMap.containsKey(mweString);
+	}
+	
+	private String getMapForMWE(String mweString)
+	{
+		return this.mweRuleMap.get(mweString);
+	}
+	
+	
+	private boolean hasRenameRuleForLexeme(String lexeme)
+	{
+		return this.mweRenameRuleMap.containsKey(lexeme);
+	}
+	
+
+	private Pair<String, String> getRenameRuleForLexeme(String lexeme)
+	{
+		return this.mweRenameRuleMap.get(lexeme);
 	}	
 }
