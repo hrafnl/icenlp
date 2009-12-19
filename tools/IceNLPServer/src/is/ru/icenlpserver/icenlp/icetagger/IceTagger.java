@@ -20,13 +20,13 @@ import is.iclt.icenlp.core.utils.Pair;
 import is.iclt.icenlp.core.utils.Word;
 import is.iclt.icenlp.facade.IceTaggerFacade;
 import is.ru.icenlpserver.common.Configuration;
-import is.iclt.icenlp.core.utils.MapperLexicon;
+import is.iclt.icenlp.core.utils.MappingLexicon;
 
 public class IceTagger implements IIceTagger 
 {
 	private IceTaggerFacade facade;
 	private Lemmald lemmald = null;
-	private MapperLexicon mapperLexicon = null;
+	private MappingLexicon mapperLexicon = null;
 	private String taggingOutputForamt = null;
 	private boolean lemmatize = false;
 	private boolean leave_not_found_tag_unchanged = false;
@@ -136,7 +136,7 @@ public class IceTagger implements IIceTagger
 			{
 				String mappingLexicon = this.configuration.getValue("mappinglexicon");
 				System.out.println("[i] Reading mapping lexicon from: " + mappingLexicon + '.');
-				this.mapperLexicon = new MapperLexicon(mappingLexicon, true, this.leave_not_found_tag_unchanged, this.configuration.debugMode(), this.not_found_tag);
+				this.mapperLexicon = new MappingLexicon(mappingLexicon, true, this.leave_not_found_tag_unchanged, this.configuration.debugMode(), this.not_found_tag);
 			}
 			
 			if(this.lemmatize)

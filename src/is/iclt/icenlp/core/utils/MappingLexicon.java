@@ -17,7 +17,7 @@ import java.util.List;
  * to a collection of word objects.
  * @author hlynurs
  */
-public class MapperLexicon 
+public class MappingLexicon 
 {
 	// Enumeration for block sections in the mapping file.
 	public enum BLOCK_TYPE {not_set, tagmaps, mwe, tagmapping, lemma, mwe_rename, lexeme, test}
@@ -64,7 +64,7 @@ public class MapperLexicon
 	 * and a given tag does not have any mapping tag. 
 	 * @throws Exception If mapping file is not found.
 	 */
-	public MapperLexicon(String tagMapFile, 
+	public MappingLexicon(String tagMapFile, 
 			boolean showLexiconStatusOutput,
 			boolean leaveNotFoundTagUnchanged,
 			boolean showAppliedActions,

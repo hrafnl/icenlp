@@ -23,7 +23,7 @@ package is.iclt.icenlp.runner;
 import is.iclt.icenlp.core.lemmald.Lemmald;
 import is.iclt.icenlp.core.tokenizer.IceTokenTags;
 import is.iclt.icenlp.core.tokenizer.Segmentizer;
-import is.iclt.icenlp.core.utils.MapperLexicon;
+import is.iclt.icenlp.core.utils.MappingLexicon;
 import is.iclt.icenlp.core.utils.Word;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -38,7 +38,7 @@ import java.util.List;
 public class RunIceTaggerApertium extends RunIceTagger
 {
 	// Member variables.
-	private MapperLexicon mappingLexicon;
+	private MappingLexicon  mappingLexicon;
     private Lemmald lemmald;
 	
 
@@ -49,7 +49,7 @@ public class RunIceTaggerApertium extends RunIceTagger
         runner.lemmald = Lemmald.getInstance();
         
         // create new instance of the mapping lexicon.
-        runner.mappingLexicon = new MapperLexicon(runner.tagMapFile, false, false, false, "<NOT MAPPED>");
+        runner.mappingLexicon = new MappingLexicon(runner.tagMapFile, false, false, false, "<NOT MAPPED>");
         
         // Perform the tagging
         runner.performTagging();
