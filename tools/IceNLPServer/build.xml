@@ -67,8 +67,6 @@
 java -Xms64m -Xmx512m -Dfile.encoding=UTF-8 -jar ${ant.project.name}.jar --config=config/IceNLPServer.conf
 		</echo>
 		
-		<echo file="${dist.dir}/${runner.name}.bat" append="false">java -Xmx256M -jar ${ant.project.name}.jar --config=config/IceNLPServer.conf</echo>
-	
 		<chmod perm="+x" dir="${dist.dir}" includes="**/*.sh" />
 	</target>
 	
