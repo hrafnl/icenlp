@@ -248,29 +248,33 @@ public class MappingLexicon
 	public void processWordList(List<Word> wordList)
 	{
 		// let's go through the tag mapping and check if there is any TAGMAPPING for that word.
-		for(Word word : wordList)
+		// If there are no tag mapping rules then we skip this part.
+		if(this.tagMaps.size() > 0)
 		{
-			String mappedTag = this.lookupTagmap(word.getTag(), false);
-			if(mappedTag != null)
+			for(Word word : wordList)
 			{
-				if(this.showAppliedActions)
-					System.out.println("[debug] tagmapping rule applied: " + word.getTag() + " -> " + mappedTag);
-				
-				word.setTag(mappedTag);
-			}
-			
-			else
-			{
-				if(!this.leaveNotFoundTagUnchanged)
+				String mappedTag = this.lookupTagmap(word.getTag(), false);
+				if(mappedTag != null)
 				{
 					if(this.showAppliedActions)
-						System.out.println("[debug] tagmapping rule applied: " + word.getTag() + " -> " + this.notFoundMappingTag);
-					word.setTag(this.notFoundMappingTag);
+						System.out.println("[debug] tagmapping rule applied: " + word.getTag() + " -> " + mappedTag);
+					
+					word.setTag(mappedTag);
 				}
+				
 				else
 				{
-					if(this.showAppliedActions)
-						System.out.println("[debug] tagmapping rule applied: Leaving " + word.getTag() + " unchanged.");	
+					if(!this.leaveNotFoundTagUnchanged)
+					{
+						if(this.showAppliedActions)
+							System.out.println("[debug] tagmapping rule applied: " + word.getTag() + " -> " + this.notFoundMappingTag);
+						word.setTag(this.notFoundMappingTag);
+					}
+					else
+					{
+						if(this.showAppliedActions)
+							System.out.println("[debug] tagmapping rule applied: Leaving " + word.getTag() + " unchanged.");	
+					}
 				}
 			}
 		}
