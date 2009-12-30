@@ -205,43 +205,4 @@ public class IceTaggerFacade
 
         return sents;
     }
-
-    /**
-     * Returns a IceNLP tagged string that has been mapped
-     * to an equivalent Apertium form. 
-     *
-     * @param String object that contains the string that will
-     * be tagged.
-     * @return String object that contains the string apertium
-     * tagged.
-     */
-    public String tagApertium(String text) throws IOException
-    {       
-        Lemmald myLemmald = Lemmald.getInstance();
-        Sentences sentences = this.tag(text);
-        String out = "";
-        
-        for(Sentence s : sentences.getSentences())
-        {
-            ArrayList<Token> tokens = s.getTokens();
-            for(Token o : tokens)
-            {
-                IceTokenTags tok = (IceTokenTags)o;
-                String lemma = myLemmald.lemmatize(tok.lexeme,tok.getFirstTagStr()).getLemma();
-                String mappedTag = mapper.lookup(tok.getFirstTagStr(), false);
-                
-                if(mappedTag == null)
-                    mappedTag = "<NOT MAPPED>" + ":" + tok.getFirstTagStr();
-                
-                // Special cases of mapping.
-                if (mappedTag.matches(".*<vblex>.*")) {
-                    if (lemma.equalsIgnoreCase("vera")) {mappedTag = mappedTag.replaceFirst("vblex","vbser");}
-                    else if (lemma.equalsIgnoreCase("hafa")) {mappedTag = mappedTag.replaceFirst("vblex","vbhaver");}
-                    else if (lemma.equalsIgnoreCase("geta")) {mappedTag = mappedTag.replaceFirst("vblex","vaux");}
-                }
-                out = out + "^"+lemma + mappedTag + "$ "; 
-            }
-        }
-        return out;
-    } 
 }
