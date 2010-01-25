@@ -40,6 +40,7 @@ public class RunIceTaggerApertium extends RunIceTagger
 	// Member variables.
 	private MappingLexicon  mappingLexicon;
     private Lemmald lemmald;
+    private boolean showSurfaceForm=false;
 	
 
 	public static void main( String args[] ) throws Exception
@@ -55,6 +56,26 @@ public class RunIceTaggerApertium extends RunIceTagger
         runner.performTagging();
 		runner.finish(before);
 	}
+
+    // we override getParameters
+    protected void getParameters( String args[] )
+	{
+
+        super.getParameters(args);
+        // The parameter showSurfaceForm is only used in IceTaggerApertium
+		for( int i = 0; i <= args.length - 1; i++ )
+		{
+            if( args[i].equals( "-sf" ) )
+                showSurfaceForm = true;
+        }
+    }
+
+    // we override showParameters
+     protected void showParameters()
+	{
+		super.showParameters();
+        System.out.println( "  -sf (print surface form)" );
+    }
 
 	// we override printResults.
 	protected void printResults(BufferedWriter outFile) throws IOException 
@@ -81,11 +102,18 @@ public class RunIceTaggerApertium extends RunIceTagger
 
         for(Word word: wordList)  {
             if( outputFormat == Segmentizer.tokenPerLine ) {
-                outFile.write("^" + word.getLemma() + word.getTag() + "$ ");
+                if (showSurfaceForm)
+                    outFile.write("^" + word.getLexeme() + "/" + word.getLemma() + word.getTag() + "$ ");
+                else
+                    outFile.write("^" + word.getLemma() + word.getTag() + "$ ");
                 outFile.newLine();
             }
-            else
-                output = output + "^" + word.getLemma() + word.getTag() + "$ ";
+            else {
+                if (showSurfaceForm)
+                    output = output + "^" + word.getLexeme() + "/" + word.getLemma() + word.getTag() + "$ ";
+                else
+                    output = output + "^" + word.getLemma() + word.getTag() + "$ ";
+            }
         }
 
         if( outputFormat != Segmentizer.tokenPerLine )

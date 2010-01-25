@@ -86,6 +86,21 @@ public class RunIceTagger
     private TriTaggerLexicons triLex=null;
 
     private void showParametersExit()
+    {
+       showParameters();
+       showParametersFooter();
+       System.exit( 0 );
+    }
+
+    private void showParametersFooter()
+    {
+        System.out.println( "------------------------------------------" );
+        System.out.println( "If the parameters -p or -i/-o or -f are not provided then");
+        System.out.println( "IceTagger reads from standard input and writes to standard output");
+        System.out.println( "------------------------------------------" );
+    }
+
+    protected void showParameters()
 	{
 		System.out.println( "Arguments: " );
         System.out.println( "-help (shows this info)" );
@@ -126,12 +141,7 @@ public class RunIceTagger
 		System.out.println( "  -bt (base tagging)" );
 		System.out.println( "  -nf (do not perform full disambiguation)" );
 		System.out.println( "  -ns (do not perform strict tokenization)" );
-        System.out.println( "------------------------------------------" );
-        System.out.println( "If the parameters -p or -i/-o or -f are not provided then");
-        System.out.println( "IceTagger reads from standard input and writes to standard output");
-        System.out.println( "------------------------------------------" );
 
-        System.exit( 0 );
 	}
 
 	private void checkParameters()
@@ -283,7 +293,7 @@ public class RunIceTagger
 		in.close();
 	}
 
-	private void getParameters( String args[] )
+	protected void getParameters( String args[] )
 	{
 		for( int i = 0; i <= args.length - 1; i++ )
 		{
