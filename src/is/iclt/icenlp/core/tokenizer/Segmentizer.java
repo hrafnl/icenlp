@@ -232,7 +232,7 @@ public class Segmentizer
 
 	private boolean isFullStop( char ch, boolean isLastChar )
 	{
-		char nextChar;
+		char nextChar, prevChar;
 		boolean endOfSentence = false;
 
 		if( isLastChar )  // If last character of the line or
@@ -240,20 +240,25 @@ public class Segmentizer
         else
 		{
 			nextChar = currLine.charAt( currIndex );
+            if (currIndex > 1)
+                prevChar = currLine.charAt( currIndex - 2 );
+            else
+                prevChar = ' ';
+
 			if( nextChar == ' ' )    // If a space after the full stops
 				endOfSentence = true;
-            // fífunni.1 eða salati.»
+            // fífunni.1 eða salati.»  but not 23.1.
             else if ((ch == '.' || ch == '!' || ch == '?'  || ch == '»' /*|| ch == ':'*/)
-                    && Character.isDigit(nextChar))
+                    && Character.isDigit(nextChar) && !Character.isDigit(prevChar)) {
                 endOfSentence = true;
-
+            }
 
             // This else added 18.07.2007 because of Mogga corpus
             /*else if ( (ch == '"' || ch == '«' || ch == '»'))
             {
                 if (currIndex > 0) {
                     char prevCh =  currLine.charAt(currIndex-1);
-                    if (prevCh == '.' || prevCh == '?' || prevCh == '!')  
+                    if (prevCh == '.' || prevCh == '?' || prevCh == '!')
                         endOfSentence = true;
                 }
             } */
@@ -265,8 +270,8 @@ public class Segmentizer
 				endOfSentence = false;
 				// Check for like: "Elsku mamma," jörmuðu kiðlingarnir ....
 			else if( (ch == '"' || ch == '”' || ch == '“' || ch == '»') && currIndex > 1) {
-                char prevCh = currLine.charAt( currIndex - 2 );
-                if (prevCh != '.' && prevCh != '!' && prevCh != '?' && prevCh != ':')
+                //char prevCh = currLine.charAt( currIndex - 2 );
+                if (prevChar != '.' && prevChar != '!' && prevChar != '?' && prevChar != ':')
 				    endOfSentence = false;
             }
 		}
@@ -315,6 +320,11 @@ public class Segmentizer
 		return sentence;
 	}
 
+    private boolean isEmptyLine()
+    {
+       return (currLine.length() == 0 || currLine.matches("^\\s+$"));
+    }
+
 	// Assumes the sentence can occupie more than one line and thus does sentence segmentation
 	private String nextSentence()
 			throws IOException
@@ -329,7 +339,8 @@ public class Segmentizer
 			boolean isLastChar = false;      // Last character of the line?
 			if( currLine != null )            // Not end of file
 			{
-				if( currLine.length() != 0 )   // Not an empty line
+				//if( currLine.length() != 0 && !currLine.matches("^\\s+$"))   // Not an empty line
+                if( !isEmptyLine())
 				{
 					ch = currLine.charAt( currIndex );
 					currIndex++;
@@ -337,8 +348,6 @@ public class Segmentizer
 					if( currIndex == currLine.length() )
 					{
 						isLastChar = true;
-						//if( ch != ' ' && ch != '\t' && sentence != "" )
-						//	sentence = sentence + " ";   // Add a space between sentences that comprise more that one line
 						saveSentence = true;
 					}
 
@@ -361,7 +370,8 @@ public class Segmentizer
 				else                         // An empty line
 					endOfSentence = true;
 
-				if( currIndex == currLine.length() || (currLine.length() == 0) )     // Then end of line
+				//if( currIndex == currLine.length() || (currLine.length() == 0) )     // Then end of line
+                if( currIndex == currLine.length() || isEmptyLine() )     // Then end of line
 				{
 					currLine = input.readLine();      // Read next line
 					currIndex = 0;
