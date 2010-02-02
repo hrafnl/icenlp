@@ -15,8 +15,9 @@ date
 
 echo Input file: $1
 echo Output file: $2
+echo Output path: $3
 
-if [ "$3" = "-l" ]  # Phrase_per_line flag
+if [ "$4" = "-l" ]  # Phrase_per_line flag
 then
   echo Writing output as one phrase per line 
 fi
@@ -50,37 +51,37 @@ fi
 
 JAR=../../dist/IceNLPCore.jar
 PACKAGE=is.iclt.icenlp.core.iceparser
-java -classpath $JAR $PACKAGE.Preprocess $1 > preprocess.out
-java -classpath $JAR $PACKAGE.Phrase_MWE preprocess.out > phrase_MWE.out
-java -classpath $JAR $PACKAGE.Phrase_MWEP1 phrase_MWE.out > phrase_MWEP1.out
-java -classpath $JAR $PACKAGE.Phrase_MWEP2 phrase_MWEP1.out > phrase_MWEP2.out
-java -classpath $JAR $PACKAGE.Phrase_AdvP phrase_MWEP2.out > phrase_AdvP.out
-java -classpath $JAR $PACKAGE.Phrase_AP phrase_AdvP.out > phrase_AP.out
-java -classpath $JAR $PACKAGE.Case_AP phrase_AP.out > case_AP.out
-java -classpath $JAR $PACKAGE.Phrase_APs case_AP.out > phrase_APs.out
-java -classpath $JAR $PACKAGE.Phrase_NP phrase_APs.out > phrase_NP.out
-java -classpath $JAR $PACKAGE.Phrase_VP phrase_NP.out > phrase_VP.out
-java -classpath $JAR $PACKAGE.Case_NP phrase_VP.out > case_NP.out
-java -classpath $JAR $PACKAGE.Phrase_NPs case_NP.out > phrase_NPs.out
-java -classpath $JAR $PACKAGE.Phrase_PP phrase_NPs.out > phrase_PP.out
-java -classpath $JAR $PACKAGE.Clean1 phrase_PP.out > clean1.out
+java -classpath $JAR $PACKAGE.Preprocess $1 > $3/preprocess.out
+java -classpath $JAR $PACKAGE.Phrase_MWE $3/preprocess.out > $3/phrase_MWE.out
+java -classpath $JAR $PACKAGE.Phrase_MWEP1 $3/phrase_MWE.out > $3/phrase_MWEP1.out
+java -classpath $JAR $PACKAGE.Phrase_MWEP2 $3/phrase_MWEP1.out > $3/phrase_MWEP2.out
+java -classpath $JAR $PACKAGE.Phrase_AdvP $3/phrase_MWEP2.out > $3/phrase_AdvP.out
+java -classpath $JAR $PACKAGE.Phrase_AP $3/phrase_AdvP.out > $3/phrase_AP.out
+java -classpath $JAR $PACKAGE.Case_AP $3/phrase_AP.out > $3/case_AP.out
+java -classpath $JAR $PACKAGE.Phrase_APs $3/case_AP.out > $3/phrase_APs.out
+java -classpath $JAR $PACKAGE.Phrase_NP $3/phrase_APs.out > $3/phrase_NP.out
+java -classpath $JAR $PACKAGE.Phrase_VP $3/phrase_NP.out > $3/phrase_VP.out
+java -classpath $JAR $PACKAGE.Case_NP $3/phrase_VP.out > $3/case_NP.out
+java -classpath $JAR $PACKAGE.Phrase_NPs $3/case_NP.out > $3/phrase_NPs.out
+java -classpath $JAR $PACKAGE.Phrase_PP $3/phrase_NPs.out > $3/phrase_PP.out
+java -classpath $JAR $PACKAGE.Clean1 $3/phrase_PP.out > $3/clean1.out
 
-java -classpath $JAR $PACKAGE.Func_TIMEX clean1.out > func_timex.out
-java -classpath $JAR $PACKAGE.Func_QUAL func_timex.out > func_qual.out
-java -classpath $JAR $PACKAGE.Func_SUBJ func_qual.out > func_subj.out
-java -classpath $JAR $PACKAGE.Func_COMP func_subj.out > func_comp.out
-java -classpath $JAR $PACKAGE.Func_OBJ func_comp.out > func_obj.out
-java -classpath $JAR $PACKAGE.Func_OBJ2 func_obj.out > func_obj2.out
-java -classpath $JAR $PACKAGE.Func_OBJ3 func_obj2.out > func_obj3.out
-java -classpath $JAR $PACKAGE.Func_SUBJ2 func_obj3.out > func_subj2.out
-java -classpath $JAR $PACKAGE.Clean2 func_subj2.out > clean2.out
+java -classpath $JAR $PACKAGE.Func_TIMEX $3/clean1.out > $3/func_timex.out
+java -classpath $JAR $PACKAGE.Func_QUAL $3/func_timex.out > $3/func_qual.out
+java -classpath $JAR $PACKAGE.Func_SUBJ $3/func_qual.out > $3/func_subj.out
+java -classpath $JAR $PACKAGE.Func_COMP $3/func_subj.out > $3/func_comp.out
+java -classpath $JAR $PACKAGE.Func_OBJ $3/func_comp.out > $3/func_obj.out
+java -classpath $JAR $PACKAGE.Func_OBJ2 $3/func_obj.out > $3/func_obj2.out
+java -classpath $JAR $PACKAGE.Func_OBJ3 $3/func_obj2.out > $3/func_obj3.out
+java -classpath $JAR $PACKAGE.Func_SUBJ2 $3/func_obj3.out > $3/func_subj2.out
+java -classpath $JAR $PACKAGE.Clean2 $3/func_subj2.out > $3/clean2.out
 
-if [ "$3" = "-l" ]  # phrase_per_line flag
+if [ "$4" = "-l" ]  # phrase_per_line flag
 then
-	java -classpath $JAR $PACKAGE.Phrase_Per_Line clean2.out > phrase_per_line.out
-	cp phrase_per_line.out $2
+	java -classpath $JAR $PACKAGE.Phrase_Per_Line $3/clean2.out > $3/phrase_per_line.out
+	cp $3/phrase_per_line.out $3/$2
 else
-	cp clean2.out $2
+	cp $3/clean2.out $3/$2
 fi
 
 date
