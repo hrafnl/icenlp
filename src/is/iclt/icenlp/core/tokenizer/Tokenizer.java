@@ -26,6 +26,8 @@ import is.iclt.icenlp.core.utils.Lexicon;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 /**
  * Performs tokenization.
@@ -45,6 +47,7 @@ public class Tokenizer
 	private int index;
 	private char[] lexeme;
 	private char[] letter;
+    private Pattern webAddress;
 
 
 	private int tokenType;
@@ -108,6 +111,8 @@ public class Tokenizer
 		letter = new char[1];        // temporary array
 		lexeme = new char[maxLexemeSize];      //  number of characters in a token
 		tokens = new ArrayList();       // number of tokens in a sentence
+
+        webAddress = Pattern.compile("(ht|f)tps?://[-\\w]+(\\.\\w[-\\w]*)+");
 	}
 
 	public void findMultiWords( boolean find )
@@ -563,10 +568,29 @@ public class Tokenizer
 		return true;
 	}
 
+    public boolean isWebAddress(String str)
+    {
+        Matcher matcher = webAddress.matcher(str);
+        // Attempts to match str, starting at the beginning, against the pattern.
+        // lookingAt does not require that the entire str be matched.
+        if (matcher.lookingAt()) {
+            int start = matcher.start();
+            int end = matcher.end();
+            // Now build the token
+            currToken.lexeme = sentence.substring(index+start, index+end );
+		    currToken.tokenCode = Token.TokenCode.tcWebAddress;
+            // And update the global index
+            index = index + end - start;
+            return true;
+        }
+        return false;
+    }
+
 	public void nextToken()
 	{
 		char ch, chNext;
 		boolean isLastChar = false;
+
 		if( index < sentence.length() )
 		{
 			if( index == sentence.length() - 1 )
@@ -574,8 +598,11 @@ public class Tokenizer
 
 			ch = sentence.charAt( index );
 
-			
-			if( Character.isLetter( ch ) ) getWord( ch );
+            String restOfSentence = sentence.substring(index);
+            // Contains a web address?
+            if (isWebAddress(restOfSentence))
+			    ;
+			else if( Character.isLetter( ch ) ) getWord( ch );
 			else if( Character.isDigit( ch ) ) getNumber( ch );
 			else if( Character.isWhitespace( ch ) ) skipWhitespace( ch );
 			else if( ch == '.' ) getPeriods();
