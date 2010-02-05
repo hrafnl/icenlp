@@ -381,7 +381,7 @@ public class Tokenizer
 				// More than one consecutive periods are disallowed
                 // HL: Also break a period and a single quote away from the word, 10.02.2009
                 // HL: Also break a period and a quote away from the word, 23.06.2009
-                if( lastch == '.' && (ch == '.' || ch == '\'' || ch == '»' || ch == '"' || ch == '”'))
+                if( lastch == '.' && (ch == '.' || ch == '\'' || ch == '»' || ch == '"' || ch == '”' || ch == '‘'))
 				{
 					periodFound = false;
 					index--;
@@ -447,10 +447,10 @@ public class Tokenizer
 	private void getNumber( char c )
 	{
 		int i = 0;
-		//char lastCh, firstCh = c;
         char ch = c;
+        char lastch;
         while( Character.isDigit( ch ) || Character.isLetter( ch ) ||
-		       ch == '½' || ch == '.' || ch == ',' || ch == '%' || ch == '$'  || ch == '£' ||
+		       ch == '½' || ch == '.' || ch == ',' || ch == '%' || ch == '$'  || ch == '£' || ch == '°' ||
 		       ch == '-' || ch == '_' || ch == '÷' || ch == '*' || ch == '+' || ch == '±' || ch == '/' ||
 		       (!strictTokenization && (
 				       ch == '°' || ch == '^' || ch == '_' ||
@@ -458,20 +458,17 @@ public class Tokenizer
 				       ch == '\\' || ch == '=' || ch == '{' || ch == '}' || ch == '\'')) )
 		{
 			lexeme[i] = ch;
-            //lastCh = ch;
+            lastch = ch;
             index++;
 			i++;
 
-            if( index < sentence.length() )      // EOS char might be missing
-            {
+            if( index < sentence.length() ) {     // EOS char might be missing
                 ch = sentence.charAt( index );
-                // This if statement was added 18.10.2007
-                /*if (firstCh != '-' && lastCh == '-' && ch >= '0' && ch <= '9')    // 100-101 verður 100 - 101
-                {
-                    index--;                     // read to far
-					i--;
-                    break;
-                }*/
+                // Handling cases like : 2001.»
+                if (lastch == '.' && (ch == '»' || ch == '"' || ch == '”')) {
+                    index--;
+                    i--;
+                }
             }
             else
 			{

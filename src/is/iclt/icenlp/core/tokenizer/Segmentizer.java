@@ -42,6 +42,7 @@ public class Segmentizer
 
 	private int lastIndex = 0;
 	private int currIndex = 0;
+    private String abbrev;
 
     public static String interpretLineFormat(int format)
     {
@@ -174,16 +175,34 @@ public class Segmentizer
 		return (currLine != null);
 	}
 
+    // Checks to see if the given string starts with an upper case, ignoring white spaces
+    private boolean startsWithUpperCase(String str)
+    {
+        int idx=0;
+        char ch = str.charAt(idx);
+        while (idx < str.length() && Character.isWhitespace(ch)) {
+            idx++;
+            ch = str.charAt(idx);
+        }
+        /*if (Character.isUpperCase(ch))
+            return true;
+        else
+            return false;*/
+        return Character.isUpperCase(ch);
+    }
+
 	private boolean isAbbreviation( int endIndex )
 	{
-		String abbrev = null;
+		String str;
+        abbrev = null;
 		int idx = endIndex;
 		boolean startOfAbbrevFound = false;
+        char ch=' ';
 
 		while( !startOfAbbrevFound )
 		{
 			// Search for the start of the abbreviation
-			char ch = currLine.charAt( idx );
+			ch = currLine.charAt( idx );
 			if( ch == ' ' ||
 			    ch == '(' ||
 			    ch == '[' || idx == 0 )
@@ -191,17 +210,48 @@ public class Segmentizer
 			else
 				idx--;
 		}
-        if (idx == 0)
-            abbrev = currLine.substring( 0, endIndex + 1 );
+        if ((idx == 0) && (ch != ' ') && (ch != '(') && (ch != '['))
+                str = currLine.substring( 0, endIndex + 1 );
 		else
-		    abbrev = currLine.substring( idx + 1, endIndex + 1 );
-		return (lex.lookup( abbrev, true ) != null);
+		    str = currLine.substring( idx + 1, endIndex + 1 );
+
+        if (lex.lookup( str, true ) != null) {
+            abbrev = str;
+            return true;
+        }
+        else
+            return false;
+		//return (lex.lookup( abbrev, true ) != null);
 	}
+
+    private boolean isTitle(String str)
+    {
+       String lower = str.toLowerCase();
+       return lower.matches("(mr|mrs|dr|hr)\\.");
+    }
 
 	private boolean isPeriodEOS()         // Checks if the period is really marking end of sentence
 	{
-		if( isAbbreviation( currIndex - 1 ) )  // The period could have been a part of an abbreviation
-			return false;
+        // The period could have been a part of an abbreviation
+        char ch = currLine.charAt(currIndex);
+		if( Character.isWhitespace(ch) && isAbbreviation( currIndex - 1 ) ) {
+            if (currIndex == currLine.length()-1)
+                return true;
+            else {
+            // "og baka í 15 sek. Síðan ..."
+            // Guðrún J. Bachmann"  => J. not end of sentence
+            // Mr. Hrafn => Mr. not end of sentence
+                if (startsWithUpperCase(currLine.substring(currIndex))) {
+                    if ((Character.isUpperCase(abbrev.charAt(0)) && abbrev.length() == 2) ||
+                            isTitle(abbrev) )
+                       return false;
+                    else
+                       return true;
+                }
+                else
+                    return false;
+            }
+        }
 		else
 		{
 			if( currIndex + 1 >= currLine.length() )
@@ -245,7 +295,8 @@ public class Segmentizer
             else
                 prevChar = ' ';
 
-			if( nextChar == ' ' )    // If a space after the full stops
+			//if( nextChar == ' ' )    // If a space after the full stops
+            if( Character.isWhitespace(nextChar))    // If a space after the full stops
 				endOfSentence = true;
             // fífunni.1 eða salati.»  but not 23.1.
             else if ((ch == '.' || ch == '!' || ch == '?'  || ch == '»' /*|| ch == ':'*/)
@@ -253,20 +304,11 @@ public class Segmentizer
                 endOfSentence = true;
             }
 
-            // This else added 18.07.2007 because of Mogga corpus
-            /*else if ( (ch == '"' || ch == '«' || ch == '»'))
-            {
-                if (currIndex > 0) {
-                    char prevCh =  currLine.charAt(currIndex-1);
-                    if (prevCh == '.' || prevCh == '?' || prevCh == '!')
-                        endOfSentence = true;
-                }
-            } */
-
             if( ch == '.' && !isPeriodEOS() )        // Is the period really marking EOS
 				endOfSentence = false;
             // Check for salati.»
-			else if( (ch == '.' || ch == '!' || ch == '?' /*|| ch == ':'*/) && (nextChar == '"' || nextChar == '”' || nextChar == '“' || nextChar == '«' || ch == '»') ) // || ch == '»'))
+			else if( (ch == '.' || ch == '!' || ch == '?' /*|| ch == ':'*/) &&
+                    (nextChar == '"' || nextChar == '”' || nextChar == '“' || nextChar == '«' || nextChar == '»' || nextChar == '‘') ) 
 				endOfSentence = false;
 				// Check for like: "Elsku mamma," jörmuðu kiðlingarnir ....
 			else if( (ch == '"' || ch == '”' || ch == '“' || ch == '»') && currIndex > 1) {
@@ -352,7 +394,7 @@ public class Segmentizer
 					}
 
 					if( ch == '.' || ch == '!' || ch == '?' //|| ch == ':'
-					    || ch == '"' || ch == '”' || ch == '“'|| ch == '«' || ch == '»')    // Full stops
+					    || ch == '"' || ch == '”' || ch == '“'|| ch == '«' || ch == '»' || ch == '‘')    // Full stops
 					{
 						if( isFullStop( ch, isLastChar ) )
 						{
