@@ -380,12 +380,14 @@ public class IceTagger
 				nextToken = (IceTokenTags)tokens.get( i + 1 );
 			else
 				nextToken = null;
-
-			if( !currToken.noTags() && currToken.getFirstTag().getTagStr().equals( IceTag.tagOrdinal ) )   // "ta"
+            // "ta"
+			if( !currToken.noTags() && currToken.getFirstTag().getTagStr().equals( IceTag.tagOrdinal ) &&
+                    !currToken.isDate() && !currToken.isTime())   
 			{
 				if( nextToken != null )
 				{
-					if( nextToken.isNumeral() )
+					//if( nextToken.isNumeral() )
+                    if( nextToken.isNumeral() && !nextToken.getFirstTag().getTagStr().equals( IceTag.tagOrdinal ))
 					{
 						currToken.clearTags();
 						currToken.setTag( IceTag.tagOrdinal2 );
@@ -394,8 +396,9 @@ public class IceTagger
 					else if( nextToken.isNominal() )
 					{
 						currToken.clearTags();
-						if( currToken.lexeme.endsWith( "." ) )     // 3. kafli
+						if( currToken.lexeme.endsWith( "." ) )  {   // 3. kafli
 							currToken.addAllTags( IceTag.tagAdjectivesSingular );
+                        }
 						else
 							currToken.addAllTags( IceTag.tagCardinalsPlural );
 					}

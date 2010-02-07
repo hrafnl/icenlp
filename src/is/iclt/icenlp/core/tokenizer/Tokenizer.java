@@ -47,7 +47,8 @@ public class Tokenizer
 	private int index;
 	private char[] lexeme;
 	private char[] letter;
-    private Pattern webAddress;
+    private Pattern webAddressPattern;
+    private Pattern timePattern;
 
 
 	private int tokenType;
@@ -112,7 +113,8 @@ public class Tokenizer
 		lexeme = new char[maxLexemeSize];      //  number of characters in a token
 		tokens = new ArrayList();       // number of tokens in a sentence
 
-        webAddress = Pattern.compile("(ht|f)tps?://[-\\w]+(\\.\\w[-\\w]*)+");
+        webAddressPattern = Pattern.compile("(ht|f)tps?://[-\\w]+(\\.\\w[-\\w]*)+");
+        timePattern = Pattern.compile("\\d+:\\d+"); // 20:25
 	}
 
 	public void findMultiWords( boolean find )
@@ -449,6 +451,7 @@ public class Tokenizer
 		int i = 0;
         char ch = c;
         char lastch;
+
         while( Character.isDigit( ch ) || Character.isLetter( ch ) ||
 		       ch == '½' || ch == '.' || ch == ',' || ch == '%' || ch == '$'  || ch == '£' || ch == '°' ||
 		       ch == '-' || ch == '_' || ch == '÷' || ch == '*' || ch == '+' || ch == '±' || ch == '/' ||
@@ -484,6 +487,7 @@ public class Tokenizer
 				}
 				break;
 			}
+
 		}
 		;
 
@@ -567,7 +571,7 @@ public class Tokenizer
 
     public boolean isWebAddress(String str)
     {
-        Matcher matcher = webAddress.matcher(str);
+        Matcher matcher = webAddressPattern.matcher(str);
         // Attempts to match str, starting at the beginning, against the pattern.
         // lookingAt does not require that the entire str be matched.
         if (matcher.lookingAt()) {
@@ -576,6 +580,24 @@ public class Tokenizer
             // Now build the token
             currToken.lexeme = sentence.substring(index+start, index+end );
 		    currToken.tokenCode = Token.TokenCode.tcWebAddress;
+            // And update the global index
+            index = index + end - start;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isTime(String str)
+    {
+        Matcher matcher = timePattern.matcher(str);
+        // Attempts to match str, starting at the beginning, against the pattern.
+        // lookingAt does not require that the entire str be matched.
+        if (matcher.lookingAt()) {
+            int start = matcher.start();
+            int end = matcher.end();
+            // Now build the token
+            currToken.lexeme = sentence.substring(index+start, index+end );
+		    currToken.tokenCode = Token.TokenCode.tcNumber;
             // And update the global index
             index = index + end - start;
             return true;
@@ -599,6 +621,9 @@ public class Tokenizer
             // Contains a web address?
             if (isWebAddress(restOfSentence))
 			    ;
+            // Patern 20:25?
+            else if (isTime(restOfSentence))
+                ;
 			else if( Character.isLetter( ch ) ) getWord( ch );
 			else if( Character.isDigit( ch ) ) getNumber( ch );
 			else if( Character.isWhitespace( ch ) ) skipWhitespace( ch );

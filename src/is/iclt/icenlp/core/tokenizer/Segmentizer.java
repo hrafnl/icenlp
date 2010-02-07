@@ -42,7 +42,7 @@ public class Segmentizer
 
 	private int lastIndex = 0;
 	private int currIndex = 0;
-    private String abbrev;
+    private String abbrev, abbrevType;
 
     public static String interpretLineFormat(int format)
     {
@@ -180,7 +180,7 @@ public class Segmentizer
     {
         int idx=0;
         char ch = str.charAt(idx);
-        while (idx < str.length() && Character.isWhitespace(ch)) {
+        while (idx < str.length()-1 && Character.isWhitespace(ch)) {
             idx++;
             ch = str.charAt(idx);
         }
@@ -195,6 +195,7 @@ public class Segmentizer
 	{
 		String str;
         abbrev = null;
+        abbrevType = null;
 		int idx = endIndex;
 		boolean startOfAbbrevFound = false;
         char ch=' ';
@@ -215,20 +216,16 @@ public class Segmentizer
 		else
 		    str = currLine.substring( idx + 1, endIndex + 1 );
 
-        if (lex.lookup( str, true ) != null) {
+        String key = lex.lookup( str, false );
+        if (key != null) {
             abbrev = str;
+            abbrevType = key;
             return true;
         }
         else
             return false;
-		//return (lex.lookup( abbrev, true ) != null);
 	}
 
-    private boolean isTitle(String str)
-    {
-       String lower = str.toLowerCase();
-       return lower.matches("(mr|mrs|dr|hr)\\.");
-    }
 
 	private boolean isPeriodEOS()         // Checks if the period is really marking end of sentence
 	{
@@ -242,8 +239,8 @@ public class Segmentizer
             // Guðrún J. Bachmann"  => J. not end of sentence
             // Mr. Hrafn => Mr. not end of sentence
                 if (startsWithUpperCase(currLine.substring(currIndex))) {
-                    if ((Character.isUpperCase(abbrev.charAt(0)) && abbrev.length() == 2) ||
-                            isTitle(abbrev) )
+                    // Type ABBREV2 does not end a sentence
+                    if (abbrevType.equalsIgnoreCase("ABBREV2"))
                        return false;
                     else
                        return true;
@@ -381,8 +378,7 @@ public class Segmentizer
 			boolean isLastChar = false;      // Last character of the line?
 			if( currLine != null )            // Not end of file
 			{
-				//if( currLine.length() != 0 && !currLine.matches("^\\s+$"))   // Not an empty line
-                if( !isEmptyLine())
+				if( !isEmptyLine())
 				{
 					ch = currLine.charAt( currIndex );
 					currIndex++;

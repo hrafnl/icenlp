@@ -130,6 +130,16 @@ public class Token {
         return false;
     }
 
+    public boolean isDate() {
+       // 20.12.2005
+       return lexeme.matches("\\d+(\\.|/)\\d+(\\.|/)\\d+");  
+
+    }
+
+    public boolean isTime() {
+       return lexeme.matches("\\d+:\\d+"); // 20:25
+    }
+
   /*
   *  Used if the token is a multiword or an abbreviaton
   */
