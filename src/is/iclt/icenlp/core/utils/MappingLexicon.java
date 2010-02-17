@@ -362,7 +362,7 @@ public class MappingLexicon
                     //System.out.println("orð er: " + lexeme);
                     // Where we are working with MWE, we overwrite the lemma with the lexeme.
                     // lexeme.length()-1 because of the additional space at then end
-                    Word w = new Word(lexeme.substring(0,lexeme.length()-1), this.getMapForMWE(mweStr), MWECode.none);
+                    Word w = new Word(lexeme.substring(0,lexeme.length()-1), this.getMapForMWE(mweStr), MWECode.none, null, false);
                     w.setLemma(lexeme.substring(0,lexeme.length()-1));
                     wordList.add(begins, w);
                 }

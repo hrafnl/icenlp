@@ -91,7 +91,7 @@ public class RunIceTaggerApertium extends RunIceTagger
             if( t.isUnknown() )
 			    numUnknowns++;
 
-			wordList.add(new Word(t.lexeme, this.lemmald.lemmatize(t.lexeme, t.getFirstTagStr()).getLemma(), t.getFirstTagStr(), t.mweCode));
+			wordList.add(new Word(t.lexeme, this.lemmald.lemmatize(t.lexeme, t.getFirstTagStr()).getLemma(), t.getFirstTagStr(), t.mweCode, t.tokenCode, t.linkedToPreviousWord));
 		}
 		
 		this.mappingLexicon.processWordList(wordList);

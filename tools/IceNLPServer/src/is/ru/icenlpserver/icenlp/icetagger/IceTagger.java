@@ -12,6 +12,7 @@ import is.iclt.icenlp.core.tokenizer.Sentence;
 import is.iclt.icenlp.core.tokenizer.Sentences;
 import is.iclt.icenlp.core.tokenizer.Token;
 import is.iclt.icenlp.core.tokenizer.TokenizerResources;
+import is.iclt.icenlp.core.tokenizer.Token.TokenCode;
 import is.iclt.icenlp.core.tritagger.TriTaggerLexicons;
 import is.iclt.icenlp.core.tritagger.TriTaggerResources;
 import is.iclt.icenlp.core.utils.Lexicon;
@@ -29,12 +30,21 @@ public class IceTagger implements IIceTagger {
 	private boolean leave_not_found_tag_unchanged = false;
 	private String not_found_tag = null;
 	private Configuration configuration;
+	private String punctuationSeparator = " ";
+	private String taggingOutputSparator = " ";
+	
 
 	public IceTagger() throws IceTaggerConfigrationException {
 		// Store the reference to the configuration in member to
 		// minimize function calls to getInstance().
 		this.configuration = Configuration.getInstance();
-
+		
+		if(this.configuration.containsKey("PunctuationSeparator"))
+			this.punctuationSeparator = this.configuration.getValue("PunctuationSeparator");
+		
+		if(this.configuration.containsKey("TaggingOutputSparator"))
+			this.taggingOutputSparator = this.configuration.getValue("TaggingOutputSparator");
+		
 		try {
 			// check for not found tag. If there is no unfound_tag set in the
 			// configuration file we use a default one: <NOT MAPPED>.
@@ -138,7 +148,7 @@ public class IceTagger implements IIceTagger {
 				tokLexicon = new Lexicon(tokenLexicon);
 			}
 
-			// If the user wants to use the mapper lexicon we must build one.
+			// If the user wants to use the mapping lexicon we must build one.
 			if (this.configuration.containsKey("mappinglexicon")) {
 				String mappingLexicon = this.configuration
 						.getValue("mappinglexicon");
@@ -202,8 +212,7 @@ public class IceTagger implements IIceTagger {
 			for (Sentence s : sentences.getSentences()) {
 				for (Token token : s.getTokens()) {
 					IceTokenTags t = ((IceTokenTags) token);
-					wordList.add(new Word(t.lexeme, t.getFirstTagStr(),
-							t.mweCode));
+					wordList.add(new Word(t.lexeme, t.getFirstTagStr(), t.mweCode, t.tokenCode, t.linkedToPreviousWord));
 				}
 			}
 
@@ -213,36 +222,48 @@ public class IceTagger implements IIceTagger {
 							word.getTag()).getLemma());
 			}
 
-			// Apply mapping rules to the word list.s
-			this.mapperLexicon.processWordList(wordList);
+			// Apply mapping rules to the word list.
+			if(this.mapperLexicon != null)
+				this.mapperLexicon.processWordList(wordList);
 
 			// Create output string that will be sent to the client.
 			String output = "";
 
 			// If we have not set any tagging output
-			if (this.taggingOutputForamt == null) {
-				if (this.lemmatize) {
-					for (Word word : wordList)
-						output = output + word.getLemma() + " " + word.getTag()
-								+ " ";
-				} else {
-					for (Word word : wordList)
-						output = output + word.getLexeme() + " "
-								+ word.getTag() + " ";
+			if (this.taggingOutputForamt == null) 
+			{	
+				for (Word word : wordList)
+				{
+					if(word.linkedToPreviousWord)
+						output = output + punctuationSeparator + word.getLexeme() + " " + word.getTag();
+					else
+						output = output + taggingOutputSparator + word.getLexeme() + " " + word.getTag();
+							
 				}
 			}
 
-			else {
+			// We have some tagging output set.
+			else 
+			{
 				for (Word word : wordList) {
-					String part = this.taggingOutputForamt.replace("[LEXEME]",
-							word.getLexeme());
+					String part = this.taggingOutputForamt.replace("[LEXEME]", word.getLexeme());
 					part = part.replace("[TAG]", word.getTag());
+
 					if (this.lemmatize)
 						part = part.replace("[LEMMA]", word.getLemma());
-					output = output + part;
+					
+					if (word.linkedToPreviousWord)
+						output = output + punctuationSeparator + part;
+
+					else
+						output = output + taggingOutputSparator + part;
 				}
 			}
-
+			
+			// Remove the first char if it is a space.
+			if(output.charAt(0) == ' ')
+				output = output.substring(1, output.length());
+			
 			return output;
 		}
 

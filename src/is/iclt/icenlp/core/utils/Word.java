@@ -1,6 +1,7 @@
 package is.iclt.icenlp.core.utils;
 
 import is.iclt.icenlp.core.tokenizer.Token.MWECode;
+import is.iclt.icenlp.core.tokenizer.Token.TokenCode;
 
 /**
 * Represents word within a sentence and keps
@@ -16,21 +17,27 @@ public class Word
     private String tag;
     private String lemma;
     public MWECode mweCode;
+    public TokenCode tokenCode;
+    public boolean linkedToPreviousWord;
 
     // Constructor for the class.
-    public Word(String lexeme, String tag, MWECode mweCode)
+    public Word(String lexeme, String tag, MWECode mweCode, TokenCode tokenCode, boolean linkedToPreviousWord)
     {
         this.lexeme = lexeme;
         this.tag = tag;
         this.mweCode = mweCode;
+        this.tokenCode = tokenCode;
+        this.linkedToPreviousWord = linkedToPreviousWord;
     }
     
-    public Word(String lexeme, String lemma, String tag, MWECode mweCode)
+    public Word(String lexeme, String lemma, String tag, MWECode mweCode, TokenCode tokenCode, boolean linkedToPreviousWord)
     {
         this.lexeme = lexeme;
         this.tag = tag;
         this.mweCode = mweCode;
         this.lemma = lemma;
+        this.tokenCode = tokenCode;
+        this.linkedToPreviousWord = linkedToPreviousWord;
     }
     
     /**

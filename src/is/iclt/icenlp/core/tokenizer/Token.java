@@ -45,11 +45,16 @@ public class Token {
     public String lexeme;               // The lexeme
     public TokenCode tokenCode;         // The token code
     public MWECode mweCode;
+    
+    // hs added
+    public boolean linkedToPreviousWord;
+    
 
     public Token()
     {
         this.lexeme = null;
         this.tokenCode = TokenCode.tcNone;
+        this.linkedToPreviousWord = false;
         
     }
 
@@ -58,6 +63,7 @@ public class Token {
         this.lexeme = str;
         this.tokenCode = tc;
         this.mweCode = MWECode.none;
+        this.linkedToPreviousWord = false;
     }
 
     public boolean isQuote()

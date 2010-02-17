@@ -21,6 +21,7 @@
  */
 package is.iclt.icenlp.core.tokenizer;
 
+import is.iclt.icenlp.core.tokenizer.Token.TokenCode;
 import is.iclt.icenlp.core.utils.Lexicon;
 
 import java.io.IOException;
@@ -122,7 +123,15 @@ public class Tokenizer
 		findMultiWords = find;
 	}
 
-/*
+
+	private boolean isLinkedToNext(TokenCode tokenCode)
+	{
+		if(tokenCode == TokenCode.tcEOS || tokenCode == TokenCode.tcComma)
+			return true;		
+		return false;
+	}
+	
+	/*
 	private void clearLexeme()
 	{
 		for( int i = 0; i < lexeme.length; i++ )
@@ -229,13 +238,14 @@ public class Tokenizer
 		index = 0;
 		sentence = sentenc;
 		Token token;
+		Token lastToken;
 
 		while( index < sentence.length() )
 		{
 			nextToken();
 			if( currToken.tokenCode != Token.TokenCode.tcWhitespace )
 			{
-				//System.out.println(currToken.lexeme);
+				//System.out.println(currToken);
 				switch( tokenType )
 				{
 					case typeToken:
@@ -254,7 +264,15 @@ public class Tokenizer
 						token = new Token( currToken.lexeme, currToken.tokenCode );
 						break;
 				}
+				
+				if(this.isLinkedToNext(token.tokenCode))
+					token.linkedToPreviousWord = true;
+
 				tokens.add( token );
+				
+				// Remember last token.
+				lastToken = token;
+				
 			}
 		}
 

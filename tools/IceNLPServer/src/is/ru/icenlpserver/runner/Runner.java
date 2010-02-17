@@ -47,8 +47,8 @@ public class Runner {
 			while ((strLine = br.readLine()) != null) {
 				if (!strLine.startsWith("#") && !strLine.startsWith("//")
 						&& strLine.length() > 0) {
-					if (strLine.length() >= 3 && strLine.contains("=")) {
-						Pattern p = Pattern.compile("\"[^\"]+\"");
+					if (strLine.length() >= 2 && strLine.contains("=")) {
+						Pattern p = Pattern.compile("\"[^\"]*\"");
 
 						Matcher matcher = p.matcher(strLine);
 						String value;
