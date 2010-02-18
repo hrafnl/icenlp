@@ -5,10 +5,12 @@
     </description>
     
     <property name="src.dir" value="src"/>
+    <property name="applications.dir" value="/usr/local/applications"/>
         <!-- Change the values of hostname and apertium_shell_script.-->
-        <property name="hostname" value="SET-HOST-NAME"/>
+        <!--property name="hostname" value="SET-HOST-NAME"/-->
+        <property name="hostname" value="$1"/>
         <!--property name="apertium_shell_script" value="${user.home}/apertium/apertium-is-en/pipelineIceClient.sh"/-->
-        <property name="apertium_shell_script" value="${user.home}/apertium/apertium-is-en/icenlpApertium.sh"/>
+        <property name="apertium_shell_script" value="${applications.dir}/apertium/apertium-is-en/icenlpApertium.sh"/>
         
         <property name="build.dir" value="build"/>
         <property name="classes.dir" value="${build.dir}/classes"/>
