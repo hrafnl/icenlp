@@ -87,14 +87,16 @@
         <echo message="Found IceNLPServer dir"/>
         <copy todir="${dist}/${package}/tools/IceNLPServer">
 			<fileset dir="tools/IceNLPServer/dist" />
-		</copy>
+	</copy>
+	<chmod perm="+x" dir="${dist}/${package}/tools/IceNLPServer" includes="**/*.sh" />
     </target>
 
     <target name="client-jar" if="IceNLPClient.present">
         <echo message="Found IceNLPClient dir"/>
         <copy todir="${dist}/${package}/tools/IceNLPClient">
 			<fileset dir="tools/IceNLPClient/dist" />
-		</copy>
+	</copy>
+	<chmod perm="+x" dir="${dist}/${package}/tools/IceNLPClient" includes="**/*.sh" />
     </target>
 
 	
