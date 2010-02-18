@@ -15,6 +15,8 @@ To generate these .java files use the shells:
 	/flex/icetagger/compileRules.sh 
 	/flex/iceparser/flexAll.sh
 	/flex/iceNER/flexit.sh
+
+Same holds for the rule file used by the lemmatizer Lemmald. It is generated using the shell /dict/lemmald/makeRules.sh
 -----------------------------------------
 hrafn@ru.is
 anton.karl.ingason@gmail.com

@@ -76,6 +76,10 @@ public class RuleDatabase {
         // Go through every line in rule database file
         while( ruleTokenizer.hasMoreTokens() ){
             ruleLine = ruleTokenizer.nextToken();
+            // Comments start with "#"
+            if(ruleLine.startsWith("#"))
+                continue;
+            
             ruleSplitter = new StringTokenizer( ruleLine, delim );
 
             ruleId = ruleSplitter.nextToken();
