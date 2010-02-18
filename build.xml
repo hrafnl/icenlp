@@ -82,6 +82,10 @@
                property="IceNLPServer.present"/>
     <available file="tools/IceNLPClient/dist" type="dir"
                property="IceNLPClient.present"/>
+    <available file="tools/RouterSlave/dist" type="dir"
+               property="RouterSlave.present"/>
+    <available file="tools/IRW/dist" type="dir"
+               property="IRW.present"/>
 
     <target name="server-jar" if="IceNLPServer.present">
         <echo message="Found IceNLPServer dir"/>
@@ -99,8 +103,24 @@
 	<chmod perm="+x" dir="${dist}/${package}/tools/IceNLPClient" includes="**/*.sh" />
     </target>
 
+    <target name="routerslave-jar" if="RouterSlave.present">
+        <echo message="Found RouterSlave dir"/>
+        <copy todir="${dist}/${package}/tools/RouterSlave">
+			<fileset dir="tools/RouterSlave/dist" />
+	</copy>
+	<chmod perm="+x" dir="${dist}/${package}/tools/RouterSlave" includes="**/*.sh" />
+    </target>
+
+    <target name="irw-jar" if="IRW.present">
+        <echo message="Found IRW dir"/>
+        <copy todir="${dist}/${package}/tools/IRW">
+			<fileset dir="tools/IRW/dist" />
+	</copy>
+	<chmod perm="+x" dir="${dist}/${package}/tools/IRW" includes="**/*.sh" />
+    </target>
+
 	
-	<target name="package" depends="release-jar, server-jar, client-jar" >
+	<target name="package" depends="release-jar, server-jar, client-jar, routerslave-jar, irw-jar" >
 		
 		<copy file="${dist}/${jar_name}.jar" todir="${dist}/${package}/dist" />
 		<copy todir="${dist}/${package}/bat">
