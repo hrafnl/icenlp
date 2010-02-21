@@ -14,6 +14,7 @@ are not version controlled because they are automatically generated from .flex s
 To generate these .java files use the shells:         
 	/flex/icetagger/compileRules.sh 
 	/flex/iceparser/flexAll.sh
+	/flex/iceparser/errorSearch/flexAll.sh
 	/flex/iceNER/flexit.sh
 
 Same holds for the rule file used by the lemmatizer Lemmald. It is generated using the shell /dict/lemmald/makeRules.sh
