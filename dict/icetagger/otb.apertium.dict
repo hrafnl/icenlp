@@ -695,8 +695,10 @@ uns <cnj> <cnjsub>
 þótt <cnj> <cnjsub>
 
 [MWE]
-hins_vegar <adv>
 eins_og <adv>
+hins_vegar <adv>
+í_dag <adv>
+í_gær <adv>
 
 [MWE-RENAME]
 ########################################
