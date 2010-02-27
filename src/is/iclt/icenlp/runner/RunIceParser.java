@@ -73,7 +73,7 @@ public class RunIceParser {
         System.out.println("***************************************************");
         System.out.println("*  IceParser - An incremental finite-state parser *");
         System.out.println("*  Version 1.1                                    *");
-        System.out.println("*  Copyright (C) 2006-2009, Hrafn Loftsson        *" );
+        System.out.println("*  Copyright (C) 2006-2010, Hrafn Loftsson        *" );
         System.out.println("***************************************************");
     }
 

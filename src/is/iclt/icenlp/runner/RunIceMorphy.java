@@ -290,11 +290,16 @@ public class RunIceMorphy {
 
     private void printHeader()
     {
-        System.out.println("************************************************");
-        System.out.println("*  IceMorphy - A morphological analyzer        *");
-        System.out.println("*  Version 1.1                                 *");
-        System.out.println("*  Copyright (C) 2005-2009, Hrafn Loftsson     *" );
-        System.out.println("************************************************");
+        System.out.println("****************************************************************");
+        System.out.println("*  IceMorphy - A morphological analyzer                        *");
+        System.out.println("*  Version 1.1                                                 *");
+        System.out.println("*  Copyright (C) 2005-2010, Hrafn Loftsson                     *");
+        System.out.println("*                                                              *");
+        System.out.println("* The dictionaries used by IceMorphy are derived from the      *");
+        System.out.println("* Icelandic Frequency Dictionary (IFD) corpus, and from        *");
+        System.out.println("* a part of the Database of Modern Icelandic Inflections (BIN) *");
+        System.out.println("* - Copyright © Árni Magnússon Institute for Icelandic Studies *");
+        System.out.println("****************************************************************");
     }
 
     // Get the lexicons either from the resources or the parameters

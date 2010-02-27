@@ -3,7 +3,7 @@ echo "*                                                  *"
 echo "*  IceParser - An incremental finite-state parser  *"
 echo "*                for Icelandic text                *"
 echo "*  Version 1.1                                     *"
-echo "*  (c) Hrafn Loftsson, 2006-2009                   *"
+echo "*  (c) Hrafn Loftsson, 2006-2010                   *"
 echo "*                                                  *"
 echo "****************************************************"
 
