@@ -653,9 +653,9 @@ lhfþof <adj><pst><nt><pl><dat><idk>
 # This section contains tag mapping exception rules for lemmata.
 # The rules are on the form: lemma mapped_tag newtag
 ###############################################################
-vera <vblex> <vbser>
-hafa <vblex> <vbhaver>
-geta <vblex> <vbaux>
+vera <vblex><actv> <vbser>
+hafa <vblex><actv> <vbhaver>
+geta <vblex><actv> <vbaux>
 
 [LEXEME]
 ###############################################################
