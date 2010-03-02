@@ -289,7 +289,15 @@ public class IceTagger implements IIceTagger {
 					// check in FST
 					if(this.fstp != null)	
 					{
-						String res = fstp.biltrans(part, true);
+						String check = "^" + word.getLemma() + word.getTag() + "$";
+						String res = fstp.biltrans(check, true);
+						if(res.startsWith("^@"))
+						{
+							if(this.configuration.debugMode())
+								System.out.println("[debug] word " + word.getLemma() + " not found in bidix" );
+							
+							part = "^*" + word.getLexeme() + "$";
+						}
 					}
 					
 					
