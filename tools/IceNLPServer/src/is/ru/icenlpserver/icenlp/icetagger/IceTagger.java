@@ -296,7 +296,9 @@ public class IceTagger implements IIceTagger {
 							if(this.configuration.debugMode())
 								System.out.println("[debug] word " + word.getLemma() + " not found in bidix" );
 							
-							part = "^*" + word.getLexeme() + "$";
+							part = this.taggingOutputForamt.replace("[LEXEME]",word.getLexeme());
+                            part = part.replace("[LEMMA]", "*" + word.getLexeme());
+                            part = part.replace("[TAG]", "");
 						}
 					}
 					
