@@ -50,7 +50,13 @@
 	    <manifestclasspath property="jar.classpath" jarfile="${dist}/${jar_name}.jar">
 	      <classpath refid="classpath"/>
 	    </manifestclasspath>  
-		<jar destfile="${dist}/${jar_name}.jar">			
+
+        
+        <exec executable="bash" newenvironment="false" dir="dict/lemmald">
+            <arg value="makeRules.sh" /></exec>
+        
+        
+        <jar destfile="${dist}/${jar_name}.jar">			
 			<fileset dir="${build}">
 				<include name="**/*.class" />
 			</fileset>

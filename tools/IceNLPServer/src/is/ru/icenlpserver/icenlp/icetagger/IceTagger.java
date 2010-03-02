@@ -1,8 +1,14 @@
 package is.ru.icenlpserver.icenlp.icetagger;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.apertium.lttoolbox.process.FSTProcessor;
 
 import is.iclt.icenlp.core.icetagger.IceTaggerLexicons;
 import is.iclt.icenlp.core.icetagger.IceTaggerResources;
@@ -32,19 +38,46 @@ public class IceTagger implements IIceTagger {
 	private Configuration configuration;
 	private String punctuationSeparator = " ";
 	private String taggingOutputSparator = " ";
-	
+	private FSTProcessor fstp = null;
 
 	public IceTagger() throws IceTaggerConfigrationException {
 		// Store the reference to the configuration in member to
 		// minimize function calls to getInstance().
 		this.configuration = Configuration.getInstance();
-		
-		if(this.configuration.containsKey("PunctuationSeparator"))
+
+		if (this.configuration.containsKey("PunctuationSeparator"))
 			this.punctuationSeparator = this.configuration.getValue("PunctuationSeparator");
-		
-		if(this.configuration.containsKey("TaggingOutputSparator"))
+
+		if (this.configuration.containsKey("TaggingOutputSparator"))
 			this.taggingOutputSparator = this.configuration.getValue("TaggingOutputSparator");
-		
+
+		if (this.configuration.containsKey("compiled_bidix")) {
+			String compiledBidixLocation = this.configuration.getValue("compiled_bidix");
+			File file = new File(compiledBidixLocation);
+
+			if (!file.exists() || !file.canRead()) {
+				System.out.println("[!!] Unable to read compiled bidix "+ compiledBidixLocation + ".");
+			} else {
+				System.out.println("[i] Loading compiled bidix "+ compiledBidixLocation + ".");
+				this.fstp = new FSTProcessor();
+				try {
+					fstp.load(new BufferedInputStream(new FileInputStream(compiledBidixLocation)));
+					System.out.println("[i] Compiled bidix loaded");
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					this.fstp = null;
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					this.fstp = null;
+				}
+				fstp.initBiltrans();
+				System.out.println("[i] FST for compiled bidix ready.");
+			}
+
+		}
+
 		try {
 			// check for not found tag. If there is no unfound_tag set in the
 			// configuration file we use a default one: <NOT MAPPED>.
@@ -212,7 +245,8 @@ public class IceTagger implements IIceTagger {
 			for (Sentence s : sentences.getSentences()) {
 				for (Token token : s.getTokens()) {
 					IceTokenTags t = ((IceTokenTags) token);
-					wordList.add(new Word(t.lexeme, t.getFirstTagStr(), t.mweCode, t.tokenCode, t.linkedToPreviousWord));
+					wordList.add(new Word(t.lexeme, t.getFirstTagStr(),
+							t.mweCode, t.tokenCode, t.linkedToPreviousWord));
 				}
 			}
 
@@ -223,34 +257,41 @@ public class IceTagger implements IIceTagger {
 			}
 
 			// Apply mapping rules to the word list.
-			if(this.mapperLexicon != null)
+			if (this.mapperLexicon != null)
 				this.mapperLexicon.processWordList(wordList);
 
 			// Create output string that will be sent to the client.
 			String output = "";
 
 			// If we have not set any tagging output
-			if (this.taggingOutputForamt == null) 
-			{	
-				for (Word word : wordList)
-				{
-					if(word.linkedToPreviousWord)
-						output = output + punctuationSeparator + word.getLexeme() + " " + word.getTag();
+			if (this.taggingOutputForamt == null) {
+				for (Word word : wordList) {
+					if (word.linkedToPreviousWord)
+						output = output + punctuationSeparator
+								+ word.getLexeme() + " " + word.getTag();
 					else
-						output = output + taggingOutputSparator + word.getLexeme() + " " + word.getTag();
-							
+						output = output + taggingOutputSparator
+								+ word.getLexeme() + " " + word.getTag();
+
 				}
 			}
 
 			// We have some tagging output set.
-			else 
-			{
+			else {
 				for (Word word : wordList) {
-					String part = this.taggingOutputForamt.replace("[LEXEME]", word.getLexeme());
+					String part = this.taggingOutputForamt.replace("[LEXEME]",word.getLexeme());
 					part = part.replace("[TAG]", word.getTag());
 
 					if (this.lemmatize)
 						part = part.replace("[LEMMA]", word.getLemma());
+
+					
+					// check in FST
+					if(this.fstp != null)	
+					{
+						String res = fstp.biltrans(part, true);
+					}
+					
 					
 					if (word.linkedToPreviousWord)
 						output = output + punctuationSeparator + part;
@@ -259,11 +300,11 @@ public class IceTagger implements IIceTagger {
 						output = output + taggingOutputSparator + part;
 				}
 			}
-			
+
 			// Remove the first char if it is a space.
-			if(output.charAt(0) == ' ')
+			if (output.charAt(0) == ' ')
 				output = output.substring(1, output.length());
-			
+
 			return output;
 		}
 

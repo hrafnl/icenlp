@@ -20,6 +20,12 @@
 	    </fileset>  
         </path> 
 
+	<path id="local-class-path">  
+        <fileset dir="libs/" >  
+	        <include name="*.jar"/>  
+	    </fileset>  
+    </path> 
+
 	<target name="clean" description="Removes build- and jar-dir.">
         	<delete dir="${build.dir}"/>
 		<delete dir="${jar.dir}"/>
@@ -36,7 +42,8 @@
 		<javac srcdir="src" destdir="${classes.dir}">
 			<classpath>  
 				<path refid="files-classpath" />  
-			</classpath>
+    			<path refid="local-class-path" /> 
+            </classpath>
 		</javac>
 	</target>
 	
@@ -45,7 +52,7 @@
 		<jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
 			<manifest>
 				<attribute name="Main-Class" value="${main-class}"/>
-				<attribute name="Class-Path" value="IceNLPCore.jar ../../dist/IceNLPCore.jar ../../../dist/IceNLPCore.jar" />
+				<attribute name="Class-Path" value="lttoolbox.jar IceNLPCore.jar ../../dist/IceNLPCore.jar ../../../dist/IceNLPCore.jar" />
 			</manifest>
 		</jar>
 	</target>
@@ -54,6 +61,10 @@
 		<mkdir dir="${dist.dir}"/>
 		<copy todir="${dist.dir}">
 			<fileset dir="${jar.dir}" />
+		</copy>
+
+		<copy todir="${dist.dir}">
+			<fileset dir="libs" />
 		</copy>
 
 		<copy todir="${dist.dir}/config">

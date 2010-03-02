@@ -121,7 +121,7 @@ public boolean agreement(String tag1, String tag2)
 
 %}
 
-%include /home/hrafn/nlp/java/IceNLPCore/flex/iceparser/regularDef.txt
+%include /home/hs/temp/icenlp/flex/iceparser/regularDef.txt
 
 OpenSubj = "{*SUBJ>"
 CloseSubj = "*SUBJ>}"
