@@ -3406,8 +3406,14 @@ milljarðar=nkfn
 milljarða=nkfo_nkfe
 milljörðum=nkfþ
 
+# Nouns
 evra=nven
 evru=nveo_nveþ_nvee
 
 markari=nken
 markara=nkeo_nkeþ_nkee
+
+# Proper nouns
+Finnland=nhen-ö_nheo-ö
+Evrópusambandið=nhengö_nheogö
+
