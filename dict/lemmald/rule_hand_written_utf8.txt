@@ -1,9 +1,6 @@
 # Beginning of handwritten rules #
 #################################
 e=u,w=plöntu,p=n1v:öntu>anta:1
-# e=u,p=n1h:dinu>d:500
-e=u,p=nheþg:dinu>d:500
-e=u,p=nheþgs:dinu>d:500
 e=u,p=nheþgö:dinu>d:500
 # End of handwritten rules	#
 #################################
