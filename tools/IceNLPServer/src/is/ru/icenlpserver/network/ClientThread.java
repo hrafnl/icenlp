@@ -84,14 +84,16 @@ public class ClientThread implements Runnable {
 					// receiving and
 					// let's create a replay for the client.
 					String taggedString = null;
-					try {
-						taggedString = IceNLPSingletonService.getInstance()
-								.tagText(strFromClient);
+					try 
+					{
+						taggedString = IceNLPSingletonService.getInstance().tagText(strFromClient);
 						if (Configuration.getInstance().debugMode())
-							System.out.println("[debug] Reply string from IceNLP that will be sent to client is: "
-											+ taggedString);
+							System.out.println("[debug] Reply string from IceNLP that will be sent to client is: " + taggedString);
 
-					} catch (Exception e) {
+					} 
+					catch (Exception e) 
+					{
+						System.out.println(e);
 						System.out.println("[x] Error in thread while getting IceNLP singleton instance");
 					}
 
@@ -127,6 +129,7 @@ public class ClientThread implements Runnable {
 		try {
 			this.socket.close();
 		} catch (IOException e) {
+			System.out.println(">> ERROR WAS HERE!!!");
 			System.out.println("[X] " + e.getMessage());
 		}
 	}

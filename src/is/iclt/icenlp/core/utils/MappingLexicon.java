@@ -99,6 +99,7 @@ public class MappingLexicon
 	 */
 	private void readConfigFile(String mappingFile) throws FileNotFoundException, IOException 
 	{
+		System.out.println("KALLAD HERE!!!!");
 		FileInputStream fstream = new FileInputStream(mappingFile);
 		DataInputStream in = new DataInputStream(fstream);
 		BufferedReader br = new BufferedReader(new InputStreamReader(in));
@@ -210,6 +211,7 @@ public class MappingLexicon
 							{
 								String[] str = strLine.split("\\s+");
 								this.mweRuleMap.put(str[0], str[1]);
+								System.out.println(">> added MWE key: " + str[0]);
 								break;
 							}
 							
@@ -225,6 +227,7 @@ public class MappingLexicon
 							{
 								String[] strings = strLine.split("\\s+");
 								this.mweRenameRuleMap.put(strings[0], new Pair<String, String>(strings[1], strings[2]));
+								System.out.println(">> added MWE_RENAME key: " + strings[0]);
 								break;
 							}
 							else
@@ -346,7 +349,7 @@ public class MappingLexicon
 
                     j += 1;
                 }
-                
+                mweStr = mweStr.toLowerCase();
                 if(this.hasMapForMWE(mweStr))
                 {
                 	if(this.showAppliedActions)
@@ -376,7 +379,7 @@ public class MappingLexicon
             {
                 Pair<String, String> pair = this.getRenameRuleForLexeme(word.getLexeme());
                 word.setLemma(pair.one.replace('_', ' '));
-                word.setLemma(pair.one.replace('_', ' '));
+                word.setLexeme(pair.one.replace('_', ' '));
                 word.setTag(pair.two);
                 if(this.showAppliedActions)
 					System.out.println("[debug] applied MWE-RENAME rule to word " + word.getLexeme());

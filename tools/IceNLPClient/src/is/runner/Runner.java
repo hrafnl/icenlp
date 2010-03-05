@@ -13,12 +13,16 @@ import java.util.List;
 
 public class Runner 
 {	
+	
+	
 	public static void printHelp()
 	{
 		System.out.println("IceNLPClient");
 		System.out.println("\t --host|h= \t Connection host.");
 		System.out.println("\t --port|p= \t Connection port.");
 	}
+	
+	
 	
 	public static void main(String[] args) 
 	{		
@@ -49,13 +53,26 @@ public class Runner
 			InputStreamReader reader = new InputStreamReader(System.in, "UTF8");
 			BufferedReader br = new BufferedReader(reader);
 			
+			
+			// we must restrict what the client is sending.
 			while ((inLine = br.readLine()) != null)
-				lines.add(inLine);
+			{
+				if(inLine.length() >=1)
+				{
+					lines.add(inLine);
+				}
+			}
+			
+			if (lines.size() == 0) 
+			{
+				printHelp();
+				return;
+			}
 			
 			Socket socket = null;
 			socket = new Socket(host, port);
-			for(String s : lines)
-				System.out.println(tagString(s, socket));
+			System.out.println(tagString(lines, socket));
+
 		}
 		catch(Exception ex)
 		{
@@ -63,10 +80,22 @@ public class Runner
 		}
 	}
 	
-	public static String tagString(String s, Socket socket) throws IOException
+	
+	
+	
+	
+	
+	
+	public static String tagString(List<String> lines, Socket socket) throws IOException
 	{
 		InputStream inStream = socket.getInputStream();
 		OutputStream outStream = socket.getOutputStream();
+		
+		// Create one strinf of all the sentences.
+		String s = "";
+		for(String line : lines)
+			s = s + "\n" + line;
+		
 		createSentecePackets(outStream, s);
 		Packet p = readFromStream(inStream);
 		if(p.getOpcode() == 3)
@@ -96,6 +125,7 @@ public class Runner
 			return "";
 		}
 	}
+		
 	
 	public static Packet readFromStream(InputStream stream)
 	{

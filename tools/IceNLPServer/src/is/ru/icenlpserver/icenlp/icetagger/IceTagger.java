@@ -18,7 +18,6 @@ import is.iclt.icenlp.core.tokenizer.Sentence;
 import is.iclt.icenlp.core.tokenizer.Sentences;
 import is.iclt.icenlp.core.tokenizer.Token;
 import is.iclt.icenlp.core.tokenizer.TokenizerResources;
-import is.iclt.icenlp.core.tokenizer.Token.TokenCode;
 import is.iclt.icenlp.core.tritagger.TriTaggerLexicons;
 import is.iclt.icenlp.core.tritagger.TriTaggerResources;
 import is.iclt.icenlp.core.utils.Lexicon;
@@ -55,21 +54,25 @@ public class IceTagger implements IIceTagger {
 			String compiledBidixLocation = this.configuration.getValue("compiled_bidix");
 			File file = new File(compiledBidixLocation);
 
-			if (!file.exists() || !file.canRead()) {
+			if (!file.exists() || !file.canRead()) 
 				System.out.println("[!!] Unable to read compiled bidix "+ compiledBidixLocation + ".");
-			} else {
+			else 
+			{
 				System.out.println("[i] Loading compiled bidix "+ compiledBidixLocation + ".");
 				this.fstp = new FSTProcessor();
-				try {
+				try 
+				{
 					fstp.load(new BufferedInputStream(new FileInputStream(compiledBidixLocation)));
 					System.out.println("[i] Compiled bidix loaded");
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
+				} 
+				catch (FileNotFoundException e) 
+				{
 					this.fstp = null;
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					System.out.println("[!!] Unable to read compiled bidix "+ compiledBidixLocation + ".");
+				} 
+				catch (IOException e) 
+				{
+					System.out.println("[!!] Unable to read compiled bidix "+ compiledBidixLocation + ".");
 					this.fstp = null;
 				}
 				fstp.initBiltrans();
@@ -187,6 +190,7 @@ public class IceTagger implements IIceTagger {
 						.getValue("mappinglexicon");
 				System.out.println("[i] Reading mapping lexicon from: "
 						+ mappingLexicon + '.');
+				System.out.println(">> here.");
 				this.mapperLexicon = new MappingLexicon(mappingLexicon, true,
 						this.leave_not_found_tag_unchanged, this.configuration
 								.debugMode(), this.not_found_tag);
@@ -286,7 +290,6 @@ public class IceTagger implements IIceTagger {
 						part = part.replace("[LEMMA]", word.getLemma());
 
 					
-					// check in FST
 					if(this.fstp != null)	
 					{
 						String check = "^" + word.getLemma() + word.getTag() + "$";
@@ -298,7 +301,7 @@ public class IceTagger implements IIceTagger {
 							
 							part = this.taggingOutputForamt.replace("[LEXEME]",word.getLexeme());
                             part = part.replace("[LEMMA]", "*" + word.getLexeme());
-                            part = part.replace("[TAG]", "");
+                            part = part.replace("[TAG]", word.getTag());
 						}
 					}
 					
