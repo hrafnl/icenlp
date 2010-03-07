@@ -190,7 +190,6 @@ public class IceTagger implements IIceTagger {
 						.getValue("mappinglexicon");
 				System.out.println("[i] Reading mapping lexicon from: "
 						+ mappingLexicon + '.');
-				System.out.println(">> here.");
 				this.mapperLexicon = new MappingLexicon(mappingLexicon, true,
 						this.leave_not_found_tag_unchanged, this.configuration
 								.debugMode(), this.not_found_tag);

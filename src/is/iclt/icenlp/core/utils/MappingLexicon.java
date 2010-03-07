@@ -20,7 +20,7 @@ import java.util.List;
 public class MappingLexicon 
 {
 	// Enumeration for block sections in the mapping file.
-	public enum BLOCK_TYPE {not_set, tagmaps, mwe, tagmapping, lemma, mwe_rename, lexeme, test}
+	public enum BLOCK_TYPE {not_set, tagmaps, mwe, tagmapping, lemma, mwe_rename, lexeme, lexemepattern}
 	
 	// Hash map for direct tags mappings.
 	private HashMap<String, String> tagMaps;
@@ -37,6 +37,9 @@ public class MappingLexicon
 	// Hash map for MWE rename rules.
 	private HashMap<String, Pair<String, String>> mweRenameRuleMap;
 	
+	// Hash map for Lexeme-pattern tag rules.
+	private HashMap<String,String> lexemePatternMap;
+
 	// Boolean flag that is used to decide whether tags that do not have
 	// any mapping are left unchanged or are marked with "notFoundMappingTag". 
 	private boolean leaveNotFoundTagUnchanged;
@@ -75,6 +78,7 @@ public class MappingLexicon
 		this.lexemeExceptionRuleMap = new HashMap<String, List<Pair<String, String>>>();
 		this.mweRuleMap = new HashMap<String, String>();
 		this.mweRenameRuleMap = new HashMap<String, Pair<String, String>>();
+		this.lexemePatternMap = new HashMap<String, String>(); 
 		this.leaveNotFoundTagUnchanged = leaveNotFoundTagUnchanged;
 		this.showAppliedActions = showAppliedActions;
 		this.notFoundMappingTag = notFoundMappingTag;
@@ -86,6 +90,7 @@ public class MappingLexicon
 			System.out.println("[i] Number of mapping rules: " + this.tagMaps.size());
 			System.out.println("[i] Number of lexeme exception rules: " + this.lexemeExceptionRuleMap.size());
 			System.out.println("[i] Number of lemma exception rules: " + this.lemmaExceptionRuleMap.size());
+			System.out.println("[i] Number of lexeme-patterns rules: " + this.lexemePatternMap.size());
 			System.out.println("[i] Number of MWE rules: " + this.mweRuleMap.size());
 			System.out.println("[i] Number of MWE rename rules: " + this.mweRenameRuleMap.size());
 		}
@@ -99,7 +104,6 @@ public class MappingLexicon
 	 */
 	private void readConfigFile(String mappingFile) throws FileNotFoundException, IOException 
 	{
-		System.out.println("KALLAD HERE!!!!");
 		FileInputStream fstream = new FileInputStream(mappingFile);
 		DataInputStream in = new DataInputStream(fstream);
 		BufferedReader br = new BufferedReader(new InputStreamReader(in));
@@ -139,6 +143,9 @@ public class MappingLexicon
 					
 					else if(entryType.toLowerCase().equals("mwe-rename"))
 						type = BLOCK_TYPE.mwe_rename;
+					
+					else if(entryType.toLowerCase().equals("lexeme-pattern"))
+						type = BLOCK_TYPE.lexemepattern;
 					
 					else
 					{
@@ -211,7 +218,6 @@ public class MappingLexicon
 							{
 								String[] str = strLine.split("\\s+");
 								this.mweRuleMap.put(str[0], str[1]);
-								System.out.println(">> added MWE key: " + str[0]);
 								break;
 							}
 							
@@ -227,12 +233,26 @@ public class MappingLexicon
 							{
 								String[] strings = strLine.split("\\s+");
 								this.mweRenameRuleMap.put(strings[0], new Pair<String, String>(strings[1], strings[2]));
-								System.out.println(">> added MWE_RENAME key: " + strings[0]);
 								break;
 							}
 							else
 							{
 								System.out.println("[!!!]: Error in config at line " + lineNum + ". Invalid MWE-RENAME entry.");
+								System.out.println(lineNum + ": " + strLine);
+								break;
+							}
+						
+						case lexemepattern:
+							if(strLine.matches("\\S+\\s+\\S+"))
+							{
+								String[] str = strLine.split("\\s+");
+								this.lexemePatternMap.put(str[0], str[1]);
+								break;
+							}
+							
+							else
+							{
+								System.out.println("[!!!]: Error in config at line " + lineNum + ". Invalid ");
 								System.out.println(lineNum + ": " + strLine);
 								break;
 							}
@@ -385,9 +405,23 @@ public class MappingLexicon
 					System.out.println("[debug] applied MWE-RENAME rule to word " + word.getLexeme());
             }
         }
+        
+        // Go over Lexeme-pattern rules.
+        for(Word word : wordList)
+        {
+        	for(String key : this.lexemePatternMap.keySet())
+        	{
+        		if(word.getLexeme().matches(key))
+        		{
+        			word.setTag(this.lexemePatternMap.get(key));
+        			if(this.showAppliedActions)
+    					System.out.println("[debug] applied Lexeme-pattern rule to word " + word.getLexeme());
+        			break;
+        		}
+        	}
+        }
 	}
 	
-
 	private String lookupTagmap(String tag, boolean ignoreCase) 
 	{
 		if(ignoreCase)
