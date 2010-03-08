@@ -61,11 +61,9 @@
 				<include name="**/*.class" />
 			</fileset>
             <fileset dir="./">
-				<!--exclude name="dict/icetagger/otb/*.dict" /-->
-                <!--exclude name="dict/icetagger/otbBin.dict" /-->
-				<include name="dict/icetagger/*.dict" />
-				<include name="dict/tokenizer/*" />
-				<!--exclude name="dict/tritagger/old/*.dict" /-->
+		<include name="dict/icetagger/*.dict" />
+                <exclude name="dict/icetagger/otbBin.dict" />
+		<include name="dict/tokenizer/*" />
                 <include name="dict/tritagger/*.dict" />
             	<include name="dict/formald/segment.srx" />
             	
@@ -136,7 +134,9 @@
 	    <chmod perm="+x" dir="${dist}/${package}/bat" includes="**/*.sh" />		 
 		
 		<copy todir="${dist}/${package}/dict">
-			<fileset dir="dict" />
+			<fileset dir="dict"> 
+				<exclude name="**/otbBin.dict"/>
+			</fileset>
 		</copy>
 		<copy todir="${dist}/${package}/lib">
 			<fileset dir="lib" />
