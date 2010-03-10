@@ -663,40 +663,50 @@ geta <vblex><actv> <vbaux>
 # The rules are on the form: lexeme mapped_tag newtag
 ###############################################################
 mjög <adv> <preadv>
-og <cnj> <cnjcoo>
-eða <cnj> <cnjcoo>
-en <cnj> <cnjcoo>
-enn <cnj> <cnjcoo>
-svona <cnj> <cnjcoo>
-né <cnj> <cnjcoo>
-ef <cnj> <cnjsub>
+hvaðan <adv> <adv><itg>
+hvar <adv> <adv><itg>
+hve <adv> <adv><itg>
+hvenær <adv> <adv><itg>
+hvernig <adv> <adv><itg>
+hvert <adv> <adv><itg>
+hví <adv> <adv><itg>
+
 að <cnj> <cnjsub>
-þegar <cnj> <cnjsub>
-sem <cnj> <cnjsub>
-meðan <cnj> <cnjsub>
-nema <cnj> <cnjsub>
-síðan <cnj> <cnjsub>
-þó <cnj> <cnjsub>
-svo <adv> <cnjadv>
 annaðhvort <cnj> <cnjsub>
 bæði <cnj> <cnjsub>
+og <cnj> <cnjcoo>
+eð <cnj> <cnjsub>
+eða <cnj> <cnjcoo>
+ef <cnj> <cnjsub>
 einsog <cnj> <cnjsub>
 ellegar <cnj> <cnjsub>
+en <cnj> <cnjcoo>
+enn <cnj> <cnjcoo>
 er <cnj> <cnjsub>
-eð <cnj> <cnjsub>
 fyrst <cnj> <cnjsub>
 heldur <cnj> <cnjsub>
 hvorki <cnj> <cnjsub>
 hvort <cnj> <cnjsub>
+meðan <cnj> <cnjsub>
+nema <cnj> <cnjsub>
+né <cnj> <cnjcoo>
+sem <cnj> <cnjsub>
+svona <cnj> <cnjcoo>
+síðan <cnj> <cnjsub>
+svo <adv> <cnjadv>
 tilað <cnj> <cnjsub>
 uns <cnj> <cnjsub>
 ýmist <cnj> <cnjsub>
+þegar <cnj> <cnjsub>
 þarsem <cnj> <cnjsub>
+þó <cnj> <cnjsub>
 þótt <cnj> <cnjsub>
 
 [MWE]
 eins_og <adv>
 hins_vegar <adv>
+hvers_konar <adv><itg>
+hvers_vegna <adv><itg>
 í_dag <adv>
 í_gær <adv>
 
