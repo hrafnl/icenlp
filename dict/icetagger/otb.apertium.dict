@@ -34,7 +34,7 @@ aþ <pr>
 ae <pr>
 c <cnj>
 ct <rel><an><mf><sp>
-cn <cnj><inf>
+cn <inf>
 ta <num>
 tfhee <num><nt><sg><gen>
 tfhen <num><nt><sg><nom>
@@ -243,9 +243,9 @@ nxfn-s <np><al><mfn><pl><nom><ind>
 nxfo <n><mfn><pl><acc><ind>
 slg <vblex><ppart>
 slm <vblex><ppart>
-sng <vblex><inf>
-sng--þ <vblex><inf>
-snm <vblex><inf>
+sng <vblex><actv><inf>
+sng--þ <vblex><actv><inf>
+snm <vblex><midv><inf>
 ssg <vblex><pp>
 ssm <vblex><pp>
 sbg2en <vblex><actv><imp><p2><sg>

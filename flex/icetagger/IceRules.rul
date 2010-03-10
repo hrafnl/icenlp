@@ -453,6 +453,8 @@ RULE prevToken.isInfinitive() && currToken.isVerbInfinitive() ;    // Infinitive
 RULE prevToken.isPreposition() && !prevToken.isPersonalPronoun() && currToken.isNoun() ;
  // "var orðið",
 RULE (prevToken.isVerbBe() && !prevToken.isVerbSupine() && !prevToken.isVerbPastPart()) && (tag.isVerbSupine() || tag.isVerbIndicativeForm() || tag.isVerbSubjunctiveForm()) ;
+// "hvað þýðir orðið" HL: 09.03.2010
+RULE prevToken.isOnlyWordClass(VERB) && (prevToken.isVerbIndicative() || prevToken.isVerbSubjunctive()) && !prevToken.isVerbAuxiliary() ;
 // tók lokið af
 RULE tag.isVerbPastParticiple() 
 	&& !prevToken.lexeme.equalsIgnoreCase("sem") && (prevToken.isVerb() || prevToken.isVerbInfinitive()) 
