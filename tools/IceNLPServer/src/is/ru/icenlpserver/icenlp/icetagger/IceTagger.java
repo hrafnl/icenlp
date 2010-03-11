@@ -300,7 +300,8 @@ public class IceTagger implements IIceTagger {
 							
 							part = this.taggingOutputForamt.replace("[LEXEME]",word.getLexeme());
                             part = part.replace("[LEMMA]", "*" + word.getLexeme());
-                            part = part.replace("[TAG]", word.getTag());
+                            part = part.replace("[TAG]", "");
+                            //part = part.replace("[TAG]", word.getTag());
 						}
 					}
 					
