@@ -246,8 +246,8 @@ slm <vblex><ppart>
 sng <vblex><actv><inf>
 sng--þ <vblex><actv><inf>
 snm <vblex><midv><inf>
-ssg <vblex><pp>
-ssm <vblex><pp>
+ssg <vblex><actv><supn>
+ssm <vblex><midv><supn>
 sbg2en <vblex><actv><imp><p2><sg>
 sbg2fn <vblex><actv><imp><p2><pl>
 sbm2en <vblex><actv><imp><p2><sg>
@@ -702,6 +702,7 @@ uns <cnj> <cnjsub>
 þótt <cnj> <cnjsub>
 
 [MWE]
+að_einhverju_leyti <adv>
 eins_og <adv>
 hins_vegar <adv>
 hvers_konar <adv><itg>
