@@ -661,7 +661,10 @@ hafa <vblex><actv> <vbhaver>
 # This section contains tag mapping exception rules for lexemes.
 # The rules are on the form: lexeme mapped_tag newtag
 ###############################################################
+afar <adv> <preadv>
 mjög <adv> <preadv>
+virkilega <adv> <preadv>
+
 hvaðan <adv> <adv><itg>
 hvar <adv> <adv><itg>
 hve <adv> <adv><itg>
@@ -715,3 +718,6 @@ hvers_vegna <adv><itg>
 # This section contains MWE rename rules
 #######################################
 hinsvegar hins_vegar <adv>
+
+[LEXEME-PATTERN]
+[0-9]+ <num>

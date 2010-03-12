@@ -326,7 +326,8 @@ public class MappingLexicon
 		// Go over Lexeme Exception rules.
 		for(Word word : wordList)
 		{
-			String lookupWord = word.getLexeme();
+			//String lookupWord = word.getLexeme();
+            String lookupWord = word.getLexeme().toLowerCase();
 
 			if(this.hasExceptionRulesForLexeme(lookupWord))
 			{

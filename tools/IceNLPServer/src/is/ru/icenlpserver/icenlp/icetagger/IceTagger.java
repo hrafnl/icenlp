@@ -240,6 +240,23 @@ public class IceTagger implements IIceTagger {
 		}
 	}
 
+	private String getLemma(IceTokenTags t)
+	{
+        // Make sure we provide the lemmatizer with a lower case lexeme
+        String lexeme, lemma;
+
+        // The first letter is often capitalised at the beginning of a sentence
+        if (!t.isProperNoun() && Character.isUpperCase( t.lexeme.charAt( 0 ) )) {
+              lexeme = t.lexeme.toLowerCase();
+        }
+        else
+            lexeme = t.lexeme;
+
+        lemma = this.lemmald.lemmatize(lexeme,t.getFirstTagStr()).getLemma();
+        return lemma;
+    }
+
+
 	public String tag(String text) {
 		List<Word> wordList = new LinkedList<Word>();
 		try {
@@ -248,16 +265,23 @@ public class IceTagger implements IIceTagger {
 			for (Sentence s : sentences.getSentences()) {
 				for (Token token : s.getTokens()) {
 					IceTokenTags t = ((IceTokenTags) token);
-					wordList.add(new Word(t.lexeme, t.getFirstTagStr(),
+
+					if (this.lemmatize) {
+					    String lemma = getLemma(t);
+                        wordList.add(new Word(t.lexeme, lemma, t.getFirstTagStr(),
+							t.mweCode, t.tokenCode, t.linkedToPreviousWord));
+                    }
+		            else
+					    wordList.add(new Word(t.lexeme, t.getFirstTagStr(),
 							t.mweCode, t.tokenCode, t.linkedToPreviousWord));
 				}
 			}
 
-			if (this.lemmatize) {
+			/*if (this.lemmatize) {
 				for (Word word : wordList)
 					word.setLemma(this.lemmald.lemmatize(word.getLexeme(),
 							word.getTag()).getLemma());
-			}
+			}*/
 
 			// Apply mapping rules to the word list.
 			if (this.mapperLexicon != null)

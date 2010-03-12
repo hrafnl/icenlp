@@ -80,6 +80,7 @@ public class RunIceTaggerApertium extends RunIceTagger
 	// we override printResults.
 	protected void printResults(BufferedWriter outFile) throws IOException 
 	{
+        String lexeme;
 		List<Word> wordList = new LinkedList<Word>();
 		
 		// create word objects and add them to the wordlist.
@@ -91,7 +92,14 @@ public class RunIceTaggerApertium extends RunIceTagger
             if( t.isUnknown() )
 			    numUnknowns++;
 
-			wordList.add(new Word(t.lexeme, this.lemmald.lemmatize(t.lexeme, t.getFirstTagStr()).getLemma(), t.getFirstTagStr(), t.mweCode, t.tokenCode, t.linkedToPreviousWord));
+            // Make sure we use lower case for lexemes before we ask for the lemma
+            if (!t.isProperNoun() && Character.isUpperCase( t.lexeme.charAt( 0 ) ))
+                lexeme = t.lexeme.toLowerCase();
+            else
+                lexeme = t.lexeme;
+            
+            wordList.add(new Word(t.lexeme, this.lemmald.lemmatize(lexeme, t.getFirstTagStr()).getLemma(), t.getFirstTagStr(), t.mweCode, t.tokenCode, t.linkedToPreviousWord));
+			//wordList.add(new Word(t.lexeme, this.lemmald.lemmatize(t.lexeme, t.getFirstTagStr()).getLemma(), t.getFirstTagStr(), t.mweCode, t.tokenCode, t.linkedToPreviousWord));
 		}
 		
 		this.mappingLexicon.processWordList(wordList);
