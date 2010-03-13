@@ -1,6 +1,6 @@
 <project name="IceNLPServer" basedir="." default="clean-distribution">
 	<description>
-		ANT build script for the IceNLP Server project.
+        ANT build script for the IceNLP server.
 	</description>
 
 	<property name="src.dir" value="src"/>
@@ -11,7 +11,8 @@
 	<property name="dist.dir" value="dist"/>
 	<property name="docs.dir" value="documents" />	
 	<property name="main-class" value="is.ru.icenlpserver.runner.Runner"/>
-	<property name="IceNLPCoreFolder" value="../../dist/"/>
+    <!-- Location to a folder that contains IceNLPCore.jar-->
+    <property name="IceNLPCoreFolder" value="../../core/dist/"/>
 	<property name="runner.name" value="RunServer"/>
 
 	<path id="files-classpath">  
@@ -52,7 +53,7 @@
 		<jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
 			<manifest>
 				<attribute name="Main-Class" value="${main-class}"/>
-				<attribute name="Class-Path" value="lttoolbox.jar IceNLPCore.jar ../../dist/IceNLPCore.jar ../../../dist/IceNLPCore.jar" />
+                <attribute name="Class-Path" value="lttoolbox.jar IceNLPCore.jar ../../core/dist/IceNLPCore.jar ../../../core/dist/IceNLPCore.jar" />
 			</manifest>
 		</jar>
 	</target>
@@ -71,7 +72,7 @@
 			<fileset dir="${conf.dir}" />
 		</copy>
 
-        <copy file="../../dict/icetagger/otb.apertium.dict" todir="${dist.dir}/config/dicts"/>
+        <copy file="../../core/dict/icetagger/otb.apertium.dict" todir="${dist.dir}/config/dicts"/>
 
 
         <echo file="${dist.dir}/${runner.name}.sh" append="false">#\!/bin/sh
