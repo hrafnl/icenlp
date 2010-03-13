@@ -906,7 +906,8 @@ public class IceHeuristics
 			}
 
 			// Special case like "Það átti hann" here "hann" is the subject
-			if( !( tokAfterVerb != null && currToken.lexeme.equalsIgnoreCase( "það" ) && isSubject( tokAfterVerb, verb ) ) )
+			//if( !( tokAfterVerb != null && currToken.lexeme.equalsIgnoreCase( "það" ) && !tokAfterVerb.lexeme.equalsIgnoreCase( "það" ) && isSubject( tokAfterVerb, verb ) ) )
+            if( !( tokAfterVerb != null && currToken.lexeme.equalsIgnoreCase( "það" ) && isSubject( tokAfterVerb, verb ) ) )
 			{
 				if( currToken.getSVOMark() == IceTokenTags.SVOMark.svoNone && !currToken.lexeme.equalsIgnoreCase( "hvað" ) && isSubject( currToken, verb ) )
 				{

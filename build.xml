@@ -40,6 +40,8 @@
 
 
 	<target name="compile" depends="init" description="Compiles all the source files">
+        	<exec executable="bash" newenvironment="false" dir="flex/icetagger">
+            		<arg value="makeRules.sh" /></exec>
 		<javac srcdir="${src}" destdir="${build}">
 			 <classpath refid="classpath" /> 		
 			 <!-- <compilerarg value="-Xlint"/> /-->

@@ -41,6 +41,7 @@ public class Tokenizer
 	public static final int typeTokenTags = 1;
 	public static final int typeIceTokenTags = 2;
 	public static final int typeHmmTokenTags = 3;
+    public static String datePatternStr = "[0-9][0-9]?\\.? ?(janúar|febrúar|mars|apríl|maí|júní|júlí|ágúst|september|október|nóvember|desember)";
 
 	private Lexicon lex;			// a lexicon
 	private Token currToken;
@@ -50,11 +51,13 @@ public class Tokenizer
 	private char[] letter;
     private Pattern webAddressPattern;
     private Pattern timePattern;
+    private Pattern datePattern;
 
 
 	private int tokenType;
 	private boolean strictTokenization; // Set to true if words and numbers cannot contain any special characters,
                                         // and single quotes are not part of other tokens
+    private boolean dateHandling=false;
     private boolean findMultiWords;
 	public ArrayList tokens;
 
@@ -116,11 +119,17 @@ public class Tokenizer
 
         webAddressPattern = Pattern.compile("(ht|f)tps?://[-\\w]+(\\.\\w[-\\w]*)+");
         timePattern = Pattern.compile("\\d+:\\d+"); // 20:25
+        datePattern = Pattern.compile(datePatternStr);
 	}
 
 	public void findMultiWords( boolean find )
 	{
 		findMultiWords = find;
+	}
+
+    public void dateHandling( boolean doSpecialDateHandling )
+	{
+		dateHandling = doSpecialDateHandling;
 	}
 
 
@@ -623,6 +632,24 @@ public class Tokenizer
         return false;
     }
 
+    public boolean isDate(String str)
+    {
+        Matcher matcher = datePattern.matcher(str);
+        // Attempts to match str, starting at the beginning, against the pattern.
+        // lookingAt does not require that the entire str be matched.
+        if (matcher.lookingAt()) {
+            int start = matcher.start();
+            int end = matcher.end();
+            // Now build the token
+            currToken.lexeme = sentence.substring(index+start, index+end );
+		    currToken.tokenCode = Token.TokenCode.tcNumber;
+            // And update the global index
+            index = index + end - start;
+            return true;
+        }
+        return false;
+    }
+
 	public void nextToken()
 	{
 		char ch, chNext;
@@ -639,7 +666,10 @@ public class Tokenizer
             // Contains a web address?
             if (isWebAddress(restOfSentence))
 			    ;
-            // Patern 20:25?
+            // Date pattern?  HL: Added because of Apertium 13/03/2010
+            else if (dateHandling && isDate(restOfSentence))
+                ;
+            // Pattern 20:25?
             else if (isTime(restOfSentence))
                 ;
 			else if( Character.isLetter( ch ) ) getWord( ch );

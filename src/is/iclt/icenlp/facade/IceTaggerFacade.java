@@ -99,6 +99,11 @@ public class IceTaggerFacade
             Lemmald.getInstance();
     }
 
+   public void dateHandling( boolean doSpecialDateHandling )
+   {
+		this.tokenizer.dateHandling(doSpecialDateHandling);
+   }
+
     private void initHMM(IceTagger.HmmModelType mType) throws IOException
     {
           if (mType != IceTagger.HmmModelType.none) {

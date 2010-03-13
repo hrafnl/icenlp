@@ -116,7 +116,9 @@ RULE currToken.lexeme.endsWith("lega") && currToken.isAdverb() && !nextToken.isN
 // eins og
 RULE currToken.lexeme.equalsIgnoreCase("eins") && nextToken.lexeme.equalsIgnoreCase("og") ;
 // margra landa
-RULE tag.isAdjectiveComparative() && currToken.isAdjectivePositive() && nextToken.isNoun() && !tag.genderNumberCaseMatch(nextToken.getTags());
+RULE tag.isAdjectiveComparative() && currToken.isAdjectivePositive() && nextToken.isNoun() && !tag.genderNumberCaseMatch(nextToken.getTags()) ;
+// í eitt ár  HL: 13.03.2010
+RULE currToken.isNumeral() && nextToken.lexeme.equalsIgnoreCase("ár") ;
                    	
 END Adj
 
@@ -446,19 +448,19 @@ RULE currToken.isNoun() && nextToken != null && nextToken.isVerb() ; // A noun i
 
 ELSE
 IF prevToken != null ;
-RULE prevToken.isOnlyWordClass(PREP) && !prevToken.lexeme.equalsIgnoreCase("vegna");
+RULE prevToken.isOnlyWordClass(PREP) && !prevToken.lexeme.equalsIgnoreCase("vegna") ;
 RULE prevToken.isOnlyWordClass(ARTICLE) ;
 RULE prevToken.isInfinitive() && currToken.isVerbInfinitive() ;    // Infinitive verb are handled above
 // á RÉTTI dagsins but make sure that "við höfðum ekkert".. works
 RULE prevToken.isPreposition() && !prevToken.isPersonalPronoun() && currToken.isNoun() ;
  // "var orðið",
 RULE (prevToken.isVerbBe() && !prevToken.isVerbSupine() && !prevToken.isVerbPastPart()) && (tag.isVerbSupine() || tag.isVerbIndicativeForm() || tag.isVerbSubjunctiveForm()) ;
-// "hvað þýðir orðið" HL: 09.03.2010
-RULE prevToken.isOnlyWordClass(VERB) && (prevToken.isVerbIndicative() || prevToken.isVerbSubjunctive()) && !prevToken.isVerbAuxiliary() ;
 // tók lokið af
 RULE tag.isVerbPastParticiple() 
 	&& !prevToken.lexeme.equalsIgnoreCase("sem") && (prevToken.isVerb() || prevToken.isVerbInfinitive()) 
 	&& !prevToken.isVerbBe() && (nextToken == null || !nextToken.isVerbBe()) ;
+// HL: 13.03.2010 Þú GERÐIR það sjálfur
+RULE tag.isVerbPastParticiple() && currToken.lexeme.equalsIgnoreCase("gerðir") && prevToken.isPersonalPronoun() ;
 RULE prevToken.isVerbSpecialAuxiliary() ;
 // skal (ekki) hita
 RULE currToken.isVerbInfinitive() 

@@ -707,11 +707,15 @@ uns <cnj> <cnjsub>
 [MWE]
 að_einhverju_leyti <adv>
 eins_og <cnjsub>
+frá_upphafi <adv>
 hins_vegar <adv>
 hvers_konar <adv><itg>
 hvers_vegna <adv><itg>
+inni_í <pr>
 í_dag <adv>
 í_gær <adv>
+í_morgun <adv>
+á_morgun <adv>
 þrátt_fyrir <adv>
 
 [MWE-RENAME]

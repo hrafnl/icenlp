@@ -138,7 +138,7 @@ public class Token {
 
     public boolean isDate() {
        // 20.12.2005
-       return lexeme.matches("\\d+(\\.|/)\\d+(\\.|/)\\d+");  
+       return lexeme.matches("\\d+(\\.|/)\\d+(\\.|/)\\d+") || lexeme.matches(Tokenizer.datePatternStr);  
 
     }
 

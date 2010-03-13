@@ -2,7 +2,10 @@
 #################################
 e=u,w=Súsönnu,p=n1v:önnu>anna:500
 e=a,w=borganna,p=nvfeg:ganna>g:500
+e=a,w=dollara,p=n1k:a>i:500
+e=u,w=hvolfinu,p=nheþg:finu>f:500
 e=s,w=krossins,p=nkeeg:sins>s:500
+e=m,w=milljörðum,p=nkfþ:örðum>arður:500
 e=u,w=plöntu,p=n1v:öntu>anta:1
 e=ð,w=tjónið,p=n1h:nið>n:500
 # Evrópusambandinu

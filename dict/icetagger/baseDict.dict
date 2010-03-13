@@ -1479,7 +1479,6 @@ gerir=sfg3en_sfg2en_svg2en
 gerum=sfg1fn_svg1fn
 gerið=sfg2fn_svg2fn_nheng_nheog
 gerði=sfg3eþ_sfg1eþ_svg3eþ_svg1eþ_nven_nveo_nveþ
-gerðir=sfg2eþ_svg2eþ
 gerðum=sfg1fþ_svg1fþ_nvfþ
 gerðuð=sfg2fþ_svg2fþ
 gerðu=sfg3fþ_svg3fþ_sbg2en
@@ -1488,7 +1487,7 @@ gerðu=sfg3fþ_svg3fþ_sbg2en
 gerður=sþgken
 gerð=sþgven_sþghfn_nven_nveo_nveþ_lvensf_lhfnsf_lhfosf
 gert=ssg_sþghen
-gerðir=sþgkfn
+gerðir=sþgkfn_nvfo_nvfn_sfg2eþ_svg2eþ
 gerðar=sþgvfn
 
 gjósa=sng_sfg3fn
@@ -3330,8 +3329,12 @@ vonast=snm<i>_sfm3en<i>_sfm2en<i>_sfm1en<i>_sfm3fn<i>_sfm2fn<i>_sfm1fn<i>_ssm<i>
 þuldar=sþgvfn_lvfnsf_lvfosf
 
 #Verbs that demand subjects in oblique cases
+batna=sng
+batnar=sfg3en<þ>
+#Subjunctive - Viðtengingarháttur
+batni=svg3en<þ>
+
 bregða=sng
-bregður=sfg1en<þ>
 bregður=sfg3en<þ>_sfg2en<þ>_sfg1fn<þ>_sfg2fn<þ>
 brá=sfg3eþ<þ>_sfg3eþ<þ>_sfg1eþ<þ>
 #Subjunctive - Viðtengingarháttur

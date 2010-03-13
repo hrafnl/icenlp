@@ -201,6 +201,8 @@ public class IceTagger implements IIceTagger {
 			}
 
 			facade = new IceTaggerFacade(iceLexicons, tokLexicon);
+			// This should be handed as an option in the config file!
+			facade.dateHandling(true);  // Do special date handling
 
 			// Let's check for the TriTagger
 			if (this.configuration.containsKey("tritagger")) {
@@ -229,7 +231,10 @@ public class IceTagger implements IIceTagger {
 
 					}
 					facade.createTriTagger(triLexicons);
-					facade.useTriTagger(true);
+					// This will make Tritagger perform initial word class selection and final disambiguation
+					//facade.useTriTagger(true);   // equivalent to facade.setModelType(IceTagger.HmmModelType.startend)
+					// This makes TriTagger only do final disambiguation
+					facade.setModelType(is.iclt.icenlp.core.icetagger.IceTagger.HmmModelType.end);
 					System.out.println("[i] Tritagger is ready.");
 				}
 			}

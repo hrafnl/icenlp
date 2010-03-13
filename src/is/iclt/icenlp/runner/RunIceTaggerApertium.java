@@ -53,6 +53,7 @@ public class RunIceTaggerApertium extends RunIceTagger
         runner.mappingLexicon = new MappingLexicon(runner.tagMapFile, false, false, false, "<NOT MAPPED>");
         
         // Perform the tagging
+        runner.tokenizer.dateHandling(true);    // Group dates into a single lexeme
         runner.performTagging();
 		runner.finish(before);
 	}
