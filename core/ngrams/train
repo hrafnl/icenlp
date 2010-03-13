@@ -1,0 +1,4 @@
+# $1=Corpus file, $2=model name, $3=-e if empty lines between sentences
+bash computeNgrams $1 ./models/$2.ngram ./models/$2.lambda $3
+bash buildDictTagFreq $1 ./models/$2.lex
+cp ./models/$2.lex ./models/$2.orig.lex

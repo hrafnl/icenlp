@@ -1,0 +1,224 @@
+/* The following regluar expression cover verbs which demand oblique case subjects (aukafallssagnir) */
+
+VerbBe =	[eE]r(t|u[mð]?)? | [vV](ar(st)?|oru[mð]?) | [ss]é(rt|u[mð]?)? | [vV]ær(ir?|u[mð]?) |
+		[vV]erð(ur|um|i(ð|r)?|a)? | [vV]arð(st)? | [uU]rðu[mð]? | [yY]rð(ir?|u[mð]?) | [vV]ertu |
+
+/* Verbs that demand complements */
+		[hH](eit(i(r|ð)?|um|a) | é(t((u(m|ð)?)? |ir?) | st))	|		/* heita */
+		[kK](all(ast|ist)|öll(umst|uðum?st))			|		/* kallast */
+		[rR]eynd?(ist|um?st|ast)			|			/* reynast */
+		[vV]ir[ðt](ist|um?st|ast)			|			/* virðast */
+		[þÞ](yk(i(r|ð|st)?|j(um(st)?|a(st)?)) | [óæ]tt(i(r|st)?|u(ð|m?(st)?)?))	/* þykja */
+	
+
+arEnding = a(r|ði?)|i		/* dámar */
+stEnding = (a(ði)?|i)st
+
+/* Verbs which demand dative subjects */
+VerbDat = 	
+	[aA]uðn{stEnding}					|	/* auðnast		*/
+	[áÁ]skotn{stEnding}					|	/* áskotnast		*/
+	
+	[bB]atn{arEnding}					|	/* batna		*/
+	[bB](eri?|ar|æri|orið)					|	/* ber			*/
+	[bB]([ae]rst|[æo]rist)					|	/* berast		*/
+	[bB]ir(tist|st)						|	/* birtast		*/
+	[bB](ýð(ur|st)|jóði(st)?|auð(st)?|yði(st)?|oði(ð|st))	|	/* bjóða/bjóðast	*/
+	[bB]land{stEnding}					|	/* blandast (hugur)	*/
+	[bB]læ(ðir?|ddi|tt)					|	/* blæða		*/
+	[bB]löskr(ar|(að)?i?)					|	/* blöskra		*/
+	[bB]ragð{stEnding}					|	/* bragðast		*/
+	[bB]r(eg(ð(ur|i(st)?)|st))|á(st)?|ygði(st)?|ugði(ð|st)	|	/* bregða/bregðast	*/
+	[bB]r(enn(ur|i)|ann|ynni|unnið)				|	/* brenna		*/
+	[bB](ýr|úið?|jó|yggi)					|	/* búa			*/
+	[bB]æ(tt?ist|st)					|	/* bætast		*/
+	
+	[dD]apr{stEnding}					|	/* daprast		*/
+	[dD]ám{arEnding}					|	/* dáma			*/
+	[dD](ett(ur|i)|att|ytti|ottið)				|	/* dettta		*/
+	[dD]r(ýpur|júpi|aup|ypi|opið)				|	/* drjúpa		*/
+	[dD](ug(ir?|ði|að)|ygði)				|	/* duga			*/
+	[dD]v(el(ji)?st|[ae]ld?ist)				|	/* dveljast		*/
+	[dD](yl(ji)?st|[uy]ld?ist)				|	/* dyljast		*/
+	
+	[eE]ln{arEnding}					|	/* elna			*/
+	[eE]n([dt]i)?st						|	/* endast		*/
+	
+	[fF](ellur|allið?|élli?)				|       /* falla		*/
+	[fF](ellst|allist|élli?st)				|       /* fallast (hendur)	*/
+	[fF]([eó]r(st)?|[aæ]ri(st|ð)?) 				|	/* fara/farast 		*/
+	[fF]arn{stEnding}					|       /* farnast		*/
+	[fF]atl?{stEnding}					|       /* fatast/fatlast	*/
+	[fF]eila{arEnding}					|	/* feila		*/
+	[fF]est(ist)?						|	/* festast		*/
+	[fF]én{stEnding}					|       /* fénast		*/
+	[fF](inni?|ann|[uy]ndi)st				|       /* finnast		*/
+	[fF]ip{stEnding}					|       /* fipast		*/
+	[fF]jölg{arEnding}					|	/* fjölga		*/
+	/* [fF]leyg(ir?|ði|t)					| */	/* fleygja (fram)	*/
+	[fF]lj(ýgur|júgi|aug|ygi|ogið)				|	/* fljúga		*/
+	/* [fF]ylg(ir?|di|t)					|	/* fylgja		*/ */
+	[fF]yrig([eæ]fi?st|afst)				|	/* fyrirgefa		*/
+	[fF]æ((ð|dd)i?st)					|	/* fæðast		*/
+	[fF]ækk{arEnding}					|	/* fækka		*/
+	[fF]örl({arEnding}|{stEnding})				|	/* förla/förlast	*/
+	
+	[gG]agn{stEnding}					|	/* gagnast		*/
+	[gG]((e(ng(ur|ið?))|kk)|angi)				|	/* ganga		*/
+	[gG]eðj{stEnding}					|	/* geðjast		*/
+	[gG][aeæ]fi?st						|	/* gefast		*/
+	[gG]r(em(st|[jd]ist) | amd?ist)				|	/* gremjast		*/
+	[gG]reyp(t?i)?st 					|	/* greypast		*/
+	[gG]ræ(ði?st|ddist)					|	/* græðast		*/
+	
+	[hH][aeé]l(di)?st 					|	/* haldast 		*/
+	[hH]efn(d?i)?st 					|	/* hefnast 		*/
+	[hH]eils{stEnding} 					|	/* heilsast 		*/
+	[hH]ent{arEnding} 					|	/* henta 		*/
+	[hH]eppn{stEnding} 					|	/* heppnast 		*/
+	[hH]eyr(ð?i)?st 					|	/* heyrast 		*/
+	[hH]itn{arEnding} 					|	/* henta 		*/
+	[hH]l(eypur|aupið?|jóp|ypi) 				|	/* hlaupa (kapp) 	*/
+	[hH]lekk(t?i)?st 					|	/* hlekkjast 		*/
+	[hH]lotn{stEnding} 					|	/* hlotnast 		*/
+	[hH]lýn{arEnding} 					|	/* hlýnar 		*/
+	[hH]nign{arEnding} 					|	/* hnignar 		*/
+	[hH]rak{arEnding} 					|	/* hrakar 		*/
+	[hH]r(ýs|jósi|aus|ysi|osið) 				|	/* hrjósa (hugur) 	*/
+	[hH]ugkvæm(d?i)?st 					|	/* hugkvæmast 		*/
+	[hH]ugn{stEnding} 					|	/* hugnast 		*/
+	[hH]æf(ð?ir?|t) 					|	/* hæfa 		*/
+	[hH]æg(ð?ir?|t) 					|	/* hægja 		*/
+	[hH]ætt(ir?)? 						|	/* hættir (til) 	*/
+	
+	[kK](emur|om(ið?)?|æmi) 				|	/* kemur 		*/
+	[kK]óln{arEnding} 					|	/* kólna 		*/
+	[kK]yng(ir?|di|t) 					|	/* kyngir (niður) 	*/
+	
+	[lL]án{stEnding} 					|	/* lánast 		*/
+	[lL]áð?i?st 						|	/* lást 		*/
+	[lL]ei(ð|dd)i?st 					|	/* leiðast 		*/
+	[lL]eyf(ð?ist|st) 					|	/* leyfast 		*/
+	[lL]étt(ir?)?						|       /* létta		*/
+	[lL]inn(ir?|ti?)					|       /* linna		*/
+	[lL](íð(ur|i|i?st)|ei(ð(st)?|ddist)|iði(ð|st)?)		| 	/* líða/íðast		*/
+	[lL]íka{arEnding}					|       /* líka			*/
+	[lL](í(st|tist)|eist|itist)				| 	/* lítast		*/
+	[lL](ýkur|júki|auk|yki|okið)				|	/* ljúka		*/
+	[lL](ýstur|jósti|aust|ysti|ostið) 			|	/* ljósta 		*/
+	[lL]ykt{arEnding}					|       /* lykta		*/
+	[lL]yn(dir?|ti?)					|       /* lynda		*/
+	[lL]ær(ð?i)?st 						|	/* lærast 		*/
+	
+	[mM]ið{arEnding}					|       /* lykta		*/
+	[mM]isf([eó]rst|[aæ]rist)				|	/* misfarast		*/
+	[mM]isheppn{stEnding}					|	/* misheppnast		*/
+	[mM]isheyr(ð?i)?st					|	/* misheyrast		*/
+	[mM]islíka{arEnding}					|       /* mislíka		*/
+	[mM]issýn(d?i)?st					|       /* missýnast		*/
+	[mM]ist([eó]kst|[aæe]kist)				|       /* mistakast		*/
+	[mM]un{arEnding}					|       /* muna			*/
+	
+	[nN]æg(ir?|ði|t)					|	/* nægja		*/
+	
+	[oO]fb(ýður|jóði|auð|yði|oðið)				|	/* ofbjóða		*/
+	[óÓ]{arEnding}						|	/* óa			*/
+	
+	[rR]at{stEnding}					|	/* ratast		*/
+	[rR]eikn{stEnding}					|	/* reiknast		*/
+	[rR]én{arEnding}					|	/* réna			*/
+	[rR]ign(ir?|di|t)					|	/* rigna		*/
+	[rR](ísi?|eis|isið?)					|	/* rísa			*/
+	
+	[sS]árn{arEnding}					|	/* sárna		*/
+	[sS]eink{arEnding}					|	/* seinka		*/
+	[sS](em(ur|ji|di)|am(di|ið))					/* semur		*/
+	[sS]inn{stEnding}					|	/* sinnast		*/
+	[sS]jatn{arEnding}					|	/* sjatna		*/
+	[sS](ést|(já|æ)ist|ást)					|	/* sjást		*/
+	[sS]kán{arEnding}					|	/* skána		*/
+	[sS]keik{arEnding}					|	/* skeika		*/
+	[sS]kil(st|[jd]?ist)					|	/* skiljast		*/
+	[sS]kjátl{stEnding}					|	/* skjátlast		*/
+	[sS]kol{arEnding}					|	/* skola		*/
+	[sS]krik{arEnding}					|	/* skrika		*/
+	[sS]n(ýst|(ú|er)ist)					|	/* snúast (hugur)	*/
+	[sS]ortn{arEnding}					|	/* sortna		*/
+	[sS]taf{arEnding}					|	/* stafa (hætta að)	*/
+	[sS]t(endur|andi|óð|æði|aðið)				|	/* standa (á sama)	*/
+	[sS]t(íg(ur|i)|eig|igið?)				|	/* stígur (til höfuðs)	*/
+	[sS]t(ekkur|ökk(vi)?|ykki|okkið)			|	/* stekkur (bros)	*/
+	[sS]úrn{arEnding}					|	/* súrna		*/
+	[sS]velg(d?i)?st					|	/* svelgjast		*/
+	[sS]vip{arEnding}					|	/* svipa (til)		*/
+	[sS]v(íð(ur|i)|eið|iðið?)				|	/* svíða		*/
+	[sS]ýn(d?ist|st) 					|	/* sýnast 		*/
+	[sS](ækt?ist|ó(tti)?st) 				|	/* sækjast 		*/
+	[sS]æm(ir?|di|t) 					|	/* sæma 		*/
+	
+	[tT]([eó]kst | [aeæ]kist) 				|	/* takast 		*/
+	[tT](el(ji)?st|[ae]ld?ist) 				|	/* teljast (til) 	*/
+	
+	[vV]arð							|	/* mér varð		*/
+	[vV](ef(ji)?st|[ae]fð?ist)	  			|	/* vefjast		*/
+	[vV]egn{arEnding}					|	/* vegna		*/
+	[vV]eit(ir?|ti?)	  				|	/* veita		*/
+	[vV]ersn{arEnding}					|	/* versna		*/
+	[vV]iðk(emur|om(i?ð)?|æmi)				|	/* viðkoma		*/
+	[vV]iðv(ík(ur|i)|éki?|ikið)				|	/* viðvíkja		*/
+	[vV](inni?st|annst)					|	/* vinnast		*/
+	[yYuU]nnist						|	/* vinnast		*/
+	[vV]itn{stEnding}					|	/* vitnast		*/
+	[vV]olgn{arEnding}					|	/* volgna		*/
+	[vV]ökn{arEnding}					|	/* vökna		*/
+	
+	[yY]firs(ést|jái?st|æist)				|	/* yfirsjást		*/
+	[yY]ln{arEnding}					|	/* ylna			*/
+	
+	[þÞ]ok{arEnding}					|	/* þoka			*/
+	[þÞ]ókn{stEnding}					|	/* þóknast		*/
+	[þÞ](ykir?|[óæ]tti?)						/* þykja		*/
+		
+/* Verbs which demand accusative subjects */
+VerbAcc = 	
+	[bB]r(est(ur|i)|ast|ysti|ostið)				|	/* bresta		*/
+	[dD]reym(ir?|di|t)					|	/* dreyma		*/
+	[fF]ýs(ir?|ti|t)					|	/* fýsir		*/
+	[gG]rein(ir?|di|t)					|	/* greinir		*/
+	[gG]r(íp(ur|i)|eip|ipið?)				|	/* grípa		*/
+	[gG]run{arEnding}					|	/* gruna		*/
+	[hH]ryll(ir?|ti?)					|	/* hrylla		*/
+	[hH]ungr{arEnding}					|	/* hungra		*/
+	[kK]itl{arEnding}					|	/* kitla		*/
+	[kK]líg(j{arEnding}|i)					|	/* klígja		*/
+	[kK]læ(j{arEnding}|i)					|	/* klæja		*/
+	[kK]repp(ir?|ti|t)					|	/* kreppa		*/
+	[lL]ang{arEnding}					|	/* langa		*/
+	[lL]eng(ir?|di|t)					|	/* lengja		*/
+	[lL]yst(ir?|i)?						|	/* lysta		*/
+	[lL]æg(ir?|ð?i|t)					|	/* lægja		*/
+	([m|M]is|[rR]ang)?[mM]inn(ir?|ti?|i)			|	/* (mis)minnir		*/
+	[mM]un{arEnding}					|	/* muna			*/
+	[óÓ]r{arEnding}						|	/* órar			*/
+	[rR]ag{arEnding}					|	/* raga			*/
+	[rR]ám{arEnding}					|	/* ráma			*/
+	[rR](ek(ur|ið?)|ak|æki)					|	/* reka			*/
+	[sS]ak{arEnding}					|	/* saka			*/
+	[sS]et(ur|t(ji|ti?))					|	/* setur (hljóðan)	*/
+	[sS]k(efur|afið?|óf|æfi)				|	/* skefur		*/
+	[sS]skipt(ir?)?						|	/* skipta		*/
+	[sS]kort(ir?)?						|	/* skorta		*/
+	[sS]toð{arEnding}					|	/* stoða		*/
+	[sS]undl{arEnding}					|	/* sundla		*/
+	[sS]veng(ir?|di|t)					|	/* svengja		*/
+	[sS]vim{arEnding}					|	/* svima		*/
+	[sS]v(íð(ur|i)|eið|iðið?)				|	/* svíða		*/
+	[sS]yfj{arEnding}					|	/* syfja		*/
+	[uU]ndr{arEnding}					|	/* undra		*/
+	[vV]anhag{arEnding}					|	/* vanhagar (um)	*/
+	[vV]ant{arEnding}					|	/* vantar		*/	
+	[vV]arð{arEnding}					|	/* varðar (um)		*/	
+	[vV]erk(ja(r|ði?)|i)					|	/* verkjar		*/
+	[þÞ]rj(ýtur|óti|aut|yti|otið)				|	/* þrjóta		*/
+	[þÞ](v(erri?|arr)|yrri|orrið)				|	/* þverra		*/
+	[þÞ]yrst(ir?)?							/* þyrsta		*/

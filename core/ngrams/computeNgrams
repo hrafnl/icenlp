@@ -1,0 +1,3 @@
+# $1 = Corpus file, $2 = output ngram file, $3 = output alpha parameter file, $4 = -e if empty lines in corpus
+echo "Computing ngrams ..."
+perl computeNgrams.pl $1 $2 $3 $4

@@ -1,0 +1,204 @@
+<?xml version="1.0"?>
+
+<project name="IceNLP_Resources" default="package" basedir=".">
+	<description>
+		Compiles a release version of the IceNLP toolkit as a single jar file with resource files
+	</description>
+
+	<property name="src" location="src" />
+	<property name="build" location="build" />
+	<property name="dist" location="dist" />
+	<property name="package" value="IceNLP" />
+	<property name="lib" location="lib" />
+	<property name="javadoc" location="javadoc" />	
+	
+	<property name="dict" location="dict" />	
+	<property name="segment" location="${lib}/segment-1.3.3.jar" />
+	<property name="commons_io" location="${lib}/commons-io-1.4.jar" />
+	<property name="commons_logging" location="${lib}/commons-logging-1.1.1.jar" />
+	<property name="commons_cli" location="${lib}/commons-cli-1.2.jar" />
+	<property name="xerces" location="${lib}/xerces.jar" />
+
+    <property name="jar_version" value="1.3" />
+	<property name="jar_name" value="IceNLPCore" />
+
+	<path id="classpath">
+		<pathelement location="${segment}" />
+		<pathelement location="${commons_io}" />
+		<pathelement location="${commons_logging}" />
+	    <pathelement location="${commons_cli}" />
+		<pathelement location="${xerces}" />
+	</path>			
+
+	<target name="init" depends="clean" >
+		<tstamp /> <!-- Create the timestamp for the build -->
+		<!-- Create all the directories for the build -->
+		<mkdir dir="${build}" />
+		<mkdir dir="${dist}" />
+		<mkdir dir="${dist}/${package}" />
+	</target>
+
+
+	<target name="compile" depends="init" description="Compiles all the source files">
+        	<exec executable="bash" newenvironment="false" dir="flex/icetagger">
+            		<arg value="makeRules.sh" /></exec>
+		<javac srcdir="${src}" destdir="${build}">
+			 <classpath refid="classpath" /> 		
+			 <!-- <compilerarg value="-Xlint"/> /-->
+	    </javac>
+	</target>	
+	
+	<target name="release-jar" depends="compile, init" description="Compiles a release version of IceNLP">
+	    <manifestclasspath property="jar.classpath" jarfile="${dist}/${jar_name}.jar">
+	      <classpath refid="classpath"/>
+	    </manifestclasspath>  
+
+        
+        <exec executable="bash" newenvironment="false" dir="dict/lemmald">
+            <arg value="makeRules.sh" /></exec>
+        
+        
+        <jar destfile="${dist}/${jar_name}.jar">			
+			<fileset dir="${build}">
+				<include name="**/*.class" />
+			</fileset>
+            <fileset dir="./">
+		<include name="dict/icetagger/*.dict" />
+                <exclude name="dict/icetagger/otbBin.dict" />
+		<include name="dict/tokenizer/*" />
+                <include name="dict/tritagger/*.dict" />
+            	<include name="dict/formald/segment.srx" />
+            	
+            	<!-- Lemmald /-->
+            	<include name="dict/lemmald/postfixRules.txt" />
+            	<include name="dict/lemmald/rule_database_utf8.dat" />
+            	<include name="dict/lemmald/settings.txt" />
+                <!--exclude name="dict/tritagger/*WC.dict" /-->                
+                <include name="ngrams/models/otb.*" />
+            </fileset>
+	        <manifest>
+	                <attribute name="Built-By" value="${user.name}" />
+	                <attribute name="Class-Path" value="${jar.classpath}"/>
+	        </manifest>
+		</jar>
+	</target>
+
+
+    <available file="tools/IceNLPServer/dist" type="dir"
+               property="IceNLPServer.present"/>
+    <available file="tools/IceNLPClient/dist" type="dir"
+               property="IceNLPClient.present"/>
+    <available file="tools/RouterSlave/dist" type="dir"
+               property="RouterSlave.present"/>
+    <available file="tools/IRW/dist" type="dir"
+               property="IRW.present"/>
+
+    <target name="server-jar" if="IceNLPServer.present">
+        <echo message="Found IceNLPServer dir"/>
+        <copy todir="${dist}/${package}/tools/IceNLPServer">
+			<fileset dir="tools/IceNLPServer/dist" />
+	</copy>
+	<chmod perm="+x" dir="${dist}/${package}/tools/IceNLPServer" includes="**/*.sh" />
+    </target>
+
+    <target name="client-jar" if="IceNLPClient.present">
+        <echo message="Found IceNLPClient dir"/>
+        <copy todir="${dist}/${package}/tools/IceNLPClient">
+			<fileset dir="tools/IceNLPClient/dist" />
+	</copy>
+	<chmod perm="+x" dir="${dist}/${package}/tools/IceNLPClient" includes="**/*.sh" />
+    </target>
+
+    <target name="routerslave-jar" if="RouterSlave.present">
+        <echo message="Found RouterSlave dir"/>
+        <copy todir="${dist}/${package}/tools/RouterSlave">
+			<fileset dir="tools/RouterSlave/dist" />
+	</copy>
+	<chmod perm="+x" dir="${dist}/${package}/tools/RouterSlave" includes="**/*.sh" />
+    </target>
+
+    <target name="irw-jar" if="IRW.present">
+        <echo message="Found IRW dir"/>
+        <copy todir="${dist}/${package}/tools/IRW">
+			<fileset dir="tools/IRW/dist" />
+	</copy>
+	<chmod perm="+x" dir="${dist}/${package}/tools/IRW" includes="**/*.sh" />
+    </target>
+
+	
+	<target name="package" depends="release-jar, server-jar, client-jar, routerslave-jar, irw-jar" >
+		
+		<copy file="${dist}/${jar_name}.jar" todir="${dist}/${package}/dist" />
+		<copy todir="${dist}/${package}/bat">
+			<fileset dir="bat" />
+		</copy>
+		
+	    <chmod perm="+x" dir="${dist}/${package}/bat" includes="**/*.sh" />		 
+		
+		<copy todir="${dist}/${package}/dict">
+			<fileset dir="dict"> 
+				<exclude name="**/otbBin.dict"/>
+			</fileset>
+		</copy>
+		<copy todir="${dist}/${package}/lib">
+			<fileset dir="lib" />
+		</copy>		
+		<copy todir="${dist}/${package}/ngrams">
+			<fileset dir="ngrams" />
+		</copy>
+
+
+		<copy file="doc/IceNLP.pdf" todir="${dist}/${package}/doc" />
+		<copy file="doc/Tagset.pdf" todir="${dist}/${package}/doc" />
+		
+		<zip compress="yes" destfile="${dist}/IceNLP-${jar_version}.zip">
+			<zipfileset dir="dist" includes="IceNLPCore.jar" prefix="${package}/dist" />
+            <zipfileset dir="tools/IceNLPServer/dist" includes="**/*" prefix="${package}/tools/IceNLPServer" erroronmissingdir="false"/>
+            <zipfileset dir="tools/IceNLPClient/dist" includes="**/*" prefix="${package}/tools/IceNLPClient" erroronmissingdir="false"/>
+ 			<zipfileset dir="bat" includes="**/*.sh" filemode="755" prefix="${package}/bat" />			
+			<zipfileset dir="bat" includes="**/*" excludes="**/*.sh" prefix="${package}/bat" />
+			
+		    <zipfileset dir="dict" prefix="${package}/dict" />
+			<zipfileset dir="lib" prefix="${package}/lib" />
+			<zipfileset dir="ngrams" prefix="${package}/ngrams" />
+			<zipfileset dir="doc" includes="**/*.pdf" prefix="${package}/doc" />
+		</zip>
+	</target>
+
+	<target name="clean" description="clean up" >
+        <!-- Delete the ${build} and ${dist} directory trees -->
+        <delete dir="${build}"/>
+        <delete dir="${dist}"/>
+    </target>
+	
+	
+	<!-- ================================================================== -->
+	<!-- JAVADOC -->
+	<!-- ================================================================== -->
+	<target name="javadoc">
+		<delete dir="${javadoc}"/>
+		<javadoc destdir="${javadoc}" author="true" version="true" use="true" access="public" noqualifier="all" encoding="utf-8" windowtitle="IceNLP Javadoc">
+
+			<classpath>
+				<pathelement location="${build}" />
+				<fileset dir="${lib}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+
+			<fileset dir="${src}" defaultexcludes="no">
+				<include name="**/*.java" />
+			</fileset>
+
+			<doctitle>
+				<![CDATA[<h1>IceNLP</h1>]]></doctitle>
+		<bottom>
+			<![CDATA[<i>Copyright &#169; 2009 <a href="http://www.ru.is/faculty/hrafn/" target="_top">Hrafn Loftsson</a>, <a href="http://www3.hi.is/~antoni/" target="_top">Anton Karl Ingason</a>
+			</i>]]></bottom>
+		<link offline="true" href="http://java.sun.com/products/jdk/1.5/docs/api/" packagelistLoc="/tmp" />
+	</javadoc>
+	<echo>javadoc output can now be found in javadoc/index.html</echo>
+	</target>
+
+	
+</project>

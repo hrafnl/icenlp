@@ -1,0 +1,66 @@
+[Used by TriTagger]
+
+[The name of the input file to be tagged]
+INPUT_FILE=test.txt
+
+[The name of the output file]
+OUTPUT_FILE=test.out
+
+MODEL=../../ngrams/models/otb
+
+[NGRAM: 2=bigram | 3=trigram]
+NGRAM=3
+
+[Input LINE_FORMAT = 1|2|3 ]
+[ 1: one token per line. One empty line between sentences ]
+[ 2: one sentence per line ]
+[ 3: other]
+
+LINE_FORMAT=1
+
+[ OUTPUT_FORMAT = 1|2 ]
+[ 1: one token/tag per line. One empty line between sentences ]
+[ 2: one sentence per line ]
+
+OUTPUT_FORMAT=1
+
+[ SENTENCE_START = upper|lower ]
+[ upper: Every sentence starts with an upper case letter ]
+[ lower: Every sentence starts with a lower case letter, except when the first word is a proper noun ]
+
+SENTENCE_START=upper
+
+[Backup dictionary]
+BACKUP_DICT=../../dict/tritagger/baseDict.dict
+
+[The idioms (phrases) dictionary]
+IDIOMS_DICT=../../dict/tritagger/idioms.dict
+
+[Used by the Tokenizer]
+
+[STRICT = yes|no . Strict tokenization or not]
+STRICT=no
+
+[Lexicon used by the tokenizer]
+TOKEN_DICT=../../dict/tokenizer/lexicon.txt
+
+[Used by IceMorphy]
+ICEMORPHY=no
+
+[Main dictionary used by IceMorphy]
+DICT=../../dict/icetagger/otb.dict
+
+[The base dictionary used by IceMorphy; should not be changed]
+BASE_DICT=../../dict/icetagger/baseDict.dict
+
+[Main dictionary of endings and corresponding tags]
+ENDINGS_BASE=../../dict/icetagger/baseEndings.dict
+
+[Dictionary of endings and corresponding tags]
+ENDINGS_DICT=../../dict/icetagger/otb.endings.dict
+
+[Dictionary of endings for proper names and corresponding tags]
+ENDINGS_PROPER_DICT=../../dict/icetagger/otb.endingsProper.dict
+
+[The prefixes dictionary
+PREFIXES_DICT=../../dict/icetagger/prefixes.dict

@@ -1,0 +1,126 @@
+WhiteSpace = [ \t\f]
+
+WordChar = [^\r\n\t\f ]
+Word = {WordChar}+
+WordSpaces = {WhiteSpace}*{Word}{WhiteSpace}+
+
+Gender = [kvhx]	/* k=masculine, v=feminine, h=neuter, x=unspec */
+Number = [ef]	/* e=singular, f=plural */
+ObliqueCase = [oþe]		/* o=accusative, þ=dative, e=genitive */
+Case = n | {ObliqueCase}	/* n=nominative */
+Person = [123]
+PhraseCase = [nadg]		/* nom, acc, dat, gen */
+Mood = [bfvsþl]		/* b=boðháttur, f=framsöguháttur, v=viðtengingarháttur, s= vegna sagnbótar, þ=lýsingarháttur þátíðar, l=lýsingarháttur nútíðar */
+Voice = [gm]		/* g=germynd, m=miðmynd */
+Tense = [nþ]
+Declension = [osv]	/* o=no declension; s=sterk declension, v=weak declension */
+Degree = [fme]		/* f=positive, m=comparative, e=superlative */
+ArticleChar = "g"
+ProperName = [msö]
+
+AdverbTag = aa[me]?{WhiteSpace}+
+Adverb = {WordSpaces}{AdverbTag}
+AbbrevTag = as{WhiteSpace}+
+Abbreviation = {WordSpaces}{AbbrevTag}
+
+AdjectiveTag = l{Gender}{Number}{Case}{Declension}{Degree}
+
+ConjTag = ct?{WhiteSpace}+
+Conj = {WordSpaces}{ConjTag}
+
+InfinitiveTag = cn
+
+PrepTag = a{ObliqueCase}[em]?{WhiteSpace}+
+PrepTagAccDat = a[oþ][em]?{WhiteSpace}+
+PrepTagGen = ae{WhiteSpace}+
+Preposition = {WordSpaces}{PrepTag}
+PrepositionAccDat = {WordSpaces}{PrepTagAccDat}
+PrepositionGen = {WordSpaces}{PrepTagGen}
+
+VerbTag = s{Mood}{Voice}({Person}{Number}{Tense} | {Gender}{Number}{Case})?
+VerbFiniteTag = s[bfv]{Voice}{Person}{Number}{Tense}{WhiteSpace}+
+VerbInfinitiveTag = sn[mg]{WhiteSpace}+
+
+// The next definition causes problems because x can be a word!
+//NounTag = n{Gender}{Number}{Case}{ArticleChar}?{WhiteSpace}+ | x
+NounTag = n{Gender}{Number}{Case}{ArticleChar}?{WhiteSpace}+ 
+ProperNounTag = n{Gender}{Number}{Case}("-"|{ArticleChar}){ProperName}{WhiteSpace}+
+NumeralTag = t([aop]|f{Gender}{Number}{Case}){WhiteSpace}+
+PersPronounTag = fp({Gender}|{Person}){Number}{Case}{WhiteSpace}+
+
+OpenAdvP = "[AdvP"
+CloseAdvP = "AdvP]"
+OpenAP = "[AP"
+CloseAP = "AP]"
+OpenAPs = "[APs"
+CloseAPs = "APs]"
+OpenNP = "[NP"
+CloseNP = "NP]"
+OpenNPs = "[NPs"
+CloseNPs = "NPs]"
+OpenCP = "[CP"
+CloseCP = "CP]"
+OpenCP = "[CP"
+CloseCP = "CP]"
+OpenSCP = "[SCP"
+CloseSCP = "SCP]"
+
+
+OpenVP = "[VP"
+CloseVP = "VP]"
+OpenVPb = "[VPb"	/* Verb BE phrase    */
+CloseVPb = "VPb]"	
+OpenVPi = "[VPi"	/* Verb Infinitive phrase */
+CloseVPi = "VPi]"
+OpenVPs = "[VPs"	/* Verb supine phrase */
+CloseVPs = "VPs]"
+OpenVPp = "[VPp"	/* Verb past participle phrase */
+CloseVPp = "VPp]"
+OpenPP = "[PP"
+ClosePP = " PP]"	/* Extra space because of conflict with "MWE_PP]" */
+
+Comma = ","{WhiteSpace}+","
+//ConjPhrase = {OpenCP}{WhiteSpace}+(og|eða|né|heldur|en)~c{WhiteSpace}+{CloseCP}
+ConjPhrase = {OpenCP}~{CloseCP}
+ConjPhraseOrComma = {ConjPhrase} | {Comma}
+//ConjPhraseSem = {OpenCP}{WhiteSpace}+sem~c{WhiteSpace}+{CloseCP}
+
+
+/* A multiword expression is marked according to its function   */
+/* AdvP=Adverb, AP=Adjective, CP=Conjunction, PP=Preposition 	*/
+
+OpenMWE_PP = "[MWE_PP"
+CloseMWE_PP = "MWE_PP]"
+
+MWE_AdvP = "[MWE_AdvP"~"MWE_AdvP]"
+MWE_CP = "[MWE_CP"~"MWE_CP]"
+MWE_AP = "[MWE_AP"~"MWE_AP]"
+MWE_PP= {OpenMWE_PP}~{CloseMWE_PP}
+
+MWE = {MWE_AdvP}|{MWE_CP}|{MWE_AP}|{MWE_PP}
+
+/* NP-phrases in different cases */
+
+NPNom = {OpenNP}n~{CloseNP}
+NPAcc = {OpenNP}a~{CloseNP}
+NPDat = {OpenNP}d~{CloseNP}
+NPGen = {OpenNP}g~{CloseNP}
+
+APNom = {OpenAP}n~{CloseAP}
+APAcc = {OpenAP}a~{CloseAP}
+APDat = {OpenAP}d~{CloseAP}
+APGen = {OpenAP}g~{CloseAP}
+
+NPsNom = {OpenNPs}{WhiteSpace}+{OpenNP}n~{CloseNPs}
+NPsAcc = {OpenNPs}{WhiteSpace}+{OpenNP}a~{CloseNPs}
+NPsDat = {OpenNPs}{WhiteSpace}+{OpenNP}d~{CloseNPs}
+NPsGen = {OpenNPs}{WhiteSpace}+{OpenNP}g~{CloseNPs}
+
+APsNom = {OpenAPs}{WhiteSpace}+{OpenAP}n~{CloseAPs}
+APsAcc = {OpenNPs}{WhiteSpace}+{OpenAP}a~{CloseAPs}
+APsDat = {OpenNPs}{WhiteSpace}+{OpenAP}d~{CloseAPs}
+APsGen = {OpenNPs}{WhiteSpace}+{OpenAP}g~{CloseAPs}
+
+
+NPNum = {OpenNP}" "~t(a|p){WhiteSpace}+{CloseNP}
+

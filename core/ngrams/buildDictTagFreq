@@ -1,0 +1,8 @@
+echo "Building the lexicon ..."
+#echo "Removing line feed from corpus..."
+tr '\015' ' ' < $1 > corpus.tmp
+echo "Sorting (word,tag) pairs by frequency ..." 
+sort corpus.tmp | uniq -c | sort -nr > $1.freq 
+echo "Grouping words and associated tags ..." 
+perl buildDictTagFreq.pl $1.freq $2
+rm *.tmp
