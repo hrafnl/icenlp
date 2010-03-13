@@ -706,12 +706,13 @@ uns <cnj> <cnjsub>
 
 [MWE]
 að_einhverju_leyti <adv>
-eins_og <adv>
+eins_og <cnjsub>
 hins_vegar <adv>
 hvers_konar <adv><itg>
 hvers_vegna <adv><itg>
 í_dag <adv>
 í_gær <adv>
+þrátt_fyrir <adv>
 
 [MWE-RENAME]
 ########################################
@@ -720,4 +721,4 @@ hvers_vegna <adv><itg>
 hinsvegar hins_vegar <adv>
 
 [LEXEME-PATTERN]
-[0-9]+ <num>
+[0-9]+([\.,][0-9]+)* <num>

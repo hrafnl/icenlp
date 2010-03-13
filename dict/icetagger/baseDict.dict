@@ -3393,10 +3393,6 @@ október=nkeo_nkeþ_nkee_nken
 nóvember=nkeþ_nkeo_nkee_nken
 desember=nkeo_nkeþ_nken_nkee
 
-#Adjectives
-fyrra=lheovm_lheþvm_lhenvm_lkeovm_lkeþvm
-mikið=lhensf_aa_lheosf
-
 #Finance
 milljarður=nken
 milljarð=nkeo
@@ -3419,3 +3415,7 @@ markara=nkeo_nkeþ_nkee
 Finnland=nhen-ö_nheo-ö
 Evrópusambandið=nhengö_nheogö
 
+#Adjectives
+fyrra=lheovm_lheþvm_lhenvm_lkeovm_lkeþvm
+mikið=lhensf_aa_lheosf
+reiðu=nvee_lheþsf_lhfnvf_lvfovf_lveovf_lhfovf_lvfþvf_lvfnvf_lveþvf_lkfþvf_lkfnvf

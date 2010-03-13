@@ -124,9 +124,9 @@ public class Tokenizer
 	}
 
 
-	private boolean isLinkedToNext(TokenCode tokenCode)
+	private boolean isLinkedToPrevious(TokenCode tokenCode)
 	{
-		if(tokenCode == TokenCode.tcEOS || tokenCode == TokenCode.tcComma)
+		if(tokenCode == TokenCode.tcEOS || tokenCode == TokenCode.tcComma || tokenCode == TokenCode.tcPeriod)
 			return true;		
 		return false;
 	}
@@ -265,7 +265,7 @@ public class Tokenizer
 						break;
 				}
 				
-				if(this.isLinkedToNext(token.tokenCode))
+				if(this.isLinkedToPrevious(token.tokenCode))
 					token.linkedToPreviousWord = true;
 
 				tokens.add( token );

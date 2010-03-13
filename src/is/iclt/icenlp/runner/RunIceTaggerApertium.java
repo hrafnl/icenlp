@@ -111,21 +111,27 @@ public class RunIceTaggerApertium extends RunIceTagger
         for(Word word: wordList)  {
             if( outputFormat == Segmentizer.tokenPerLine ) {
                 if (showSurfaceForm)
-                    outFile.write("^" + word.getLexeme() + "/" + word.getLemma() + word.getTag() + "$ ");
+                    outFile.write("^" + word.getLexeme() + "/" + word.getLemma() + word.getTag() + "$");
                 else
-                    outFile.write("^" + word.getLemma() + word.getTag() + "$ ");
+                    outFile.write("^" + word.getLemma() + word.getTag() + "$");
                 outFile.newLine();
             }
             else {
+                if (!word.linkedToPreviousWord)
+                    output = output + " ";
                 if (showSurfaceForm)
-                    output = output + "^" + word.getLexeme() + "/" + word.getLemma() + word.getTag() + "$ ";
+                    output = output + "^" + word.getLexeme() + "/" + word.getLemma() + word.getTag() + "$";
                 else
-                    output = output + "^" + word.getLemma() + word.getTag() + "$ ";
+                    output = output + "^" + word.getLemma() + word.getTag() + "$";
             }
         }
 
-        if( outputFormat != Segmentizer.tokenPerLine )
+        if( outputFormat != Segmentizer.tokenPerLine ) {
+            // Remove the first char if it is a space.
+			if (output.charAt(0) == ' ')
+				output = output.substring(1, output.length());
             outFile.write( output );
+        }
 		outFile.newLine();
 	}
 }
