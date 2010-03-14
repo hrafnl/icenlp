@@ -26,7 +26,7 @@ import is.iclt.icenlp.core.utils.Tag;
 import java.util.Iterator;
 import java.util.ArrayList;
 
-/**
+/**                                           i
  * Encapsulates a PoS tag in the Icelandic tagset.
  * @author Hrafn Loftsson
  */
@@ -37,7 +37,7 @@ public class IceTag extends Tag {
      wcVerbPastPart, wcConj, wcConjRel, wcAdverb, wcPrep, wcInf, wcExcl, wcPunct, wcForeign, wcUndef
 
    }
-   private WordClass wordClass;
+   private WordClass wordClass;                                            
 
    // Constants
    public static final char cNominative = 'n';
@@ -566,6 +566,13 @@ public class IceTag extends Tag {
    {
        return (tagStr.toString().matches(".+<v>.*"));
    }
+
+   // if a tag is marked with <c> then the corresponding tag profile is complete
+   // i.e. the guesser should not fill into tag profile gaps
+   /*public boolean isCompleteTagProfile()
+   {
+       return (tagStr.toString().matches(".+<c>.*"));
+   }*/
 
    public boolean isVerbMiddleForm()
    {

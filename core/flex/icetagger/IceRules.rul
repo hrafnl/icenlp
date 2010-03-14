@@ -101,8 +101,9 @@ IF nextToken != null ;
 RULE nextToken.isOnlyWordClass(PERSPRONOUN) && tag.isAdjectivePositive() ;
 // select the noun
 RULE nextToken.isOnlyWordClass(ADJ) && currToken.isNoun() ;
-// select the adverb
-RULE nextToken.isOnlyWordClass(ADJ) && currToken.isAdverb() ;
+// select the adverb, but HL: 13.03.2010 "fallega rauða rósin" is ok
+RULE nextToken.isOnlyWordClass(ADJ) && currToken.isAdverb() 
+	&& (nextnextToken == null || !nextnextToken.isNoun());
 // if the next is a noun and the current is an adverb than remove the adjective if not a match with the noun
 RULE nextToken.isOnlyWordClass(NOUN) && currToken.isAdverb() 
 	&& !nextToken.isOnlyCase(GENITIVE) && !currToken.genderNumberCaseMatch(nextToken) ;
@@ -111,8 +112,9 @@ RULE currToken.lexeme.equalsIgnoreCase("fyrst") && (nextToken.isNoun() || nextTo
 	&& nextnextToken != null && nextnextToken.isVerbActive() ; 
 // choose the supine, "bætt um betur"
 RULE currToken.isVerbSupine() && nextToken.isOnlyWordClass(ADVERB) ;
-// choose the adverb
-RULE currToken.lexeme.endsWith("lega") && currToken.isAdverb() && !nextToken.isNoun() ;
+// choose the adverb, but HL: 13.03.2010 "fallega rauða rósin" is ok
+RULE currToken.lexeme.endsWith("lega") && currToken.isAdverb() && !nextToken.isNoun() 
+	&& !(nextToken.isAdjective() && nextnextToken != null && nextnextToken.isNoun());;
 // eins og
 RULE currToken.lexeme.equalsIgnoreCase("eins") && nextToken.lexeme.equalsIgnoreCase("og") ;
 // margra landa
@@ -159,6 +161,10 @@ RULE nextToken.isOnlyWordClass(REFLPRONOUN) ;
 // choose the adjective, if a match exists
 RULE (currToken.isAdjective() || currToken.isIndefinitePronoun()) 
 	&& (nextToken.isOnlyWordClass(NOUN) || nextToken.isOnlyWordClass(PROPERNOUN)) && currToken.genderNumberCaseMatch(nextToken) ;
+// HL: 13.03.2010 choose the adjective, if a match exists "fallega rauða rósin"
+RULE currToken.isAdjectiveWeak() && nextToken.isAdjectiveWeak() && 
+currToken.genderNumberCaseMatch(nextToken) && 
+nextnextToken != null && nextnextToken.isOnlyWordClass(NOUN) && nextToken.genderNumberCaseMatch(nextnextToken) ;
 // hægt er, hægt að sinna
 RULE currToken.isAdjective() && (currToken.lexeme.equalsIgnoreCase("hægt") || currToken.lexeme.equalsIgnoreCase("rétt")) 
 	&& (nextToken.isVerbBe() || nextToken.isOnlyWordClass(INF)) ;
@@ -519,8 +525,10 @@ RULE nextToken.isOnlyWordClass(NOUN) && nextToken.isOnlyCase(GENITIVE) && currTo
 // select the adjective; "sagði skjálfandi röddu"
 RULE nextToken.isNoun() && tag.isVerbPresentPart() && currToken.isAdjective() ;
 // select the adjective; "nýbökuðum (unknown) stjórnarformanni"
-RULE nextToken.isOnlyWordClass(NOUN) && currToken.isAdjective() 
-	&& currToken.genderNumberCaseMatch(nextToken) && nextToken.isOnlyCase(DATIVE) ;
+//RULE nextToken.isOnlyWordClass(NOUN) && currToken.isAdjective() 
+//	&& currToken.genderNumberCaseMatch(nextToken) && nextToken.isOnlyCase(DATIVE) ;
+// HL: 13.03.2010 select the adjective; "reiðir íbúar höfuðborgarinnar"
+RULE nextToken.isOnlyWordClass(NOUN) && currToken.isAdjective() && (currToken.isVerbIndicative() || currToken.isVerbSubjunctive()) && !tag.personGenderNumberMatch(nextToken.getTags()) && currToken.genderNumberCaseMatch(nextToken) ;
  // engin LEIÐ var, select the noun, ok is "hverjir GETA verið ..."
 RULE nextToken.isVerbBe() && !nextToken.isVerbSupine() 
 	&& prevToken != null && prevToken.isIndefinitePronoun() && currToken.isNoun() ;

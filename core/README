@@ -3,21 +3,30 @@ IceNLP is an open source Natural Language Processing (NLP) toolkit for analysing
 http://sourceforge.net/projects/icenlp
 
 -----------------------------------------
-Regarding SVN:
+The project is checked out with: 
+svn co https://icenlp.svn.sourceforge.net/svnroot/icenlp icenlp
 
-The files 
-	src/is/iclt/icenlp/core/icetagger/IceLocalRules.java 
-	src/is/iclt/icenlp/core/iceparser/*.java (except StringSearch.java) 
-	src/is/iclt/icenlp/core/iceNER/NameScanner.java 
-are not version controlled because they are automatically generated from .flex source files.
+A number of source files are automatically generated (and thus not part of the svn).
+The following steps are needed to generated these files for the first time:
 
-To generate these .java files use the shells:         
-	/flex/icetagger/compileRules.sh 
-	/flex/iceparser/flexAll.sh
-	/flex/iceparser/errorSearch/flexAll.sh
-	/flex/iceNER/flexit.sh
+	cd icenlp/core/flex/icetagger
+	./compileRules.sh
 
-Same holds for the rule file used by the lemmatizer Lemmald. It is generated using the shell /dict/lemmald/makeRules.sh (now automatically generated during build)
+	cd icenlp/core/flex/iceparser
+	./flexAll.sh
+
+	cd icenlp/core/flex/iceparser/errorSearch
+	./flexAll.sh
+
+	cd icenlp/core/flex/iceNER
+	./flexit.sh
+
+	cd icenlp/core/doc/
+	./maketex.sh
+
+Then the core can be compiled with:
+cd icenlp/core
+ant
 -----------------------------------------
 hrafn@ru.is
 anton.karl.ingason@gmail.com

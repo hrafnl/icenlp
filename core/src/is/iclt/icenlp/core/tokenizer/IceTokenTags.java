@@ -816,6 +816,9 @@ public boolean personNumberMatch(IceTokenTags tok)
                                                 break;
                case condOrdinal:       result = tag.isNumeralOrdinal();
                                                 break;
+               //case condCompleteTagProfile:     result = tag.isCompleteTagProfile();
+               //                                 break;
+
            }
            if (result)
                return true;
@@ -1022,6 +1025,11 @@ public boolean personNumberMatch(IceTokenTags tok)
     {
         return isCondition(Condition.condVerbPresentPart);
     }
+
+    /*public boolean isCompleteTagProfile()
+    {
+        return isCondition(Condition.condCompleteTagProfile);
+    }*/
 
     public boolean isNominal()
     {

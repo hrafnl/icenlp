@@ -656,6 +656,17 @@ lhfþof <adj><pst><nt><pl><dat><idk>
 vera <vblex><actv> <vbser>
 hafa <vblex><actv> <vbhaver>
 
+mega <vblex><actv> <vaux>
+munu <vblex><actv> <vaux>
+skulu <vblex><actv> <vaux>
+
+Samfylking <al> <org>
+Landsbanki <al> <org>
+Íslandsbanki <al> <org>
+Framsóknarflokkur <al> <org>
+Sjálfstæðisflokkur <al> <org>
+Alþýðuflokkur <al> <org>
+
 [LEXEME]
 ###############################################################
 # This section contains tag mapping exception rules for lexemes.
@@ -706,6 +717,7 @@ uns <cnj> <cnjsub>
 
 [MWE]
 að_einhverju_leyti <adv>
+af_hverju <adv><itg>
 eins_og <cnjsub>
 frá_upphafi <adv>
 hins_vegar <adv>
@@ -715,7 +727,10 @@ inni_í <pr>
 í_dag <adv>
 í_gær <adv>
 í_morgun <adv>
+meira_en <cnjsub>
 á_morgun <adv>
+uppi_í <pr>
+þess_vegna <adv>
 þrátt_fyrir <adv>
 
 [MWE-RENAME]
