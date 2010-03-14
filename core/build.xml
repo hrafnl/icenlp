@@ -8,7 +8,7 @@
 	<property name="src" location="src" />
 	<property name="build" location="build" />
 	<property name="dist" location="dist" />
-	<property name="package" value="IceNLP" />
+	<property name="package" value="IceNLPCore" />
 	<property name="lib" location="lib" />
 	<property name="javadoc" location="javadoc" />	
 	
@@ -84,49 +84,7 @@
 	</target>
 
 
-    <available file="tools/IceNLPServer/dist" type="dir"
-               property="IceNLPServer.present"/>
-    <available file="tools/IceNLPClient/dist" type="dir"
-               property="IceNLPClient.present"/>
-    <available file="tools/RouterSlave/dist" type="dir"
-               property="RouterSlave.present"/>
-    <available file="tools/IRW/dist" type="dir"
-               property="IRW.present"/>
-
-    <target name="server-jar" if="IceNLPServer.present">
-        <echo message="Found IceNLPServer dir"/>
-        <copy todir="${dist}/${package}/tools/IceNLPServer">
-			<fileset dir="tools/IceNLPServer/dist" />
-	</copy>
-	<chmod perm="+x" dir="${dist}/${package}/tools/IceNLPServer" includes="**/*.sh" />
-    </target>
-
-    <target name="client-jar" if="IceNLPClient.present">
-        <echo message="Found IceNLPClient dir"/>
-        <copy todir="${dist}/${package}/tools/IceNLPClient">
-			<fileset dir="tools/IceNLPClient/dist" />
-	</copy>
-	<chmod perm="+x" dir="${dist}/${package}/tools/IceNLPClient" includes="**/*.sh" />
-    </target>
-
-    <target name="routerslave-jar" if="RouterSlave.present">
-        <echo message="Found RouterSlave dir"/>
-        <copy todir="${dist}/${package}/tools/RouterSlave">
-			<fileset dir="tools/RouterSlave/dist" />
-	</copy>
-	<chmod perm="+x" dir="${dist}/${package}/tools/RouterSlave" includes="**/*.sh" />
-    </target>
-
-    <target name="irw-jar" if="IRW.present">
-        <echo message="Found IRW dir"/>
-        <copy todir="${dist}/${package}/tools/IRW">
-			<fileset dir="tools/IRW/dist" />
-	</copy>
-	<chmod perm="+x" dir="${dist}/${package}/tools/IRW" includes="**/*.sh" />
-    </target>
-
-	
-	<target name="package" depends="release-jar, server-jar, client-jar, routerslave-jar, irw-jar" >
+	<target name="package" depends="release-jar" >
 		
 		<copy file="${dist}/${jar_name}.jar" todir="${dist}/${package}/dist" />
 		<copy todir="${dist}/${package}/bat">
@@ -151,11 +109,9 @@
 		<copy file="doc/IceNLP.pdf" todir="${dist}/${package}/doc" />
 		<copy file="doc/Tagset.pdf" todir="${dist}/${package}/doc" />
 		
-		<zip compress="yes" destfile="${dist}/IceNLP-${jar_version}.zip">
+		<zip compress="yes" destfile="${dist}/${package}-${jar_version}.zip">
 			<zipfileset dir="dist" includes="IceNLPCore.jar" prefix="${package}/dist" />
-            <zipfileset dir="tools/IceNLPServer/dist" includes="**/*" prefix="${package}/tools/IceNLPServer" erroronmissingdir="false"/>
-            <zipfileset dir="tools/IceNLPClient/dist" includes="**/*" prefix="${package}/tools/IceNLPClient" erroronmissingdir="false"/>
- 			<zipfileset dir="bat" includes="**/*.sh" filemode="755" prefix="${package}/bat" />			
+            <zipfileset dir="bat" includes="**/*.sh" filemode="755" prefix="${package}/bat" />
 			<zipfileset dir="bat" includes="**/*" excludes="**/*.sh" prefix="${package}/bat" />
 			
 		    <zipfileset dir="dict" prefix="${package}/dict" />
