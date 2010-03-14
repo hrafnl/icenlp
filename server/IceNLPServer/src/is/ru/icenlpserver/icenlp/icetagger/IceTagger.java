@@ -7,9 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-
 import org.apertium.lttoolbox.process.FSTProcessor;
-
 import is.iclt.icenlp.core.icetagger.IceTaggerLexicons;
 import is.iclt.icenlp.core.icetagger.IceTaggerResources;
 import is.iclt.icenlp.core.lemmald.Lemmald;
@@ -184,15 +182,23 @@ public class IceTagger implements IIceTagger {
 				tokLexicon = new Lexicon(tokenLexicon);
 			}
 
-			// If the user wants to use the mapping lexicon we must build one.
+			// Check for a mappinglexicon lexicon configuration entry.
 			if (this.configuration.containsKey("mappinglexicon")) {
-				String mappingLexicon = this.configuration
-						.getValue("mappinglexicon");
-				System.out.println("[i] Reading mapping lexicon from: "
-						+ mappingLexicon + '.');
-				this.mapperLexicon = new MappingLexicon(mappingLexicon, true,
-						this.leave_not_found_tag_unchanged, this.configuration
-								.debugMode(), this.not_found_tag);
+				String mappingLexicon = this.configuration.getValue("mappinglexicon");
+				
+				if(mappingLexicon.toLowerCase().equals("icenlp"))
+				{
+					System.out.println("[i] Reading mapping lexicon from IceNLP resource.");
+					this.mapperLexicon = new MappingLexicon(true,
+							this.leave_not_found_tag_unchanged, this.configuration
+									.debugMode(), this.not_found_tag);	
+				}
+				else{
+					System.out.println("[i] Reading mapping lexicon from: "+ mappingLexicon + '.');
+					this.mapperLexicon = new MappingLexicon(mappingLexicon, true,
+							this.leave_not_found_tag_unchanged, this.configuration
+									.debugMode(), this.not_found_tag);
+				}
 			}
 
 			if (this.lemmatize) {

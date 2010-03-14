@@ -72,9 +72,6 @@
 			<fileset dir="${conf.dir}" />
 		</copy>
 
-        <copy file="../../core/dict/icetagger/otb.apertium.dict" todir="${dist.dir}/config/dicts"/>
-
-
         <echo file="${dist.dir}/${runner.name}.sh" append="false">#\!/bin/sh
 cd `dirname $0`
 java -Xms64m -Xmx512m -Dfile.encoding=UTF-8 -jar ${ant.project.name}.jar --config=config/IceNLPServer.conf

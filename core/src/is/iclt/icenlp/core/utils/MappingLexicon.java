@@ -6,6 +6,7 @@ import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -52,6 +53,21 @@ public class MappingLexicon
 	// for a given tag.
 	private String notFoundMappingTag;
 	
+	
+	protected MappingLexicon(boolean leaveNotFoundTagUnchanged, boolean showAppliedActions, String notFoundMappingTag)
+	{
+		this.tagMaps = new HashMap<String, String>();
+		this.lemmaExceptionRuleMap = new HashMap<String, List<Pair<String, String>>>();
+		this.lexemeExceptionRuleMap = new HashMap<String, List<Pair<String, String>>>();
+		this.mweRuleMap = new HashMap<String, String>();
+		this.mweRenameRuleMap = new HashMap<String, Pair<String, String>>();
+		this.lexemePatternMap = new HashMap<String, String>(); 
+		this.leaveNotFoundTagUnchanged = leaveNotFoundTagUnchanged;
+		this.showAppliedActions = showAppliedActions;
+		this.notFoundMappingTag = notFoundMappingTag;
+	}
+	
+
 	/**
 	 * Constructor for the MapperLexicon class. This constructor initializes all the
 	 * member variables and sets the to the values that are passed via the constructor.
@@ -73,38 +89,56 @@ public class MappingLexicon
 			boolean showAppliedActions,
 			String notFoundMappingTag) throws Exception 
 	{	
-		this.tagMaps = new HashMap<String, String>();
-		this.lemmaExceptionRuleMap = new HashMap<String, List<Pair<String, String>>>();
-		this.lexemeExceptionRuleMap = new HashMap<String, List<Pair<String, String>>>();
-		this.mweRuleMap = new HashMap<String, String>();
-		this.mweRenameRuleMap = new HashMap<String, Pair<String, String>>();
-		this.lexemePatternMap = new HashMap<String, String>(); 
-		this.leaveNotFoundTagUnchanged = leaveNotFoundTagUnchanged;
-		this.showAppliedActions = showAppliedActions;
-		this.notFoundMappingTag = notFoundMappingTag;
+		this(leaveNotFoundTagUnchanged, showAppliedActions,  notFoundMappingTag);
 		
-		readConfigFile(mappingFile);
-	
-		if(showLexiconStatusOutput)
-		{
-			System.out.println("[i] Number of mapping rules: " + this.tagMaps.size());
-			System.out.println("[i] Number of lexeme exception rules: " + this.lexemeExceptionRuleMap.size());
-			System.out.println("[i] Number of lemma exception rules: " + this.lemmaExceptionRuleMap.size());
-			System.out.println("[i] Number of lexeme-patterns rules: " + this.lexemePatternMap.size());
-			System.out.println("[i] Number of MWE rules: " + this.mweRuleMap.size());
-			System.out.println("[i] Number of MWE rename rules: " + this.mweRenameRuleMap.size());
-		}
+		FileInputStream fstream = new FileInputStream(mappingFile);
+		readConfigFile(fstream);
 	}
-
+	
+	/**
+	 * Constructor for the MapperLexicon class. This constructor initializes all the
+	 * member variables and sets the to the values that are passed via the constructor.
+	 * With this constructor the mapping file is read from the IceNLPCore jar file.
+	 * @param showLexiconStatusOutput Flag to controls whether we print overview of the rules
+	 * that were read from the mapping file.
+	 * @param leaveNotFoundTagUnchanged Flag to controls whether tag that do not have
+	 * any mappings are left unchanged or changed to notFoundMappingTag.
+	 * @param showAppliedActions Flag to controls whether we print applied rules to standard output.
+	 * @param notFoundMappingTag The mapping tag that is used if leaveNotFoundTagUnchanged is false
+	 * and a given tag does not have any mapping tag. 
+	 * @throws Exception If mapping file is not found.
+	 */
+	public MappingLexicon( 
+			boolean showLexiconStatusOutput,
+			boolean leaveNotFoundTagUnchanged,
+			boolean showAppliedActions,
+			String notFoundMappingTag) throws Exception 
+	{
+		this(leaveNotFoundTagUnchanged, showAppliedActions, notFoundMappingTag);
+		
+		InputStream fstream = getClass().getResourceAsStream( "/dict/icetagger/otb.apertium.dict" );
+		readConfigFile(fstream);
+	}
+	
+	private void showStatusOutput()
+	{
+		System.out.println("[i] Number of mapping rules: " + this.tagMaps.size());
+		System.out.println("[i] Number of lexeme exception rules: " + this.lexemeExceptionRuleMap.size());
+		System.out.println("[i] Number of lemma exception rules: " + this.lemmaExceptionRuleMap.size());
+		System.out.println("[i] Number of lexeme-patterns rules: " + this.lexemePatternMap.size());
+		System.out.println("[i] Number of MWE rules: " + this.mweRuleMap.size());
+		System.out.println("[i] Number of MWE rename rules: " + this.mweRenameRuleMap.size());	
+	}
+	
 	/**
 	 * Reads the rules from the mapping file.
 	 * @param mappingFile A full path to the mapping file.
 	 * @throws FileNotFoundException If the mapping file cannot be found.
 	 * @throws IOException If the mapping file cannot be read.
 	 */
-	private void readConfigFile(String mappingFile) throws FileNotFoundException, IOException 
+	private void readConfigFile(InputStream fstream) throws FileNotFoundException, IOException 
 	{
-		FileInputStream fstream = new FileInputStream(mappingFile);
+		//FileInputStream fstream = new FileInputStream(mappingFile);
 		DataInputStream in = new DataInputStream(fstream);
 		BufferedReader br = new BufferedReader(new InputStreamReader(in));
 		String strLine = null;
@@ -261,6 +295,9 @@ public class MappingLexicon
 			}
 			lineNum +=1;
 		}
+		
+		if(this.showAppliedActions)
+			this.showStatusOutput();
 	}
 	
 	
