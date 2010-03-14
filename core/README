@@ -6,6 +6,10 @@ http://sourceforge.net/projects/icenlp
 The project is checked out with: 
 svn co https://icenlp.svn.sourceforge.net/svnroot/icenlp icenlp
 
+This file contains information about the contents of the subdirectory core.
+
+The core includes core utilities like a tokeniser, a unknown word guesser, a PoS tagger, a finite state parser, a lemmatiser, and a Named Entity Recogniser.
+
 A number of source files are automatically generated (and thus not part of the svn).
 The following steps are needed to generated these files for the first time:
 
