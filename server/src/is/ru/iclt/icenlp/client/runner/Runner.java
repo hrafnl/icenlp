@@ -2,8 +2,9 @@ package is.ru.iclt.icenlp.client.runner;
 
 
 
-import is.ru.iclt.icenlp.client.network.Packet;
+
 import is.ru.iclt.icenlp.common.network.ByteConverter;
+import is.ru.iclt.icenlp.common.network.Packet;
 
 import java.io.BufferedReader;
 import java.io.IOException;
