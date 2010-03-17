@@ -1,0 +1,61 @@
+<project name="server" basedir="." default="jar-server">	
+	<property name="src.dir" value="src"/>
+    <property name="build.dir" value="build"/>
+    <property name="classes.dir" value="${build.dir}/classes"/>
+    <property name="dist.dir" value="dist"/>
+	
+	<target name="clean">
+		<delete dir="${build.dir}"/>
+	</target>
+
+	<target name="clean-all">
+	 	<delete dir="${build.dir}"/>
+ 		<delete dir="${dist.dir}"/>
+	</target>
+
+	<target name="compile">
+		<mkdir dir="${classes.dir}"/>
+		<javac srcdir="src" destdir="${classes.dir}">
+        	<classpath>
+        		<pathelement location="../core/dist/IceNLPCore.jar"/>
+            	<pathelement location="lib/lttoolbox.jar"/>
+        	</classpath>
+    	</javac>
+	</target>
+	
+	<target name="jar" depends="compile">
+		<mkdir dir="${dist.dir}"/>
+		<jar destfile="${dist.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
+        	<manifest>
+				<attribute name="Class-Path" value="lttoolbox.jar IceNLPCore.jar ../../core/dist/IceNLPCore.jar ../../../core/dist/IceNLPCore.jar" />
+			</manifest>
+       	</jar>
+	</target>
+
+	<target name="files" depends="jar" description="Move all neccasery files to server jar folder.">
+		<!-- Copy the server configuration file to the folder. -->	
+		<copy file="configurations/server.conf" tofile="${dist.dir}/server.conf"/>
+		<!-- Create a shell runscript for server-->
+		<echo file="${dist.dir}/RunServer.sh" append="false">#\!/bin/sh
+cd `dirname $0`
+java -classpath server.jar is.ru.iclt.icenlp.server.runner.Runner
+		</echo>
+		<chmod perm="+x" file="${dist.dir}/RunServer.sh" />
+
+
+		<!-- Create a shell runscript for client-->
+		<echo file="${dist.dir}/RunClient.sh" append="false">#\!/bin/sh
+cd `dirname $0`
+java -classpath server.jar is.ru.iclt.icenlp.client.runner.Runner --port=1234 --host=localhost
+		</echo>
+		<chmod perm="+x" file="${dist.dir}/RunClient.sh" />
+
+
+
+	</target>
+
+	<target name="dist" depends="files">
+	</target>
+
+
+</project>
