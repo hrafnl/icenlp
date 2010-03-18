@@ -1,4 +1,4 @@
-<project name="server" basedir="." default="jar-server">	
+<project name="server" basedir="." default="dist">	
 	<property name="src.dir" value="src"/>
     <property name="build.dir" value="build"/>
     <property name="classes.dir" value="${build.dir}/classes"/>
@@ -65,6 +65,5 @@ java -Xms64m -Xmx512m -Dfile.encoding=UTF-8 -classpath server.jar is.ru.iclt.ice
 
 	<target name="dist" depends="files">
 	</target>
-
 
 </project>
