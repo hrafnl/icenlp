@@ -1,34 +1,61 @@
 <project name="server" basedir="." default="dist">	
 	<property name="src.dir" value="src"/>
-    <property name="build.dir" value="build"/>
-    <property name="classes.dir" value="${build.dir}/classes"/>
-    <property name="dist.dir" value="dist"/>
-	
-	<target name="clean">
-		<delete dir="${build.dir}"/>
-	</target>
+    	<property name="build.dir" value="build"/>
+    	<property name="classes.dir" value="${build.dir}/classes"/>
+    	<property name="dist.dir" value="dist"/>
+	<property name="lib.dir" value="lib" />
+	<property name="core.dir" location="../core/dist" />
+	<property name="lttoolbox" location="${lib.dir}/lttoolbox.jar" />
+	<property name="icenlpcore" location="${core.dir}/IceNLPCore.jar" />
 
-	<target name="clean-all">
+
+	<property name="jar_version" value="1.0" />
+	<property name="jar_name" value="server" />
+	
+	<path id="classpath">
+		<pathelement location="${lttoolbox}" />
+		<pathelement location="${icenlpcore}" />
+	</path>	
+
+	<target name="clean">
 	 	<delete dir="${build.dir}"/>
  		<delete dir="${dist.dir}"/>
 	</target>
 
-	<target name="compile">
-		<mkdir dir="${classes.dir}"/>
+	<target name="init" depends="clean" >
+		<tstamp /> <!-- Create the timestamp for the build -->
+		<!-- Create all the directories for the build -->
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${classes.dir}" />
+		<mkdir dir="${dist.dir}" />
+		<!--mkdir dir="${dist.dir}/${package}" /-->
+	</target>
+
+	<target name="compile" depends="init">
+		<!--mkdir dir="${classes.dir}"/-->
 		<javac srcdir="src" destdir="${classes.dir}">
-        	<classpath>
+		<classpath refid="classpath" /> 
+        	<!--classpath>
         		<pathelement location="../core/dist/IceNLPCore.jar"/>
             	<pathelement location="lib/lttoolbox.jar"/>
-        	</classpath>
+        	</classpath-->
     	</javac>
 	</target>
 	
 	<target name="jar" depends="compile">
+		<manifestclasspath property="jar.classpath" jarfile="${dist.dir}/${jar_name}.jar">
+	      		<classpath refid="classpath"/>
+	    	</manifestclasspath> 
+
 		<mkdir dir="${dist.dir}"/>
 		<jar destfile="${dist.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
-        	<manifest>
+        	<!--manifest>
 				<attribute name="Class-Path" value="lttoolbox.jar IceNLPCore.jar ../../core/dist/IceNLPCore.jar ../../../core/dist/IceNLPCore.jar" />
-			</manifest>
+			</manifest-->
+		<manifest>
+	                <attribute name="Built-By" value="${user.name}" />
+	                <attribute name="Class-Path" value="${jar.classpath}"/>
+	        </manifest>
        	</jar>
 	</target>
 
