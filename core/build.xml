@@ -72,8 +72,7 @@
             	<!-- Lemmald /-->
             	<include name="dict/lemmald/postfixRules.txt" />
             	<include name="dict/lemmald/rule_database_utf8.dat" />
-            	<include name="dict/lemmald/settings.txt" />
-                <!--exclude name="dict/tritagger/*WC.dict" /-->                
+            	<include name="dict/lemmald/settings.txt" />    
                 <include name="ngrams/models/otb.*" />
             </fileset>
 	        <manifest>
@@ -107,25 +106,28 @@
 
 
 		<copy file="doc/IceNLP.pdf" todir="${dist}/${package}/doc" />
-		<copy file="doc/Tagset.pdf" todir="${dist}/${package}/doc" />
-		
+		<copy file="doc/Tagset.pdf" todir="${dist}/${package}/doc" />		
+	</target>
+
+	<target name="zip" depends="package" >
 		<zip compress="yes" destfile="${dist}/${package}-${jar_version}.zip">
 			<zipfileset dir="dist" includes="IceNLPCore.jar" prefix="${package}/dist" />
-            <zipfileset dir="bat" includes="**/*.sh" filemode="755" prefix="${package}/bat" />
+            		<zipfileset dir="bat" includes="**/*.sh" filemode="755" prefix="${package}/bat" />
 			<zipfileset dir="bat" includes="**/*" excludes="**/*.sh" prefix="${package}/bat" />
 			
-		    <zipfileset dir="dict" prefix="${package}/dict" />
+		    	<zipfileset dir="dict" prefix="${package}/dict" />
 			<zipfileset dir="lib" prefix="${package}/lib" />
 			<zipfileset dir="ngrams" prefix="${package}/ngrams" />
 			<zipfileset dir="doc" includes="**/*.pdf" prefix="${package}/doc" />
 		</zip>
 	</target>
+	
 
 	<target name="clean" description="clean up" >
-        <!-- Delete the ${build} and ${dist} directory trees -->
-        <delete dir="${build}"/>
-        <delete dir="${dist}"/>
-    </target>
+        	<!-- Delete the ${build} and ${dist} directory trees -->
+        	<delete dir="${build}"/>
+        	<delete dir="${dist}"/>
+    	</target>
 	
 	
 	<!-- ================================================================== -->

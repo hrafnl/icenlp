@@ -66,18 +66,15 @@
 			<fileset dir="${sh.dir}" />
 		</copy>
 		<chmod perm="+x" dir="${dist.dir}/${package}/${sh.dir}" includes="**/*.sh" />
+    	</target>
 
-		<!--zip compress="yes" destfile="${dist}/${package}-${jar_version}.zip">
-			<zipfileset dir="dist" includes="IceNLPCore.jar" prefix="${package}/dist" />
-            		<zipfileset dir="bat" includes="**/*.sh" filemode="755" prefix="${package}/bat" />
-			<zipfileset dir="bat" includes="**/*" excludes="**/*.sh" prefix="${package}/bat" />
-			
-		    <zipfileset dir="dict" prefix="${package}/dict" />
-			<zipfileset dir="lib" prefix="${package}/lib" />
-			<zipfileset dir="ngrams" prefix="${package}/ngrams" />
-			<zipfileset dir="doc" includes="**/*.pdf" prefix="${package}/doc" />
-		</zip-->		
-
-    </target>
+	<target name="zip" depends="package" >
+		<zip compress="yes" destfile="${dist.dir}/${package}-${jar_version}.zip">
+			<zipfileset dir="${dist.dir}" includes="${jar_name}.jar" prefix="${package}/${dist.dir}" />
+            		<zipfileset dir="${sh.dir}" includes="**/*.sh" filemode="755" prefix="${package}/${sh.dir}" />
+		    	<zipfileset dir="${lib.dir}" prefix="${package}/${lib.dir}" />
+			<zipfileset dir="${configs.dir}" prefix="${package}/${configs.dir}" />
+		</zip>
+	</target>
 
 </project>
