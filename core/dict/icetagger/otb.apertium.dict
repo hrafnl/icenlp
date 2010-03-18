@@ -715,23 +715,110 @@ uns <cnj> <cnjsub>
 þó <cnj> <cnjsub>
 þótt <cnj> <cnjsub>
 
+
 [MWE]
+########################################
+# This section contains mapping rules for MWE
+#######################################
 að_einhverju_leyti <adv>
+að_fullu <adj>
+að_mestu_leyti <adv>
+að_mörgu_leyti <adv>
+að_sögn <pr>
+að_öllu_leyti <adv>
+að_því_leyti <adv>
 af_hverju <adv><itg>
+á_fætur <adv>
+á_hvolfi <n><mfn>
+á_morgun <adv>
+á_næstu_mánuðum <adv>
+á_seinni_árum <adv>
+á_tímum <pr>
+áður_en <cnjsub>
+ber_að_geta <vblex>
+blátt_áfram <adv>
+breyta_um_stefnu <vblex>
+deila_við <vblex>
+detta_í_það <vblex>
+draga_saman <vblex>
+draga_á_langinn <vblex>
+eftirá_að_hyggja <adv>
 eins_og <cnjsub>
+ekkert_mál <ij>
+ekki_lengur <adv>
+engan_veginn <adv>
+engin_furða <ij>
+etja_kappi <vblex>
 frá_upphafi <adv>
+fyrr_en <cnjsub>
+gefa_í_skyn <vblex>
+greiða_úr <vblex>
+halda_fram <vblex>
+halda_uppi <vblex>
+halda_áfram <vblex>
 hins_vegar <adv>
+hins_vegar <adv>
+hlakka_til <vblex>
+hrein_mey <n><f>
+hreinn_sveinn <n><m>
+hrinda_frá <vblex>
 hvers_konar <adv><itg>
 hvers_vegna <adv><itg>
+höfða_til <vblex>
 inni_í <pr>
+í_bili <adv>
 í_dag <adv>
+í_framtíðinni <adv>
+í_fyrrasumar <adv>
+í_fyrravor <adv>
 í_gær <adv>
+í_gærkvöldi <adv>
+í_gærmorgun <adv>
+í_haust <adv>
+í_kvöld <adv>
 í_morgun <adv>
+í_raun <adv>
+í_rauninni <adv>
+í_smáatriðum <adv>
+í_staðinn <adv>
+í_sumar <adv>
+í_símanum <adv>
+í_upphafi <adv>
+í_vetur <adv>
+í_vikunni <adv>
+í_vor <adv>
+jafnskjótt_og <adv>
+koma_fram <vblex>
+leggja_fyrir <vblex>
+leggja_saman <vblex>
+láta_af <vblex>
 meira_en <cnjsub>
-á_morgun <adv>
+óska_eftir <vblex>
+reikna_út <vblex>
+réttu_megin <adv>
+strax_og <cnjsub>
+svo_framarlega_sem <cnjadv>
+til_dæmis <adv>
+um_helgina <adv>
+um_langt_árabil <adv>
+um_leið <adv>
+um_þetta_leyti <adv>
+um_þær_mundir <adv>
+undir_lokin <adv>
+undireins_og <cnjadv>
+upp_úr <pr>
 uppi_í <pr>
+út_frá <pr>
+út_úr <pr>
+úti_á <pr>
+við_hliðina_á <pr>
+ýmiss_konar <adv>
+þar_sem <cnjsub>
 þess_vegna <adv>
 þrátt_fyrir <adv>
+þvert_í_gegnum <pr>
+því_síður <adv>
+
 
 [MWE-RENAME]
 ########################################
