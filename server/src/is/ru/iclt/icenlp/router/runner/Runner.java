@@ -9,7 +9,7 @@ import is.ru.iclt.icenlp.router.threads.SlaveListeningThreadException;
  * Runner class for the router.
  * @author hlynur
  */
-public class RouterRunner {
+public class Runner {
 	public static String prefix = "[RouterRunner]: ";
 
 	public static void main(String[] args) {
