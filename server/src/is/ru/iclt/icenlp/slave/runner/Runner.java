@@ -13,7 +13,7 @@ import java.net.UnknownHostException;
  * Runner class for the slave.
  * @author hlynur
  */
-public class SlaveRunner {
+public class Runner {
 	public static void main(String[] args) {
 		// If there are no parameters we print help.
 		if (args.length == 0) {
