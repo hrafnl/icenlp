@@ -34,7 +34,7 @@
 
 	<target name="files" depends="jar" description="Move all neccasery files to server jar folder.">
 		<!-- Copy the server configuration file to the folder. -->	
-		<copy file="configurations/server.conf" tofile="${dist.dir}/server.conf"/>
+		<copy file="configs/server.conf" tofile="${dist.dir}/server.conf"/>
 		<!-- Create a shell runscript for server-->
 		<echo file="${dist.dir}/RunServer.sh" append="false">#\!/bin/sh
 cd `dirname $0`
