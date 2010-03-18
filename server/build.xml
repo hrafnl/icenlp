@@ -1,16 +1,18 @@
-<project name="server" basedir="." default="dist">	
+<project name="IceNLPServer" basedir="." default="jar">	
 	<property name="src.dir" value="src"/>
     	<property name="build.dir" value="build"/>
     	<property name="classes.dir" value="${build.dir}/classes"/>
     	<property name="dist.dir" value="dist"/>
+	<property name="sh.dir" value="sh"/>
 	<property name="lib.dir" value="lib" />
 	<property name="core.dir" location="../core/dist" />
+	<property name="core.jar" value="IceNLPCore.jar" />
 	<property name="lttoolbox" location="${lib.dir}/lttoolbox.jar" />
-	<property name="icenlpcore" location="${core.dir}/IceNLPCore.jar" />
-
+	<property name="icenlpcore" location="${lib.dir}/${core.jar}" />
+	<property name="package" value="IceNLPServer" />
 
 	<property name="jar_version" value="1.0" />
-	<property name="jar_name" value="server" />
+	<property name="jar_name" value="IceNLPServer" />
 	
 	<path id="classpath">
 		<pathelement location="${lttoolbox}" />
@@ -28,17 +30,13 @@
 		<mkdir dir="${build.dir}" />
 		<mkdir dir="${classes.dir}" />
 		<mkdir dir="${dist.dir}" />
-		<!--mkdir dir="${dist.dir}/${package}" /-->
+		<mkdir dir="${dist.dir}/${package}" />
+		<copy file="${core.dir}/${core.jar}" todir="${lib.dir}" />
 	</target>
 
 	<target name="compile" depends="init">
-		<!--mkdir dir="${classes.dir}"/-->
 		<javac srcdir="src" destdir="${classes.dir}">
 		<classpath refid="classpath" /> 
-        	<!--classpath>
-        		<pathelement location="../core/dist/IceNLPCore.jar"/>
-            	<pathelement location="lib/lttoolbox.jar"/>
-        	</classpath-->
     	</javac>
 	</target>
 	
@@ -47,11 +45,7 @@
 	      		<classpath refid="classpath"/>
 	    	</manifestclasspath> 
 
-		<mkdir dir="${dist.dir}"/>
 		<jar destfile="${dist.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
-        	<!--manifest>
-				<attribute name="Class-Path" value="lttoolbox.jar IceNLPCore.jar ../../core/dist/IceNLPCore.jar ../../../core/dist/IceNLPCore.jar" />
-			</manifest-->
 		<manifest>
 	                <attribute name="Built-By" value="${user.name}" />
 	                <attribute name="Class-Path" value="${jar.classpath}"/>
@@ -59,38 +53,27 @@
        	</jar>
 	</target>
 
-	<target name="files" depends="jar" description="Move all neccasery files to server jar folder.">
-		<!-- Copy the server configuration file to the folder. -->	
-		<copy file="configs/server.conf" tofile="${dist.dir}/server.conf"/>
-		<!-- Create a shell runscript for server-->
-		<echo file="${dist.dir}/RunServer.sh" append="false">#\!/bin/sh
-cd `dirname $0`
-java -classpath server.jar is.ru.iclt.icenlp.server.runner.Runner
-		</echo>
-		<chmod perm="+x" file="${dist.dir}/RunServer.sh" />
+	<target name="package" depends="jar" description="Generates a distribution directory">
+		<copy todir="${dist.dir}/${package}/${lib.dir}">
+			<fileset dir="${lib.dir}" />
+		</copy>
+		<copy file="${dist.dir}/${jar_name}.jar" todir="${dist.dir}/${package}/${dist.dir}" />
+		<copy todir="${dist.dir}/${package}/${sh.dir}">
+			<fileset dir="${sh.dir}" />
+		</copy>
+		<chmod perm="+x" dir="${dist.dir}/${package}/${sh.dir}" includes="**/*.sh" />
 
+		<!--zip compress="yes" destfile="${dist}/${package}-${jar_version}.zip">
+			<zipfileset dir="dist" includes="IceNLPCore.jar" prefix="${package}/dist" />
+            		<zipfileset dir="bat" includes="**/*.sh" filemode="755" prefix="${package}/bat" />
+			<zipfileset dir="bat" includes="**/*" excludes="**/*.sh" prefix="${package}/bat" />
+			
+		    <zipfileset dir="dict" prefix="${package}/dict" />
+			<zipfileset dir="lib" prefix="${package}/lib" />
+			<zipfileset dir="ngrams" prefix="${package}/ngrams" />
+			<zipfileset dir="doc" includes="**/*.pdf" prefix="${package}/doc" />
+		</zip-->		
 
-		<!-- Create a shell runscript for client-->
-		<echo file="${dist.dir}/RunClient.sh" append="false">#\!/bin/sh
-cd `dirname $0`
-java -classpath server.jar is.ru.iclt.icenlp.client.runner.Runner --port=1234 --host=localhost
-		</echo>
-		<chmod perm="+x" file="${dist.dir}/RunClient.sh" />
-
-		<echo file="${dist.dir}/RunRouter.sh" append="false">#\!/bin/sh
-cd `dirname $0`
-java -Xms64m -Xmx512m -Dfile.encoding=UTF-8 -classpath server.jar is.ru.iclt.icenlp.router.runner.Runner -h=$1
-		</echo>
-		<chmod perm="+x" file="${dist.dir}/RunRouter.sh" />
-
-    	<echo file="${dist.dir}/RunSlave.sh" append="false">#\!/bin/sh
-cd `dirname $0`
-java -Xms64m -Xmx512m -Dfile.encoding=UTF-8 -classpath server.jar is.ru.iclt.icenlp.slave.runner.Runner -h=$1 -sh=/usr/local/applications/apertium/apertium-is-en/icenlpApertium.sh -p=2525
-		</echo>
-		<chmod perm="+x" file="${dist.dir}/RunSlave.sh" />
     </target>
-
-	<target name="dist" depends="files">
-	</target>
 
 </project>
