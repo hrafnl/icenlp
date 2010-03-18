@@ -4,6 +4,7 @@
     	<property name="classes.dir" value="${build.dir}/classes"/>
     	<property name="dist.dir" value="dist"/>
 	<property name="sh.dir" value="sh"/>
+	<property name="configs.dir" value="configs"/>
 	<property name="lib.dir" value="lib" />
 	<property name="core.dir" location="../core/dist" />
 	<property name="core.jar" value="IceNLPCore.jar" />
@@ -56,6 +57,9 @@
 	<target name="package" depends="jar" description="Generates a distribution directory">
 		<copy todir="${dist.dir}/${package}/${lib.dir}">
 			<fileset dir="${lib.dir}" />
+		</copy>
+		<copy todir="${dist.dir}/${package}/${configs.dir}">
+			<fileset dir="${configs.dir}" />
 		</copy>
 		<copy file="${dist.dir}/${jar_name}.jar" todir="${dist.dir}/${package}/${dist.dir}" />
 		<copy todir="${dist.dir}/${package}/${sh.dir}">

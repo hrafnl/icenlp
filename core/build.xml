@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="IceNLP_Resources" default="package" basedir=".">
+<project name="IceNLPCore" default="package" basedir=".">
 	<description>
 		Compiles a release version of the IceNLP toolkit as a single jar file with resource files
 	</description>
@@ -19,7 +19,7 @@
 	<property name="commons_cli" location="${lib}/commons-cli-1.2.jar" />
 	<property name="xerces" location="${lib}/xerces.jar" />
 
-    <property name="jar_version" value="1.3" />
+    	<property name="jar_version" value="1.3" />
 	<property name="jar_name" value="IceNLPCore" />
 
 	<path id="classpath">
