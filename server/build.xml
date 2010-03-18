@@ -50,9 +50,18 @@ java -classpath server.jar is.ru.iclt.icenlp.client.runner.Runner --port=1234 --
 		</echo>
 		<chmod perm="+x" file="${dist.dir}/RunClient.sh" />
 
+		<echo file="${dist.dir}/RunRouter.sh" append="false">#\!/bin/sh
+cd `dirname $0`
+java -Xms64m -Xmx512m -Dfile.encoding=UTF-8 -classpath server.jar is.ru.iclt.icenlp.router.runner.Runner -h=$1
+		</echo>
+		<chmod perm="+x" file="${dist.dir}/RunRouter.sh" />
 
-
-	</target>
+    	<echo file="${dist.dir}/RunSlave.sh" append="false">#\!/bin/sh
+cd `dirname $0`
+java -Xms64m -Xmx512m -Dfile.encoding=UTF-8 -classpath server.jar is.ru.iclt.icenlp.slave.runner.Runner -h=$1 -sh=/usr/local/applications/apertium/apertium-is-en/icenlpApertium.sh -p=2525
+		</echo>
+		<chmod perm="+x" file="${dist.dir}/RunSlave.sh" />
+    </target>
 
 	<target name="dist" depends="files">
 	</target>
