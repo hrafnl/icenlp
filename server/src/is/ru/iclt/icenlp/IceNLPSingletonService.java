@@ -50,7 +50,15 @@ public class IceNLPSingletonService {
 	 *            that one wants to analyze.
 	 * @return The same text tagged with the tagset defined in the mapping file.
 	 */
-	public String tagText(String text) {
-		return icetagger.tag(text).replace("\n", "");
+	public String tagText(String text) 
+	{
+		String[] lines = text.split("\n");
+		String outPut = "";
+		for(String s : lines)
+			outPut += icetagger.tag(s) + "\n";
+			
+		if(outPut.length() >=1)
+			outPut = outPut.substring(0, outPut.length()-1);
+		return outPut;
 	}
 }

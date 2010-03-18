@@ -269,8 +269,11 @@ public class IceTagger implements IIceTagger {
 
 
 	public String tag(String text) {
+		if(text.length() == 0) return "";
+		
 		List<Word> wordList = new LinkedList<Word>();
 		try {
+
 			Sentences sentences = facade.tag(text);
 
 			for (Sentence s : sentences.getSentences()) {

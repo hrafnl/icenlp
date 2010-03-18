@@ -53,21 +53,20 @@ public class Runner
 		{
 			// Let's read from the std.
 			String inLine;
-			List<String> lines = new LinkedList<String>();
+
 			InputStreamReader reader = new InputStreamReader(System.in, "UTF8");
 			BufferedReader br = new BufferedReader(reader);
 			
-			
-			// we must restrict what the client is sending.
+			String inString = "";
+
 			while ((inLine = br.readLine()) != null)
-			{
-				if(inLine.length() >=1)
-				{
-					lines.add(inLine);
-				}
-			}
+				inString += inLine + "\n";
 			
-			if (lines.size() == 0) 
+			if(inString.length()>=1)
+				inString = inString.substring(0, inString.length()-1);
+
+			// Do we need this check here?
+			if (inString.length() == 0) 
 			{
 				printHelp();
 				return;
@@ -75,7 +74,7 @@ public class Runner
 			
 			Socket socket = null;
 			socket = new Socket(host, port);
-			System.out.println(tagString(lines, socket));
+			System.out.println(tagString(inString, socket));
 
 		}
 		catch(Exception ex)
@@ -90,17 +89,14 @@ public class Runner
 	
 	
 	
-	public static String tagString(List<String> lines, Socket socket) throws IOException
+	public static String tagString(String lines, Socket socket) throws IOException
 	{
 		InputStream inStream = socket.getInputStream();
 		OutputStream outStream = socket.getOutputStream();
 		
-		// Create one strinf of all the sentences.
-		String s = "";
-		for(String line : lines)
-			s = s + "\n" + line;
+
 		
-		createSentecePackets(outStream, s);
+		createSentecePackets(outStream, lines);
 		Packet p = readFromStream(inStream);
 		if(p.getOpcode() == 3)
 		{
