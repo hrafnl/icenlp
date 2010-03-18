@@ -1,5 +1,7 @@
 package is.ru.iclt.icenlp.common.network;
 
+import is.ru.iclt.icenlp.router.common.network.ByteConverter;
+
 /**
  * Class that represents a network packet. The packet contains the payload that
  * is read from a socket.
@@ -11,6 +13,10 @@ public class Packet {
 	private int dateSize;
 
 
+	
+
+	
+	
 	/**
 	 * Constructor for the class.
 	 * @param data
@@ -29,6 +35,11 @@ public class Packet {
 	public Packet(byte[] data) {
 		this.data = data;
 	}
+	
+	public Packet(int opcode) {
+		this.data = new byte[512];
+		this.setOpcode(opcode);
+	}
 
 
 	/**
@@ -38,6 +49,13 @@ public class Packet {
 	public byte[] getData() {
 		return this.data;
 	}
+	
+	
+	public void setData(byte[] data) {
+		this.data = data;
+	}
+	
+	
 
 	/**
 	 * Function that returns the size of
@@ -49,18 +67,25 @@ public class Packet {
 		return this.dateSize;
 	}
 	
-	/**
-	 * Function that returns the opcode of a packet. 
-	 * @return Integer number that is read from the first
-	 * fore bits in the network payload.
-	 */
-	public int getOpcode() {
-		int opCode = 0;
-		int pos = 0;
-		opCode += ((int) data[pos++] & 0xFF) << 24;
-		opCode += ((int) data[pos++] & 0xFF) << 16;
-		opCode += ((int) data[pos++] & 0xFF) << 8;
-		opCode += ((int) data[pos++] & 0xFF) << 0;
-		return opCode;
+	public int getOpcode() 
+	{
+		return ByteConverter.bytesToInt(this.data, 0);
+	}
+	
+	public void setOpcode(int opcode) {
+		byte[] opcodedata = ByteConverter.itToByte(opcode);
+		for (int i = 0; i < 4; i++)
+			this.data[i] = opcodedata[i];
+	}
+	
+	public void setInteger(int begin, int value) {
+		byte[] valueData = ByteConverter.itToByte(value);
+		for (int i = 0; i < 4; i++) {
+			this.data[i + begin] = valueData[i];
+		}
+	}
+	
+	public int getInteger(int begins) {
+		return ByteConverter.bytesToInt(this.data, begins);
 	}
 }

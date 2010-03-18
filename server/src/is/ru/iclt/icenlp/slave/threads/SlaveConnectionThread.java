@@ -2,8 +2,8 @@ package is.ru.iclt.icenlp.slave.threads;
 
 
 
+import is.ru.iclt.icenlp.common.network.Packet;
 import is.ru.iclt.icenlp.router.common.network.ByteConverter;
-import is.ru.iclt.icenlp.router.common.network.Packet;
 
 import java.io.BufferedReader;
 import java.io.IOException;
