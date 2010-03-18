@@ -69,7 +69,6 @@ public class IceTaggerFacade
     
     public IceTaggerFacade(IceTaggerLexicons iceLexicons, Lexicon tokenizerLexicon, String morphyLexiconsDictFileWithLocation) throws IOException
     {
-        System.out.println(">> here.");
     	segmentizer = new Segmentizer(tokenizerLexicon);
         this.tokenizer = new Tokenizer( Tokenizer.typeIceTokenTags, strictTokenization, tokenizerLexicon);
         this.tokenizer.findMultiWords( false );
@@ -77,11 +76,7 @@ public class IceTaggerFacade
         initIceTagger(iceLexicons);
     }
     
-    
-    
-    
-    
-    
+ 
     public IceTaggerFacade(IceTaggerLexicons iceLexicons, Lexicon tokenizerLexicon, IceTagger.HmmModelType mType) throws IOException
     {
         this(iceLexicons, tokenizerLexicon);
