@@ -57,7 +57,7 @@ public class TriTaggerFacade {
         this.tokenizer = new Tokenizer( Tokenizer.typeIceTokenTags,
                                         strictTokenization,
                                         tokenizerLexicon);
-        this.tokenizer.findMultiWords( false );
+        //this.tokenizer.findMultiWords( false );
         initTriTagger(triLexicons);
 
     }

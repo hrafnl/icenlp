@@ -412,9 +412,10 @@ The possible values are:
 \item \emph{2}: One sentence per line.
 \end{itemize}
 \item \emph{-l <lexicon file>}: <lexicon file> is the name of a lexicon used by the tokeniser 
-The main purpose of the lexicon is to list the abbreviations that the tokeniser is supposed to recognise.
+The purpose of the lexicon is to list the abbreviations and the multiword expressions (MWEs) that the tokeniser is supposed to recognise.
 If this parameter is not supplied, the tokeniser uses the default resource file \emph{lexicon.txt} in the \emph{IceNLPCore.jar} file.
 \item \emph{-c <count>}: The tokeniser quits after tokenising \emph{<count>} sentences.
+\item \emph{-mwe}: Mark MWEs in the output. 
 \item \emph{-sa}: Split abbreviations. Use this option if each abbreviation is to be splitted into individual parts.
 \item \emph{-ns}: Not strict tokenisation. This means, for example, that strings like delta\$(4) are not broken apart. If this parameter is not supplied, i.e. strict tokenisation is preferred, then the above string will result in the following tokens: delta \$ ( 4 ).
 \end{itemize}

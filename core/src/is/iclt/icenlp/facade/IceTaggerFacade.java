@@ -62,7 +62,7 @@ public class IceTaggerFacade
         this.tokenizer = new Tokenizer( Tokenizer.typeIceTokenTags,
                                         strictTokenization,
                                         tokenizerLexicon);
-        this.tokenizer.findMultiWords( false );
+        //this.tokenizer.findMultiWords( false );
 
         initIceTagger(iceLexicons);
     }
@@ -71,7 +71,7 @@ public class IceTaggerFacade
     {
     	segmentizer = new Segmentizer(tokenizerLexicon);
         this.tokenizer = new Tokenizer( Tokenizer.typeIceTokenTags, strictTokenization, tokenizerLexicon);
-        this.tokenizer.findMultiWords( false );
+        //this.tokenizer.findMultiWords( false );
         iceLexicons.morphyLexicons.dict = new Lexicon(morphyLexiconsDictFileWithLocation);
         initIceTagger(iceLexicons);
     }
@@ -89,7 +89,7 @@ public class IceTaggerFacade
         this.tokenizer = new Tokenizer( Tokenizer.typeIceTokenTags,
                                         strictTokenization,
                                         tokenizerLexicon);
-        this.tokenizer.findMultiWords( false );
+        //this.tokenizer.findMultiWords( false );
         initIceTagger(iceLexicons);
 
     }

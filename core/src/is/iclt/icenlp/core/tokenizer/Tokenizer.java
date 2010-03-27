@@ -58,7 +58,7 @@ public class Tokenizer
 	private boolean strictTokenization; // Set to true if words and numbers cannot contain any special characters,
                                         // and single quotes are not part of other tokens
     private boolean dateHandling=false;
-    private boolean findMultiWords;
+    //private boolean findMultiWords;
 	public ArrayList tokens;
 
 
@@ -109,7 +109,7 @@ public class Tokenizer
 		}
 
 		strictTokenization = strict;
-		findMultiWords = false;
+		//findMultiWords = false;
 		sentence = "";
 		index = 0;
 
@@ -122,10 +122,10 @@ public class Tokenizer
         datePattern = Pattern.compile(datePatternStr);
 	}
 
-	public void findMultiWords( boolean find )
+	/*public void findMultiWords( boolean find )
 	{
 		findMultiWords = find;
-	}
+	}*/
 
     public void dateHandling( boolean doSpecialDateHandling )
 	{
@@ -237,7 +237,7 @@ public class Tokenizer
 				}
 				tokens.add( token );
         }
-
+        markMWEs();
     }
 
 
@@ -285,8 +285,9 @@ public class Tokenizer
 			}
 		}
 
+        markMWEs();
 		// Find multiwords
-		if( findMultiWords )
+		/*if( findMultiWords )
 		{
 			boolean multiFound = true;
 			while( multiFound )
@@ -294,7 +295,7 @@ public class Tokenizer
 			multiFound = true;
 			while( multiFound )
 				multiFound = combineMultiWords( 2 );
-		}
+		}*/
 	}
 
 	/*
@@ -302,7 +303,7 @@ public class Tokenizer
 	 *  The parameter controls how many words are combined (2 or 3).
 	 *  Returns true if multiWord in sentence is found, else false
 	 */
-	public boolean combineMultiWords( int number )
+	/*public boolean combineMultiWords( int number )
 	{
 		int count = tokens.size();
 		Token first = null, second = null, third = null;
@@ -340,7 +341,78 @@ public class Tokenizer
 			}
 		}
 		return false;
-	}
+	}*/
+
+
+    private void setMWECode(boolean trigram, boolean bigram, int idx)
+    {
+        Token tok;
+
+        tok = (Token)tokens.get(idx);
+        if (tok.mweCode == Token.MWECode.none)
+           tok.mweCode = Token.MWECode.begins;
+
+        if (trigram) {
+                tok = (Token)tokens.get(idx+2);
+                if (tok.mweCode == Token.MWECode.none)
+                    tok.mweCode = Token.MWECode.ends;
+        }
+        else if (bigram) {
+            tok = (Token)tokens.get(idx+1);
+            if (tok.mweCode == Token.MWECode.none)
+               tok.mweCode = Token.MWECode.ends;
+        }
+    }
+
+    /* marks multiword expressions */
+    private void markMWEs()
+	{
+		Token first, second, third;
+        String mwe2=null, mwe3=null, tags;
+        String mweStr;
+
+        int count = tokens.size();
+
+		boolean bigram = false;
+		boolean trigram = false;
+
+		for( int i = 0; i < count; i++ )
+		{
+            mweStr=null;
+			first = (Token)tokens.get( i );
+			mwe2 = first.lexeme;
+			if( i < count - 1 )
+			{
+				second = (Token)tokens.get( i + 1 );
+				bigram = true;
+				mwe2 = mwe2 + "_" + second.lexeme;
+			}
+			else
+				bigram = false;
+			if( i < count - 2 )
+			{
+				third = (Token)tokens.get( i + 2 );
+				trigram = true;
+				mwe3 = mwe2 + "_" + third.lexeme;
+			}
+			else
+				trigram = false;
+
+			if( trigram )
+				mweStr = lex.lookup( mwe3, true );
+			if( mweStr == null || !mweStr.equalsIgnoreCase("MWE")) {
+                trigram = false;
+                if (bigram) {
+                    mweStr = lex.lookup( mwe2, true );
+                    if( mweStr == null || !mweStr.equalsIgnoreCase("MWE"))
+                        bigram = false;
+                }
+            }
+
+            if (trigram || bigram)
+                setMWECode(trigram, bigram, i);
+	    }
+    }
 
 	private boolean isAbbreviation( String word )
 	{

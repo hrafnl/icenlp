@@ -44,7 +44,7 @@ public class TokenizerFacade {
         tokenizer = new Tokenizer( Tokenizer.typeToken,
                                         strictTokenization,
                                         tokenizerLexicon);
-        tokenizer.findMultiWords( false );
+        //tokenizer.findMultiWords( false );
     }
 
 public Sentences tokenize( String text ) throws IOException

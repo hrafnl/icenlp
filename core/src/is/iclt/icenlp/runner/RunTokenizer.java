@@ -45,6 +45,7 @@ public class RunTokenizer {
     private boolean splitAbbreviations=false;
     private boolean strictTokenization=true;
     private boolean standardInputOutput=false;
+    private boolean showMWEs=false;
     private int lineFormat=Segmentizer.otherDifferentFormat;
     private String showInputFormat="", showOutputFormat="";
     private Lexicon tokLex;
@@ -61,6 +62,7 @@ public class RunTokenizer {
        //System.out.println("-s <input string> (if no input file)");
        System.out.println("-c <count> (optional; quit after <count> sentences)");      
        System.out.println("-l <lexicon file> (optional)");
+       System.out.println("-mwe (show multiword expressions; optional)");
        System.out.println("-sa (split abbreviations; optional)");
        System.out.println("-ns (not strict tokenization; optional)");
        System.out.println( "------------------------------------------" );
@@ -134,6 +136,12 @@ public class RunTokenizer {
                     else // tokenPerLine
                     {
                       outWriter.write(token.lexeme);
+                      if (showMWEs) {
+                          if (token.mweCode == Token.MWECode.begins)
+                              outWriter.write("\t" + "MWE_begins");
+                          else if (token.mweCode == Token.MWECode.ends)
+                              outWriter.write("\t" + "MWE_ends");
+                      }
                       outWriter.newLine();
                     }
                 }
@@ -203,6 +211,8 @@ public class RunTokenizer {
              splitAbbreviations = true;
           else if (args[i].equals("-ns"))
              strictTokenization = false;
+          else if (args[i].equals("-mwe"))
+             showMWEs = true;
         }
         parseFormat();
     }

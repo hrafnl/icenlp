@@ -661,7 +661,7 @@ private void setDefaults()
 
         //tokenizer = new Tokenizer( Tokenizer.typeIceTokenTags, strictTokenization, tokenDictPath );
         tokenizer = new Tokenizer( Tokenizer.typeIceTokenTags, strictTokenization, tokLex );
-		tokenizer.findMultiWords( false );
+		//tokenizer.findMultiWords( false );
 		logger = new IceLog( logFile );
 
         /* Do we need a trigram tagger as well? */

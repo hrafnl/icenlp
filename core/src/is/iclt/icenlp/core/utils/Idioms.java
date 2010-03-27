@@ -23,6 +23,7 @@ package is.iclt.icenlp.core.utils;
 
 import is.iclt.icenlp.core.utils.Lexicon;
 import is.iclt.icenlp.core.tokenizer.TokenTags;
+import is.iclt.icenlp.core.tokenizer.Token;
 import is.iclt.icenlp.core.tokenizer.Token.MWECode;
 
 import java.io.IOException;
@@ -32,6 +33,8 @@ import java.util.ArrayList;
 /**
  * A class for storing and processing idioms.
  * @author Hrafn Loftsson
+ *
+ * Idioms are only tagged if the corresponding tokens have been marked as MWE_begins ... MWE_ends by the tokenizer
  */
 public class Idioms extends Lexicon
 {
@@ -52,7 +55,7 @@ public class Idioms extends Lexicon
 	 * Finds idioms in the supplied vector. Replaces the tags of the idioms tokens with the one found in the idioms lexicon.
 	 * @param tokens An array of tokens
 	 */
-	public void findIdioms( ArrayList tokens )
+	/*public void findIdioms( ArrayList tokens )
 	{
 		TokenTags first, second, third;
 		TokenTags tok;
@@ -113,5 +116,52 @@ public class Idioms extends Lexicon
 			}
 		}
 	}
+    */
+    public void findIdioms( ArrayList tokens )
+	{
+		TokenTags tok1, tok2;
 
+        int count = tokens.size();
+		boolean endFound = false;
+        String mwe=null, tags;
+
+        for (int i=0; i<count; i++) {
+		{
+            tags = null;
+			tok1 = (TokenTags)tokens.get( i );
+
+            endFound=false;
+            if (tok1.mweCode == Token.MWECode.begins)
+            {
+                mwe = tok1.lexeme;
+                for (int j=i+1; j<count && !endFound; j++) {
+                   tok2 = (TokenTags)tokens.get( j );
+                   if (tok2.mweCode == Token.MWECode.ends) {
+                        endFound=true;
+                   }
+                   mwe = mwe + "_" + tok2.lexeme;
+                }
+            }
+
+			if( endFound )
+				tags = lookup( mwe, true );
+
+            // Set the tags found for the idiom
+			if( tags != null )
+			{
+				dummyToken.lexeme = tags;
+				String tagStrings[] = dummyToken.splitLexeme( "_" );
+				for( int k = 0; k < tagStrings.length; k++ )
+				{
+					if( k + i < tokens.size() )
+					{
+						TokenTags tok = (TokenTags)tokens.get( k + i );
+						tok.setTag( tagStrings[k] );
+					}
+				}
+			}
+		}
+	}
+
+}
 }

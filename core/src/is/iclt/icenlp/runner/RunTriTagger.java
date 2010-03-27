@@ -458,7 +458,7 @@ private void createAllObjects(int sentenceStart) throws IOException
     }
 
     tokenizer = new Tokenizer(Tokenizer.typeHmmTokenTags, strictTokenization, tokLex);
-    tokenizer.findMultiWords(false);
+    //tokenizer.findMultiWords(false);
 
     //System.out.println("Entropy=" + Double.toString(triLex.ngrams.getEntropy()));
     //System.out.println("Suffix theta " + Double.toString(myLexicon.getTheta()));
