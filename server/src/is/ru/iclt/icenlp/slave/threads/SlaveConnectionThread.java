@@ -104,8 +104,12 @@ public class SlaveConnectionThread implements Runnable
 		            
 		            while ((line=buf.readLine())!=null)
 		            {
-		               output += line;    
+		               output += line + "\n";    
 		            }
+
+                    if(output.endsWith("\n"))
+                        output = output.substring(0, output.length()-1);
+
 		            
 		            System.out.println("[SlaveConnectinoThread]: translation sent to client " + output );
 		            sendReply(output, socket);
