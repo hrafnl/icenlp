@@ -49,6 +49,7 @@ public class Runner
         try {
             NetworkHandler handler = new NetworkHandler(host, port);
             System.out.println(handler.translate(text));
+            handler.closeConnection();
         } catch (NetworkException e) {
             System.out.println("Error: unable to communicate with router");
         }

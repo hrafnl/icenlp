@@ -25,6 +25,15 @@ public class NetworkHandler {
 
 
     public String translate(String text) throws NetworkException {
+        if(text == null)
+            return "";
+
+        if(text.length() <= 0)
+            return "";
+
+        if(text.matches("\\s+"))
+            return "";
+
         try {
             this.sendSentence(text);
             return this.readReply();
