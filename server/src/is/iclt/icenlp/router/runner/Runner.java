@@ -1,9 +1,9 @@
-package is.ru.iclt.icenlp.router.runner;
+package is.iclt.icenlp.router.runner;
 
-import is.ru.iclt.icenlp.router.threads.RequestListneningThread;
-import is.ru.iclt.icenlp.router.threads.RequestListneningThreadException;
-import is.ru.iclt.icenlp.router.threads.SlaveListeningThread;
-import is.ru.iclt.icenlp.router.threads.SlaveListeningThreadException;
+import is.iclt.icenlp.router.threads.RequestListneningThread;
+import is.iclt.icenlp.router.threads.RequestListneningThreadException;
+import is.iclt.icenlp.router.threads.SlaveListeningThread;
+import is.iclt.icenlp.router.threads.SlaveListeningThreadException;
 
 /**
  * Runner class for the router.

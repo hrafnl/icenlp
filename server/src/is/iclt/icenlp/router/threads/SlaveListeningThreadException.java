@@ -1,4 +1,4 @@
-package is.ru.iclt.icenlp.router.threads;
+package is.iclt.icenlp.router.threads;
 
 public class SlaveListeningThreadException extends Exception {
 	private static final long serialVersionUID = 1L;

@@ -1,10 +1,10 @@
-package is.ru.iclt.icenlp.client.runner;
+package is.iclt.icenlp.client.runner;
 
 
 
 
-import is.ru.iclt.icenlp.common.network.ByteConverter;
-import is.ru.iclt.icenlp.common.network.Packet;
+import is.iclt.icenlp.common.network.ByteConverter;
+import is.iclt.icenlp.common.network.Packet;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -101,14 +101,14 @@ public class Runner
 		if(p.getOpcode() == 3)
 		{
 			int size = 0;
-			int numOfPacks = is.ru.iclt.icenlp.common.network.ByteConverter.bytesToInt(p.getData(), 4);
+			int numOfPacks = is.iclt.icenlp.common.network.ByteConverter.bytesToInt(p.getData(), 4);
 			byte[] dataFromServer = new byte[numOfPacks * 512];
 			int byteCounter = 0;
 			
 			for(int i = 0; i<numOfPacks; i++)
 			{
 				p = readFromStream(inStream);
-				int dataSize = is.ru.iclt.icenlp.common.network.ByteConverter.bytesToInt(p.getData(), 4);
+				int dataSize = is.iclt.icenlp.common.network.ByteConverter.bytesToInt(p.getData(), 4);
 				size = size + dataSize;
 				for(int j = 0; j<dataSize; j++)
 				{

@@ -1,4 +1,4 @@
-package is.ru.iclt.icenlp.icetagger;
+package is.iclt.icenlp.icetagger;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -22,7 +22,7 @@ import is.iclt.icenlp.core.utils.Lexicon;
 import is.iclt.icenlp.core.utils.Word;
 import is.iclt.icenlp.facade.IceTaggerFacade;
 import is.iclt.icenlp.core.utils.MappingLexicon;
-import is.ru.iclt.icenlp.server.configuration.Configuration;
+import is.iclt.icenlp.server.configuration.Configuration;
 
 public class IceTagger implements IIceTagger {
 	private IceTaggerFacade facade;

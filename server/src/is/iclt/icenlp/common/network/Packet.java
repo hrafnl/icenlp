@@ -1,6 +1,6 @@
-package is.ru.iclt.icenlp.common.network;
+package is.iclt.icenlp.common.network;
 
-import is.ru.iclt.icenlp.router.common.network.ByteConverter;
+import is.iclt.icenlp.router.common.network.ByteConverter;
 
 /**
  * Class that represents a network packet. The packet contains the payload that

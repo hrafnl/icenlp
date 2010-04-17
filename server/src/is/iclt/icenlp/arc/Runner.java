@@ -1,7 +1,7 @@
-package is.ru.iclt.icenlp.arc;
+package is.iclt.icenlp.arc;
 
-import is.ru.iclt.icenlp.arc.network.NetworkException;
-import is.ru.iclt.icenlp.arc.network.NetworkHandler;
+import is.iclt.icenlp.arc.network.NetworkException;
+import is.iclt.icenlp.arc.network.NetworkHandler;
 import java.awt.*;
 
 public class Runner 

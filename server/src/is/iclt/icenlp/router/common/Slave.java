@@ -1,8 +1,8 @@
-package is.ru.iclt.icenlp.router.common;
+package is.iclt.icenlp.router.common;
 
 
-import is.ru.iclt.icenlp.common.network.Packet;
-import is.ru.iclt.icenlp.router.common.network.ByteConverter;
+import is.iclt.icenlp.common.network.Packet;
+import is.iclt.icenlp.router.common.network.ByteConverter;
 
 import java.io.IOException;
 import java.io.InputStream;

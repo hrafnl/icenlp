@@ -1,8 +1,8 @@
-package is.ru.iclt.icenlp;
+package is.iclt.icenlp;
 
-import is.ru.iclt.icenlp.icetagger.IIceTagger;
-import is.ru.iclt.icenlp.icetagger.IceTagger;
-import is.ru.iclt.icenlp.icetagger.IceTaggerConfigrationException;
+import is.iclt.icenlp.icetagger.IIceTagger;
+import is.iclt.icenlp.icetagger.IceTagger;
+import is.iclt.icenlp.icetagger.IceTaggerConfigrationException;
 
 
 /***

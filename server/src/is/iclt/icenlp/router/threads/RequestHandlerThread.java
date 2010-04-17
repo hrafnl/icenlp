@@ -1,12 +1,12 @@
-package is.ru.iclt.icenlp.router.threads;
+package is.iclt.icenlp.router.threads;
 
 
 
 
-import is.ru.iclt.icenlp.common.network.Packet;
-import is.ru.iclt.icenlp.router.common.ISlave;
-import is.ru.iclt.icenlp.router.common.SlaveCollection;
-import is.ru.iclt.icenlp.router.common.network.ByteConverter;
+import is.iclt.icenlp.common.network.Packet;
+import is.iclt.icenlp.router.common.ISlave;
+import is.iclt.icenlp.router.common.SlaveCollection;
+import is.iclt.icenlp.router.common.network.ByteConverter;
 
 
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package is.ru.iclt.icenlp.icetagger;
+package is.iclt.icenlp.icetagger;
 
 /***
  * Exception that is used to wrap IceTagger exception and throw it to higher

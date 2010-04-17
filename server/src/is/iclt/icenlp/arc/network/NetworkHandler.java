@@ -1,7 +1,7 @@
-package is.ru.iclt.icenlp.arc.network;
+package is.iclt.icenlp.arc.network;
 
-import is.ru.iclt.icenlp.common.network.ByteConverter;
-import is.ru.iclt.icenlp.common.network.Packet;
+import is.iclt.icenlp.common.network.ByteConverter;
+import is.iclt.icenlp.common.network.Packet;
 
 import java.io.IOException;
 import java.io.InputStream;

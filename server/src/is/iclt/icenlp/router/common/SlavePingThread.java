@@ -1,4 +1,4 @@
-package is.ru.iclt.icenlp.router.common;
+package is.iclt.icenlp.router.common;
 
 import java.io.IOException;
 import java.net.Socket;

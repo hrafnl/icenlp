@@ -1,7 +1,7 @@
-package is.ru.iclt.icenlp.server.network;
+package is.iclt.icenlp.server.network;
 
 
-import is.ru.iclt.icenlp.server.configuration.Configuration;
+import is.iclt.icenlp.server.configuration.Configuration;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

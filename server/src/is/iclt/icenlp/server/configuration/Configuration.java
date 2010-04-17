@@ -1,4 +1,4 @@
-package is.ru.iclt.icenlp.server.configuration;
+package is.iclt.icenlp.server.configuration;
 
 import java.util.HashMap;
 

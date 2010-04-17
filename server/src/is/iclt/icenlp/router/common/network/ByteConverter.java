@@ -1,4 +1,4 @@
-package is.ru.iclt.icenlp.router.common.network;
+package is.iclt.icenlp.router.common.network;
 
 /**
  * ByteConverter contains methods that allows us to convert primitive types

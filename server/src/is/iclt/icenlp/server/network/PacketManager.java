@@ -1,7 +1,7 @@
-package is.ru.iclt.icenlp.server.network;
+package is.iclt.icenlp.server.network;
 
-import is.ru.iclt.icenlp.common.network.ByteConverter;
-import is.ru.iclt.icenlp.common.network.Packet;
+import is.iclt.icenlp.common.network.ByteConverter;
+import is.iclt.icenlp.common.network.Packet;
 
 import java.util.LinkedList;
 import java.util.List;

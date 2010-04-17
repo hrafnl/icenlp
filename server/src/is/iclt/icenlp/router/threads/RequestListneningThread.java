@@ -1,4 +1,4 @@
-package is.ru.iclt.icenlp.router.threads;
+package is.iclt.icenlp.router.threads;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

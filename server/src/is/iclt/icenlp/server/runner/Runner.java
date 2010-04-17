@@ -1,9 +1,9 @@
-package is.ru.iclt.icenlp.server.runner;
+package is.iclt.icenlp.server.runner;
 
-import is.ru.iclt.icenlp.IceNLPSingletonService;
-import is.ru.iclt.icenlp.icetagger.IceTaggerConfigrationException;
-import is.ru.iclt.icenlp.server.configuration.Configuration;
-import is.ru.iclt.icenlp.server.network.NetworkThread;
+import is.iclt.icenlp.IceNLPSingletonService;
+import is.iclt.icenlp.icetagger.IceTaggerConfigrationException;
+import is.iclt.icenlp.server.configuration.Configuration;
+import is.iclt.icenlp.server.network.NetworkThread;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;

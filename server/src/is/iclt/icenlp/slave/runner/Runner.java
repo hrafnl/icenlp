@@ -1,8 +1,8 @@
-package is.ru.iclt.icenlp.slave.runner;
+package is.iclt.icenlp.slave.runner;
 
 
 
-import is.ru.iclt.icenlp.slave.threads.SlaveConnectionThread;
+import is.iclt.icenlp.slave.threads.SlaveConnectionThread;
 
 import java.io.File;
 import java.io.IOException;

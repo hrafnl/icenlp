@@ -1,9 +1,7 @@
-package is.ru.iclt.icenlp.router.threads;
+package is.iclt.icenlp.router.threads;
 
-
-
-import is.ru.iclt.icenlp.router.common.Slave;
-import is.ru.iclt.icenlp.router.common.SlaveCollection;
+import is.iclt.icenlp.router.common.Slave;
+import is.iclt.icenlp.router.common.SlaveCollection;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
