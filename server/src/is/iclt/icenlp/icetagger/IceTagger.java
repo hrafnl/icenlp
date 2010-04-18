@@ -22,7 +22,7 @@ import is.iclt.icenlp.core.utils.Lexicon;
 import is.iclt.icenlp.core.utils.Word;
 import is.iclt.icenlp.facade.IceTaggerFacade;
 import is.iclt.icenlp.core.utils.MappingLexicon;
-import is.iclt.icenlp.server.configuration.Configuration;
+import is.iclt.icenlp.common.configuration.Configuration;
 
 public class IceTagger implements IIceTagger {
 	private IceTaggerFacade facade;

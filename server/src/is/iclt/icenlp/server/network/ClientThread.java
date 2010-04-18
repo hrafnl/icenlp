@@ -4,7 +4,7 @@ package is.iclt.icenlp.server.network;
 import is.iclt.icenlp.IceNLPSingletonService;
 import is.iclt.icenlp.common.network.ByteConverter;
 import is.iclt.icenlp.common.network.Packet;
-import is.iclt.icenlp.server.configuration.Configuration;
+import is.iclt.icenlp.common.configuration.Configuration;
 
 import java.io.IOException;
 import java.io.InputStream;

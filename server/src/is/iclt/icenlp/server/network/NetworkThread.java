@@ -1,7 +1,7 @@
 package is.iclt.icenlp.server.network;
 
 
-import is.iclt.icenlp.server.configuration.Configuration;
+import is.iclt.icenlp.common.configuration.Configuration;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
