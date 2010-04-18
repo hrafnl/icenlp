@@ -1,9 +1,7 @@
 package is.iclt.icenlp.slave.runner;
 
-
-
+import is.iclt.icenlp.common.configuration.Configuration;
 import is.iclt.icenlp.slave.threads.SlaveConnectionThread;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
@@ -14,63 +12,63 @@ import java.net.UnknownHostException;
  * @author hlynur
  */
 public class Runner {
-	public static void main(String[] args) {
-		// If there are no parameters we print help.
-		if (args.length == 0) {
-			printHelp();
-			return;
-		}
+	private static String prefix = "[SlaveRunner]: ";
+    public static void main(String[] args)
+    {
 
-		String scriptLoaction = null;
+        if(args.length >= 2){
+            System.out.println(prefix + "error in parameters.");
+            System.out.println(prefix + "stopping.");
+            help();
+            System.exit(0);
+        }
 
-		// default host to connect to is "localhost"
-		// this can be changed with an argument,namely
-		// with the -hostname argument.
-		String routerHost = "localhost";
+        else if(args.length == 1){
 
-		// default port to connect to is "2525"
-		// this can be changed with an argument,namely
-		// with the -port argument.
-		String routerPort = "2525";
+            if(args[0].equals("--help")){
+                help();
+                System.exit(0);
+            }
 
-		for (String string : args) {
-			if (string.matches("-host=[a-zA-Z0-9.]+"))
-				routerHost = string.replace("-host=", "");
+            String configFileLocation = args[0];
+            File f = new File(configFileLocation);
+            if(f.exists() && f.canRead()){
+                System.out.println(prefix + "reading configuration file from: " + configFileLocation);
+                Configuration.loadConfig(args[0]);
+            }
+            else{
+                System.out.println(prefix + "unable to read configuration file from: " + configFileLocation);
+                System.out.println(prefix + "stopping.");
+                System.exit(0);
+            }
+        }
 
-			else if (string.matches("-h=[a-zA-Z0-9.]+"))
-				routerHost = string.replace("-h=", "");
+        else{
+            File f = new File("slave.conf");
+            System.out.println(prefix + "Reading default configuration file: " + f.getAbsolutePath());
+            if(f.exists() && f.canRead())
+                Configuration.loadConfig("slave.conf");
+            else{
+                System.out.println(prefix + "unable to read default configuration file: " + f.getAbsolutePath());
+                System.out.println(prefix + "stopping.");
+                System.exit(0);
+            }
+        }
 
-			else if (string.matches("-port=[0-9]+"))
-				routerPort = string.replace("-port=", "");
+        String scriptLocation = Configuration.getInstance().getValue("ApertiumRunScript");
+		String routerHost = Configuration.getInstance().getValue("routerHost");
+		String routerPort = Configuration.getInstance().getValue("routerPort");
 
-			else if (string.matches("-p=[0-9]+"))
-				routerPort = string.replace("-p=", "");
 
-			else if (string.matches("-sh=.+"))
-				scriptLoaction = string.replace("-sh=", "");
-
-			else {
-				System.out.println("[SlaveRunner]: unknown parameter: " + string);
-				return;
-			}
-		}
-
-		// If there is no script location set we must
-		// stop the slave.
-		if (scriptLoaction == null) {
-			printHelp();
-			return;
-		}
-
-		// Lets check out if the script exists and is executable.
-		File f = new File(scriptLoaction);
+        // Lets check out if the script exists and is executable.
+		File f = new File(scriptLocation);
 		if (!f.exists()) {
-			System.out.println("[SlaveRunner]: File " + scriptLoaction + " does not exists.");
+			System.out.println("[SlaveRunner]: File " + scriptLocation + " does not exists.");
 			return;
 		}
 
 		if (!f.canExecute()) {
-			System.out.println("[SlaveRunner]: File " + scriptLoaction + " is not executiable.");
+			System.out.println("[SlaveRunner]: File " + scriptLocation + " is not executiable.");
 			return;
 		}
 
@@ -91,7 +89,7 @@ public class Runner {
 		// Let's start the connection thread and initialize the communications
 		// with the rotuer.
 		final SlaveConnectionThread ct = new SlaveConnectionThread(socket,
-				scriptLoaction);
+				scriptLocation);
 		final Thread t = new Thread(ct);
 		t.start();
 		System.out.println("[SlaveRunner]: ready.");
@@ -106,12 +104,9 @@ public class Runner {
 		});
 	}
 
-	public static void printHelp() {
-		System.out.println(">> IceNLP Slave");
-		System.out.println("Usage: java -jar IceNLPSlave.jar --sh=~/translation/apertium.sh");
-		System.out.println("");
-		System.out.println("Other parameters:");
-		System.out.println("-host \t The hostname of the router.");
-		System.out.println("-port \t The port of the router.");
+	public static void help() {
+		System.out.println("parameters:");
+		System.out.println("[configuration file]      Path to configuration file to load.");
+		System.out.println("--help                    Prints this menu.");
 	}
 }
