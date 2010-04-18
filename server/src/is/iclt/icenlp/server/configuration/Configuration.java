@@ -1,6 +1,13 @@
 package is.iclt.icenlp.server.configuration;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Singleton configuration lookup. The key value pairs from the configuration
@@ -21,6 +28,87 @@ public class Configuration {
 		this.config = new HashMap<String, String>();
 	}
 
+	
+	
+	
+	/**
+	 * Function that reads through the configuration file and loads the
+	 * Configuration object.
+	 * 
+	 * @param configFile Name (with path) of the configuration file.
+	 * @return True if the configuration file was read without any errors, false otherwise.
+	 */
+	public static boolean loadConfig(String configFile) {
+		FileInputStream fstream = null;
+		DataInputStream in = null;
+		BufferedReader br = null;
+
+		try {
+			fstream = new FileInputStream(configFile);
+			in = new DataInputStream(fstream);
+			br = new BufferedReader(new InputStreamReader(in));
+		} catch (Exception e) {
+			System.out.println("[X] Error while opening configuration file: "
+					+ e.getMessage());
+			return false;
+		}
+
+		String strLine = null;
+		try {
+			int lineNumber = 1;
+			while ((strLine = br.readLine()) != null) {
+				if (!strLine.startsWith("#") && !strLine.startsWith("//")
+						&& strLine.length() > 0) {
+					if (strLine.length() >= 2 && strLine.contains("=")) {
+						Pattern p = Pattern.compile("\"[^\"]*\"");
+
+						Matcher matcher = p.matcher(strLine);
+						String value;
+						if (matcher.find()) {
+							value = matcher.group().replace("\"", "");
+						} else {
+							System.out
+									.println("[X] Error in configuration file in line "
+											+ lineNumber);
+							return false;
+						}
+
+						String key = strLine.substring(0, strLine.indexOf("="))
+								.replaceAll("\\s", "");
+
+						Configuration.getInstance().addConfigEntry(key, value);
+					} else {
+						System.out
+								.println("[X] Error in configuration file in line "
+										+ lineNumber);
+						return false;
+					}
+				}
+
+				lineNumber += 1;
+			}
+		} catch (IOException e) {
+			System.out.println("[X] Error while reading configuration file: "
+					+ e.getMessage());
+			return false;
+		}
+		return true;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * Adds new key value pair into the configuration collection. If the adding
 	 * key is already in the collection the old value gets overwritten by the

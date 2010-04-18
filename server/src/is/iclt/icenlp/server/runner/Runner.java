@@ -21,69 +21,7 @@ import java.util.regex.Pattern;
  * @author hlynurs
  */
 public class Runner {
-	/**
-	 * Function that reads through the configuration file and loads the
-	 * Configuration object.
-	 * 
-	 * @param configFile Name (with path) of the configuration file.
-	 * @return True if the configuration file was read without any errors, false otherwise.
-	 */
-	public static boolean loadConfig(String configFile) {
-		FileInputStream fstream = null;
-		DataInputStream in = null;
-		BufferedReader br = null;
 
-		try {
-			fstream = new FileInputStream(configFile);
-			in = new DataInputStream(fstream);
-			br = new BufferedReader(new InputStreamReader(in));
-		} catch (Exception e) {
-			System.out.println("[X] Error while opening configuration file: "
-					+ e.getMessage());
-			return false;
-		}
-
-		String strLine = null;
-		try {
-			int lineNumber = 1;
-			while ((strLine = br.readLine()) != null) {
-				if (!strLine.startsWith("#") && !strLine.startsWith("//")
-						&& strLine.length() > 0) {
-					if (strLine.length() >= 2 && strLine.contains("=")) {
-						Pattern p = Pattern.compile("\"[^\"]*\"");
-
-						Matcher matcher = p.matcher(strLine);
-						String value;
-						if (matcher.find()) {
-							value = matcher.group().replace("\"", "");
-						} else {
-							System.out
-									.println("[X] Error in configuration file in line "
-											+ lineNumber);
-							return false;
-						}
-
-						String key = strLine.substring(0, strLine.indexOf("="))
-								.replaceAll("\\s", "");
-
-						Configuration.getInstance().addConfigEntry(key, value);
-					} else {
-						System.out
-								.println("[X] Error in configuration file in line "
-										+ lineNumber);
-						return false;
-					}
-				}
-
-				lineNumber += 1;
-			}
-		} catch (IOException e) {
-			System.out.println("[X] Error while reading configuration file: "
-					+ e.getMessage());
-			return false;
-		}
-		return true;
-	}
 
 	public static void main(String[] args) {
 		// Announce the name of the server.
@@ -95,7 +33,7 @@ public class Runner {
 		if (args.length == 0) {
 			System.out
 					.println("[i] Using default config file: server.conf");
-			if (!loadConfig("server.conf"))
+			if (!Configuration.loadConfig("server.conf"))
 				return;
 		}
 
@@ -107,7 +45,7 @@ public class Runner {
 			} else if (args[0].matches("(?i)--(config|c)=.+")) {
 				String configFilePath = args[0].split("=")[1];	
 				System.out.println("[i] Using config file: " + configFilePath);
-				if (!loadConfig(configFilePath))
+				if (!Configuration.loadConfig(configFilePath))
 					return;
 			} else {
 				printHelp();

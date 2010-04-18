@@ -7,7 +7,7 @@ import is.iclt.icenlp.router.threads.SlaveListeningThreadException;
 
 /**
  * Runner class for the router.
- * @author hlynur
+ * @author Hlynur Sigurþórsson
  */
 public class Runner {
 	public static String prefix = "[RouterRunner]: ";
@@ -17,7 +17,7 @@ public class Runner {
 		System.out.println(">> IceNLP Router");
 
 		// The hostname for the router server.
-		// default hostname is "localhost".
+		// default hostname is set to "localhost".
 		String hostname = "localhost";
 
 		// The port that the server listens to for
@@ -31,6 +31,7 @@ public class Runner {
 
 		// let's look through the arguments that
 		// are passed by the user.
+		/*
 		for (String arg : args) {
 			// argument check for --slaveport (-s)
 			if (arg.matches("-slaveport=[0-9]+|-s=[0-9]+")) {
@@ -71,6 +72,7 @@ public class Runner {
 				return;
 			}
 		}
+		*/
 
 		// Let's display all the settings.
 		System.out.println(prefix + "hostname set to " + hostname);
