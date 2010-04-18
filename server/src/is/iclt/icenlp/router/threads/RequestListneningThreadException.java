@@ -6,5 +6,4 @@ public class RequestListneningThreadException extends Exception {
 	public RequestListneningThreadException(String message) {
 		super(message);
 	}
-
 }

@@ -22,14 +22,14 @@ public class Runner {
             System.out.println(prefix + "error in parameters.");
             System.out.println(prefix + "stopping.");
             help();
-            return;
+            System.exit(0);
         }
 
         else if(args.length == 1){
 
             if(args[0].equals("--help")){
                 help();
-                return;
+                System.exit(0);
             }
 
             String configFileLocation = args[0];
@@ -41,7 +41,7 @@ public class Runner {
             else{
                 System.out.println(prefix + "unable to read configuration file from: " + configFileLocation);
                 System.out.println(prefix + "stopping.");
-                return;
+                System.exit(0);
             }
         }
 
@@ -53,7 +53,7 @@ public class Runner {
             else{
                 System.out.println(prefix + "unable to read default configuration file: " + f.getAbsolutePath());
                 System.out.println(prefix + "stopping.");
-                return;
+                System.exit(0);
             }
         }
 
@@ -84,12 +84,35 @@ public class Runner {
 			return;
 		}
 
-		new Thread(slaveListeningThread).start();
+
 
 		// Let's start the request listening thread.
 		RequestListneningThread requestThread = null;
 		try {
-			requestThread = new RequestListneningThread(hostName, requestPort);
+            boolean routerCanServerRequests = false;
+            if(Configuration.getInstance().containsKey("CanServerRequests")){
+                String canServeR = Configuration.getInstance().getValue("CanServerRequests");
+                if(canServeR.toLowerCase().equals("true")){
+                    routerCanServerRequests = true;
+                }
+                // Check if the apertium script exists and is executable.
+                if(Configuration.getInstance().containsKey("apertiumrunscript")){
+                    File f = new File(Configuration.getInstance().getValue("apertiumrunscript"));
+                    if(!f.canExecute() || !f.canRead()){
+                        System.out.println(prefix + "Cannot read ApertiumRunScript at " + f.getAbsolutePath());
+                        System.out.println(prefix + "stopping.");
+                        System.exit(0);
+                    }
+                }
+                else{
+                    System.out.println(prefix + "Configuration error: ApertiumRunScript must be set in the configuration file");
+                    System.out.println(prefix + "stopping.");
+                    System.exit(0);
+                }
+
+            }
+
+            requestThread = new RequestListneningThread(hostName, requestPort, routerCanServerRequests);
 		} catch (RequestListneningThreadException e) {
 			System.out.println(prefix
 					+ "unable to start Request Listening thread: "
@@ -97,6 +120,8 @@ public class Runner {
 			return;
 		}
 
+        // Start the threads
+        new Thread(slaveListeningThread).start();
 		new Thread(requestThread).start();
 	}
 

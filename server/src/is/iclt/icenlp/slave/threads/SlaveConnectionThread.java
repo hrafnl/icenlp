@@ -36,7 +36,6 @@ public class SlaveConnectionThread implements Runnable
 		}
 	}
 	
-	@Override
 	public void run() 
 	{
 		while(alive)

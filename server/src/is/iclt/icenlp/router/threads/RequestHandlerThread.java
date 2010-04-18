@@ -1,15 +1,13 @@
 package is.iclt.icenlp.router.threads;
 
-
-
-
 import is.iclt.icenlp.common.network.Packet;
 import is.iclt.icenlp.router.common.ISlave;
 import is.iclt.icenlp.router.common.SlaveCollection;
 import is.iclt.icenlp.router.common.network.ByteConverter;
 
-
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.SocketException;
@@ -29,19 +27,51 @@ public class RequestHandlerThread implements Runnable {
 			e.printStackTrace();
 		}
 	}
-
-	@Override
+    
 	public void run() {
 		try {
 			// Lets get a new slave from the slave collection.
 			this.slave = SlaveCollection.getInstance().getSlave();
 
-			// If we don't have any slave to work with we will send
-			// an error will then be sent to the client.
+			// If there are no slave available then we must check if the router should
+            // handle the translation, if not, then we send error string back.
 			if (this.slave == null)
-				this
-						.sendReplyToClient("Unable to serve request, try again later.");
-			else {
+            {
+				if(RequestListneningThread.canServerRequests)
+                {
+                	System.out.println(prefix + "handling translation within this thread.");
+                    String request = this.readRequestFromClient();
+                    String [] passCmd = {"/bin/bash", "-c", "echo '" + request + "' | sh " + RequestListneningThread.apertiumRunScript};
+					Runtime run = Runtime.getRuntime();
+		            Process pr = run.exec(passCmd);
+		            try {
+		               pr.waitFor();
+		            } catch (InterruptedException e) {
+		                e.printStackTrace();
+		            }
+
+		            BufferedReader buf = new BufferedReader(new InputStreamReader(pr.getInputStream()));
+
+		            String output = "";
+		            String line;
+
+		            while ((line=buf.readLine())!=null)
+		            {
+		               output += line + "\n";
+		            }
+
+                    if(output.endsWith("\n"))
+                        output = output.substring(0, output.length()-1);
+
+                    this.sendReplyToClient(output);
+                }
+                else
+                {
+                    this.sendReplyToClient("Unable to serve request, try again later.");
+                }
+            }
+
+            else {
 				this.slave.increseLoad();
 
 				// Read the request from the client.
@@ -53,8 +83,7 @@ public class RequestHandlerThread implements Runnable {
 				String reply = this.slave.transle(request);
 
 				if (reply == null)
-					this
-							.sendReplyToClient("Unable to serve request, try again later.");
+					this.sendReplyToClient("Unable to serve request, try again later.");
 
 				else
 					this.sendReplyToClient(reply);
@@ -81,8 +110,7 @@ public class RequestHandlerThread implements Runnable {
 		// If the first packet from the client has the opcode 3.
 		// else we don't care and stop the connection.
 		if (packet.getOpcode() == 3) {
-			// Let's read the string that the client is sending
-			// to us.
+			// Let's read the string that the client is sending to us.
 			int numpackets = packet.getInteger(4);
 
 			if (numpackets >= 0 && numpackets < Integer.MAX_VALUE) {
