@@ -28,7 +28,7 @@ public class RequestListneningThread implements Runnable {
         if(routerCanServerRequests){
             canServerRequests = true;
             apertiumRunScript = Configuration.getInstance().getValue("apertiumrunscript");
-            System.out.println("We can server requests with " + apertiumRunScript);
+            System.out.println(prefix + "We can server requests with " + apertiumRunScript);
         }
 
 		try {

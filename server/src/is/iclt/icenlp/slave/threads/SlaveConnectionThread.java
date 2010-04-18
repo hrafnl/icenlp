@@ -5,12 +5,9 @@ package is.iclt.icenlp.slave.threads;
 import is.iclt.icenlp.common.apertium.ApertiumWrapper;
 import is.iclt.icenlp.common.network.Packet;
 import is.iclt.icenlp.router.common.network.ByteConverter;
-import is.iclt.icenlp.router.threads.RequestListneningThread;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.LinkedList;
@@ -91,7 +88,7 @@ public class SlaveConnectionThread implements Runnable
 					
 
 
-		            String output = ApertiumWrapper.translate(RequestListneningThread.apertiumRunScript, stringFromRouter);
+		            String output = ApertiumWrapper.translate(scriptLocation, stringFromRouter);
 
 
 		            
