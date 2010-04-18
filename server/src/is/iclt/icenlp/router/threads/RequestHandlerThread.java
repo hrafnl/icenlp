@@ -1,5 +1,6 @@
 package is.iclt.icenlp.router.threads;
 
+import is.iclt.icenlp.common.apertium.ApertiumWrapper;
 import is.iclt.icenlp.common.network.Packet;
 import is.iclt.icenlp.router.common.ISlave;
 import is.iclt.icenlp.router.common.SlaveCollection;
@@ -41,29 +42,7 @@ public class RequestHandlerThread implements Runnable {
                 {
                 	System.out.println(prefix + "handling translation within this thread.");
                     String request = this.readRequestFromClient();
-                    String [] passCmd = {"/bin/bash", "-c", "echo '" + request + "' | sh " + RequestListneningThread.apertiumRunScript};
-					Runtime run = Runtime.getRuntime();
-		            Process pr = run.exec(passCmd);
-		            try {
-		               pr.waitFor();
-		            } catch (InterruptedException e) {
-		                e.printStackTrace();
-		            }
-
-		            BufferedReader buf = new BufferedReader(new InputStreamReader(pr.getInputStream()));
-
-		            String output = "";
-		            String line;
-
-		            while ((line=buf.readLine())!=null)
-		            {
-		               output += line + "\n";
-		            }
-
-                    if(output.endsWith("\n"))
-                        output = output.substring(0, output.length()-1);
-
-                    this.sendReplyToClient(output);
+                    this.sendReplyToClient(ApertiumWrapper.translate(RequestListneningThread.apertiumRunScript, request));
                 }
                 else
                 {

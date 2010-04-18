@@ -2,8 +2,10 @@ package is.iclt.icenlp.slave.threads;
 
 
 
+import is.iclt.icenlp.common.apertium.ApertiumWrapper;
 import is.iclt.icenlp.common.network.Packet;
 import is.iclt.icenlp.router.common.network.ByteConverter;
+import is.iclt.icenlp.router.threads.RequestListneningThread;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -31,7 +33,7 @@ public class SlaveConnectionThread implements Runnable
 		}
 		catch (IOException e) 
 		{
-			System.out.println("[SlaveConnectinoThread]: unable to get input stream from socket.");
+			System.out.println("[SlaveConnectionThread]: unable to get input stream from socket.");
 			this.alive = false;
 		}
 	}
@@ -87,30 +89,13 @@ public class SlaveConnectionThread implements Runnable
 					
 					// Here we must run Apertium.
 					
-					String [] passCmd = {"/bin/bash", "-c", "echo '" + stringFromRouter + "' | sh " + this.scriptLocation};
-					Runtime run = Runtime.getRuntime();
-		            Process pr = run.exec(passCmd);
-		            try {
-		               pr.waitFor();
-		            } catch (InterruptedException e) {
-		                e.printStackTrace();
-		            }
-		            
-		            BufferedReader buf = new BufferedReader(new InputStreamReader(pr.getInputStream()));
 
-		            String output = "";
-		            String line = "";
-		            
-		            while ((line=buf.readLine())!=null)
-		            {
-		               output += line + "\n";    
-		            }
 
-                    if(output.endsWith("\n"))
-                        output = output.substring(0, output.length()-1);
+		            String output = ApertiumWrapper.translate(RequestListneningThread.apertiumRunScript, stringFromRouter);
+
 
 		            
-		            System.out.println("[SlaveConnectinoThread]: translation sent to client " + output );
+		            System.out.println("[SlaveConnectionThread]: translation sent to client " + output );
 		            sendReply(output, socket);
 		    		
 				}
@@ -119,7 +104,7 @@ public class SlaveConnectionThread implements Runnable
 				
 				else
 				{
-					System.out.println("[SlaveConnectinoThread]: recevied bogus opcode. Shuting down.");
+					System.out.println("[SlaveConnectionThread]: recevied bogus opcode. Shuting down.");
 					alive = false;
 					socket.close();
 				}
@@ -140,7 +125,7 @@ public class SlaveConnectionThread implements Runnable
 		try 
 		{
 			this.socket.close();
-			System.out.println("thread shuting down.");
+			System.out.println("thread shutting down.");
 			this.alive = false;
 		} 
 		catch (IOException e) 
