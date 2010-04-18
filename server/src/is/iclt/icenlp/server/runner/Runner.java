@@ -2,17 +2,8 @@ package is.iclt.icenlp.server.runner;
 
 import is.iclt.icenlp.IceNLPSingletonService;
 import is.iclt.icenlp.icetagger.IceTaggerConfigrationException;
-import is.iclt.icenlp.server.configuration.Configuration;
+import is.iclt.icenlp.common.configuration.Configuration;
 import is.iclt.icenlp.server.network.NetworkThread;
-
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 
 
 /**
