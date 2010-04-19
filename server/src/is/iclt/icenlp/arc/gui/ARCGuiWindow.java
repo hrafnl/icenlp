@@ -124,6 +124,7 @@ public class ARCGuiWindow extends JFrame{
 		this.setTitle("ARC GUI");
 		this.setLocation(new Point(307, 25));
 		this.setSize(new Dimension(562, 600));
+		this.setResizable(false);
 	}
 
 	/** Add Component Without a Layout Manager (Absolute Positioning) */
