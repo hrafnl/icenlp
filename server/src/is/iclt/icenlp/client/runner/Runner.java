@@ -3,6 +3,7 @@ package is.iclt.icenlp.client.runner;
 
 
 
+import is.iclt.icenlp.client.network.ClientNetworkHandler;
 import is.iclt.icenlp.common.network.ByteConverter;
 import is.iclt.icenlp.common.network.Packet;
 
@@ -25,20 +26,18 @@ public class Runner
 		System.out.println("\t --host|h= \t Connection host.");
 		System.out.println("\t --port|p= \t Connection port.");
 	}
-	
-	
-	
+    
 	public static void main(String[] args) 
 	{		
 		String host = "localhost";
-		int port = 1234;
+		String port = "1234";
 		
 		if(args.length > 0)
 		{	
 			for(String arg : args)
 			{
 				if(arg.matches("(?i)--(port|p)=.+"))
-					port = Integer.parseInt(arg.split("=")[1]);
+					port = arg.split("=")[1];
 				else if(arg.matches("(?i)--(host|h)=.+"))
 					host = arg.split("=")[1];
 				else
@@ -72,10 +71,8 @@ public class Runner
 				return;
 			}
 			
-			Socket socket = null;
-			socket = new Socket(host, port);
-			System.out.println(tagString(inString, socket));
-
+			ClientNetworkHandler handler = new ClientNetworkHandler(host, port);
+			System.out.println(handler.tagString(inString));
 		}
 		catch(Exception ex)
 		{
@@ -83,19 +80,11 @@ public class Runner
 		}
 	}
 	
-	
-	
-	
-	
-	
-	
+
 	public static String tagString(String lines, Socket socket) throws IOException
 	{
 		InputStream inStream = socket.getInputStream();
 		OutputStream outStream = socket.getOutputStream();
-		
-
-		
 		createSentecePackets(outStream, lines);
 		Packet p = readFromStream(inStream);
 		if(p.getOpcode() == 3)
