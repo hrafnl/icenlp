@@ -14,6 +14,12 @@ public class ARCGuiWindow extends JFrame{
 	private JLabel jLabel2;
 	private JLabel jLabel3;
 	private JLabel jLabel4;
+    private JLabel serverHostLabel;
+
+    private JTextField serverHostText;
+
+
+
 	private JTextField hostText;
 	private JTextArea clientTaggingOutput;
 	private JScrollPane jScrollPane1;
@@ -38,10 +44,13 @@ public class ARCGuiWindow extends JFrame{
 		jLabel2 = new JLabel();
 		jLabel3 = new JLabel();
 		jLabel4 = new JLabel();
+        serverHostLabel = new JLabel();
 
 		hostText = new JTextField();
         portText = new TextField(6);
-		clientTaggingOutput = new JTextArea();
+        serverHostText = new JTextField();
+
+        clientTaggingOutput = new JTextArea();
 		jScrollPane1 = new JScrollPane();
 		translationTextArea = new JTextArea();
 		jScrollPane2 = new JScrollPane();
@@ -55,7 +64,7 @@ public class ARCGuiWindow extends JFrame{
 		// jLabel1
 		//
 		jLabel1.setText("Router host:");
-        jLabel1.setSize(10,10);
+
 		//
 		// jLabel2
 		//
@@ -70,9 +79,13 @@ public class ARCGuiWindow extends JFrame{
 		//
 
 		jLabel4.setText("Port:");
+        serverHostLabel.setText("Server host:");
+        
 
 		hostText.setText("localhost");
         portText.setText("2526");
+        serverHostText.setText("localhost");
+
 
 		translateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
@@ -118,16 +131,30 @@ public class ARCGuiWindow extends JFrame{
 		addComponent(contentPane, portText, 230,5,107,22);
 		addComponent(contentPane, translateButton, 350,5,107,22);
 		addComponent(contentPane, jLabel4, 200,6,60,18);
-		addComponent(contentPane, jLabel2, 6,199,70,18);
-		addComponent(contentPane, jLabel3, 6,380,86,18);
-		addComponent(contentPane, hostText, 73,5,107,22);
-		addComponent(contentPane, jScrollPane1, 6,217,542,152);
-		addComponent(contentPane, jScrollPane2, 6,32,542,155);
-		addComponent(contentPane, jScrollPane3, 6,402,543,157);
+
+
+        addComponent(contentPane, jLabel2, 6,241,70,18);
+
+        addComponent(contentPane, jLabel3, 6,425,86,18);
+
+        addComponent(contentPane, hostText, 73,5,107,22);
+
+        addComponent(contentPane, jScrollPane1, 6,265,542,152);
+
+        addComponent(contentPane, jScrollPane2, 6,70,542,155);
+
+        addComponent(contentPane, jScrollPane3, 6,452,543,157);
+
+        addComponent(contentPane, serverHostText, 71,35,107,22);
+        addComponent(contentPane, serverHostLabel, 5,35,60,18);
+
+
+
+
 
 		this.setTitle("ARC GUI");
 		this.setLocation(new Point(307, 25));
-		this.setSize(new Dimension(562, 600));
+		this.setSize(new Dimension(562, 650));
 		this.setResizable(false);
 	}
 
@@ -144,7 +171,7 @@ public class ARCGuiWindow extends JFrame{
 
         try{
             // Get the tagged output for the string.
-            ClientNetworkHandler clientHandler = new ClientNetworkHandler("localhost","1234");
+            ClientNetworkHandler clientHandler = new ClientNetworkHandler(this.serverHostText.getText(), "1234");
             clientTaggingOutput.setText(clientHandler.tagString(translationText));
             
             // Get the translation for the sentence.
