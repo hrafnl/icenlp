@@ -49,7 +49,8 @@ public class ClientNetworkHandler
 			}
 
 			String strServer = new String(dataFromServer, 0, size);
-			return strServer;
+			socket.close();
+            return strServer;
 		}
 		else
 		{

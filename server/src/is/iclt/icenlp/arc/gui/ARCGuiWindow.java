@@ -14,10 +14,11 @@ public class ARCGuiWindow extends JFrame{
 	private JLabel jLabel2;
 	private JLabel jLabel3;
 	private JLabel jLabel4;
+    private JLabel serverPortLabel;
     private JLabel serverHostLabel;
 
     private JTextField serverHostText;
-
+    private JTextField serverPortText;
 
 
 	private JTextField hostText;
@@ -45,11 +46,11 @@ public class ARCGuiWindow extends JFrame{
 		jLabel3 = new JLabel();
 		jLabel4 = new JLabel();
         serverHostLabel = new JLabel();
-
+        serverPortLabel = new JLabel();
 		hostText = new JTextField();
         portText = new TextField(6);
         serverHostText = new JTextField();
-
+        serverPortText = new JTextField(6);
         clientTaggingOutput = new JTextArea();
 		jScrollPane1 = new JScrollPane();
 		translationTextArea = new JTextArea();
@@ -80,11 +81,12 @@ public class ARCGuiWindow extends JFrame{
 
 		jLabel4.setText("Port:");
         serverHostLabel.setText("Server host:");
-        
+        serverPortLabel.setText("port:");
 
 		hostText.setText("localhost");
         portText.setText("2526");
         serverHostText.setText("localhost");
+        serverPortText.setText("1234");
 
 
 		translateButton.addActionListener(new ActionListener() {
@@ -133,9 +135,9 @@ public class ARCGuiWindow extends JFrame{
 		addComponent(contentPane, jLabel4, 200,6,60,18);
 
 
-        addComponent(contentPane, jLabel2, 6,241,70,18);
+        addComponent(contentPane, jLabel2, 6,241,160,20);
 
-        addComponent(contentPane, jLabel3, 6,425,86,18);
+        addComponent(contentPane, jLabel3, 6,425,160,18);
 
         addComponent(contentPane, hostText, 73,5,107,22);
 
@@ -147,7 +149,8 @@ public class ARCGuiWindow extends JFrame{
 
         addComponent(contentPane, serverHostText, 71,35,107,22);
         addComponent(contentPane, serverHostLabel, 5,35,60,18);
-
+        addComponent(contentPane, serverPortLabel, 200,35,60,18);
+        addComponent(contentPane, serverPortText, 230,35,107,22);
 
 
 
@@ -171,12 +174,13 @@ public class ARCGuiWindow extends JFrame{
 
         try{
             // Get the tagged output for the string.
-            ClientNetworkHandler clientHandler = new ClientNetworkHandler(this.serverHostText.getText(), "1234");
+            ClientNetworkHandler clientHandler = new ClientNetworkHandler(this.serverHostText.getText(), serverPortText.getText());
             clientTaggingOutput.setText(clientHandler.tagString(translationText));
             
             // Get the translation for the sentence.
-            NetworkHandler handler = new NetworkHandler(hostText, portText);
-            apertiumOutputtextArea.setText(handler.translate(translationText));
+            NetworkHandler apertiumHandler = new NetworkHandler(hostText, portText);
+            apertiumOutputtextArea.setText(apertiumHandler.translate(translationText));
+            apertiumHandler.closeConnection();
         }
         catch (NetworkException e1) 
         {
