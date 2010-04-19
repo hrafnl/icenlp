@@ -2,9 +2,11 @@ package is.iclt.icenlp.arc.gui;
 
 import is.iclt.icenlp.arc.network.NetworkException;
 import is.iclt.icenlp.arc.network.NetworkHandler;
+import is.iclt.icenlp.client.network.ClientNetworkHandler;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import javax.swing.*;
 
 public class ARCGuiWindow extends JFrame{
@@ -13,7 +15,7 @@ public class ARCGuiWindow extends JFrame{
 	private JLabel jLabel3;
 	private JLabel jLabel4;
 	private JTextField hostText;
-	private JTextArea jTextArea1;
+	private JTextArea clientTaggingOutput;
 	private JScrollPane jScrollPane1;
 	private JTextArea translationTextArea;
 	private JScrollPane jScrollPane2;
@@ -23,8 +25,8 @@ public class ARCGuiWindow extends JFrame{
 	private JButton translateButton;
 	private TextField portText;
 
-    
-	public ARCGuiWindow(){
+
+    public ARCGuiWindow(){
 		super();
 		initializeComponent();
 		this.setVisible(true);
@@ -39,7 +41,7 @@ public class ARCGuiWindow extends JFrame{
 
 		hostText = new JTextField();
         portText = new TextField(6);
-		jTextArea1 = new JTextArea();
+		clientTaggingOutput = new JTextArea();
 		jScrollPane1 = new JScrollPane();
 		translationTextArea = new JTextArea();
 		jScrollPane2 = new JScrollPane();
@@ -80,15 +82,17 @@ public class ARCGuiWindow extends JFrame{
 		});
 
 		//
-		// jTextArea1
+		// clientTaggingOutput
 		//
-		jTextArea1.setText("");
-        jTextArea1.setEditable(false);
+		clientTaggingOutput.setText("");
+        clientTaggingOutput.setEditable(false);
 
 		//
 		// jScrollPane1
 		//
-		jScrollPane1.setViewportView(jTextArea1);
+		jScrollPane1.setViewportView(clientTaggingOutput);
+        clientTaggingOutput.setLineWrap(true);
+
 		//
 		// translationTextArea
 		//
@@ -138,14 +142,22 @@ public class ARCGuiWindow extends JFrame{
 		String portText = this.portText.getText();
         String translationText = this.translationTextArea.getText();
 
-        try
-        {
+        try{
+            // Get the tagged output for the string.
+            ClientNetworkHandler clientHandler = new ClientNetworkHandler("localhost","1234");
+            clientTaggingOutput.setText(clientHandler.tagString(translationText));
+            
+            // Get the translation for the sentence.
             NetworkHandler handler = new NetworkHandler(hostText, portText);
             apertiumOutputtextArea.setText(handler.translate(translationText));
         }
         catch (NetworkException e1) 
         {
             JOptionPane.showMessageDialog(this, "Unable to connect to router " + hostText + ":" + portText);
+        }
+        catch (IOException e1) 
+        {
+            JOptionPane.showMessageDialog(this, "Unable to connect to tag the string.");
         }
 	}
 }
