@@ -1,7 +1,10 @@
 package is.iclt.icenlp.arc;
 
+import is.iclt.icenlp.arc.gui.ARCGuiWindow;
 import is.iclt.icenlp.arc.network.NetworkException;
 import is.iclt.icenlp.arc.network.NetworkHandler;
+
+import javax.swing.*;
 import java.awt.*;
 
 public class Runner 
@@ -13,6 +16,7 @@ public class Runner
         String host = "localhost";
         String port = "2526";
         String text = "";
+        boolean gui = false;
 
         // Read through the parameters from std-in.
 		for(String arg : args)
@@ -25,6 +29,10 @@ public class Runner
 
 			else if(arg.startsWith("--text="))
 				text = arg.replace("--text=", "");
+
+            else if(arg.startsWith("--gui"))
+				gui = true;
+
 
 			else if(arg.equals("--help")){
 				System.out.println("ARC - Apertium RouterClient");
@@ -46,13 +54,28 @@ public class Runner
         /* Create instance of the network handler and send the
            the text to the router and print the result from
            the translation to std-out. */
-        try {
-            NetworkHandler handler = new NetworkHandler(host, port);
-            System.out.println(handler.translate(text));
-            handler.closeConnection();
-        } catch (NetworkException e) {
-            System.out.println("Error: unable to communicate with router");
-        }
+
+            if(gui){
+                JFrame.setDefaultLookAndFeelDecorated(true);
+		        JDialog.setDefaultLookAndFeelDecorated(true);
+		
+		        ARCGuiWindow wnd =  new ARCGuiWindow();
+                wnd.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+            }
+            else
+            {
+                try{
+                NetworkHandler handler = new NetworkHandler(host, port);
+                System.out.println(handler.translate(text));
+                handler.closeConnection();
+                }
+                catch (NetworkException e)
+                {
+                    System.out.println("Unable to connect to router.");    
+                }
+            }
+
 
 
     }
