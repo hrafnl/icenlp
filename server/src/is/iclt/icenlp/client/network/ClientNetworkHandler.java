@@ -10,10 +10,12 @@ import java.net.Socket;
 import java.util.LinkedList;
 import java.util.List;
 
-
+/***
+ *  ClientNetworkHandler handles all the network communication from the
+ *  client side to the server.
+ */
 public class ClientNetworkHandler
 {
-
     private String host;
     private String port;
 
@@ -39,8 +41,13 @@ public class ClientNetworkHandler
 
 			for(int i = 0; i<numOfPacks; i++)
 			{
-				p = readFromStream(inStream);
-				int dataSize = is.iclt.icenlp.common.network.ByteConverter.bytesToInt(p.getData(), 4);
+                p = readFromStream(inStream);
+				if(p.getOpcode() != 4){
+                    System.out.println("[error]: Invalid opcode from server, expected 4, got " + p.getOpcode());   
+                    socket.close();
+                    return "";
+                }
+                int dataSize = is.iclt.icenlp.common.network.ByteConverter.bytesToInt(p.getData(), 4);
 				size = size + dataSize;
 				for(int j = 0; j<dataSize; j++)
 				{
@@ -54,7 +61,7 @@ public class ClientNetworkHandler
 		}
 		else
 		{
-			System.out.println(">> Error, reply from server was wrong.");
+			System.out.println("[error]: Invalid opcode from server, expected 3, got " + p.getOpcode());
 			return "";
 		}
 	}

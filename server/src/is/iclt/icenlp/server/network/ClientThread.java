@@ -48,7 +48,7 @@ public class ClientThread implements Runnable {
 		while (this.alive) {
 			Packet pack = this.readFromClient();
 			if (pack.getDataSize() == -1) {
-				this.alive = false;
+                this.alive = false;
 				break;
 			} else {
 				int opcode = pack.getOpcode();
@@ -124,7 +124,10 @@ public class ClientThread implements Runnable {
 				}
                 
 				else {
-					this.alive = false;
+				    if(this.debugMode){
+                        System.out.println("[debug] invalid initial packet from client.");
+                    }
+                    this.alive = false;
 					break;
 				}
 			}
