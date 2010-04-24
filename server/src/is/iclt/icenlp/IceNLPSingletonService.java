@@ -34,8 +34,7 @@ public class IceNLPSingletonService {
 	 *             if there are any exception while building the IceTagger
 	 *             object we will throw a configuration error.
 	 */
-	public static synchronized IceNLPSingletonService getInstance()
-			throws IceTaggerConfigrationException {
+	public static synchronized IceNLPSingletonService getInstance() throws IceTaggerConfigrationException {
 		if (instance_ == null) {
 			instance_ = new IceNLPSingletonService();
 		}

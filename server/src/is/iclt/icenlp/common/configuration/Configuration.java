@@ -28,9 +28,7 @@ public class Configuration {
 		this.config = new HashMap<String, String>();
 	}
 
-	
-	
-	
+
 	/**
 	 * Function that reads through the configuration file and loads the
 	 * Configuration object.
@@ -48,8 +46,7 @@ public class Configuration {
 			in = new DataInputStream(fstream);
 			br = new BufferedReader(new InputStreamReader(in));
 		} catch (Exception e) {
-			System.out.println("[X] Error while opening configuration file: "
-					+ e.getMessage());
+			System.out.println("[X] Error opening configuration file: " + e.getMessage());
 			return false;
 		}
 
@@ -94,21 +91,8 @@ public class Configuration {
 		}
 		return true;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+    
 	/**
 	 * Adds new key value pair into the configuration collection. If the adding
 	 * key is already in the collection the old value gets overwritten by the

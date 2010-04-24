@@ -291,12 +291,6 @@ public class IceTagger implements IIceTagger {
 				}
 			}
 
-			/*if (this.lemmatize) {
-				for (Word word : wordList)
-					word.setLemma(this.lemmald.lemmatize(word.getLexeme(),
-							word.getTag()).getLemma());
-			}*/
-
 			// Apply mapping rules to the word list.
 			if (this.mapperLexicon != null)
 				this.mapperLexicon.processWordList(wordList);
@@ -313,7 +307,6 @@ public class IceTagger implements IIceTagger {
 					else
 						output = output + taggingOutputSparator
 								+ word.getLexeme() + " " + word.getTag();
-
 				}
 			}
 
