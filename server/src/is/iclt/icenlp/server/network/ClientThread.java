@@ -17,8 +17,6 @@ import java.util.List;
 /**
  * ClientThread handles the network communications between connected client and
  * the server.
- * 
- * @author hlynurs
  */
 public class ClientThread implements Runnable {
 	// Private member variable for the client
@@ -54,12 +52,13 @@ public class ClientThread implements Runnable {
 				break;
 			} else {
 				int opcode = pack.getOpcode();
-                if (opcode == 1) {
-
-                    // what happens if this number will be negative?
-                    // todo: add check on the numberOfPackets and close the connection if bogus. 
+                if (opcode == 1) { 
                     int numberOfPackets = ByteConverter.bytesToInt(pack.getData(), 4);
-					List<Packet> packets = new LinkedList<Packet>();
+					if(numberOfPackets <= 0){
+                        this.alive = false;
+                        break;
+                    }
+                    List<Packet> packets = new LinkedList<Packet>();
 
 					for (int i = 0; i < numberOfPackets; i++) {
 						Packet p = readFromClient();
@@ -94,30 +93,27 @@ public class ClientThread implements Runnable {
 					}
 
 					catch (UnsupportedEncodingException e2) {
-						e2.printStackTrace();
+                        System.out.println("[!!] Error while generating return string: " + e2.getMessage());
 					}
 
 					if (this.debugMode) {
 						System.out.println("[debug] String from client: " + strFromClient);
 					}
 					// Let's check out the output that the clients will be
-					// receiving and
-					// let's create a replay for the client.
+					// receiving and let's create a replay for the client.
 					String taggedString = null;
-					try 
-					{
+					try {
 						taggedString = IceNLPSingletonService.getInstance().tagText(strFromClient);
 						if (this.debugMode)
 							System.out.println("[debug] Reply string from IceNLP that will be sent to client is: " + taggedString);
 
 					} 
-					catch (Exception e) 
-					{
+					catch (Exception e) {
 						System.out.println(e);
 						System.out.println("[!!] Error in thread while getting IceNLP singleton instance");
 					}
 
-					// lets write the replay to the client.
+					// Send the tagged string back to the client.
 					try {
 						writeReplyString(taggedString);
 					} catch (IOException e) {
@@ -126,15 +122,7 @@ public class ClientThread implements Runnable {
 						break;
 					}
 				}
-
-				else if (opcode == 5) {
-					if (this.debugMode) {
-						System.out.println("[debug] Client is closing the connection");
-					}
-					this.alive = false;
-					break;
-				}
-
+                
 				else {
 					this.alive = false;
 					break;
@@ -160,11 +148,8 @@ public class ClientThread implements Runnable {
 
 	// Function for sending the replay to the client.
 	private void writeReplyString(String reply) throws IOException {
-		// System.out.println("write replyString: " + reply);
 		List<Packet> packets = new LinkedList<Packet>();
-
 		byte[] strBytes = reply.getBytes("UTF8");
-		// System.out.println("strBytes:" + strBytes.toString());
 		int numberOfpackets = ((int) Math.floor((strBytes.length / 504))) + 1;
 
 		// Let's add the initial packet to the collection
@@ -182,9 +167,7 @@ public class ClientThread implements Runnable {
 		if (this.debugMode)
 			System.out.println("[debug] data sent to client.");
 	}
-
-
-
+    
     private Packet readFromClient() {
 		byte[] data = new byte[512];
 		Packet packet = null;
