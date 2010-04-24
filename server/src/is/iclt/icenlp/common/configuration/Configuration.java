@@ -155,7 +155,7 @@ public class Configuration {
 	 */
 	public boolean debugMode() {
 		if (this.config.containsKey("debug")) {
-			if (this.config.get("debug").equals("true")) {
+			if (this.config.get("debug").toLowerCase().equals("true")) {
 				return true;
 			}
 		}

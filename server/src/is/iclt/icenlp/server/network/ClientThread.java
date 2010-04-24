@@ -15,7 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * ClientThread handles the network communications between connected clients and
+ * ClientThread handles the network communications between connected client and
  * the server.
  * 
  * @author hlynurs
@@ -26,10 +26,12 @@ public class ClientThread implements Runnable {
 	private boolean alive;
 	private OutputStream ostream;
 	private InputStream istream;
+    private boolean debugMode;
 
 	public ClientThread(Socket socket) {
 		this.socket = socket;
 		this.alive = true;
+        this.debugMode = Configuration.getInstance().debugMode(); 
 
 		try {
 			this.ostream = socket.getOutputStream();
@@ -52,16 +54,30 @@ public class ClientThread implements Runnable {
 				break;
 			} else {
 				int opcode = pack.getOpcode();
-				if (opcode == 1) {
-					int numberOfPacksets = ByteConverter.bytesToInt(pack
-							.getData(), 4);
+                if (opcode == 1) {
+
+                    // what happens if this number will be negative?
+                    // todo: add check on the numberOfPackets and close the connection if bogus. 
+                    int numberOfPackets = ByteConverter.bytesToInt(pack.getData(), 4);
 					List<Packet> packets = new LinkedList<Packet>();
 
-					for (int i = 0; i < numberOfPacksets; i++) {
-						packets.add(readFromClient());
+					for (int i = 0; i < numberOfPackets; i++) {
+						Packet p = readFromClient();
+                        if(p.getOpcode() != 2){
+                            if(this.debugMode)
+                                System.out.println("[debug] invalid data packet from client.");
+                            this.alive = false;
+                            break;
+                        }
+                        packets.add(p);
 					}
 
-					byte[] stringData = new byte[numberOfPacksets * 512];
+                    // if we got some bogus packets while fetching the data, then we will
+                    // stop this thread.
+                    if(!this.alive)
+                        break;
+
+					byte[] stringData = new byte[numberOfPackets * 512];
 					int byteCounter = 0;
 					int stringSize = 0;
 
@@ -81,7 +97,7 @@ public class ClientThread implements Runnable {
 						e2.printStackTrace();
 					}
 
-					if (Configuration.getInstance().debugMode()) {
+					if (this.debugMode) {
 						System.out.println("[debug] String from client: " + strFromClient);
 					}
 					// Let's check out the output that the clients will be
@@ -91,14 +107,14 @@ public class ClientThread implements Runnable {
 					try 
 					{
 						taggedString = IceNLPSingletonService.getInstance().tagText(strFromClient);
-						if (Configuration.getInstance().debugMode())
+						if (this.debugMode)
 							System.out.println("[debug] Reply string from IceNLP that will be sent to client is: " + taggedString);
 
 					} 
 					catch (Exception e) 
 					{
 						System.out.println(e);
-						System.out.println("[x] Error in thread while getting IceNLP singleton instance");
+						System.out.println("[!!] Error in thread while getting IceNLP singleton instance");
 					}
 
 					// lets write the replay to the client.
@@ -112,7 +128,7 @@ public class ClientThread implements Runnable {
 				}
 
 				else if (opcode == 5) {
-					if (Configuration.getInstance().debugMode()) {
+					if (this.debugMode) {
 						System.out.println("[debug] Client is closing the connection");
 					}
 					this.alive = false;
@@ -126,15 +142,14 @@ public class ClientThread implements Runnable {
 			}
 		}
 
-		if (Configuration.getInstance().debugMode()) {
+		if (this.debugMode) {
 			System.out.println("[debug] Client thread is shutting down");
 		}
 
 		try {
 			this.socket.close();
 		} catch (IOException e) {
-			System.out.println(">> ERROR WAS HERE!!!");
-			System.out.println("[X] " + e.getMessage());
+			System.out.println("[!!] " + e.getMessage());
 		}
 	}
 
@@ -156,20 +171,21 @@ public class ClientThread implements Runnable {
 		packets.add(PacketManager.createTagAnswerSizePacket(numberOfpackets));
 
 		// Let's split the string into packets and add them to our collection.
-		for (Packet p : PacketManager.createStringPackets(4, strBytes,
-				numberOfpackets))
+		for (Packet p : PacketManager.createStringPackets(4, strBytes, numberOfpackets))
 			packets.add(p);
 
 		// Let's send the packets to the client.
-		if (Configuration.getInstance().debugMode())
+		if (this.debugMode)
 			System.out.println("[debug] sending " + packets.size() + " packets to client.");
 		this.writeToClient(packets);
 
-		if (Configuration.getInstance().debugMode())
+		if (this.debugMode)
 			System.out.println("[debug] data sent to client.");
 	}
 
-	public Packet readFromClient() {
+
+
+    private Packet readFromClient() {
 		byte[] data = new byte[512];
 		Packet packet = null;
 		try {

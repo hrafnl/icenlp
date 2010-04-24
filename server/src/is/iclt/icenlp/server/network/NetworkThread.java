@@ -12,9 +12,11 @@ public class NetworkThread implements Runnable {
 	// Member variables.
 	private boolean alive; // indicates the status of the thread.
 	private ServerSocket serverSocket;
+    private boolean debugMode = false;
 
 	public NetworkThread() {
-		this.alive = true;
+		this.debugMode = Configuration.getInstance().debugMode();
+        this.alive = true;
 
 		try {
 			// Find the host name that the server will use.
@@ -27,18 +29,20 @@ public class NetworkThread implements Runnable {
 			if (Configuration.getInstance().containsKey("port"))
 				port = Configuration.getInstance().getValue("port");
 
-			InetSocketAddress address = new InetSocketAddress(host, Integer
-					.parseInt(port));
-			this.serverSocket = new ServerSocket(Integer.parseInt(port), 10,
-					address.getAddress());
+            String backlogSize = "100";
+            if (Configuration.getInstance().containsKey("backlogSize"))
+				backlogSize = Configuration.getInstance().getValue("backlogSize");
+
+			InetSocketAddress address = new InetSocketAddress(host, Integer.parseInt(port));
+			this.serverSocket = new ServerSocket(Integer.parseInt(port), Integer.parseInt(backlogSize), address.getAddress());
 
 			System.out.println("[i] Server hostname: " + host);
 			System.out.println("[i] Server port: " + port);
+            System.out.println("[i] Connection backlog size: " + backlogSize);
 		}
 
 		catch (Exception e) {
-			System.out.println("[x] Error in binding host/port to server: "
-					+ e.getMessage());
+			System.out.println("[!!] Error in binding host/port to server: " + e.getMessage());
 		}
 	}
 	/**
@@ -53,16 +57,15 @@ public class NetworkThread implements Runnable {
 		while (this.alive) {
 			try {
 				Socket socket = this.serverSocket.accept();
-				if (Configuration.getInstance().debugMode())
-					System.out.println("[debug] Connection from host "
-							+ socket.getInetAddress().getCanonicalHostName());
+				if (this.debugMode)
+					System.out.println("[debug] Connection from host " + socket.getInetAddress().getCanonicalHostName());
 
 				// Let's create a new thread for the connection.
 				new Thread(new ClientThread(socket)).start();
 			}
 
 			catch (IOException e) {
-				System.out.println("[X] " + e.getMessage());
+				System.out.println("[!!] " + e.getMessage());
 			}
 		}
 
