@@ -7,19 +7,10 @@
 # This section contains tag mapping rules.
 # The rules are on the form: oldtag newtag
 ##############################################
-[ <sent>
-] <sent>
-/ <sent>
-_ <sent>
-) <rpar>
-( <lpar>
-» <sent>
-« <sent>
 - <guio>
 ? <sent>
 ! <sent>
 . <sent>
-... <sent>
 ; <sent>
 : <sent>
 , <cm>
