@@ -10,7 +10,8 @@ import java.io.IOException;
 import javax.swing.*;
 
 public class ARCGuiWindow extends JFrame {
-    private JLabel jLabel1;
+	private static final long serialVersionUID = 1L;
+	private JLabel jLabel1;
     private JLabel jLabel2;
     private JLabel jLabel3;
     private JLabel jLabel4;

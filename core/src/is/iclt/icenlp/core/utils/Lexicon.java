@@ -30,116 +30,99 @@ import java.io.InputStream;
 /**
  * A class for storing and accessing a lexicon.
  */
-public class Lexicon
-{
+public class Lexicon {
 	/**
-	 * This class is based on the Lexicon class by Oliver Mason from the
-	 * book Programming for Corpus Linguistics: How to Do Text Analysis with Java
+	 * This class is based on the Lexicon class by Oliver Mason from the book
+	 * Programming for Corpus Linguistics: How to Do Text Analysis with Java
 	 */
-    protected PropertiesEncoding storage = null;
+	protected PropertiesEncoding storage = null;
 
-    /**
+	/**
 	 * Constructor *
 	 */
-	public Lexicon()
-	{
+	public Lexicon() {
 		storage = new PropertiesEncoding();
-    }
+	}
 
-    /**
-	 * Load a lexicon file.
-	 * The lexicon is initialised from a file.  The file should contain
-	 * one line per entry, with the data separated from the entry with
-	 * an equal-sign (the standard Java property format).
+	/**
+	 * Load a lexicon file. The lexicon is initialised from a file. The file
+	 * should contain one line per entry, with the data separated from the entry
+	 * with an equal-sign (the standard Java property format).
 	 */
 
-    public Lexicon( InputStream in ) throws IOException, NullPointerException
-	{
-		if( in == null )
-			throw new NullPointerException( "InputStream was not initialized correctly (null)" );
+	public Lexicon(InputStream in) throws IOException, NullPointerException {
+		if (in == null)
+			throw new NullPointerException(
+					"InputStream was not initialized correctly (null)");
 
 		storage = new PropertiesEncoding();
-        load( in);
+		load(in);
 	}
 
-	public Lexicon( String filename)
-			throws IOException
-	{
+	public Lexicon(String filename) throws IOException {
 		storage = new PropertiesEncoding();
-        load( filename);
+		load(filename);
 	}
 
-    public PropertiesEncoding getProperties()
-    {
-        return storage;
-    }
-    
-    public int getSize()
-	{
+	public PropertiesEncoding getProperties() {
+		return storage;
+	}
+
+	public int getSize() {
 		return storage.size();
 	}
 
-	public boolean containsKey( String key )
-	{
-		return storage.containsKey( key );
+	public boolean containsKey(String key) {
+		return storage.containsKey(key);
 	}
 
-	public void put( String key, String value )
-	{
-		storage.put( key, value );
+	public void put(String key, String value) {
+		storage.put(key, value);
 	}
 
-	public Set getEntrySet()
-	{
+	public Set getEntrySet() {
 		return storage.entrySet();
 	}
 
-	public void load( String filename)
-			throws IOException
-	{
-		BufferedInputStream in = new BufferedInputStream(
-				new FileInputStream( filename ) );
-		storage.load( in );   // Important to call the overridden method in PropertiesEncoding
+	public void load(String filename) throws IOException {
+		BufferedInputStream in = new BufferedInputStream(new FileInputStream(
+				filename));
+		storage.load(in); // Important to call the overridden method in
+							// PropertiesEncoding
 		in.close();
 	}
 
-    public void load( InputStream in)
-			throws IOException
-	{
-		storage.load( in );   // Important to call the overridden method in PropertiesEncoding
+	public void load(InputStream in) throws IOException {
+		storage.load(in); // Important to call the overridden method in
+							// PropertiesEncoding
 		in.close();
 	}
 
-	public Enumeration keys()
-	{
+	public Enumeration keys() {
 		return storage.keys();
 	}
 
-
-
 	/**
-	 * Look up a word in the lexicon.
-	 * If the given word form is contained in the lexicon, the associated
-	 * entry is returned as a String, otherwise null.
+	 * Look up a word in the lexicon. If the given word form is contained in the
+	 * lexicon, the associated entry is returned as a String, otherwise null.
 	 */
-	public String lookup( String word, boolean ignoreCase )
-	{
+	public String lookup(String word, boolean ignoreCase) {
 
 		String lookupWord;
 
-		if( ignoreCase )
+		if (ignoreCase)
 			lookupWord = word.toLowerCase();
 		else
 			lookupWord = word;
 
-		String entry = storage.getProperty( lookupWord, null );
-        if (entry == null && ignoreCase)   {
-           lookupWord = word.toLowerCase();
-           entry = storage.getProperty( lookupWord, null );
-        }
+		String entry = storage.getProperty(lookupWord, null);
+		if (entry == null && ignoreCase) {
+			lookupWord = word.toLowerCase();
+			entry = storage.getProperty(lookupWord, null);
+		}
 
 		return entry;
 
 	}
 
-}  // end of class is.iclt.icenlp.core.utils.Lexicon
+} // end of class is.iclt.icenlp.core.utils.Lexicon

@@ -5,7 +5,6 @@ import is.iclt.icenlp.arc.network.NetworkException;
 import is.iclt.icenlp.arc.network.NetworkHandler;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class Runner 
 {

@@ -51,6 +51,7 @@ public class RunIceTaggerApertium extends RunIceTagger
         
         // create new instance of the mapping lexicon.
         runner.mappingLexicon = new MappingLexicon(runner.tagMapFile, false, false, false, "<NOT MAPPED>");
+        runner.mappingLexicon.setLeave_lexemes_of_length_one_unchanged(true);
         
         // Perform the tagging
         runner.tokenizer.dateHandling(true);    // Group dates into a single lexeme
@@ -100,7 +101,6 @@ public class RunIceTaggerApertium extends RunIceTagger
                 lexeme = t.lexeme;
             
             wordList.add(new Word(t.lexeme, this.lemmald.lemmatize(lexeme, t.getFirstTagStr()).getLemma(), t.getFirstTagStr(), t.mweCode, t.tokenCode, t.linkedToPreviousWord));
-			//wordList.add(new Word(t.lexeme, this.lemmald.lemmatize(t.lexeme, t.getFirstTagStr()).getLemma(), t.getFirstTagStr(), t.mweCode, t.tokenCode, t.linkedToPreviousWord));
 		}
 		
 		this.mappingLexicon.processWordList(wordList);

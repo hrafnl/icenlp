@@ -117,8 +117,7 @@ public class IceTagger implements IIceTagger {
 				if (this.taggingOutputForamt.contains("[LEMMA]"))
 					this.lemmatize = true;
 
-				System.out.println("[i] tagging output format: "
-						+ this.taggingOutputForamt + '.');
+				System.out.println("[i] tagging output format: " + this.taggingOutputForamt + '.');
 			}
 
 			// Loading IceTagger lexicons.
@@ -151,8 +150,7 @@ public class IceTagger implements IIceTagger {
 				if (iceResources.isVerbAdverb == null)
 					throw new Exception(
 							"Could not locate verb adverb dictionary");
-				System.out
-						.println("[i] Reading IceTagger lexicons from IceNLP resource.");
+				System.out.println("[i] Reading IceTagger lexicons from IceNLP resource.");
 				iceLexicons = new IceTaggerLexicons(iceResources);
 			} else {
 				String iceLexiconDirs = this.configuration
@@ -160,8 +158,7 @@ public class IceTagger implements IIceTagger {
 
 				if (!iceLexiconDirs.endsWith("/"))
 					iceLexiconDirs = iceLexiconDirs + '/';
-				System.out.println("[i] Reading IceTagger lexicon from "
-						+ iceLexiconDirs + '.');
+				System.out.println("[i] Reading IceTagger lexicon from " + iceLexiconDirs + '.');
 				iceLexicons = new IceTaggerLexicons(iceLexiconDirs);
 			}
 
@@ -186,8 +183,7 @@ public class IceTagger implements IIceTagger {
 			if (this.configuration.containsKey("mappinglexicon")) {
 				String mappingLexicon = this.configuration.getValue("mappinglexicon");
 				
-				if(mappingLexicon.toLowerCase().equals("icenlp"))
-				{
+				if(mappingLexicon.toLowerCase().equals("icenlp")){
 					System.out.println("[i] Reading mapping lexicon from IceNLP resource.");
 					this.mapperLexicon = new MappingLexicon(true,
 							this.leave_not_found_tag_unchanged, this.configuration
@@ -199,6 +195,10 @@ public class IceTagger implements IIceTagger {
 							this.leave_not_found_tag_unchanged, this.configuration
 									.debugMode(), this.not_found_tag);
 				}
+			
+				// TODO Make this as an property in the server configuration file.
+				this.mapperLexicon.setLeave_lexemes_of_length_one_unchanged(true);
+			
 			}
 
 			if (this.lemmatize) {
@@ -282,9 +282,8 @@ public class IceTagger implements IIceTagger {
 
 					if (this.lemmatize) {
 					    String lemma = getLemma(t);
-                        wordList.add(new Word(t.lexeme, lemma, t.getFirstTagStr(),
-							t.mweCode, t.tokenCode, t.linkedToPreviousWord));
-                    }
+                        wordList.add(new Word(t.lexeme, lemma, t.getFirstTagStr(), t.mweCode, t.tokenCode, t.linkedToPreviousWord));
+					}
 		            else
 					    wordList.add(new Word(t.lexeme, t.getFirstTagStr(),
 							t.mweCode, t.tokenCode, t.linkedToPreviousWord));
@@ -300,42 +299,52 @@ public class IceTagger implements IIceTagger {
 
 			// If we have not set any tagging output
 			if (this.taggingOutputForamt == null) {
-				for (Word word : wordList) {
+				for (Word word : wordList) 
+				{
 					if (word.linkedToPreviousWord)
-						output = output + punctuationSeparator
-								+ word.getLexeme() + " " + word.getTag();
+						output = output + punctuationSeparator + word.getLexeme() + " " + word.getTag();
+					
 					else
-						output = output + taggingOutputSparator
-								+ word.getLexeme() + " " + word.getTag();
+						output = output + taggingOutputSparator + word.getLexeme() + " " + word.getTag();
 				}
 			}
 
 			// We have some tagging output set.
-			else {
-				for (Word word : wordList) {
-					String part = this.taggingOutputForamt.replace("[LEXEME]",word.getLexeme());
-					part = part.replace("[TAG]", word.getTag());
-
-					if (this.lemmatize)
-						part = part.replace("[LEMMA]", word.getLemma());
-
+			else
+			{
+				for (Word word : wordList) 
+				{
 					
-					if(this.fstp != null)	
+					String part = null;
+					
+					if(word.isOnlyOutputLexeme())
 					{
-						String check = "^" + word.getLemma() + word.getTag() + "$";
-						String res = fstp.biltrans(check, true);
-						if(res.startsWith("^@"))
+						part = word.getLexeme();
+					}
+					else
+					{
+						part = this.taggingOutputForamt.replace("[LEXEME]",word.getLexeme());
+						part = part.replace("[TAG]", word.getTag());
+	
+						if (this.lemmatize)
+							part = part.replace("[LEMMA]", word.getLemma());
+	
+						
+						if(this.fstp != null && !word.isOnlyOutputLexeme())	
 						{
-							if(this.configuration.debugMode())
-								System.out.println("[debug] word " + word.getLemma() + " not found in bidix" );
-							
-							part = this.taggingOutputForamt.replace("[LEXEME]",word.getLexeme());
-                            part = part.replace("[LEMMA]", "*" + word.getLexeme());
-                            part = part.replace("[TAG]", "");
-                            //part = part.replace("[TAG]", word.getTag());
+							String check = "^" + word.getLemma() + word.getTag() + "$";
+							String res = fstp.biltrans(check, true);
+							if(res.startsWith("^@"))
+							{
+								if(this.configuration.debugMode())
+									System.out.println("[debug] word " + word.getLemma() + " not found in bidix" );
+								
+								part = this.taggingOutputForamt.replace("[LEXEME]",word.getLexeme());
+	                            part = part.replace("[LEMMA]", "*" + word.getLexeme());
+	                            part = part.replace("[TAG]", "");
+							}
 						}
 					}
-					
 					
 					if (word.linkedToPreviousWord)
 						output = output + punctuationSeparator + part;

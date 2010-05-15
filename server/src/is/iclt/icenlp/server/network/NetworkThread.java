@@ -50,6 +50,7 @@ public class NetworkThread implements Runnable {
 	 * This functions loops until alive becomes false.
 	 * During the loop the function waits for new
 	 * incoming requests.
+	 * TODO Change this to select/poll for removing threads.
 	 */
 	public void run() {
 		System.out.println("[i] Ready.");

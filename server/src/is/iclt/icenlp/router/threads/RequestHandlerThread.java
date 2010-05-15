@@ -5,10 +5,7 @@ import is.iclt.icenlp.common.network.Packet;
 import is.iclt.icenlp.router.common.ISlave;
 import is.iclt.icenlp.router.common.SlaveCollection;
 import is.iclt.icenlp.router.common.network.ByteConverter;
-
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.SocketException;
