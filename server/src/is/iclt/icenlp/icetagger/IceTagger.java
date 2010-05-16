@@ -7,6 +7,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+
+import is.iclt.icenlp.IceParser.IIceParser;
+import is.iclt.icenlp.IceParser.IceParser;
 import org.apertium.lttoolbox.process.FSTProcessor;
 import is.iclt.icenlp.core.icetagger.IceTaggerLexicons;
 import is.iclt.icenlp.core.icetagger.IceTaggerResources;
@@ -36,6 +39,8 @@ public class IceTagger implements IIceTagger {
 	private String punctuationSeparator = " ";
 	private String taggingOutputSparator = " ";
 	private FSTProcessor fstp = null;
+
+    private IIceParser parser;
 
 	public IceTagger() throws IceTaggerConfigrationException {
 		// Store the reference to the configuration in member to
@@ -244,7 +249,8 @@ public class IceTagger implements IIceTagger {
 					System.out.println("[i] Tritagger is ready.");
 				}
 			}
-		}
+		    this.parser = IceParser.instance();
+        }
 
 		catch (Exception e) {
 			throw new IceTaggerConfigrationException(e.getMessage(), e);
@@ -275,7 +281,12 @@ public class IceTagger implements IIceTagger {
 		try {
 
 			Sentences sentences = facade.tag(text);
+            String strParse = parser.parse(sentences.toString());
+            //System.out.println(strParse);
 
+
+
+            // Create a a word list from the tagging results.
 			for (Sentence s : sentences.getSentences()) {
 				for (Token token : s.getTokens()) {
 					IceTokenTags t = ((IceTokenTags) token);
@@ -289,6 +300,49 @@ public class IceTagger implements IIceTagger {
 							t.mweCode, t.tokenCode, t.linkedToPreviousWord));
 				}
 			}
+
+            // go through the sentence list and place a number for it in the parse list.
+            int i = 0;
+            int lastIndex = 0;
+            for(Word w : wordList){
+                int index =  strParse.indexOf(w.getLexeme(), lastIndex);
+                lastIndex = index;
+                strParse = strParse.substring(0,index+w.getLexeme().length()) + "_"+i + " " + strParse.substring(index+w.getLexeme().length()+1);
+                i = i+ 1;
+            }
+
+            
+            // Let's add the subj to correct words.
+            for(String parseLine : strParse.split("\n")){
+                if(parseLine.contains("{*SUBJ")){
+                    char arrow = parseLine.charAt(6);
+                    String[] parseLineTokens = parseLine.split(" ");
+                    // Search for the last word in the subj, that is the one that
+                    // will get the subj to its tag.
+                    for(int j = parseLineTokens.length-1; j>=0; j-- ){
+                        if(parseLineTokens[j].split("_").length >=2){
+
+                            String[] d = parseLineTokens[j].split("_");
+                            String wordIndexStr = d[d.length-1];
+                            if(wordIndexStr.matches("[0-9]+")){
+                                int ind = Integer.parseInt(wordIndexStr);
+                                if(ind > wordList.size())
+                                    continue;
+                                if(arrow == '>')
+                                    wordList.get(Integer.parseInt(d[d.length-1])).parseString = "<@SUBJ→>";
+                                else
+                                    wordList.get(Integer.parseInt(d[d.length-1])).parseString = "<@SUBJ←>";
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            //System.out.println(strParse);
+
+
+
 
 			// Apply mapping rules to the word list.
 			if (this.mapperLexicon != null)
@@ -314,8 +368,12 @@ public class IceTagger implements IIceTagger {
 			{
 				for (Word word : wordList) 
 				{
-					
-					String part = null;
+					// add the parse tag to the of the tag.
+                    // TODO: move this into Word object.
+					if(word.parseString !=null)
+                        word.setTag(word.getTag() + word.parseString);
+
+                    String part = null;
 					
 					if(word.isOnlyOutputLexeme())
 					{
@@ -358,7 +416,7 @@ public class IceTagger implements IIceTagger {
 			if (output.charAt(0) == ' ')
 				output = output.substring(1, output.length());
 
-			return output;
+            return output;
 		}
 
 		catch (IOException e) {

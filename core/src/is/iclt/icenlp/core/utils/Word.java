@@ -16,6 +16,7 @@ public class Word
     private String lexeme;
     private String tag;
     private String lemma;
+    public String parseString = null;
     private boolean onlyOutputLexeme;
     
     // Public member variables.
