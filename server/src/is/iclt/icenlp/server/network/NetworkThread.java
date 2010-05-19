@@ -2,6 +2,7 @@ package is.iclt.icenlp.server.network;
 
 
 import is.iclt.icenlp.common.configuration.Configuration;
+import is.iclt.icenlp.server.output.OutputGenerator;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -13,11 +14,17 @@ public class NetworkThread implements Runnable {
 	private boolean alive; // indicates the status of the thread.
 	private ServerSocket serverSocket;
     private boolean debugMode = false;
+    private OutputGenerator outputGenerator;
 
 	public NetworkThread() {
 		this.debugMode = Configuration.getInstance().debugMode();
         this.alive = true;
-
+        try {
+			this.outputGenerator = new OutputGenerator();
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		try {
 			// Find the host name that the server will use.
 			String host = "localhost";
@@ -62,7 +69,7 @@ public class NetworkThread implements Runnable {
 					System.out.println("[debug] Connection from host " + socket.getInetAddress().getCanonicalHostName());
 
 				// Let's create a new thread for the connection.
-				new Thread(new ClientThread(socket)).start();
+				new Thread(new ClientThread(socket, this.outputGenerator)).start();
 			}
 
 			catch (IOException e) {

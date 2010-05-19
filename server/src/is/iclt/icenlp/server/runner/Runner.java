@@ -61,14 +61,7 @@ public class Runner {
 		thread = new Thread(nt);
 		thread.start();
 
-		// Shutdown hook so users can kill the server
-		// with shutdown signal (CTRL+C)
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				System.out.println("\nShutting server down..");
-				nt.cleanUp();
-			}
-		});
+
 	}
     
 	public static void printHelp() {

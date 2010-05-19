@@ -1,10 +1,9 @@
 package is.iclt.icenlp.server.network;
 
-
-import is.iclt.icenlp.IceNLPSingletonService;
 import is.iclt.icenlp.common.network.ByteConverter;
 import is.iclt.icenlp.common.network.Packet;
 import is.iclt.icenlp.common.configuration.Configuration;
+import is.iclt.icenlp.server.output.OutputGenerator;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,8 +24,10 @@ public class ClientThread implements Runnable {
 	private OutputStream ostream;
 	private InputStream istream;
     private boolean debugMode;
+    private OutputGenerator outputGenerator;
 
-	public ClientThread(Socket socket) {
+	public ClientThread(Socket socket, OutputGenerator generator) {
+		this.outputGenerator = generator;
 		this.socket = socket;
 		this.alive = true;
         this.debugMode = Configuration.getInstance().debugMode(); 
@@ -103,13 +104,27 @@ public class ClientThread implements Runnable {
 					// receiving and let's create a replay for the client.
 					String taggedString = null;
 					try {
-						taggedString = IceNLPSingletonService.getInstance().tagText(strFromClient);
+						//taggedString = IceNLPSingletonService.getInstance().tagText(strFromClient);
+						
+						// wrap to function.
+						java.lang.StringBuilder b = new StringBuilder();
+						
+						
+						String[] lines = strFromClient.split("\n");
+						//String outPut = "";
+						for(String s : lines){
+							b.append(this.outputGenerator.generateOutput(s));
+						}
+		
+						System.out.println("fo");
+				
+						taggedString = b.toString();
 						if (this.debugMode)
 							System.out.println("[debug] Reply string from IceNLP that will be sent to client is: " + taggedString);
 
 					} 
 					catch (Exception e) {
-						System.out.println(e);
+						System.out.println(e.getCause());
 						System.out.println("[!!] Error in thread while getting IceNLP singleton instance");
 					}
 

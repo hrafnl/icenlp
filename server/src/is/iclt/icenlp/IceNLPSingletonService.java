@@ -1,7 +1,6 @@
 package is.iclt.icenlp;
 
 import is.iclt.icenlp.icetagger.IIceTagger;
-import is.iclt.icenlp.icetagger.IceTagger;
 import is.iclt.icenlp.icetagger.IceTaggerConfigrationException;
 
 
@@ -19,9 +18,10 @@ public class IceNLPSingletonService {
 	IIceTagger icetagger;
 
 	// Protected constructor for the class.
-	protected IceNLPSingletonService() throws IceTaggerConfigrationException {
+	protected IceNLPSingletonService() throws IceTaggerConfigrationException 
+	{
 		// Let us create a new instance of Icetagger.
-		this.icetagger = new IceTagger();
+		//this.icetagger = new IceTagger();
 		System.out.println("[i] IceNLPSingletonService built.");
 	}
 
@@ -51,6 +51,7 @@ public class IceNLPSingletonService {
 	 */
 	public String tagText(String text) 
 	{
+		/*
 		String[] lines = text.split("\n");
 		String outPut = "";
 		for(String s : lines)
@@ -59,5 +60,7 @@ public class IceNLPSingletonService {
 		if(outPut.length() >=1)
 			outPut = outPut.substring(0, outPut.length()-1);
 		return outPut;
+		*/
+		return null;
 	}
 }
