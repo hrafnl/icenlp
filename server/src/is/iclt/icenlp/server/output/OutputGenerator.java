@@ -5,53 +5,40 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
 
-import is.iclt.icenlp.IceParser.IIceParser;
 import is.iclt.icenlp.IceParser.IceParser;
 import is.iclt.icenlp.common.configuration.Configuration;
 import is.iclt.icenlp.core.icetagger.IceTaggerLexicons;
 import is.iclt.icenlp.core.icetagger.IceTaggerResources;
-import is.iclt.icenlp.core.tokenizer.IceTokenTags;
-import is.iclt.icenlp.core.tokenizer.Sentence;
-import is.iclt.icenlp.core.tokenizer.Sentences;
-import is.iclt.icenlp.core.tokenizer.Token;
 import is.iclt.icenlp.core.tokenizer.TokenizerResources;
-import is.iclt.icenlp.core.tritagger.TriTaggerLexicons;
-import is.iclt.icenlp.core.tritagger.TriTaggerResources;
 import is.iclt.icenlp.core.utils.Lexicon;
 import is.iclt.icenlp.core.utils.MappingLexicon;
 import is.iclt.icenlp.core.utils.Word;
-import is.iclt.icenlp.facade.IceTaggerFacade;
 import is.iclt.icenlp.icetagger.IceTagger;
-import is.iclt.icenlp.icetagger.IceTaggerConfigrationException;
 import is.iclt.icenlp.icetagger.IceTaggerException;
-import is.iclt.icenlp.lemmald.Lemmald;
 
 import org.apertium.lttoolbox.process.FSTProcessor;
 
 public class OutputGenerator {
 
+	// Private member variables.
 	private Configuration configuration;
 	private MappingLexicon mapperLexicon = null;
-	
 	private String taggingOutputForamt = null;
 	private boolean lemmatize = false;
 	private boolean leave_not_found_tag_unchanged = false;
 	private String not_found_tag = null;
-	
 	private String punctuationSeparator = " ";
 	private String taggingOutputSparator = " ";
 	private FSTProcessor fstp = null;
-	
 	private IceTagger iceTagger;
-	private IceParser iceParser;
+	//private IceParser iceParser;
 
-	// TODO comment constructor.
+	//TODO Comment constructor.
 	public OutputGenerator() throws Exception{
 		
-		// Get instance of icetagger.
+		// Get instance of IceTagger.
 		this.iceTagger = IceTagger.instance();
 		
 		// Store the reference to the configuration in member to
@@ -64,35 +51,29 @@ public class OutputGenerator {
 		if (this.configuration.containsKey("TaggingOutputSparator"))
 			this.taggingOutputSparator = this.configuration.getValue("TaggingOutputSparator");
 
-		if (this.configuration.containsKey("compiled_bidix")) 
-		{
+		if (this.configuration.containsKey("compiled_bidix")) {
 			String compiledBidixLocation = this.configuration.getValue("compiled_bidix");
 			File file = new File(compiledBidixLocation);
 
 			if (!file.exists() || !file.canRead())
-				System.out.println("[!!] Unable to read compiled bidix "
-						+ compiledBidixLocation + ".");
+				System.out.println("[!!] Unable to read compiled bidix " + compiledBidixLocation + ".");
+			
 			else {
-				System.out.println("[i] Loading compiled bidix "
-						+ compiledBidixLocation + ".");
+				System.out.println("[i] Loading compiled bidix " + compiledBidixLocation + ".");
 				this.fstp = new FSTProcessor();
 				try {
-					fstp.load(new BufferedInputStream(new FileInputStream(
-							compiledBidixLocation)));
+					fstp.load(new BufferedInputStream(new FileInputStream(compiledBidixLocation)));
 					System.out.println("[i] Compiled bidix loaded");
 				} catch (FileNotFoundException e) {
 					this.fstp = null;
-					System.out.println("[!!] Unable to read compiled bidix "
-							+ compiledBidixLocation + ".");
+					System.out.println("[!!] Unable to read compiled bidix " + compiledBidixLocation + ".");
 				} catch (IOException e) {
-					System.out.println("[!!] Unable to read compiled bidix "
-							+ compiledBidixLocation + ".");
+					System.out.println("[!!] Unable to read compiled bidix " + compiledBidixLocation + ".");
 					this.fstp = null;
 				}
 				fstp.initBiltrans();
 				System.out.println("[i] FST for compiled bidix ready.");
 			}
-
 		}
 		
 		// check for not found tag. If there is no unfound_tag set in the
@@ -102,32 +83,24 @@ public class OutputGenerator {
 		else
 			this.not_found_tag = "<NOT MAPPED>";
 		
-		// Check for leave_not_found_tag_unchanged in the configuration
-		// file.
+		// Check for leave_not_found_tag_unchanged in the configuration file.
 		if (this.configuration.containsKey("leave_not_found_tag_unchanged")) {
-			if (this.configuration
-					.getValue("leave_not_found_tag_unchanged").equals(
-							"true")) {
+			if (this.configuration.getValue("leave_not_found_tag_unchanged").equals("true")) {
 				this.leave_not_found_tag_unchanged = true;
-				System.out
-						.println("[i] unfound tags in tagmapping will be left unchanged if not found in mapping collection.");
-			} else if (this.configuration.getValue(
-					"leave_not_found_tag_unchanged").equals("false")) {
+				System.out.println("[i] unfound tags in tagmapping will be left unchanged if not found in mapping collection.");
+			} 
+			else if (this.configuration.getValue("leave_not_found_tag_unchanged").equals("false")) {
 				this.leave_not_found_tag_unchanged = false;
-				System.out
-						.println("[i] unfound tags in tagmapping will be marked with "
-								+ this.not_found_tag);
+				System.out.println("[i] unfound tags in tagmapping will be marked with " + this.not_found_tag);
 			} else {
-				System.out
-						.println("[x] leave_not_found_tag_unchanged can either be true or false. Set to default (true).");
+				System.out.println("[x] leave_not_found_tag_unchanged can either be true or false. Set to default (true).");
 				this.leave_not_found_tag_unchanged = true;
 			}
 		}
 		
 		// Check for the tagging output
 		if (this.configuration.containsKey("taggingoutputformat")) {
-			this.taggingOutputForamt = this.configuration
-					.getValue("taggingoutputformat");
+			this.taggingOutputForamt = this.configuration.getValue("taggingoutputformat");
 
 			if (this.taggingOutputForamt.contains("[LEMMA]")){
 				this.lemmatize = true;
@@ -137,63 +110,6 @@ public class OutputGenerator {
 		}
 		
 		try {
-			// Loading IceTagger lexicons.
-			IceTaggerLexicons iceLexicons = null;
-			if (!this.configuration.containsKey("icelexiconsdir")) {
-				IceTaggerResources iceResources = new IceTaggerResources();
-				if (iceResources.isDictionaryBase == null)
-					throw new Exception("Could not locate base dictionary");
-				if (iceResources.isDictionary == null)
-					throw new Exception("Could not locate otb dictionary");
-				if (iceResources.isEndingsBase == null)
-					throw new Exception(
-							"Could not locate endings base dictionary");
-				if (iceResources.isEndings == null)
-					throw new Exception("Could not locate endings dictionary");
-				if (iceResources.isEndingsProper == null)
-					throw new Exception(
-							"Could not locate endings proper dictionary");
-				if (iceResources.isPrefixes == null)
-					throw new Exception("Could not locate prefixes dictionary");
-				if (iceResources.isTagFrequency == null)
-					throw new Exception(
-							"Could not locate tag frequency dictionary");
-				if (iceResources.isIdioms == null)
-					throw new Exception("Could not locate idioms dictionary");
-				if (iceResources.isVerbPrep == null)
-					throw new Exception("Could not locate verb prep dictionary");
-				if (iceResources.isVerbObj == null)
-					throw new Exception("Could not locate verb obj dictionary");
-				if (iceResources.isVerbAdverb == null)
-					throw new Exception("Could not locate verb adverb dictionary");
-				System.out.println("[i] Reading IceTagger lexicons from IceNLP resource.");
-				iceLexicons = new IceTaggerLexicons(iceResources);
-			} else {
-				String iceLexiconDirs = this.configuration.getValue("IceLexiconsDir");
-
-				if (!iceLexiconDirs.endsWith("/"))
-					iceLexiconDirs = iceLexiconDirs + '/';
-				System.out.println("[i] Reading IceTagger lexicon from " + iceLexiconDirs + '.');
-				iceLexicons = new IceTaggerLexicons(iceLexiconDirs);
-			}
-
-			// Loading tokenizer lexicon.
-			Lexicon tokLexicon = null;
-			if (!this.configuration.containsKey("tokenizerlexicon")) {
-				TokenizerResources tokResources = new TokenizerResources();
-				if (tokResources.isLexicon == null)
-					throw new Exception("Could not locate token dictionary");
-				System.out
-						.println("[i] Reading Tokenizer lexicon from IceNLP resource.");
-				tokLexicon = new Lexicon(tokResources.isLexicon);
-			} else {
-				String tokenLexicon = this.configuration
-						.getValue("tokenizerlexicon");
-				System.out.println("[i] Reading Tokenizer lexicon from "
-						+ tokenLexicon + '.');
-				tokLexicon = new Lexicon(tokenLexicon);
-			}
-
 			// Check for a mappinglexicon lexicon configuration entry.
 			if (this.configuration.containsKey("mappinglexicon")) {
 				String mappingLexicon = this.configuration.getValue("mappinglexicon");
@@ -210,18 +126,14 @@ public class OutputGenerator {
 							this.configuration.debugMode(), this.not_found_tag);
 				}
 
-				// TODO Make this as an property in the server configuration
-				// file.
+				// TODO Make this as an property in the server configuration file.
 				this.mapperLexicon.setLeave_lexemes_of_length_one_unchanged(true);
-
 			}
 
 			if (this.lemmatize) 
 				this.iceTagger.lemmatize(true);
-			
-			this.iceParser = IceParser.instance();
+			//this.iceParser = IceParser.instance();
 		}
-
 		catch (Exception e) {
 			throw e;
 		}
@@ -241,7 +153,7 @@ public class OutputGenerator {
 		}
 
 		
-		// TODO: WE ARE TAGGING TWICE MUST FIX.
+		// TODO: We need to wrap this IceParser logic and move it elsewhere.
 		//String strParse = this.iceParser.parse(text);
 		
 		/*

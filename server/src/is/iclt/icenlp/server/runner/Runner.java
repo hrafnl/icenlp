@@ -5,7 +5,6 @@ import is.iclt.icenlp.icetagger.IceTaggerConfigrationException;
 import is.iclt.icenlp.common.configuration.Configuration;
 import is.iclt.icenlp.server.network.NetworkThread;
 
-
 public class Runner {
 	public static void main(String[] args) {
 		System.out.println(">> IceNLPServer");
@@ -21,15 +20,12 @@ public class Runner {
 		}
 
 		// We will read the configuration file that is passed in through args.
-		else if (args.length == 1)
-		{
-			if (args[0].matches("(?i)--(help|h)"))
-			{
+		else if (args.length == 1){
+			if (args[0].matches("(?i)--(help|h)")){
 				printHelp();
 				return;
 			}
-            else if (args[0].matches("(?i)--(config|c)=.+"))
-            {
+            else if (args[0].matches("(?i)--(config|c)=.+")){
 				String configFilePath = args[0].split("=")[1];	
 				System.out.println("[i] Using config file: " + configFilePath);
 				if (!Configuration.loadConfig(configFilePath)){
@@ -52,8 +48,7 @@ public class Runner {
 		Thread thread;
 
 		// Lets create the first instance of the singleton service.
-		try 
-		{
+		try {
 			IceNLPSingletonService.getInstance();
 		} catch (IceTaggerConfigrationException e) {
 			System.out.println("[!!] IceTagger error: " + e.getMessage());
@@ -64,8 +59,6 @@ public class Runner {
 		nt = new NetworkThread();
 		thread = new Thread(nt);
 		thread.start();
-
-
 	}
     
 	public static void printHelp() {

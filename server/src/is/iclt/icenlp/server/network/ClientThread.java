@@ -116,8 +116,6 @@ public class ClientThread implements Runnable {
 						for(String s : lines){
 							b.append(this.outputGenerator.generateOutput(s));
 						}
-		
-						System.out.println("fo");
 				
 						taggedString = b.toString();
 						if (this.debugMode)
