@@ -220,19 +220,15 @@ public class OutputGenerator {
 				this.iceTagger.lemmatize(true);
 			
 			this.iceParser = IceParser.instance();
-			
-			
-
 		}
 
 		catch (Exception e) {
 			throw e;
 		}
-
 	}
 	
 	public String generateOutput(String text) {
-		if (text.length() == 0 || !text.matches("\\w+"))
+		if (text.length() == 0 || text.matches("^\\s+$"))
 			return "";
 
 		List<Word> wordList;

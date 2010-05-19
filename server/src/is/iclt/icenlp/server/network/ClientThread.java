@@ -46,7 +46,8 @@ public class ClientThread implements Runnable {
 	 * Run is called when the thread is spawned.
 	 */
 	public void run() {
-		while (this.alive) {
+		while (this.alive) 
+		{
 			Packet pack = this.readFromClient();
 			if (pack.getDataSize() == -1) {
                 this.alive = false;
@@ -146,6 +147,8 @@ public class ClientThread implements Runnable {
 					break;
 				}
 			}
+		
+		
 		}
 
 		if (this.debugMode) {

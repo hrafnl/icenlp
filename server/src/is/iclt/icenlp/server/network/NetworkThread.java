@@ -19,7 +19,8 @@ public class NetworkThread implements Runnable {
 	public NetworkThread() {
 		this.debugMode = Configuration.getInstance().debugMode();
         this.alive = true;
-        try {
+        try 
+        {
 			this.outputGenerator = new OutputGenerator();
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
