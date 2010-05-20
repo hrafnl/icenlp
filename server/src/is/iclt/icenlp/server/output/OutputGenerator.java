@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
+import is.iclt.icenlp.IceParser.IceParser;
 import is.iclt.icenlp.common.configuration.Configuration;
 import is.iclt.icenlp.core.utils.MappingLexicon;
 import is.iclt.icenlp.core.utils.Word;
@@ -28,11 +29,9 @@ public class OutputGenerator {
 	private String taggingOutputSparator = " ";
 	private FSTProcessor fstp = null;
 	private IceTagger iceTagger;
-	//private IceParser iceParser;
+	private IceParser iceParser;
 
-	//TODO Comment constructor.
 	public OutputGenerator() throws Exception{
-		
 		// Get instance of IceTagger.
 		this.iceTagger = IceTagger.instance();
 		
@@ -119,7 +118,6 @@ public class OutputGenerator {
 							this.configuration.debugMode(), this.not_found_tag);
 				}
 
-				// TODO Make this as an property in the server configuration file.
 				if(this.configuration.containsKey("leave_lexemes_of_length_one_unchanged")){
 					if (this.configuration.getValue("leave_lexemes_of_length_one_unchanged").toLowerCase().equals("true")){
 						this.mapperLexicon.setLeave_lexemes_of_length_one_unchanged(true);
@@ -127,13 +125,14 @@ public class OutputGenerator {
 					}
 					else
 						System.out.println("[i] Leave Unknown lexemes of length 1 disabled.");
-						
 				}
 			}
 
 			if (this.lemmatize) 
 				this.iceTagger.lemmatize(true);
-			//this.iceParser = IceParser.instance();
+			
+			
+			this.iceParser = IceParser.instance();
 		}
 		catch (Exception e) {
 			throw e;
@@ -155,10 +154,73 @@ public class OutputGenerator {
 
 		
 		// TODO: We need to wrap this IceParser logic and move it elsewhere.
-		//String strParse = this.iceParser.parse(text);
+		String strParse = this.iceParser.parse(this.getTagStr(wordList));
+		System.out.println("parse output: " + strParse);
+		
+		int i = 0;
+		int lastIndex = 0;
+		for (Word w : wordList)
+		{
+			int index = strParse.indexOf(w.getLexeme(), lastIndex);
+			lastIndex = index;
+			strParse = strParse.substring(0, index + w.getLexeme().length())+ "_"+ i+ " "+ strParse.substring(index + w.getLexeme().length() + 1);
+			i = i + 1;
+		}
+
+		// Let's add the subj to correct words.
+		for (String parseLine : strParse.split("\n")) 
+		{
+			if (parseLine.contains("{*SUBJ")) {
+				char arrow = parseLine.charAt(6);
+				String[] parseLineTokens = parseLine.split(" ");
+				// Search for the last word in the subj, that is the one
+				// that
+				// will get the subj to its tag.
+				for (int j = parseLineTokens.length - 1; j >= 0; j--) {
+					if (parseLineTokens[j].split("_").length >= 2) {
+
+						String[] d = parseLineTokens[j].split("_");
+						String wordIndexStr = d[d.length - 1];
+						if (wordIndexStr.matches("[0-9]+")) {
+							int ind = Integer.parseInt(wordIndexStr);
+							if (ind > wordList.size())
+								continue;
+							if (arrow == '>')
+								wordList.get(Integer
+										.parseInt(d[d.length - 1])).parseString = "<@SUBJ→>";
+							else
+								wordList.get(Integer
+										.parseInt(d[d.length - 1])).parseString = "<@SUBJ←>";
+							break;
+						}
+					}
+				}
+			
+			}
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		/*
-		try {
+		
 
 			
 			// System.out.println(strParse);
@@ -228,7 +290,7 @@ public class OutputGenerator {
 						}
 					}
 				}
-			}
+			
 			*/
 
 			// System.out.println(strParse);
@@ -263,7 +325,8 @@ public class OutputGenerator {
 
 					if (word.isOnlyOutputLexeme())
 						part = word.getLexeme();
-					else {
+					else 
+					{
 						part = this.taggingOutputForamt.replace("[LEXEME]", word.getLexeme());
 						part = part.replace("[TAG]", word.getTag());
 
@@ -273,7 +336,8 @@ public class OutputGenerator {
 						if (this.fstp != null && !word.isOnlyOutputLexeme()) {
 							String check = "^" + word.getLemma() + word.getTag() + "$";
 							String res = fstp.biltrans(check, true);
-							if (res.startsWith("^@")) {
+							if (res.startsWith("^@")) 
+							{
 								if (this.configuration.debugMode())
 									System.out.println("[debug] word " + word.getLemma() + " not found in bidix");
 
@@ -299,5 +363,12 @@ public class OutputGenerator {
 
 			return builder.toString();
 		}
+	
+	
+	private String getTagStr(List<Word> wordList){
+		StringBuilder strBuilder = new StringBuilder();
+		for(Word w : wordList)
+			strBuilder.append(w.getLexeme() + " " + w.getTag() + " ");
+		return strBuilder.toString();
 	}
-
+}
