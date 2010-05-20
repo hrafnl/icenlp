@@ -357,17 +357,11 @@ public class MappingLexicon {
 				else {
 					if (!this.leaveNotFoundTagUnchanged) {
 						if (this.showAppliedActions)
-							System.out
-									.println("[debug] tagmapping rule applied: "
-											+ word.getTag()
-											+ " -> "
-											+ this.notFoundMappingTag);
+							System.out.println("[debug] tagmapping rule applied: "+ word.getTag()+ " -> "+ this.notFoundMappingTag);
 						word.setTag(this.notFoundMappingTag);
 					} else {
 						if (this.showAppliedActions)
-							System.out
-									.println("[debug] tagmapping rule applied: Leaving "
-											+ word.getTag() + " unchanged.");
+							System.out.println("[debug] tagmapping rule applied: Leaving " + word.getTag() + " unchanged.");
 					}
 
 					// If this was a word of length one.
@@ -386,47 +380,37 @@ public class MappingLexicon {
 
 		// Go over Lemma Exception rules.
 		for (Word word : wordList) {
-			String lookupWord = word.getLemma();
+			String lookupWordLemma = word.getLemma();
+			String lookupWordLexeme = word.getLexeme().toLowerCase();
 
-			if (this.hasExceptionRulesForLemma(lookupWord)) {
-				List<Pair<String, String>> rules = this
-						.getExceptionRulesForLemma(lookupWord);
-				for (Pair<String, String> pair : rules) {
+			if (this.hasExceptionRulesForLemma(lookupWordLemma)) 
+			{
+				List<Pair<String, String>> rules = this.getExceptionRulesForLemma(lookupWordLemma);
+				for (Pair<String, String> pair : rules) 
+				{
 					if (word.getTag().matches(".*" + pair.one + ".*")) {
 						if (this.showAppliedActions)
-							System.out
-									.println("[debug] applied Lemma exception rule for the lemma "
-											+ word.getLemma());
+							System.out.println("[debug] applied Lemma exception rule for the lemma "+ word.getLemma());
 
-						word.setTag(word.getTag().replaceFirst(pair.one,
-								pair.two));
+						word.setTag(word.getTag().replaceFirst(pair.one, pair.two));
 					}
 				}
 			}
-		}
-
-		// Go over Lexeme Exception rules.
-		for (Word word : wordList) {
-			// String lookupWord = word.getLexeme();
-			String lookupWord = word.getLexeme().toLowerCase();
-
 			if (!word.isOnlyOutputLexeme()
-					&& this.hasExceptionRulesForLexeme(lookupWord)) {
+					&& this.hasExceptionRulesForLexeme(lookupWordLexeme)) {
 				List<Pair<String, String>> rules = this
-						.getExceptionRulesForLexeme(lookupWord);
+						.getExceptionRulesForLexeme(lookupWordLexeme);
 				for (Pair<String, String> pair : rules) {
 					if (word.getTag().matches(".*" + pair.one + ".*")) {
 						if (this.showAppliedActions)
-							System.out
-									.println("[debug] applied Lexeme exception rule for the lexeme "
-											+ word.getLexeme());
+							System.out.println("[debug] applied Lexeme exception rule for the lexeme "+ word.getLexeme());
 
-						word.setTag(word.getTag().replaceFirst(pair.one,
-								pair.two));
+						word.setTag(word.getTag().replaceFirst(pair.one, pair.two));
 					}
 				}
 			}
 		}
+
 
 		// Go over the MWE expression
 		for (int i = 0; i < wordList.size(); i++) {
@@ -462,14 +446,11 @@ public class MappingLexicon {
 						lexeme += wordList.get(begins).getLexeme() + " ";
 						wordList.remove(begins);
 					}
-					// System.out.println("orð er: " + lexeme);
 					// Where we are working with MWE, we overwrite the lemma
 					// with the lexeme.
 					// lexeme.length()-1 because of the additional space at then
 					// end
-					Word w = new Word(lexeme.substring(0, lexeme.length() - 1),
-							this.getMapForMWE(mweStr), MWECode.none, null,
-							false);
+					Word w = new Word(lexeme.substring(0, lexeme.length() - 1), this.getMapForMWE(mweStr), MWECode.none, null, false);
 					w.setLemma(lexeme.substring(0, lexeme.length() - 1));
 					wordList.add(begins, w);
 				}
@@ -478,17 +459,13 @@ public class MappingLexicon {
 
 		// Go over MWE-RENAME rules.
 		for (Word word : wordList) {
-			if (!word.isOnlyOutputLexeme()
-					&& this.hasRenameRuleForLexeme(word.getLexeme())) {
-				Pair<String, String> pair = this.getRenameRuleForLexeme(word
-						.getLexeme());
+			if (!word.isOnlyOutputLexeme() && this.hasRenameRuleForLexeme(word.getLexeme())) {
+				Pair<String, String> pair = this.getRenameRuleForLexeme(word.getLexeme());
 				word.setLemma(pair.one.replace('_', ' '));
 				word.setLexeme(pair.one.replace('_', ' '));
 				word.setTag(pair.two);
 				if (this.showAppliedActions)
-					System.out
-							.println("[debug] applied MWE-RENAME rule to word "
-									+ word.getLexeme());
+					System.out.println("[debug] applied MWE-RENAME rule to word " + word.getLexeme());
 			}
 		}
 
@@ -498,10 +475,7 @@ public class MappingLexicon {
 				if (!word.isOnlyOutputLexeme() && word.getLexeme().matches(key)) {
 					word.setTag(this.lexemePatternMap.get(key));
 					if (this.showAppliedActions)
-						System.out
-								.println("[debug] applied Lexeme-pattern rule to word "
-										+ word.getLexeme());
-					break;
+						System.out.println("[debug] applied Lexeme-pattern rule to word "+ word.getLexeme());
 				}
 			}
 		}
