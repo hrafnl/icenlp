@@ -7,12 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
-import is.iclt.icenlp.IceParser.IceParser;
 import is.iclt.icenlp.common.configuration.Configuration;
-import is.iclt.icenlp.core.icetagger.IceTaggerLexicons;
-import is.iclt.icenlp.core.icetagger.IceTaggerResources;
-import is.iclt.icenlp.core.tokenizer.TokenizerResources;
-import is.iclt.icenlp.core.utils.Lexicon;
 import is.iclt.icenlp.core.utils.MappingLexicon;
 import is.iclt.icenlp.core.utils.Word;
 import is.iclt.icenlp.icetagger.IceTagger;
@@ -146,8 +141,8 @@ public class OutputGenerator {
 		List<Word> wordList;
 		try {
 			wordList = this.iceTagger.tag(text);
-		} catch (IceTaggerException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (IceTaggerException e) {
 			e.printStackTrace();
 			return "";
 		}
@@ -180,11 +175,6 @@ public class OutputGenerator {
 				}
 			}
 			*/
-		
-		
-			
-			
-			
 
 			// go through the sentence list and place a number for it in the
 			// parse list.
@@ -242,19 +232,17 @@ public class OutputGenerator {
 				this.mapperLexicon.processWordList(wordList);
 
 			// Create output string that will be sent to the client.
-			// TODO change for string builder.
-			String output = "";
-
+			StringBuilder builder = new StringBuilder();
+			
 			// If we have not set any tagging output
 			if (this.taggingOutputForamt == null) {
 				for (Word word : wordList) {
 					if (word.linkedToPreviousWord)
-						output = output + punctuationSeparator
-								+ word.getLexeme() + " " + word.getTag();
+						builder.append(punctuationSeparator + word.getLexeme() + " " + word.getTag());
 
 					else
-						output = output + taggingOutputSparator
-								+ word.getLexeme() + " " + word.getTag();
+						builder.append(punctuationSeparator + word.getLexeme() + " " + word.getTag());
+					
 				}
 			}
 
@@ -262,54 +250,48 @@ public class OutputGenerator {
 			else {
 				for (Word word : wordList) {
 					// add the parse tag to the of the tag.
-					// TODO: move this into Word object.
 					if (word.parseString != null)
 						word.setTag(word.getTag() + word.parseString);
 
 					String part = null;
 
-					if (word.isOnlyOutputLexeme()) {
+					if (word.isOnlyOutputLexeme())
 						part = word.getLexeme();
-					} else {
-						part = this.taggingOutputForamt.replace("[LEXEME]",
-								word.getLexeme());
+					else {
+						part = this.taggingOutputForamt.replace("[LEXEME]", word.getLexeme());
 						part = part.replace("[TAG]", word.getTag());
 
 						if (this.lemmatize)
 							part = part.replace("[LEMMA]", word.getLemma());
 
 						if (this.fstp != null && !word.isOnlyOutputLexeme()) {
-							String check = "^" + word.getLemma()
-									+ word.getTag() + "$";
+							String check = "^" + word.getLemma() + word.getTag() + "$";
 							String res = fstp.biltrans(check, true);
 							if (res.startsWith("^@")) {
 								if (this.configuration.debugMode())
-									System.out.println("[debug] word "
-											+ word.getLemma()
-											+ " not found in bidix");
+									System.out.println("[debug] word " + word.getLemma() + " not found in bidix");
 
-								part = this.taggingOutputForamt.replace(
-										"[LEXEME]", word.getLexeme());
-								part = part.replace("[LEMMA]", "*"
-										+ word.getLexeme());
+								part = this.taggingOutputForamt.replace("[LEXEME]", word.getLexeme());
+								part = part.replace("[LEMMA]", "*" + word.getLexeme());
 								part = part.replace("[TAG]", "");
 							}
 						}
 					}
 
 					if (word.linkedToPreviousWord)
-						output = output + punctuationSeparator + part;
-
+						builder.append(punctuationSeparator + part);
+						
 					else
-						output = output + taggingOutputSparator + part;
+						builder.append(taggingOutputSparator + part);
+					
 				}
 			}
 
 			// Remove the first char if it is a space.
-			if (output.charAt(0) == ' ')
-				output = output.substring(1, output.length());
+			if (builder.toString().charAt(0) == ' ')
+				return builder.toString().substring(1);
 
-			return output;
+			return builder.toString();
 		}
 	}
 

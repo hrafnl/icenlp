@@ -145,8 +145,6 @@ public class ClientThread implements Runnable {
 					break;
 				}
 			}
-		
-		
 		}
 
 		if (this.debugMode) {
