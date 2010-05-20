@@ -16,8 +16,10 @@ public class IceParser implements IIceParser{
     // Private member variable that holds an instance of the
     // IceParser facade.
     private IceParserFacade parser;
-    private boolean include_functions = true;
-    private boolean phrase_per_line = true;
+    private boolean include_functions = true; // TODO: set to config file.
+    private boolean phrase_per_line = true; // TODO: set to config file.
+    private String mark_subject_left = "<@←SUBJ>";
+    private String mark_subject_right = "<@SUBJ→>";
     
     public synchronized static IceParser instance(){
         if(instance_ == null)
@@ -71,11 +73,11 @@ public class IceParser implements IIceParser{
 								if (ind > words.size())
 									continue;
 								if (arrow == '>'){
-									words.get(Integer.parseInt(d[d.length - 1])).parseString = "<@SUBJ→>";
+									words.get(Integer.parseInt(d[d.length - 1])).parseString = this.mark_subject_right;
 								}
 								else
 								{
-									words.get(Integer.parseInt(d[d.length - 1])).parseString = "<@←SUBJ>";
+									words.get(Integer.parseInt(d[d.length - 1])).parseString = mark_subject_left;
 								}
 								break;
 							}

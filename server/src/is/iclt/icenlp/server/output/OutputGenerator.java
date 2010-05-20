@@ -132,6 +132,10 @@ public class OutputGenerator {
 				this.iceTagger.lemmatize(true);
 			
 			
+			if (this.taggingOutputForamt.contains("[MORPH]")){
+				this.iceParser = IceParser.instance();
+			}
+
 			this.iceParser = IceParser.instance();
 		}
 		catch (Exception e) {
@@ -152,10 +156,8 @@ public class OutputGenerator {
 			e.printStackTrace();
 			return "";
 		}
-		this.iceParser.parse(wordList);
-
-
-		// System.out.println(strParse);
+		if(this.iceParser != null)
+			this.iceParser.parse(wordList);
 
 		// Apply mapping rules to the word list.
 		if (this.mapperLexicon != null)
@@ -180,8 +182,8 @@ public class OutputGenerator {
 		else {
 			for (Word word : wordList) {
 				// add the parse tag to the of the tag.
-				if (word.parseString != null)
-					word.setTag(word.getTag() + word.parseString);
+				//if (word.parseString != null)
+				//	word.setTag(word.getTag() + word.parseString);
 
 				String part = null;
 
@@ -191,6 +193,14 @@ public class OutputGenerator {
 				{
 					part = this.taggingOutputForamt.replace("[LEXEME]", word.getLexeme());
 					part = part.replace("[TAG]", word.getTag());
+					if(this.iceParser != null)
+					{
+						if(word.parseString == null){
+							part = part.replace("[MORPH]", "");
+						}
+						else
+							part = part.replace("[MORPH]", word.parseString);
+					}
 
 					if (this.lemmatize)
 						part = part.replace("[LEMMA]", word.getLemma());
