@@ -111,9 +111,7 @@ public class OutputGenerator {
 
 				if (mappingLexicon.toLowerCase().equals("icenlp")) {
 					System.out.println("[i] Reading mapping lexicon from IceNLP resource.");
-					this.mapperLexicon = new MappingLexicon(true,
-							this.leave_not_found_tag_unchanged,
-							this.configuration.debugMode(), this.not_found_tag);
+					this.mapperLexicon = new MappingLexicon(true, this.leave_not_found_tag_unchanged, this.configuration.debugMode(), this.not_found_tag);
 				} else {
 					System.out.println("[i] Reading mapping lexicon from: " + mappingLexicon + '.');
 					this.mapperLexicon = new MappingLexicon(mappingLexicon,
@@ -122,7 +120,15 @@ public class OutputGenerator {
 				}
 
 				// TODO Make this as an property in the server configuration file.
-				this.mapperLexicon.setLeave_lexemes_of_length_one_unchanged(true);
+				if(this.configuration.containsKey("leave_lexemes_of_length_one_unchanged")){
+					if (this.configuration.getValue("leave_lexemes_of_length_one_unchanged").toLowerCase().equals("true")){
+						this.mapperLexicon.setLeave_lexemes_of_length_one_unchanged(true);
+						System.out.println("[i] Leave Unknown lexemes of length 1 enabled.");
+					}
+					else
+						System.out.println("[i] Leave Unknown lexemes of length 1 disabled.");
+						
+				}
 			}
 
 			if (this.lemmatize) 
