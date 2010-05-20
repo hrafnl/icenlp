@@ -1,5 +1,6 @@
 package is.iclt.icenlp.IceParser;
 
+import is.iclt.icenlp.common.configuration.Configuration;
 import is.iclt.icenlp.core.utils.Word;
 import is.iclt.icenlp.facade.IceParserFacade;
 
@@ -28,6 +29,16 @@ public class IceParser implements IIceParser{
     }
     
     protected IceParser(){
+        String value_mark_subject_left = Configuration.getInstance().getValue("mark_subject_left");
+        if(value_mark_subject_left != null){
+        	this.mark_subject_left = value_mark_subject_left;	
+        }
+        String value_mark_subject_right = Configuration.getInstance().getValue("mark_subject_right");
+        if(value_mark_subject_right != null){
+        	this.mark_subject_right = value_mark_subject_right;	
+        }
+    	
+
         System.out.println("[i] IceParser instance created.");
         parser = new IceParserFacade();
     }

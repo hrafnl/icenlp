@@ -181,9 +181,6 @@ public class OutputGenerator {
 		// We have some tagging output set.
 		else {
 			for (Word word : wordList) {
-				// add the parse tag to the of the tag.
-				//if (word.parseString != null)
-				//	word.setTag(word.getTag() + word.parseString);
 
 				String part = null;
 
@@ -234,6 +231,5 @@ public class OutputGenerator {
 			return builder.toString().substring(1);
 
 		return builder.toString();
-		}
-	
+		}	
 }
