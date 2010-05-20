@@ -105,17 +105,12 @@ public class ClientThread implements Runnable {
 					// receiving and let's create a replay for the client.
 					String taggedString = null;
 					try {
-						//taggedString = IceNLPSingletonService.getInstance().tagText(strFromClient);
-						
 						// wrap to function.
 						java.lang.StringBuilder b = new StringBuilder();
 						
-						
 						String[] lines = strFromClient.split("\n");
-						//String outPut = "";
-						for(String s : lines){
+						for(String s : lines)
 							b.append(this.outputGenerator.generateOutput(s));
-						}
 				
 						taggedString = b.toString();
 						if (this.debugMode)

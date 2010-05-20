@@ -17,8 +17,8 @@ public class IceParser implements IIceParser{
     // Private member variable that holds an instance of the
     // IceParser facade.
     private IceParserFacade parser;
-    private boolean include_functions = true; // TODO: set to config file.
-    private boolean phrase_per_line = true; // TODO: set to config file.
+    private boolean include_functions = true;
+    private boolean phrase_per_line = true;
     private String mark_subject_left = "<@←SUBJ>";
     private String mark_subject_right = "<@SUBJ→>";
     
@@ -37,7 +37,6 @@ public class IceParser implements IIceParser{
         if(value_mark_subject_right != null){
         	this.mark_subject_right = value_mark_subject_right;	
         }
-    	
 
         System.out.println("[i] IceParser instance created.");
         parser = new IceParserFacade();

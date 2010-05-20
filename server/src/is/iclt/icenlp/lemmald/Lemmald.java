@@ -2,8 +2,6 @@ package is.iclt.icenlp.lemmald;
 
 import is.iclt.icenlp.core.tokenizer.IceTokenTags;
 
-
-
 public class Lemmald 
 {
 	private is.iclt.icenlp.core.lemmald.Lemmald lemmald = null;
