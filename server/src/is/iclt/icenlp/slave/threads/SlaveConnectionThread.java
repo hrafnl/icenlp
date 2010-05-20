@@ -64,18 +64,15 @@ public class SlaveConnectionThread implements Runnable
 						}
 						
 						int packetOpcode = ByteConverter.bytesToInt(data, 0);
-						if(packetOpcode != 0)
-						{							
+						if(packetOpcode != 0){							
 							int dataSize = ByteConverter.bytesToInt(data, 4);
 							size = size + dataSize;
-							for(int j = 0; j<dataSize; j++)
-							{
+							for(int j = 0; j<dataSize; j++){
 								dataFromRouter[byteCounter++] = data[j+8];
 							}
 							numPackets -= 1;
 						}
-						else
-						{
+						else{
 							System.out.println("[SlaveConnectinoThread]: received ping while getting data!");
 						}
 					}

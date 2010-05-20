@@ -139,7 +139,8 @@ public class OutputGenerator {
 		}
 	}
 	
-	public String generateOutput(String text) {
+	public String generateOutput(String text) 
+	{
 		if (text.length() == 0 || text.matches("^\\s+$"))
 			return "";
 
@@ -151,224 +152,78 @@ public class OutputGenerator {
 			e.printStackTrace();
 			return "";
 		}
+		this.iceParser.parse(wordList);
 
+
+		// System.out.println(strParse);
+
+		// Apply mapping rules to the word list.
+		if (this.mapperLexicon != null)
+			this.mapperLexicon.processWordList(wordList);
+
+		// Create output string that will be sent to the client.
+		StringBuilder builder = new StringBuilder();
 		
-		// TODO: We need to wrap this IceParser logic and move it elsewhere.
-		String strParse = this.iceParser.parse(this.getTagStr(wordList));
-		System.out.println("parse output: " + strParse);
-		
-		int i = 0;
-		int lastIndex = 0;
-		for (Word w : wordList)
-		{
-			int index = strParse.indexOf(w.getLexeme(), lastIndex);
-			lastIndex = index;
-			strParse = strParse.substring(0, index + w.getLexeme().length())+ "_"+ i+ " "+ strParse.substring(index + w.getLexeme().length() + 1);
-			i = i + 1;
-		}
+		// If we have not set any tagging output
+		if (this.taggingOutputForamt == null) {
+			for (Word word : wordList) {
+				if (word.linkedToPreviousWord)
+					builder.append(punctuationSeparator + word.getLexeme() + " " + word.getTag());
 
-		// Let's add the subj to correct words.
-		for (String parseLine : strParse.split("\n")) 
-		{
-			if (parseLine.contains("{*SUBJ")) {
-				char arrow = parseLine.charAt(6);
-				String[] parseLineTokens = parseLine.split(" ");
-				// Search for the last word in the subj, that is the one
-				// that
-				// will get the subj to its tag.
-				for (int j = parseLineTokens.length - 1; j >= 0; j--) {
-					if (parseLineTokens[j].split("_").length >= 2) {
-
-						String[] d = parseLineTokens[j].split("_");
-						String wordIndexStr = d[d.length - 1];
-						if (wordIndexStr.matches("[0-9]+")) {
-							int ind = Integer.parseInt(wordIndexStr);
-							if (ind > wordList.size())
-								continue;
-							if (arrow == '>')
-								wordList.get(Integer
-										.parseInt(d[d.length - 1])).parseString = "<@SUBJ→>";
-							else
-								wordList.get(Integer
-										.parseInt(d[d.length - 1])).parseString = "<@SUBJ←>";
-							break;
-						}
-					}
-				}
-			
+				else
+					builder.append(punctuationSeparator + word.getLexeme() + " " + word.getTag());
+				
 			}
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		/*
-		
 
-			
-			// System.out.println(strParse);
+		// We have some tagging output set.
+		else {
+			for (Word word : wordList) {
+				// add the parse tag to the of the tag.
+				if (word.parseString != null)
+					word.setTag(word.getTag() + word.parseString);
 
-			// Create a a word list from the tagging results.
-			for (Sentence s : sentences.getSentences()) {
-				for (Token token : s.getTokens()) {
-					IceTokenTags t = ((IceTokenTags) token);
+				String part = null;
 
-					if (this.lemmatize) {
-						String lemma = getLemma(t);
-						wordList.add(new Word(t.lexeme, lemma, t
-								.getFirstTagStr(), t.mweCode, t.tokenCode,
-								t.linkedToPreviousWord));
-					} else
-						wordList
-								.add(new Word(t.lexeme, t.getFirstTagStr(),
-										t.mweCode, t.tokenCode,
-										t.linkedToPreviousWord));
-				}
-			}
-			*/
+				if (word.isOnlyOutputLexeme())
+					part = word.getLexeme();
+				else 
+				{
+					part = this.taggingOutputForamt.replace("[LEXEME]", word.getLexeme());
+					part = part.replace("[TAG]", word.getTag());
 
-			// go through the sentence list and place a number for it in the
-			// parse list.
-		/*	
-		int i = 0;
-			int lastIndex = 0;
-			for (Word w : wordList) {
-				int index = strParse.indexOf(w.getLexeme(), lastIndex);
-				lastIndex = index;
-				strParse = strParse
-						.substring(0, index + w.getLexeme().length())
-						+ "_"
-						+ i
-						+ " "
-						+ strParse
-								.substring(index + w.getLexeme().length() + 1);
-				i = i + 1;
-			}
+					if (this.lemmatize)
+						part = part.replace("[LEMMA]", word.getLemma());
 
-			// Let's add the subj to correct words.
-			for (String parseLine : strParse.split("\n")) {
-				if (parseLine.contains("{*SUBJ")) {
-					char arrow = parseLine.charAt(6);
-					String[] parseLineTokens = parseLine.split(" ");
-					// Search for the last word in the subj, that is the one
-					// that
-					// will get the subj to its tag.
-					for (int j = parseLineTokens.length - 1; j >= 0; j--) {
-						if (parseLineTokens[j].split("_").length >= 2) {
+					if (this.fstp != null && !word.isOnlyOutputLexeme()) {
+						String check = "^" + word.getLemma() + word.getTag() + "$";
+						String res = fstp.biltrans(check, true);
+						if (res.startsWith("^@")) 
+						{
+							if (this.configuration.debugMode())
+								System.out.println("[debug] word " + word.getLemma() + " not found in bidix");
 
-							String[] d = parseLineTokens[j].split("_");
-							String wordIndexStr = d[d.length - 1];
-							if (wordIndexStr.matches("[0-9]+")) {
-								int ind = Integer.parseInt(wordIndexStr);
-								if (ind > wordList.size())
-									continue;
-								if (arrow == '>')
-									wordList.get(Integer
-											.parseInt(d[d.length - 1])).parseString = "<@SUBJ→>";
-								else
-									wordList.get(Integer
-											.parseInt(d[d.length - 1])).parseString = "<@SUBJ←>";
-								break;
-							}
+							part = this.taggingOutputForamt.replace("[LEXEME]", word.getLexeme());
+							part = part.replace("[LEMMA]", "*" + word.getLexeme());
+							part = part.replace("[TAG]", "");
 						}
 					}
 				}
-			
-			*/
 
-			// System.out.println(strParse);
-
-			// Apply mapping rules to the word list.
-			if (this.mapperLexicon != null)
-				this.mapperLexicon.processWordList(wordList);
-
-			// Create output string that will be sent to the client.
-			StringBuilder builder = new StringBuilder();
-			
-			// If we have not set any tagging output
-			if (this.taggingOutputForamt == null) {
-				for (Word word : wordList) {
-					if (word.linkedToPreviousWord)
-						builder.append(punctuationSeparator + word.getLexeme() + " " + word.getTag());
-
-					else
-						builder.append(punctuationSeparator + word.getLexeme() + " " + word.getTag());
+				if (word.linkedToPreviousWord)
+					builder.append(punctuationSeparator + part);
 					
-				}
+				else
+					builder.append(taggingOutputSparator + part);
+				
 			}
+		}
 
-			// We have some tagging output set.
-			else {
-				for (Word word : wordList) {
-					// add the parse tag to the of the tag.
-					if (word.parseString != null)
-						word.setTag(word.getTag() + word.parseString);
+		// Remove the first char if it is a space.
+		if (builder.toString().charAt(0) == ' ')
+			return builder.toString().substring(1);
 
-					String part = null;
-
-					if (word.isOnlyOutputLexeme())
-						part = word.getLexeme();
-					else 
-					{
-						part = this.taggingOutputForamt.replace("[LEXEME]", word.getLexeme());
-						part = part.replace("[TAG]", word.getTag());
-
-						if (this.lemmatize)
-							part = part.replace("[LEMMA]", word.getLemma());
-
-						if (this.fstp != null && !word.isOnlyOutputLexeme()) {
-							String check = "^" + word.getLemma() + word.getTag() + "$";
-							String res = fstp.biltrans(check, true);
-							if (res.startsWith("^@")) 
-							{
-								if (this.configuration.debugMode())
-									System.out.println("[debug] word " + word.getLemma() + " not found in bidix");
-
-								part = this.taggingOutputForamt.replace("[LEXEME]", word.getLexeme());
-								part = part.replace("[LEMMA]", "*" + word.getLexeme());
-								part = part.replace("[TAG]", "");
-							}
-						}
-					}
-
-					if (word.linkedToPreviousWord)
-						builder.append(punctuationSeparator + part);
-						
-					else
-						builder.append(taggingOutputSparator + part);
-					
-				}
-			}
-
-			// Remove the first char if it is a space.
-			if (builder.toString().charAt(0) == ' ')
-				return builder.toString().substring(1);
-
-			return builder.toString();
+		return builder.toString();
 		}
 	
-	
-	private String getTagStr(List<Word> wordList){
-		StringBuilder strBuilder = new StringBuilder();
-		for(Word w : wordList)
-			strBuilder.append(w.getLexeme() + " " + w.getTag() + " ");
-		return strBuilder.toString();
-	}
 }

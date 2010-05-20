@@ -1,8 +1,10 @@
 package is.iclt.icenlp.IceParser;
 
+import is.iclt.icenlp.core.utils.Word;
 import is.iclt.icenlp.facade.IceParserFacade;
 
 import java.io.IOException;
+import java.util.List;
 
 
 public class IceParser implements IIceParser{
@@ -14,6 +16,8 @@ public class IceParser implements IIceParser{
     // Private member variable that holds an instance of the
     // IceParser facade.
     private IceParserFacade parser;
+    private boolean include_functions = true;
+    private boolean phrase_per_line = true;
     
     public synchronized static IceParser instance(){
         if(instance_ == null)
@@ -27,13 +31,71 @@ public class IceParser implements IIceParser{
     }
 
     public String parse(String text) {
-        boolean include_functions = true;
-        boolean phrase_per_line = true;
         try {
             return parser.parse(text, include_functions, phrase_per_line);
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         return null;
     }
+
+	public String parse(List<Word> words) {
+		String taggedString = this.getTagStr(words);
+		try {
+			String strParse = this.parser.parse(taggedString, include_functions, phrase_per_line);
+			int i = 0;
+			int lastIndex = 0;
+			for (Word w : words)
+			{
+				int index = strParse.indexOf(w.getLexeme(), lastIndex);
+				lastIndex = index;
+				strParse = strParse.substring(0, index + w.getLexeme().length())+ "_"+ i+ " "+ strParse.substring(index + w.getLexeme().length() + 1);
+				i = i + 1;
+			}
+
+			// Let's add the subj to correct words.
+			for (String parseLine : strParse.split("\n")) 
+			{
+				if (parseLine.contains("{*SUBJ")) {
+					char arrow = parseLine.charAt(6);
+					String[] parseLineTokens = parseLine.split(" ");
+					// Search for the last word in the subj, that is the one
+					// that will get the subj to its tag.
+					for (int j = parseLineTokens.length - 1; j >= 0; j--) {
+						if (parseLineTokens[j].split("_").length >= 2) {
+
+							String[] d = parseLineTokens[j].split("_");
+							String wordIndexStr = d[d.length - 1];
+							if (wordIndexStr.matches("[0-9]+")) {
+								int ind = Integer.parseInt(wordIndexStr);
+								if (ind > words.size())
+									continue;
+								if (arrow == '>'){
+									words.get(Integer.parseInt(d[d.length - 1])).parseString = "<@SUBJ→>";
+								}
+								else
+								{
+									words.get(Integer.parseInt(d[d.length - 1])).parseString = "<@←SUBJ>";
+								}
+								break;
+							}
+						}
+					}
+				
+				}
+			}
+		} 
+		catch (IOException e) {
+
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	private String getTagStr(List<Word> wordList){
+		StringBuilder strBuilder = new StringBuilder();
+		for(Word w : wordList)
+			strBuilder.append(w.getLexeme() + " " + w.getTag() + " ");
+		return strBuilder.toString();
+	}
 }
