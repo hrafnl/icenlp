@@ -132,7 +132,7 @@ public class OutputGenerator {
 				this.iceTagger.lemmatize(true);
 			
 			
-			if (this.taggingOutputForamt.contains("[MORPH]")){
+			if (this.taggingOutputForamt.contains("[FUNC]")){
 				this.iceParser = IceParser.instance();
 			}
 
@@ -193,10 +193,10 @@ public class OutputGenerator {
 					if(this.iceParser != null)
 					{
 						if(word.parseString == null){
-							part = part.replace("[MORPH]", "");
+							part = part.replace("[FUNC]", "");
 						}
 						else
-							part = part.replace("[MORPH]", word.parseString);
+							part = part.replace("[FUNC]", word.parseString);
 					}
 
 					if (this.lemmatize)
@@ -205,8 +205,7 @@ public class OutputGenerator {
 					if (this.fstp != null && !word.isOnlyOutputLexeme()) {
 						String check = "^" + word.getLemma() + word.getTag() + "$";
 						String res = fstp.biltrans(check, true);
-						if (res.startsWith("^@")) 
-						{
+						if (res.startsWith("^@")) {
 							if (this.configuration.debugMode())
 								System.out.println("[debug] word " + word.getLemma() + " not found in bidix");
 
