@@ -68,6 +68,7 @@ public class IceParser implements IIceParser{
 			// Let's add the subj to correct words.
 			for (String parseLine : strParse.split("\n")) 
 			{
+				System.out.println("parser line: " + parseLine);
 				if (parseLine.contains("{*SUBJ")) {
 					char arrow = parseLine.charAt(6);
 					String[] parseLineTokens = parseLine.split(" ");
@@ -93,7 +94,6 @@ public class IceParser implements IIceParser{
 							}
 						}
 					}
-				
 				}
 			}
 		} 

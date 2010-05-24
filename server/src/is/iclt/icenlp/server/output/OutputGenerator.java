@@ -190,11 +190,10 @@ public class OutputGenerator {
 				{
 					part = this.taggingOutputForamt.replace("[LEXEME]", word.getLexeme());
 					part = part.replace("[TAG]", word.getTag());
-					if(this.iceParser != null)
-					{
-						if(word.parseString == null){
-							part = part.replace("[FUNC]", "");
-						}
+					if(this.iceParser != null){
+						if(word.parseString == null)
+							part = part.replace("[FUNC]", ""); 
+						
 						else
 							part = part.replace("[FUNC]", word.parseString);
 					}
@@ -212,6 +211,11 @@ public class OutputGenerator {
 							part = this.taggingOutputForamt.replace("[LEXEME]", word.getLexeme());
 							part = part.replace("[LEMMA]", "*" + word.getLexeme());
 							part = part.replace("[TAG]", "");
+							if(word.parseString !=null)
+								part = part.replace("[FUNC]", word.parseString);
+							else
+								part = part.replace("[FUNC]", "");
+								
 						}
 					}
 				}
