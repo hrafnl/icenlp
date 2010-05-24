@@ -22,6 +22,9 @@ public class IceParser implements IIceParser{
     private String mark_subject_left = "<@←SUBJ>";
     private String mark_subject_right = "<@SUBJ→>";
     
+    private String mark_obj_left = "<@←OBJ>";
+    private String mark_obj_right = "<@OBJ→>";
+    
     public synchronized static IceParser instance(){
         if(instance_ == null)
             instance_ = new IceParser();
@@ -37,7 +40,17 @@ public class IceParser implements IIceParser{
         if(value_mark_subject_right != null){
         	this.mark_subject_right = value_mark_subject_right;	
         }
-
+        
+        String value_mark_obj_right = Configuration.getInstance().getValue("mark_obj_right");
+        if(value_mark_subject_right != null){
+        	this.mark_obj_right = value_mark_obj_right;	
+        }
+        
+        String value_mark_obj_left = Configuration.getInstance().getValue("mark_obj_left");
+        if(value_mark_subject_right != null){
+        	this.mark_obj_left = value_mark_obj_left;	
+        }
+        
         System.out.println("[i] IceParser instance created.");
         parser = new IceParserFacade();
     }
@@ -68,13 +81,15 @@ public class IceParser implements IIceParser{
 			// Let's add the subj to correct words.
 			for (String parseLine : strParse.split("\n")) 
 			{
-				System.out.println("parser line: " + parseLine);
-				if (parseLine.contains("{*SUBJ")) {
+				//System.out.println("parser line: " + parseLine);
+				if (parseLine.contains("{*SUBJ")) 
+				{
 					char arrow = parseLine.charAt(6);
 					String[] parseLineTokens = parseLine.split(" ");
 					// Search for the last word in the subj, that is the one
 					// that will get the subj to its tag.
-					for (int j = parseLineTokens.length - 1; j >= 0; j--) {
+					for (int j = parseLineTokens.length - 1; j >= 0; j--) 
+					{
 						if (parseLineTokens[j].split("_").length >= 2) {
 
 							String[] d = parseLineTokens[j].split("_");
@@ -86,8 +101,7 @@ public class IceParser implements IIceParser{
 								if (arrow == '>'){
 									words.get(Integer.parseInt(d[d.length - 1])).parseString = this.mark_subject_right;
 								}
-								else
-								{
+								else{
 									words.get(Integer.parseInt(d[d.length - 1])).parseString = mark_subject_left;
 								}
 								break;
@@ -95,6 +109,32 @@ public class IceParser implements IIceParser{
 						}
 					}
 				}
+				if (parseLine.contains("{*OBJ"))
+				{
+					char arrow = parseLine.charAt(5);
+					String[] parseLineTokens = parseLine.split(" ");
+					for (int j = parseLineTokens.length - 1; j >= 0; j--) 
+					{
+						if (parseLineTokens[j].split("_").length >= 2) {
+
+							String[] d = parseLineTokens[j].split("_");
+							String wordIndexStr = d[d.length - 1];
+							if (wordIndexStr.matches("[0-9]+")) {
+								int ind = Integer.parseInt(wordIndexStr);
+								if (ind > words.size())
+									continue;
+								if (arrow == '>'){
+									words.get(Integer.parseInt(d[d.length - 1])).parseString = this.mark_obj_right;
+								}
+								else{
+									words.get(Integer.parseInt(d[d.length - 1])).parseString = this.mark_obj_left;
+								}
+								break;
+							}
+						}
+					}
+					
+				}	
 			}
 		} 
 		catch (IOException e) {

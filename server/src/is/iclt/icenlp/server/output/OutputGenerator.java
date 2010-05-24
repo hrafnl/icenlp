@@ -186,8 +186,7 @@ public class OutputGenerator {
 
 				if (word.isOnlyOutputLexeme())
 					part = word.getLexeme();
-				else 
-				{
+				else {
 					part = this.taggingOutputForamt.replace("[LEXEME]", word.getLexeme());
 					part = part.replace("[TAG]", word.getTag());
 					if(this.iceParser != null){
