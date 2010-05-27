@@ -132,11 +132,9 @@ public class OutputGenerator {
 				this.iceTagger.lemmatize(true);
 			
 			
-			if (this.taggingOutputForamt.contains("[FUNC]")){
+			if (this.taggingOutputForamt.contains("[FUNC]"))
 				this.iceParser = IceParser.instance();
-			}
 
-			this.iceParser = IceParser.instance();
 		}
 		catch (Exception e) {
 			throw e;
