@@ -180,6 +180,9 @@ public class OutputGenerator {
 		else {
 			for (Word word : wordList) {
 
+				if(word.getLexeme().equals("<") || word.getLexeme().equals(">"))
+					continue;
+				
 				String part = null;
 
 				if (word.isOnlyOutputLexeme())
