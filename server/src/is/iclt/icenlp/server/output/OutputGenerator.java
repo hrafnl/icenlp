@@ -180,13 +180,12 @@ public class OutputGenerator {
 		else {
 			for (Word word : wordList) {
 
-				if(word.getLexeme().equals("<") || word.getLexeme().equals(">"))
-					continue;
-				
 				String part = null;
 
-				if (word.isOnlyOutputLexeme())
+				if (word.isOnlyOutputLexeme()){
 					part = word.getLexeme();
+				}
+				
 				else {
 					part = this.taggingOutputForamt.replace("[LEXEME]", word.getLexeme());
 					part = part.replace("[TAG]", word.getTag());
