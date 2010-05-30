@@ -180,9 +180,13 @@ public class OutputGenerator {
 		else {
 			for (Word word : wordList) {
 
+				if(word.getLexeme().equals("<"))
+					continue;
+				
 				String part = null;
 
 				if (word.isOnlyOutputLexeme()){
+					System.out.println("-- OUTPUT LEFT ALONE " + word.getLexeme());
 					part = word.getLexeme();
 				}
 				
