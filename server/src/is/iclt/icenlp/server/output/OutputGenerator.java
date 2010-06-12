@@ -145,15 +145,18 @@ public class OutputGenerator {
 	{
 		if (text.length() == 0 || text.matches("^\\s+$"))
 			return "";
-
+		
 		List<Word> wordList;
-		try {
+		try 
+		{
 			wordList = this.iceTagger.tag(text);
 		} 
 		catch (IceTaggerException e) {
 			e.printStackTrace();
 			return "";
 		}
+		
+		
 		if(this.iceParser != null)
 			this.iceParser.parse(wordList);
 
@@ -186,7 +189,9 @@ public class OutputGenerator {
 				String part = null;
 
 				if (word.isOnlyOutputLexeme()){
-					System.out.println("-- OUTPUT LEFT ALONE " + word.getLexeme());
+					
+					word.setLexeme("\\"+word.getLexeme());
+					//System.out.println("-- OUTPUT LEFT ALONE " + word.getLexeme());
 					part = word.getLexeme();
 				}
 				
