@@ -11,6 +11,7 @@ import is.iclt.icenlp.IceParser.IceParser;
 import is.iclt.icenlp.common.configuration.Configuration;
 import is.iclt.icenlp.core.utils.MappingLexicon;
 import is.iclt.icenlp.core.utils.Word;
+import is.iclt.icenlp.core.utils.WordList;
 import is.iclt.icenlp.icetagger.IceTagger;
 import is.iclt.icenlp.icetagger.IceTaggerException;
 
@@ -146,6 +147,12 @@ public class OutputGenerator {
 		if (text.length() == 0 || text.matches("^\\s+$"))
 			return "";
 		
+		
+		
+		
+		
+		
+		
 		List<Word> wordList;
 		try 
 		{
@@ -155,6 +162,13 @@ public class OutputGenerator {
 			e.printStackTrace();
 			return "";
 		}
+		
+		
+		
+		for(Word w : wordList)
+			System.out.println(w.getLexeme());
+		
+		
 		
 		
 		if(this.iceParser != null)
@@ -181,17 +195,27 @@ public class OutputGenerator {
 
 		// We have some tagging output set.
 		else {
-			for (Word word : wordList) {
+			boolean nextSlash = false;
+			for (Word word : wordList) 
+			{
 
-				if(word.getLexeme().equals("<"))
-					continue;
-				
 				String part = null;
 
+				if (word.getLexeme().equals("\\"))
+				{
+					nextSlash = true;
+					continue;
+				}
+				
+				
 				if (word.isOnlyOutputLexeme()){
 					
-					word.setLexeme("\\"+word.getLexeme());
-					//System.out.println("-- OUTPUT LEFT ALONE " + word.getLexeme());
+					//word.setLexeme("\\"+word.getLexeme());
+					if(nextSlash){
+						word.setLexeme("\\" + word.getLexeme());
+						nextSlash = false;
+					}
+					System.out.println("-- OUTPUT LEFT ALONE " + word.getLexeme());
 					part = word.getLexeme();
 				}
 				
@@ -213,8 +237,10 @@ public class OutputGenerator {
 						String check = "^" + word.getLemma() + word.getTag() + "$";
 						String res = fstp.biltrans(check, true);
 						if (res.startsWith("^@")) {
-							if (this.configuration.debugMode())
-								System.out.println("[debug] word " + word.getLemma() + " not found in bidix");
+							if (this.configuration.debugMode()){
+								System.out.println("[debug] word " + word.getLemma() + " not found in bidix2");
+								System.out.println(word.getLexeme().length());
+							}
 
 							part = this.taggingOutputForamt.replace("[LEXEME]", word.getLexeme());
 							part = part.replace("[LEMMA]", "*" + word.getLexeme());

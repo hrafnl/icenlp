@@ -51,6 +51,12 @@ public class Runner {
             }
 
             ClientNetworkHandler handler = new ClientNetworkHandler(host, port);
+            
+            // Fix for Apertium text processor. We must find a workaround for this problem.
+            inString = inString.substring(0, inString.length()-6);
+            //System.out.println("FOOO");
+                        
+            
             System.out.println(handler.tagString(inString));
         }
         catch (Exception ex) {
