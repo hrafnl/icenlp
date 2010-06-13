@@ -341,21 +341,30 @@ public class MappingLexicon {
 		// then we want to dump it out without modifying it...
 		// we need a new option fo this: IF_NOT_FOUND
 
-		if (this.tagMaps.size() > 0) {
-			for (Word word : wordList) {
+		if (this.tagMaps.size() > 0) 
+		{
+			for (Word word : wordList) 
+			{
 				String mappedTag = this.lookupTagmap(word.getTag(), false);
-				if (mappedTag != null) {
-					if (this.showAppliedActions) {
-						System.out.println("[debug] tagmapping rule applied: "
-								+ word.getTag() + " -> " + mappedTag
-								+ ", from " + word.getTag());
+				if (mappedTag != null) 
+				{
+					if (this.showAppliedActions) 
+					{
+						System.out.println("[debug] tagmapping rule applied: " + word.getTag() + " -> " + mappedTag + ", on " + word.getLexeme());
+					}
+					if(word.getLexeme().length() == 1){
+						Character c = word.getLexeme().charAt(0);
+						if(!Character.isLetter(c))
+							word.setOnlyOutputLexeme(true);
 					}
 
 					word.setTag(mappedTag);
 				}
 
-				else {
-					if (!this.leaveNotFoundTagUnchanged) {
+				else 
+				{
+					if (!this.leaveNotFoundTagUnchanged) 
+					{
 						if (this.showAppliedActions)
 							System.out.println("[debug] tagmapping rule applied: "+ word.getTag()+ " -> "+ this.notFoundMappingTag);
 						word.setTag(this.notFoundMappingTag);
@@ -365,12 +374,13 @@ public class MappingLexicon {
 					}
 
 					// If this was a word of length one.
-					if (this.leave_lexemes_of_length_one_unchanged) {
-						if (word.getLexeme().length() == 1) {
+					if (this.leave_lexemes_of_length_one_unchanged) 
+					{
+						System.out.println(word.getLexeme() + ": " + word.getLexeme().length());
+						if (word.getLexeme().length() == 1) 
+						{
 							if (this.showAppliedActions)
-								System.out.println("[debug] Lexeme "
-										+ word.getLexeme()
-										+ " will be left unchanged.");
+								System.out.println("[debug] Lexeme " + word.getLexeme() + " will be left unchanged.");
 							word.setOnlyOutputLexeme(true);
 						}
 					}
