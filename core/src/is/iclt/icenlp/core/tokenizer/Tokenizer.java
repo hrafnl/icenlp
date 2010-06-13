@@ -952,6 +952,9 @@ public class Tokenizer
 					case'»':
 						setToken( ch, Token.TokenCode.tcRArrow );
 						break;
+                    case '^':
+                        setToken( ch, Token.TokenCode.tcHat );
+						break;
 					default:
 						//System.out.println("ERROR: Don't recognize character:" + (new Character(ch)).toString());
 						//int num = Character.getNumericValue(ch);
@@ -1064,6 +1067,8 @@ public class Tokenizer
 						    break;
 				case'>':    if (len==1) currToken.tokenCode = Token.TokenCode.tcGreater;
 						    break;
+                case '^':   if (len==1) currToken.tokenCode = Token.TokenCode.tcHat;
+                            break;
                 case'+':    if (len==1)
 							    currToken.tokenCode = Token.TokenCode.tcPlus;
 						    else

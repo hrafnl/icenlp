@@ -398,6 +398,13 @@ public class Segmentizer
 							endOfSentence = true;
 						}
 					}
+                    // HL 13.04.2010: Check added because of Orðasjóður málheild
+                    /*else if ((ch == '\'') && isLastChar)
+                    {
+                        saveSentence = true;
+					    endOfSentence = true;
+                    } */ 
+
 
 					if( saveSentence ) {
 						sentence = sentence + currLine.substring( lastIndex, currIndex );     // Save the current sentence
