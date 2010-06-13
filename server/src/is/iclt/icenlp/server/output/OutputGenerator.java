@@ -146,13 +146,7 @@ public class OutputGenerator {
 	{
 		if (text.length() == 0 || text.matches("^\\s+$"))
 			return "";
-		
-		
-		
-		
-		
-		
-		
+
 		List<Word> wordList;
 		try 
 		{
@@ -163,20 +157,13 @@ public class OutputGenerator {
 			return "";
 		}
 		
-		
-		
-		for(Word w : wordList)
-			System.out.println(w.getLexeme());
-		
-		
-		
-		
 		if(this.iceParser != null)
 			this.iceParser.parse(wordList);
 
 		// Apply mapping rules to the word list.
 		if (this.mapperLexicon != null)
 			this.mapperLexicon.processWordList(wordList);
+
 
 		// Create output string that will be sent to the client.
 		StringBuilder builder = new StringBuilder();
