@@ -32,7 +32,7 @@ import java.io.*;
 %class Phrase_MWEP1
 %standalone
 %line
-
+%extends IceParserTransducer
 %unicode
 
 %{

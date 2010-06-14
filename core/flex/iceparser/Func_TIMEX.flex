@@ -31,7 +31,7 @@ import java.io.*;
 %class Func_TIMEX
 %standalone
 %line
-
+%extends IceParserTransducer
 %unicode
 
 %{ 

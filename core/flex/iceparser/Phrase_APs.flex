@@ -31,7 +31,7 @@ import java.io.*;
 %class Phrase_APs
 %standalone
 %line
-
+%extends IceParserTransducer
 %unicode
 
 %{

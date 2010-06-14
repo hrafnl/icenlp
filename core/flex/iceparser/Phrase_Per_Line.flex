@@ -29,7 +29,7 @@ import java.io.*;
 %class Phrase_Per_Line
 %standalone
 %line
-
+%extends IceParserTransducer
 %unicode
 
 %{
@@ -58,69 +58,100 @@ import java.io.*;
         }
 %eof}
 
+%include regularDef.txt
+
 WordChar = [^\r\n\t\f\[\]\{\} ]
+
 Word = {WordChar}+
 Label = AdvP|APs?|NPs?|VP[bgips]?|PP|S?CP|InjP|MWE_(AdvP|AP|CP|PP)
 Func = (("*"SUBJ|"*"I?OBJ(AP|NOM)?|"*"COMP)(<|>)?)|"*"QUAL | "*"TIMEX
+
+//nýtt
+Symbol = \[{WhiteSpace}*\[  | \]{WhiteSpace}*\] | \{{WhiteSpace}*\{ | \}{WhiteSpace}*\}
 
 %state PHRASE
 %state FUNC
 
 %%
 
-<YYINITIAL> {
-"["{Label}" " 	{ /* System.err.println("InitLabel open " + yytext()); */
-		  count++; str.append(yytext()); 
-		  yybegin(PHRASE);
-		}
-"{"{Func}" " 	{ 
-		  /* System.err.println("InitFunc open " + yytext()); */
-		  funcCount++; 
-		  str.append(yytext()); 
-		  yybegin(FUNC);
-		}
-{Word}" "{Word}	{ out.write(yytext()); out.write("\n");}
-"\n"		{ //System.err.print("Reading line: " + Integer.toString(yyline+1) + "\r"); 
-		  out.write("\n"); }
-.		{ ;}
+<YYINITIAL> 
+{
+	//nýtt
+	{Symbol}
+	{
+		out.write(yytext()); out.write("\n");
+	}
+	// //
+	
+	"["{Label}" " 	
+	{ 
+		/* System.err.println("InitLabel open " + yytext()); */
+		count++; str.append(yytext()); 
+		yybegin(PHRASE);
+	}
+	"{"{Func}" " 	
+	{ 
+		/* System.err.println("InitFunc open " + yytext()); */
+		funcCount++; 
+		str.append(yytext()); 
+		yybegin(FUNC);
+	}
+	{Word}" "{Word}	
+	{ 
+		out.write(yytext()); out.write("\n");
+	}
+	"\n"		
+	{ 
+		//System.err.print("Reading line: " + Integer.toString(yyline+1) + "\r"); 
+		out.write("\n"); 
+	}
+	.	{ ;}
 }
 
-<PHRASE> {
-" "{Label}"]"	{ count--; 
-		  /* System.err.println("PhraseLabel close " + yytext()); */
-		  str.append(yytext());
-		  if (count == 0) { 
+<PHRASE> 
+{
+	" "{Label}"]"	
+	{ 
+		count--; 
+		/* System.err.println("PhraseLabel close " + yytext()); */
+		str.append(yytext());
+		if (count == 0) 
+		{ 
 		  	/*System.out.println("Match");*/
 			out.write(str.toString());
 			out.write("\n");
 			str.setLength(0);
 			yybegin(YYINITIAL);
-		  }
-	  	}
-"["{Label}" " 	{ 
-		  /* System.err.println("PhraseLabel open " + yytext()); */
-		  count++; 
-		  str.append(yytext());}
-		  
-.		{ str.append(yytext());}
+		}
+	}
+	"["{Label}" " 	
+	{ 
+		/* System.err.println("PhraseLabel open " + yytext()); */
+		count++; 
+		str.append(yytext());
+	}
+	.		{ str.append(yytext());}
 }
 
-<FUNC> {
-" "{Func}"}"	{ 
-		  /* System.err.println("Func close " + yytext()); */
-		  funcCount--; 
-		  str.append(yytext());
-		  if (funcCount == 0) { 
+<FUNC> 
+{
+	" "{Func}"}"	
+	{
+		/* System.err.println("Func close " + yytext()); */
+		funcCount--; 
+		str.append(yytext());
+		if (funcCount == 0) 
+		{ 
 			out.write(str.toString());
 			out.write("\n");
 			str.setLength(0);
 			yybegin(YYINITIAL);
-		  }
-	  	}
-"{"{Func}" " 	{ 
-		  /* System.err.println("Func open2 " + yytext()); */
-		  funcCount++; str.append(yytext());
-		}	  	
-.		{ str.append(yytext());}
-
+		}
+	}
+	"{"{Func}" " 	
+	{ 
+		/* System.err.println("Func open2 " + yytext()); */
+		funcCount++; str.append(yytext());
+	}	  	
+	.	{ str.append(yytext());}
 }

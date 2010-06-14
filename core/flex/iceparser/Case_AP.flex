@@ -32,7 +32,7 @@ import java.io.*;
 %class Case_AP
 %standalone
 %line
-
+%extends IceParserTransducer
 %unicode
 
 %{

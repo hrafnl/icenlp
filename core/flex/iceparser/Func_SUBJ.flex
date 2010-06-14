@@ -35,7 +35,7 @@ import java.io.*;
 %class Func_SUBJ
 %standalone
 %line
-
+%extends IceParserTransducer
 %unicode
 
 %{

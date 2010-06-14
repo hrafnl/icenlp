@@ -39,6 +39,7 @@ public class IceParserFacade
     private Phrase_AP ap_scn;
     private Phrase_APs aps_scn;
     private Phrase_NP np_scn;
+	private Phrase_NP2 np2_scn;
     private Phrase_VP vp_scn;
     private Case_AP cap_scn;
     private Case_NP cnp_scn;
@@ -68,6 +69,7 @@ public class IceParserFacade
         ap_scn = new Phrase_AP(sr);
         aps_scn = new Phrase_APs(sr);
         np_scn = new Phrase_NP(sr);
+		np2_scn = new Phrase_NP2(sr);
         vp_scn = new Phrase_VP(sr);
         cap_scn = new Case_AP(sr);
         cnp_scn = new Case_NP(sr);
@@ -100,8 +102,11 @@ public class IceParserFacade
 	{
 		return parse( text, include_func, false );
 	}
-
 	public String parse( String text, boolean include_func, boolean one_phrase_per_line ) throws IOException
+	{
+		return parse( text, include_func, one_phrase_per_line, false );
+	}
+	public String parse( String text, boolean include_func, boolean one_phrase_per_line , boolean agreement) throws IOException
 	{
 		StringReader sr = new StringReader( text );
 		StringWriter sw = new StringWriter( );
@@ -185,6 +190,14 @@ public class IceParserFacade
         np_scn.yyclose();
         np_scn.yyreset(sr);
         np_scn.parse(sw);
+		
+		if(agreement)
+		{
+			sr = new StringReader( sw.toString() );
+			sw = new StringWriter();
+
+			
+		}
 
         // --------------------------------
 		//print( "Phrase_VP" );

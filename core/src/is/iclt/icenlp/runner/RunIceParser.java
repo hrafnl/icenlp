@@ -36,6 +36,7 @@ public class RunIceParser {
     private boolean includeFunc = false;
     private boolean phrasePerLine = false;
     private boolean standardInputOutput=false;
+	private boolean agreement=false;
 
     public void getParam(String[] args)
     {
@@ -53,6 +54,8 @@ public class RunIceParser {
 				includeFunc = true;
 			else if( args[i].equals( "-l" ) )
 				phrasePerLine = true;
+			if( args[i].equals( "-a" ) )
+				agreement = true;
         }
     }
 
@@ -65,6 +68,7 @@ public class RunIceParser {
        System.out.println("-f      annotate functions");
        System.out.println("-l      one phrase/function per line in the output");
        System.out.println("        else the output is one sentence per line");
+	   System.out.println( "-a 	Check if the case of nouns agree."	 );
        System.exit(0);
     }
 
@@ -103,7 +107,7 @@ public class RunIceParser {
                 count++;
                 if (!standardInputOutput && count%500==0)
                     System.out.print("Lines: " + count + "\r");
-                bw.write(ipf.parse(str, includeFunc, phrasePerLine));
+                bw.write(ipf.parse(str, includeFunc, phrasePerLine, agreement));
                 bw.write("\n");
             }
             bw.flush();

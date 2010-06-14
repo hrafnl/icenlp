@@ -29,7 +29,8 @@ import java.io.*;
 %public
 %class Preprocess
 %standalone
-%line
+%line    
+%extends IceParserTransducer
 
 %unicode
 

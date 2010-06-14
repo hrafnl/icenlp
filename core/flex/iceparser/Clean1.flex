@@ -39,7 +39,7 @@ import java.io.*;
 %class Clean1
 %standalone
 %line
-
+%extends IceParserTransducer
 %unicode
 
 %{

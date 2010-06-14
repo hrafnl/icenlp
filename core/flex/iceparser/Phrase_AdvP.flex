@@ -29,7 +29,7 @@ import java.io.*;
 %class Phrase_AdvP
 %standalone
 %line
-
+%extends IceParserTransducer
 %unicode
 
 %{

@@ -29,7 +29,7 @@ import java.io.*;
 %class Func_COMP
 %standalone
 %line
-
+%extends IceParserTransducer
 %unicode
 
 %{

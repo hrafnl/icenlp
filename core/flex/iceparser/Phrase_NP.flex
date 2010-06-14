@@ -56,29 +56,156 @@
 
 package is.iclt.icenlp.core.iceparser;
 import java.io.*;
+import java.util.*;
 %%
 
 %public
 %class Phrase_NP
 %standalone
 %line
-
+%extends IceParserTransducer
 %unicode
 
 %{
-  String NPOpen=" [NP ";
-  String NPClose=" NP] ";
-  
-  //java.io.Writer out = new BufferedWriter(new OutputStreamWriter(System.out, "UTF-8"));
-  java.io.Writer out = new BufferedWriter(new OutputStreamWriter(System.out));
-      
-  public void parse(java.io.Writer _out) throws java.io.IOException
-  {
-      	out = _out;
-      	while (!zzAtEOF) 
-      	    yylex();
-  }
-  
+	String NPOpen=" [NP ";
+	String NPClose=" NP] ";
+	boolean doCheck = false;  // -a parameter attribute	
+
+	//java.io.Writer out = new BufferedWriter(new OutputStreamWriter(System.out, "UTF-8"));
+	java.io.Writer out = new BufferedWriter(new OutputStreamWriter(System.out));
+      	
+	public void set_doCheck(boolean option)
+	{
+		doCheck = option;
+	}
+	public void parse(java.io.Writer _out) throws java.io.IOException
+	{
+	    	out = _out;
+	    	while (!zzAtEOF) 
+	    	    yylex();
+	}
+
+	private String FinalCheck(String originalStr)
+	{
+		if(!doCheck)
+		{
+			return NPOpen + originalStr + NPClose;
+		}
+		String tokenlessStr = RemoveTokens(originalStr);
+		boolean allTheSame = CheckGenNumCase(tokenlessStr);
+
+		if(allTheSame)
+		{
+			return NPOpen + originalStr + NPClose;
+		}
+		else
+		{
+			return originalStr;
+		}
+	}
+	public static String RemoveTokens(String str)
+	{
+		str = RecursiveTokenRemover("[", str);
+		str = new StringBuffer(str).reverse().toString();
+		str = RecursiveTokenRemover("]", str);
+		str = new StringBuffer(str).reverse().toString();
+		str = RemoveSpacesAndWords(str);
+		
+		return str;
+	}
+	
+	public static String RecursiveTokenRemover(String token, String str)
+	{
+		if(str.indexOf(token) == -1)
+		{
+			return str;
+		}
+		
+		String before, middle, after;
+		
+		before = str.substring(0, str.indexOf(token));
+		middle = str.substring(str.indexOf(token), str.length());
+		after = middle.substring(middle.indexOf(" "), middle.length());
+		
+		str = before+after;
+
+		return RecursiveTokenRemover(token, str);
+	}
+	public static String RemoveSpacesAndWords(String str)
+	{
+		String [] temp = null;
+		temp = str.split(" ");
+		str = "";
+		int wordNr = 0;
+		for(int i=0; i < temp.length; i++)
+		{
+			if(temp[i].length() > 1)
+			{	
+				wordNr++;
+				if(wordNr %2 !=1)
+				{
+					str += temp[i] + " ";	
+				}
+			}
+		}
+
+		return str;
+	}	
+	
+	public static int GetModifier(String letter)
+	{
+		if(letter.equals("n") || letter.equals("l") || letter.equals("g") )
+			return 0;
+		if(letter.equals("f") || letter.equals("t"))
+			return 1;
+
+		return -1;
+	}
+	public static Boolean CheckGenNumCase(String str)
+	{
+		boolean allTheSame = true;
+		String [] tags = null;
+		tags = str.split(" ");
+
+		for(int i=0; i<tags.length; i++)
+		{
+			for(int x=i+1; x<tags.length; x++)
+			{
+				int mod1, mod2;
+			
+				mod1 = GetModifier(tags[i].substring(0,1));
+				mod2 = GetModifier(tags[x].substring(0,1));
+
+				if(mod1 == -1 || mod2 == -1) continue;
+
+				//ef t þá verður 2 sæti að vera f
+			
+				if(tags[i].length() < 4+mod1 || tags[x].length() < 4+mod2)
+				{
+					continue;
+				}
+
+
+				String gen1,num1,case1, gen2,num2,case2;
+
+				gen1 = tags[i].substring(1+mod1, 2+mod1);
+				num1 = tags[i].substring(2+mod1, 3+mod1);
+				case1 = tags[i].substring(3+mod1, 4+mod1);
+			
+				gen2 = tags[x].substring(1+mod2, 2+mod2);
+				num2 = tags[x].substring(2+mod2, 3+mod2);
+				case2 = tags[x].substring(3+mod2, 4+mod2);
+
+				if( !gen1.equals(gen2) || !num1.equals(num2) || !case1.equals(case2))
+				{	
+					allTheSame = false;
+				}
+			}
+		}
+
+		return allTheSame;
+	}
+
 %}
 
 %eof{
@@ -134,7 +261,12 @@ NounPhrase = {Hvad} | {HvadaNP} | {ReflNP} | {ArticleNP} | {DemonNP} | {IndefNP}
 %%
 
 {MWE}		{ out.write(yytext());} 		/* Don't touch multi-word expression */ 
-{NounPhrase}	{ out.write(NPOpen+yytext()+NPClose);}
+
+{NounPhrase}	{ String str = yytext();		
+
+		  out.write(FinalCheck(str));
+		}
+
 "\n"		{ //System.err.print("Reading line: " + Integer.toString(yyline+1) + "\r"); 
 		out.write("\n"); }
 .		{ out.write(yytext());}

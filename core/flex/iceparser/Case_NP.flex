@@ -35,7 +35,7 @@ import java.io.*;
 %class Case_NP
 %standalone
 %line
-
+%extends IceParserTransducer
 %unicode
 
 %{

@@ -6,6 +6,7 @@
 ./flexit.sh Phrase_AP
 ./flexit.sh Phrase_APs
 ./flexit.sh Phrase_NP
+./flexit.sh Phrase_NP2
 ./flexit.sh Phrase_NPs
 ./flexit.sh Case_NP
 ./flexit.sh Case_AP
