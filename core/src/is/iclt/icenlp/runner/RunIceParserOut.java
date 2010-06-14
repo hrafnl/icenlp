@@ -77,7 +77,7 @@ public class RunIceParserOut
 		System.out.println("-f      annotate functions");
 		System.out.println("-l      one phrase/function per line in the output");
 		System.out.println("        else the output is one sentence per line");
-		System.out.println( "-a 	Check if the case of nouns agree."	 );
+		System.out.println( "-a 	rely on feature agreement"	 );
 		System.exit(0);
 	}
 
