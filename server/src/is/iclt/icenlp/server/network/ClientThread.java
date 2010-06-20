@@ -109,13 +109,17 @@ public class ClientThread implements Runnable {
 						java.lang.StringBuilder b = new StringBuilder();
 						
 						String[] lines = strFromClient.split("\n");
+						String res = "";
 						for(String s : lines){
 							String strOUt = this.outputGenerator.generateOutput(s);
+							res += this.outputGenerator.generateOutput(s) + "\n";
 							b.append(strOUt+"\n");
 						}
 				
-						taggedString = b.toString();
+						//taggedString = b.toString();
+						taggedString = res;
 						taggedString = taggedString.substring(0, taggedString.length()-1);
+						taggedString = taggedString + "[][\n]";
 						
 						if (this.debugMode)
 							System.out.println("[debug] Reply string from IceNLP that will be sent to client is: " + taggedString);

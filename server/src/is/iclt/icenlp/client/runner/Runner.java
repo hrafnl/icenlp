@@ -4,6 +4,8 @@ import is.iclt.icenlp.client.network.ClientNetworkHandler;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Runner {
 
@@ -31,33 +33,31 @@ public class Runner {
             }
         }
         try {
-            // Let's read from the std.
+            
+        	ClientNetworkHandler handler = new ClientNetworkHandler(host, port);
+
             String inLine;
 
             InputStreamReader reader = new InputStreamReader(System.in, "UTF8");
             BufferedReader br = new BufferedReader(reader);
 
-            String inString = "";
+            List<String> strsin = new LinkedList<String>();
 
-            while ((inLine = br.readLine()) != null)
-                inString += inLine + "\n";
-
-            if (inString.length() >= 1)
-                inString = inString.substring(0, inString.length() - 1);
-
-            if (inString.length() == 0) {
-                printHelp();
-                return;
+            
+            while ((inLine = br.readLine()) != null){
+            	if(!inLine.equals("]")){
+            		strsin.add(inLine);
+            		
+            	}
+            	
             }
+            
+            for(String s : strsin){
+            	s = s.replace(".[][\n]", "");
+            	System.out.print(handler.tagString(s));
 
-            ClientNetworkHandler handler = new ClientNetworkHandler(host, port);
-            
-            // Fix for Apertium text processor. We must find a workaround for this problem.
-            inString = inString.substring(0, inString.length()-6);
-            //System.out.println("FOOO");
-                        
-            
-            System.out.println(handler.tagString(inString));
+            	
+            }
         }
         catch (Exception ex) {
             System.out.println(ex);

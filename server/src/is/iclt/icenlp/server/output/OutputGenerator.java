@@ -11,7 +11,6 @@ import is.iclt.icenlp.IceParser.IceParser;
 import is.iclt.icenlp.common.configuration.Configuration;
 import is.iclt.icenlp.core.utils.MappingLexicon;
 import is.iclt.icenlp.core.utils.Word;
-import is.iclt.icenlp.core.utils.WordList;
 import is.iclt.icenlp.icetagger.IceTagger;
 import is.iclt.icenlp.icetagger.IceTaggerException;
 
@@ -188,21 +187,24 @@ public class OutputGenerator {
 
 				String part = null;
 
+				
 				if (word.getLexeme().equals("\\"))
 				{
-					nextSlash = true;
-					continue;
+					if(!nextSlash){
+						nextSlash = true;
+						continue;
+					}
 				}
 				
 				
-				if (word.isOnlyOutputLexeme()){
-					
-					//word.setLexeme("\\"+word.getLexeme());
+				
+				if (word.isOnlyOutputLexeme())
+				{
 					if(nextSlash){
 						word.setLexeme("\\" + word.getLexeme());
+						word.linkedToPreviousWord = true;
 						nextSlash = false;
 					}
-					System.out.println("-- OUTPUT LEFT ALONE " + word.getLexeme());
 					part = word.getLexeme();
 				}
 				
@@ -225,7 +227,7 @@ public class OutputGenerator {
 						String res = fstp.biltrans(check, true);
 						if (res.startsWith("^@")) {
 							if (this.configuration.debugMode()){
-								System.out.println("[debug] word " + word.getLemma() + " not found in bidix2");
+								System.out.println("[debug] word " + word.getLemma() + " not found in bidix");
 								System.out.println(word.getLexeme().length());
 							}
 
