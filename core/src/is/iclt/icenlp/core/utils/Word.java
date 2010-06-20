@@ -108,6 +108,9 @@ public class Word
     public boolean isOnlyOutputLexeme() {
 		return onlyOutputLexeme;
 	}
+
+    
+    
 	
 	/**
 	 * Set function for onlyOutputLexeme member variable. When this value is set, then

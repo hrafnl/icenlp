@@ -352,10 +352,16 @@ public class MappingLexicon {
 					{
 						System.out.println("[debug] tagmapping rule applied: " + word.getTag() + " -> " + mappedTag + ", on " + word.getLexeme());
 					}
-					if(word.getLexeme().length() == 1){
+					if(word.getLexeme().length() == 1)
+					{
 						Character c = word.getLexeme().charAt(0);
 						if(!Character.isLetter(c))
-							word.setOnlyOutputLexeme(true);
+						{
+							System.out.println("::: fann einsetu " + word.getLexeme() + word.getLemma());
+							if(!word.getLexeme().equals(word.getTag()))
+								word.setOnlyOutputLexeme(true);
+						
+						}
 					}
 
 					word.setTag(mappedTag);
@@ -376,7 +382,7 @@ public class MappingLexicon {
 					// If this was a word of length one.
 					if (this.leave_lexemes_of_length_one_unchanged) 
 					{
-						System.out.println(word.getLexeme() + ": " + word.getLexeme().length());
+						//System.out.println(word.getLexeme() + ": " + word.getLexeme().length());
 						if (word.getLexeme().length() == 1) 
 						{
 							if (this.showAppliedActions)
