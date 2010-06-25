@@ -31,56 +31,8 @@ import java.io.*;
  * Runs IceParser.
  * @author Hrafn Loftsson
  */
-public class RunIceParser {
-    private String inputFile=null, outputFile=null;
-    private boolean includeFunc = false;
-    private boolean phrasePerLine = false;
-    private boolean standardInputOutput=false;
-	private boolean agreement=false;
-
-    public void getParam(String[] args)
-    {
-        for( int i = 0; i <= args.length - 1; i++ )
-		{
-            if( args[i].equals( "-help" ) ) {
-                printHeader();
-                showParametersExit();
-            }
-            else if( args[i].equals( "-i" ) )
-				inputFile = args[i + 1];
-			else if( args[i].equals( "-o" ) )
-				outputFile = args[i + 1];
-			if( args[i].equals( "-f" ) )
-				includeFunc = true;
-			else if( args[i].equals( "-l" ) )
-				phrasePerLine = true;
-			if( args[i].equals( "-a" ) )
-				agreement = true;
-        }
-    }
-
-    private void showParametersExit()
-    {
-       System.out.println("Arguments: ");
-       System.out.println( "-help (shows this info)" );
-       System.out.println( "-i <input file>" );
-	   System.out.println( "-o <output file>" );
-       System.out.println("-f      annotate functions");
-       System.out.println("-l      one phrase/function per line in the output");
-       System.out.println("        else the output is one sentence per line");
-	   System.out.println( "-a 	Check if the case of nouns agree."	 );
-       System.exit(0);
-    }
-
-    private void printHeader()
-    {
-        System.out.println("***************************************************");
-        System.out.println("*  IceParser - An incremental finite-state parser *");
-        System.out.println("*  Version 1.1                                    *");
-        System.out.println("*  Copyright (C) 2006-2010, Hrafn Loftsson        *" );
-        System.out.println("***************************************************");
-    }
-
+public class RunIceParser extends RunIceParserBase
+{
     private void parse() throws IOException
     {
         BufferedReader br;
@@ -94,7 +46,8 @@ public class RunIceParser {
             br = FileEncoding.getReader(System.in);
             bw = FileEncoding.getWriter(System.out);
         }
-        else {
+        else 
+		{
            printHeader(); 
            br = FileEncoding.getReader(inputFile);
            bw = FileEncoding.getWriter(outputFile);
@@ -103,13 +56,14 @@ public class RunIceParser {
         }
         //System.out.println( "Default file encoding: " + FileEncoding.getEncoding());
         int count=0;
-        while((str = br.readLine()) != null) {
-                count++;
-                if (!standardInputOutput && count%500==0)
-                    System.out.print("Lines: " + count + "\r");
-                bw.write(ipf.parse(str, includeFunc, phrasePerLine, agreement));
-                bw.write("\n");
-            }
+        while((str = br.readLine()) != null) 
+		{
+			count++;
+			if (!standardInputOutput && count%500==0)
+				System.out.print("Lines: " + count + "\r");
+			bw.write(ipf.parse(str, includeFunc, phrasePerLine, agreement));
+			bw.write("\n");
+		}
             bw.flush();
             if (!standardInputOutput && count%500==0)
                 System.out.println("Lines: " + count);
@@ -117,7 +71,8 @@ public class RunIceParser {
             bw.close();
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException 
+	{
 
         RunIceParser runner = new RunIceParser();
 

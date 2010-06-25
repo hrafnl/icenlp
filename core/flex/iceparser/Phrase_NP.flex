@@ -57,6 +57,7 @@
 package is.iclt.icenlp.core.iceparser;
 import java.io.*;
 import java.util.*;
+import is.iclt.icenlp.core.utils.IceParserUtils;
 %%
 
 %public
@@ -69,14 +70,14 @@ import java.util.*;
 %{
 	String NPOpen=" [NP ";
 	String NPClose=" NP] ";
-	boolean doCheck = false;  // -a parameter attribute	
-
+	boolean agreement = false;  // -a parameter attribute	;
+	
 	//java.io.Writer out = new BufferedWriter(new OutputStreamWriter(System.out, "UTF-8"));
 	java.io.Writer out = new BufferedWriter(new OutputStreamWriter(System.out));
       	
-	public void set_doCheck(boolean option)
+	public void set_doAgreementCheck(boolean option)
 	{
-		doCheck = option;
+		agreement = option;
 	}
 	public void parse(java.io.Writer _out) throws java.io.IOException
 	{
@@ -84,10 +85,9 @@ import java.util.*;
 	    	while (!zzAtEOF) 
 	    	    yylex();
 	}
-
 	private String FinalCheck(String originalStr)
 	{
-		if(!doCheck)
+		if(!agreement)
 		{
 			return NPOpen + originalStr + NPClose;
 		}
@@ -105,53 +105,14 @@ import java.util.*;
 	}
 	public static String RemoveTokens(String str)
 	{
-		str = RecursiveTokenRemover("[", str);
+		str = IceParserUtils.RemoveFromSymbolToWhitespace("[", str);
 		str = new StringBuffer(str).reverse().toString();
-		str = RecursiveTokenRemover("]", str);
+		str = IceParserUtils.RemoveFromSymbolToWhitespace("]", str);
 		str = new StringBuffer(str).reverse().toString();
-		str = RemoveSpacesAndWords(str);
-		
+		str = IceParserUtils.RemoveSpacesAndWords(str);
+			
 		return str;
 	}
-	
-	public static String RecursiveTokenRemover(String token, String str)
-	{
-		if(str.indexOf(token) == -1)
-		{
-			return str;
-		}
-		
-		String before, middle, after;
-		
-		before = str.substring(0, str.indexOf(token));
-		middle = str.substring(str.indexOf(token), str.length());
-		after = middle.substring(middle.indexOf(" "), middle.length());
-		
-		str = before+after;
-
-		return RecursiveTokenRemover(token, str);
-	}
-	public static String RemoveSpacesAndWords(String str)
-	{
-		String [] temp = null;
-		temp = str.split(" ");
-		str = "";
-		int wordNr = 0;
-		for(int i=0; i < temp.length; i++)
-		{
-			if(temp[i].length() > 1)
-			{	
-				wordNr++;
-				if(wordNr %2 !=1)
-				{
-					str += temp[i] + " ";	
-				}
-			}
-		}
-
-		return str;
-	}	
-	
 	public static int GetModifier(String letter)
 	{
 		if(letter.equals("n") || letter.equals("l") || letter.equals("g") )
@@ -202,10 +163,8 @@ import java.util.*;
 				}
 			}
 		}
-
 		return allTheSame;
 	}
-
 %}
 
 %eof{
@@ -260,12 +219,13 @@ NounPhrase = {Hvad} | {HvadaNP} | {ReflNP} | {ArticleNP} | {DemonNP} | {IndefNP}
 
 %%
 
-{MWE}		{ out.write(yytext());} 		/* Don't touch multi-word expression */ 
+{MWE}			{ out.write(yytext());} 		/* Don't touch multi-word expression */ 
 
-{NounPhrase}	{ String str = yytext();		
-
-		  out.write(FinalCheck(str));
-		}
+{NounPhrase}
+{
+	String str = yytext();		
+	out.write(FinalCheck(str));
+}
 
 "\n"		{ //System.err.print("Reading line: " + Integer.toString(yyline+1) + "\r"); 
 		out.write("\n"); }

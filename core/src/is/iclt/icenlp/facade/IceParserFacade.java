@@ -186,7 +186,10 @@ public class IceParserFacade
 		//print( "Phrase_NP" );
 		sr = new StringReader( sw.toString() );
 		sw = new StringWriter( );
-
+		if(agreement)
+		{
+			np_scn.set_doAgreementCheck(true);
+		}
         np_scn.yyclose();
         np_scn.yyreset(sr);
         np_scn.parse(sw);
@@ -195,8 +198,10 @@ public class IceParserFacade
 		{
 			sr = new StringReader( sw.toString() );
 			sw = new StringWriter();
-
 			
+			np2_scn.yyclose();
+			np2_scn.yyreset(sr);
+			np2_scn.parse(sw);
 		}
 
         // --------------------------------
@@ -269,7 +274,10 @@ public class IceParserFacade
 			//print( "Func_SUBJ" );
 			sr = new StringReader( sw.toString() );
 			sw = new StringWriter( );
-
+			if(agreement)
+			{
+				f_subj_scn.set_doAgreementCheck(true);
+			}
             f_subj_scn.yyclose();
             f_subj_scn.yyreset(sr);
             f_subj_scn.parse(sw);

@@ -27,69 +27,8 @@ import is.iclt.icenlp.core.iceparser.*;
 
 import java.io.*;
 
-public class RunIceParserOut
+public class RunIceParserOut extends RunIceParserBase
 {	
-	private String inputFile=null, outputFile=null, outputPath=null;
-	private boolean includeFunc = false;
-	private boolean phrasePerLine = false;
-    private boolean agreement=false;
-
-	public void getParam(String[] args)
-	{
-		if(args.length < 6)
-		{
-			showParametersExit();
-		}
-		for( int i = 0; i < args.length; i++ )
-		{
-			if( args[i].equals( "-help" ) ) 
-			{
-				printHeader();
-				showParametersExit();
-		    }
-		    if( args[i].equals( "-i" ) )
-				inputFile = args[i + 1];
-			if( args[i].equals( "-o" ) )
-				outputFile = args[i + 1];
-			if(args[i].equals( "-p" ) )
-				outputPath = args[i + 1];
-			if( args[i].equals( "-f" ) )
-				includeFunc = true;
-			if( args[i].equals( "-l" ) )
-				phrasePerLine = true;
-			if( args[i].equals( "-a" ) )
-				agreement = true;
-
-			
-		}
-		if(inputFile == null || outputFile == null || outputPath == null)
-		{
-			showParametersExit();
-		}
-	}
-	private void showParametersExit()
-	{
-		System.out.println("Arguments: ");
-		System.out.println( "-help (shows this info)" );
-		System.out.println( "-i <input file>" );
-	   	System.out.println( "-o <output file>" );
-		System.out.println( "-p <output Path>" );
-		System.out.println("-f      annotate functions");
-		System.out.println("-l      one phrase/function per line in the output");
-		System.out.println("        else the output is one sentence per line");
-		System.out.println( "-a 	rely on feature agreement"	 );
-		System.exit(0);
-	}
-
-	private void printHeader()
-	{
-		System.out.println("***************************************************");
-		System.out.println("*  IceParser - An incremental finite-state parser *");
-		System.out.println("*  Version 1.1                                    *");
-		System.out.println("*  Copyright (C) 2006-2010, Hrafn Loftsson        *");
-		System.out.println("***************************************************");
-	}
-	
 	private void readwrite(IceParserTransducer klasi, String inputFileAndPath, String outputFileAndPath) throws IOException
 	{
 		BufferedReader br;
@@ -118,7 +57,11 @@ public class RunIceParserOut
 		bw.close();
 	}
     private void parse() throws IOException
-    {		
+    {	
+		if(inputFile == null || outputFile == null || outputPath == null)
+		{
+			showParametersExit();
+		}
 		StringReader sr;
 		String str;			
 
@@ -180,7 +123,7 @@ public class RunIceParserOut
 		Phrase_NP np = new Phrase_NP(sr);
 		if(agreement)
 		{
-			np.set_doCheck(true);	
+			np.set_doAgreementCheck(true);	
 		}
 		readwrite(np, outputPath+"/"+"phrase_APs.out", outputPath+"/"+"phrase_NP.out");
 		
@@ -242,8 +185,12 @@ public class RunIceParserOut
 
 
 			// func_Subj															-- func_Subj
-		
+
 			Func_SUBJ f_subj = new Func_SUBJ(sr);
+			if(agreement)
+			{
+				f_subj.set_doAgreementCheck(true);	
+			}
 			readwrite(f_subj, outputPath+"/"+"func_qual.out", outputPath+"/"+"func_subj.out");				
 	
 
@@ -294,7 +241,6 @@ public class RunIceParserOut
 			Phrase_Per_Line ppl = new Phrase_Per_Line(sr);
 			readwrite(ppl, outputPath+"/"+"clean2.out", outputPath+"/"+outputFile);	
 		}
-
 	}
     public static void main(String[] args) throws IOException 
 	{
