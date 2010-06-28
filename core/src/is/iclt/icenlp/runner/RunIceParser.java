@@ -48,11 +48,15 @@ public class RunIceParser extends RunIceParserBase
         }
         else 
 		{
+			if(inputFile == null || outputFile == null || outputPath == null)
+			{
+				showParametersExit();
+			}
            printHeader(); 
            br = FileEncoding.getReader(inputFile);
-           bw = FileEncoding.getWriter(outputFile);
+           bw = FileEncoding.getWriter(outputPath+"/"+outputFile);
            System.out.println( "Input file: " + inputFile );
-           System.out.println( "Output file: " + outputFile );
+           System.out.println( "Output file: " + outputPath+"/"+outputFile );
         }
         //System.out.println( "Default file encoding: " + FileEncoding.getEncoding());
         int count=0;
