@@ -108,11 +108,11 @@ public class IceParserFacade
 	}
 	public String parse( String text, boolean include_func, boolean one_phrase_per_line , boolean agreement) throws IOException
 	{
+		// --------------------------------
+        //print( "preprocess" );
+
 		StringReader sr = new StringReader( text );
 		StringWriter sw = new StringWriter( );
-
-// --------------------------------
-        //print( "Phrase_MWE" );
 
         preprocess_scn.yyclose();
         preprocess_scn.yyreset(sr);
@@ -196,6 +196,8 @@ public class IceParserFacade
 		
 		if(agreement)
 		{
+			// --------------------------------
+        	//print( "phrase_NP2" );
 			sr = new StringReader( sw.toString() );
 			sw = new StringWriter();
 			
