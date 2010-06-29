@@ -73,6 +73,7 @@ public class RunIceParserOut extends RunIceParserBase
 		System.out.println( "Phrase per line on: " + phrasePerLine);
 		System.out.println( "annotate functions on: " + includeFunc);
 		System.out.println( "Agreement on: " + agreement);
+		System.out.println( "Ambiguity on: " + ambiguous);
 
 		
 		sr = new StringReader("empty");
@@ -124,6 +125,10 @@ public class RunIceParserOut extends RunIceParserBase
 		if(agreement)
 		{
 			np.set_doAgreementCheck(true);	
+		}
+		if(ambiguous)
+		{
+			np.set_markAmbiguous(true);
 		}
 		readwrite(np, outputPath+"/"+"phrase_APs.out", outputPath+"/"+"phrase_NP.out");
 		

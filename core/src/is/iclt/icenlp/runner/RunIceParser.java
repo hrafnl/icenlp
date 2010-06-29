@@ -65,7 +65,7 @@ public class RunIceParser extends RunIceParserBase
 			count++;
 			if (!standardInputOutput && count%500==0)
 				System.out.print("Lines: " + count + "\r");
-			bw.write(ipf.parse(str, includeFunc, phrasePerLine, agreement));
+			bw.write(ipf.parse(str, includeFunc, phrasePerLine, agreement, ambiguous));
 			bw.write("\n");
 		}
             bw.flush();
