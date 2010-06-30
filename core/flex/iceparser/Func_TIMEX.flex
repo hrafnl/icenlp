@@ -100,8 +100,15 @@ TemporalDat = {TimeDat}{WhiteSpace}+{AdvPWords}
 {Temporal}	{out.write(TempOpen+yytext()+TempClose);}	
 
 {TemporalDat}	{	/* Find where the AdvP started and insert the Temporal label */
-			StringSearch.splitString(yytext(),"[AdvP", true, -1);
-			out.write(TempOpen+StringSearch.firstString+TempClose+StringSearch.nextString);
+			theIndex = StringSearch.splitString(yytext(),"[AdvP", true, -1);
+			if(theIndex == -1)
+			{	
+				out.write(yytext());
+			}
+			else
+			{
+				out.write(TempOpen+StringSearch.firstString+TempClose+StringSearch.nextString);
+			}
 		}
 
 "\n"		{ //System.err.print("Reading line: " + Integer.toString(yyline+1) + "\r"); 

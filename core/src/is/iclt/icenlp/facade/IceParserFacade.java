@@ -110,7 +110,7 @@ public class IceParserFacade
 	{
 		return parse( text, include_func, one_phrase_per_line, agreement, false);
 	}
-	public String parse( String text, boolean include_func, boolean one_phrase_per_line , boolean agreement, boolean ambiguous) throws IOException
+	public String parse( String text, boolean include_func, boolean one_phrase_per_line , boolean agreement, boolean markGrammarError) throws IOException
 	{
 		// --------------------------------
         //print( "preprocess" );
@@ -194,9 +194,9 @@ public class IceParserFacade
 		{
 			np_scn.set_doAgreementCheck(true);
 		}
-		if(ambiguous)
+		if(markGrammarError)
 		{
-			np_scn.set_markAmbiguous(true);
+			np_scn.set_markGrammarError(true);
 		}
         np_scn.yyclose();
         np_scn.yyreset(sr);

@@ -70,11 +70,11 @@ import is.iclt.icenlp.core.utils.IceParserUtils;
 %{
 	String NPOpen=" [NP ";
 	String NPClose=" NP] ";
-	String ambNPOpen=" [NP? ";
-	String ambNPClose=" NP?] ";
+	String ErrNPOpen=" [NP? ";
+	String ErrNPClose=" NP?] ";
 
 	boolean agreement = false;  // -a parameter attribute	;
-	boolean ambiguous = false;
+	boolean markGrammarError = false;
 	
 	//java.io.Writer out = new BufferedWriter(new OutputStreamWriter(System.out, "UTF-8"));
 	java.io.Writer out = new BufferedWriter(new OutputStreamWriter(System.out));
@@ -83,9 +83,9 @@ import is.iclt.icenlp.core.utils.IceParserUtils;
 	{
 		agreement = option;
 	}
-	public void set_markAmbiguous(boolean option)
+	public void set_markGrammarError(boolean option)
 	{
-		ambiguous = option;
+		markGrammarError = option;
 	}
 	public void parse(java.io.Writer _out) throws java.io.IOException
 	{
@@ -95,7 +95,7 @@ import is.iclt.icenlp.core.utils.IceParserUtils;
 	}
 	private String FinalCheck(String originalStr)
 	{
-		if(!agreement && !ambiguous)//do nothing
+		if(!agreement && !markGrammarError)//do nothing
 		{
 			return NPOpen + originalStr + NPClose;
 		}
@@ -108,8 +108,8 @@ import is.iclt.icenlp.core.utils.IceParserUtils;
 		}
 		else
 		{
-			if(ambiguous)
-				return ambNPOpen + originalStr + ambNPClose;
+			if(markGrammarError)
+				return ErrNPOpen + originalStr + ErrNPClose;
 
 			return originalStr;
 		}

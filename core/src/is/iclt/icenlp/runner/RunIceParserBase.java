@@ -27,7 +27,7 @@ public class RunIceParserBase
 	protected boolean includeFunc = false;
 	protected boolean phrasePerLine = false;
     protected boolean agreement=false;
-	protected boolean ambiguous=false;
+	protected boolean markGrammarError=false;
     protected boolean standardInputOutput=false;
 
 	protected void getParam(String[] args)
@@ -51,13 +51,11 @@ public class RunIceParserBase
 				phrasePerLine = true;
 			if( args[i].equals( "-a" ) )
 				agreement = true;	
-			if( args[i].equals( "-g" ) )
-				ambiguous = true;		
-		}
-		if(agreement==false && ambiguous==true)
-		{
-			System.out.println("You can not check for ambiguity without checking for agreement");
-			System.exit(0);
+			if( args[i].equals( "-e" ) )
+			{
+				agreement = true;	
+				markGrammarError = true;		
+			}
 		}
 	}
 	protected void showParametersExit()
@@ -71,7 +69,7 @@ public class RunIceParserBase
 		System.out.println( "-l      one phrase/function per line in the output");
 		System.out.println( "        else the output is one sentence per line");
 		System.out.println( "-a 	rely on feature agreement"	 );
-		System.out.println( "-g 	mark ambiguous noun phrases with [NP? ~ NP?]"	 );
+		System.out.println( "-e 	Mark possible grammar errors"	 );
 		System.exit(0);
 	}
 

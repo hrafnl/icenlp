@@ -112,31 +112,66 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 
 
 {SubjVerbAdvPCompl} 	{ 
-			/* Find where the Adverb phrase ended and insert the COMP label */
-			StringSearch.splitString(yytext(),"AdvP]", true, 5);		
-			out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
+				/* Find where the Adverb phrase ended and insert the COMP label */
+				theIndex = StringSearch.splitString(yytext(),"AdvP]", true, 5);		
+				if(theIndex == -1)
+				{
+					out.write(yytext());
+				}
+				else
+				{
+					out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
+				}
 			} 
 {SubjVerbMWEAdvPCompl}  {
-			/* Find where the second adverb phrase ended and insert the COMP label */
-			StringSearch.splitString(yytext()," AdvP]", true, 6);		
-			out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
+				/* Find where the second adverb phrase ended and insert the COMP label */
+				theIndex = StringSearch.splitString(yytext()," AdvP]", true, 6);		
+				if(theIndex == -1)
+				{
+					out.write(yytext());
+				}
+				else
+				{
+					out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
+				}
 			} 
 
 {SubjVerbNPCompl}	{ 
-			/* Find where the NP phrase ended after the verb phrase and insert the COMP label */
-			StringSearch.splitString2(yytext(),"VPb]","NP]");		
-			out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
+				/* Find where the NP phrase ended after the verb phrase and insert the COMP label */
+				theIndex = StringSearch.splitString2(yytext(),"VPb]","NP]");		
+				if(theIndex == -1)
+				{
+					out.write(yytext());
+				}
+				else
+				{
+					out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
+				}
 			} 			
 
 {SubjVerbCPCompl}	{ 
-			/* Find where the CP phrase ended and insert the COMP label */
-			StringSearch.splitString(yytext(),"CP]", true, 3);		
-			out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
+				/* Find where the CP phrase ended and insert the COMP label */
+				theIndex = StringSearch.splitString(yytext(),"CP]", true, 3);		
+				if(theIndex == -1)
+				{
+					out.write(yytext());
+				}
+				else
+				{
+					out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
+				}
 			}			
 {SubjVerbCompl}	{ 
 			/* Find where the Verb phrase ended and insert the COMP label */
-			StringSearch.splitString(yytext(),"VPb]", false, 4);		
-			out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
+			theIndex = StringSearch.splitString(yytext(),"VPb]", false, 4);		
+			if(theIndex == -1)
+			{
+				out.write(yytext());
+			}
+			else
+			{
+				out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
+			}
 		} 
 /*
 {SubjVerbSpecialCompl}	{ 
@@ -145,7 +180,7 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 			}
 
 {SubjVerbVerbPastCompl}	{ 
-			/* Find where the Verb phrase ended and insert the COMP label */
+			// Find where the Verb phrase ended and insert the COMP label
 			StringSearch.splitString(yytext(),"VPb]", false, 4);		
 			out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 		} 
@@ -159,40 +194,92 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 				if (theIndex == -1) 
 					theIndex = StringSearch.splitString(yytext(),"*SUBJ>}", false, 7); 
 			}
-			out.write(StringSearch.firstString+Comp0Open+StringSearch.nextString+Comp0Close);
+			if(theIndex == -1)
+			{
+				out.write(yytext());
+			}
+			else
+			{
+				out.write(StringSearch.firstString+Comp0Open+StringSearch.nextString+Comp0Close);
+			}
 		} 
 {SubjPPCompl}	{ 
 			/* Find where the Preposition phrase ended and insert the COMP label */
-			StringSearch.splitString(yytext(),"PP]", false, 3);		
-			out.write(StringSearch.firstString+Comp0Open+StringSearch.nextString+Comp0Close);
+			theIndex = StringSearch.splitString(yytext(),"PP]", false, 3);		
+			if(theIndex == -1)
+			{
+				out.write(yytext());
+			}
+			else
+			{
+				out.write(StringSearch.firstString+Comp0Open+StringSearch.nextString+Comp0Close);
+			}
 		} 		
 		
 {VerbSubjCompl}	{ 
 			/* Find where the Subj function ended and insert the COMP label */
-			StringSearch.splitString(yytext(),"*SUBJ<}", false, 7);		
-			out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
+			theIndex = StringSearch.splitString(yytext(),"*SUBJ<}", false, 7);		
+			if(theIndex == -1)
+			{
+				out.write(yytext());
+			}
+			else
+			{
+				out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
+			}
 		} 
 {VerbCompl}	{ 
 			/* Find where the Verb phrase ended and insert the COMP label */
 			theIndex = StringSearch.splitString(yytext(),"VPb]", false, 4);		
-			if (theIndex == -1) {theIndex = StringSearch.splitString(yytext(),"VPi]", false, 4);}
-			out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
+			if (theIndex == -1) 
+			{
+				theIndex = StringSearch.splitString(yytext(),"VPi]", false, 4);
+			}
+			if(theIndex == -1)
+			{
+				out.write(yytext());
+			}
+			else
+			{
+				out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
+			}
 		} 
 {ComplVerb}	{ 
 			/* Find where the Verb phrase started and insert the COMP label */
-			StringSearch.splitString(yytext(),"[VPb", false, -1);		
-			out.write(Comp2Open+StringSearch.firstString+Comp2Close+StringSearch.nextString);
+			theIndex = StringSearch.splitString(yytext(),"[VPb", false, -1);		
+			if(theIndex == -1)
+			{
+				out.write(yytext());
+			}
+			else
+			{
+				out.write(Comp2Open+StringSearch.firstString+Comp2Close+StringSearch.nextString);
+			}
 		} 
 {VerbAdvPCompl}	{ 
 			/* Find where the Adverbial phrase ended and insert the COMP label */
-			StringSearch.splitString(yytext(),"AdvP]", false, 5);		
-			out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
+			theIndex = StringSearch.splitString(yytext(),"AdvP]", false, 5);		
+			if(theIndex == -1)
+			{
+				out.write(yytext());
+			}
+			else
+			{
+				out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
+			}
 		} 
 		
 {VerbPPCompl}	{ 
 			/* Find where the Preposition phrase ended and insert the COMP label */
-			StringSearch.splitString(yytext(),"PP]", false, 3);		
-			out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
+			theIndex = StringSearch.splitString(yytext(),"PP]", false, 3);		
+			if(theIndex == -1)
+			{
+				out.write(yytext());
+			}
+			else
+			{
+				out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
+			}
 		} 
 		
 "\n"		{ //System.err.print("Reading line: " + Integer.toString(yyline+1) + "\r"); 

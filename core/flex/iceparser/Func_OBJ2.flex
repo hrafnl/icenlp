@@ -139,32 +139,46 @@ VerbSubjObjNom = {VPDat}{WhiteSpace}+{FuncSubjectOblique}{WhiteSpace}+{NomSubjec
 			String newStr = matchedStr.replaceAll("\\*OBJ<","*IOBJ<");	/* change to indirect object */
 			
 			if (newStr.contains("PP]")) {	
-				StringSearch.splitString(newStr,"PP]", true, 3);		
+				theIndex = StringSearch.splitString(newStr,"PP]", true, 3);		
 			}
 			else if (newStr.contains("AdvP]")) {	
-				StringSearch.splitString(newStr,"AdvP]", true, 5);		
+				theIndex = StringSearch.splitString(newStr,"AdvP]", true, 5);		
 			}
 			else {
 				/* Find where the FuncObject phrase ended and insert the OBJ label */
-				StringSearch.splitString(newStr,"*IOBJ<}", false, 7);		
+				theIndex = StringSearch.splitString(newStr,"*IOBJ<}", false, 7);		
 			}
-			out.write(StringSearch.firstString+Obj1Open+StringSearch.nextString+Obj1Close);
+			if(theIndex == -1)
+			{
+				out.write(yytext());
+			}
+			else
+			{
+				out.write(StringSearch.firstString+Obj1Open+StringSearch.nextString+Obj1Close);
+			}
 		} 		
 {VerbAccObjDatObj}	{ 
 			/* The first object is the direct object */
 			String matchedStr = yytext();
 			
 			if (matchedStr.contains("PP]")) {	
-				StringSearch.splitString(matchedStr,"PP]", true, 3);		
+				theIndex = StringSearch.splitString(matchedStr,"PP]", true, 3);		
 			}
 			else if (matchedStr.contains("AdvP]")) {	
-				StringSearch.splitString(matchedStr,"AdvP]", true, 5);		
+				theIndex = StringSearch.splitString(matchedStr,"AdvP]", true, 5);		
 			}
 			else {
 				/* Find where the FuncObject phrase ended and insert the IOBJ label */
-				StringSearch.splitString(matchedStr,"*OBJ<}", false, 6);		
+				theIndex = StringSearch.splitString(matchedStr,"*OBJ<}", false, 6);		
 			}
-			out.write(StringSearch.firstString+IObjOpen+StringSearch.nextString+IObjClose);
+			if(theIndex == -1)
+			{
+				out.write(yytext());
+			}
+			else
+			{
+				out.write(StringSearch.firstString+IObjOpen+StringSearch.nextString+IObjClose);
+			}
 		} 		
 
 {ComplObj}	{ 
@@ -172,7 +186,14 @@ VerbSubjObjNom = {VPDat}{WhiteSpace}+{FuncSubjectOblique}{WhiteSpace}+{NomSubjec
 			theIndex = StringSearch.splitString(yytext(),"*COMP<}", true, 7);		
 			if (theIndex == -1)
 				theIndex = StringSearch.splitString(yytext(),"*COMP}", true, 6);			
-			out.write(StringSearch.firstString+Obj1Open+StringSearch.nextString+Obj1Close);
+			if(theIndex == -1)
+			{
+				out.write(yytext());
+			}
+			else
+			{
+				out.write(StringSearch.firstString+Obj1Open+StringSearch.nextString+Obj1Close);
+			}
 		}
 
 {ComplCompl}	{ 
@@ -180,25 +201,52 @@ VerbSubjObjNom = {VPDat}{WhiteSpace}+{FuncSubjectOblique}{WhiteSpace}+{NomSubjec
 			theIndex = StringSearch.splitString(yytext(),"*COMP<}", true, 7);		
 			if (theIndex == -1)
 				theIndex = StringSearch.splitString(yytext(),"*COMP}", true, 6);			
-			out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
+			if(theIndex == -1)
+			{
+				out.write(yytext());
+			}
+			else
+			{
+				out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
+			}
 		}
 		
 {SubjVerbObjNom}  { 
-			StringSearch.splitString(yytext(),"VP]", false, 3);		
-			out.write(StringSearch.firstString+ObjNomOpen+StringSearch.nextString+ObjNomClose);
+			theIndex = StringSearch.splitString(yytext(),"VP]", false, 3);		
+			if(theIndex == -1)
+			{
+				out.write(yytext());
+			}
+			else
+			{
+				out.write(StringSearch.firstString+ObjNomOpen+StringSearch.nextString+ObjNomClose);
+			}
 		  } 
 {VerbSubjObjNom}  { 
 			theIndex = StringSearch.splitString(yytext(),"*SUBJ<}", true, 7);		
 			if (theIndex == -1)
 				theIndex = StringSearch.splitString(yytext(),"*SUBJ}", true, 6);	
-			out.write(StringSearch.firstString+ObjNomOpen+StringSearch.nextString+ObjNomClose);
+			if(theIndex == -1)
+			{
+				out.write(yytext());
+			}
+			else
+			{
+				out.write(StringSearch.firstString+ObjNomOpen+StringSearch.nextString+ObjNomClose);
+			}
 		  } 
 
 {PPVPInfObj}	{ 
-			//System.err.print("FOUND " + yytext() + " FOUND ");
 			/* Find where the PP phrase ended and insert the OBJ label */
-			StringSearch.splitString(yytext(),"PP]", false, 3);		
-			out.write(StringSearch.firstString+Obj1Open+StringSearch.nextString+Obj1Close);
+			theIndex = StringSearch.splitString(yytext(),"PP]", false, 3);		
+			if(theIndex == -1)
+			{
+				out.write(yytext());
+			}
+			else
+			{
+				out.write(StringSearch.firstString+Obj1Open+StringSearch.nextString+Obj1Close);
+			}
 		} 
 
 {Function}	{out.write(yytext());}	/* Don't touch the phrases that have already been function marked */
