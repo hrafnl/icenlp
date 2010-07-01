@@ -21,8 +21,10 @@ public class NetworkThread implements Runnable {
         try 
         {
 			this.outputGenerator = new OutputGenerator();
-		} catch (Exception e1) {
-			e1.printStackTrace();
+		} 
+        catch (Exception e1) {
+			System.out.println("[!!] error in creating output generator: " + e1.getMessage());
+			System.exit(0);
 		}
 		try {
 			// Find the host name that the server will use.

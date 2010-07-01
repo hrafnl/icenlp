@@ -10,15 +10,17 @@ import java.util.List;
 public class Runner {
 
     public static void printHelp() {
-        System.out.println("IceNLPClient");
+        System.out.println("Parameters:");
         System.out.println("\t --host|h= \t Connection host.");
         System.out.println("\t --port|p= \t Connection port.");
     }
 
     public static void main(String[] args) {
-        String host = "localhost";
+        // Set the host and port to default value.
+    	String host = "localhost";
         String port = "1234";
-
+        
+        // Go through the program arguments.
         if (args.length > 0) {
             for (String arg : args) {
                 if (arg.matches("(?i)--(port|p)=.+"))
@@ -33,7 +35,7 @@ public class Runner {
             }
         }
         try {
-            
+            // create network handler for the client.
         	ClientNetworkHandler handler = new ClientNetworkHandler(host, port);
 
             String inLine;
@@ -43,20 +45,13 @@ public class Runner {
 
             List<String> strsin = new LinkedList<String>();
 
-            
             while ((inLine = br.readLine()) != null){
-            	if(!inLine.equals("]")){
-            		strsin.add(inLine);
-            		
-            	}
-            	
+            	strsin.add(inLine);
             }
             
+            // TODO: Should we send each one string at once?
             for(String s : strsin){
-            	s = s.replace(".[][\n]", "");
             	System.out.print(handler.tagString(s));
-
-            	
             }
         }
         catch (Exception ex) {
