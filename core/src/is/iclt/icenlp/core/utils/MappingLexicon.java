@@ -341,59 +341,37 @@ public class MappingLexicon {
 		// then we want to dump it out without modifying it...
 		// we need a new option fo this: IF_NOT_FOUND
 
-		if (this.tagMaps.size() > 0) 
-		{
-			for (Word word : wordList) 
-			{
+		if (this.tagMaps.size() > 0) {
+			
+			for (Word word : wordList) {
+				//System.out.println(word.getLexeme() + " - " + word.getTag());
 				String mappedTag = this.lookupTagmap(word.getTag(), false);
-				if (mappedTag != null) 
-				{
+				if(word.getLexeme().equals(word.getTag()) && mappedTag == null){
+					word.setOnlyOutputLexeme(true);
+					word.setTag("");
+					continue;
+				}
+				
+				if (mappedTag != null) {
 					if (this.showAppliedActions) 
-					{
 						System.out.println("[debug] tagmapping rule applied: " + word.getTag() + " -> " + mappedTag + ", on " + word.getLexeme());
-					}
-					if(word.getLexeme().length() == 1)
-					{
-						Character c = word.getLexeme().charAt(0);
-						if(!Character.isLetter(c))
-						{
-							System.out.println("::: fann einsetu " + word.getLexeme() + word.getLemma());
-							if(!word.getLexeme().equals(word.getTag()))
-								word.setOnlyOutputLexeme(true);
-						
-						}
-					}
-
 					word.setTag(mappedTag);
 				}
 
 				else 
 				{
-					if (!this.leaveNotFoundTagUnchanged) 
-					{
+					if (!this.leaveNotFoundTagUnchanged) {
 						if (this.showAppliedActions)
-							System.out.println("[debug] tagmapping rule applied: "+ word.getTag()+ " -> "+ this.notFoundMappingTag);
+							System.out.println("[debug] no tagmapping rule found for " + word.getTag()+ " mapped to unknown.");
 						word.setTag(this.notFoundMappingTag);
 					} else {
 						if (this.showAppliedActions)
-							System.out.println("[debug] tagmapping rule applied: Leaving " + word.getTag() + " unchanged.");
-					}
-
-					// If this was a word of length one.
-					if (this.leave_lexemes_of_length_one_unchanged) 
-					{
-						//System.out.println(word.getLexeme() + ": " + word.getLexeme().length());
-						if (word.getLexeme().length() == 1) 
-						{
-							if (this.showAppliedActions)
-								System.out.println("[debug] Lexeme " + word.getLexeme() + " will be left unchanged.");
-							word.setOnlyOutputLexeme(true);
-						}
+							System.out.println("[debug] no tagmapping rule found for " + word.getTag()+ " tag left unchanged.");
 					}
 				}
 			}
 		}
-
+		
 		// Go over Lemma Exception rules.
 		for (Word word : wordList) {
 			String lookupWordLemma = word.getLemma();
