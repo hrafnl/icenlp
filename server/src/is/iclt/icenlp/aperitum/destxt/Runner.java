@@ -26,7 +26,18 @@ public class Runner {
 		line = line.replace("^</<$", "\\<");
 		line = line.replace("^>/>$", "\\>");
 		line = line.replace("^{/{$", "\\{");
+		line = line.replace("^}/}$", "\\}");
+		line = line.replace("^[/[$", "\\[");
+		line = line.replace("^]/]$", "\\]");
+		line = line.replace(",/,<cm>", ",<cm>");
+		line = line.replace("./.<sent>", ".<sent>");
+		line = line.replace("?/?<sent>", "?<sent>");
+		line = line.replace("!/!<sent>", "!<sent>");
+		line = line.replace("^(/($", "(");
+		line = line.replace("^)/)$", ")");
 		//line = line.replace("$", "");
+		
+		
 		return line;
 	}
 }

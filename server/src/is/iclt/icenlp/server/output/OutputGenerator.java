@@ -228,6 +228,7 @@ public class OutputGenerator {
 
 				else
 					builder.append(taggingOutputSparator + part);
+
 			}
 		}
 
