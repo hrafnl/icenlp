@@ -1,4 +1,4 @@
-package is.iclt.icenlp.aperitum.destxt;
+package is.iclt.icenlp.apertium.destxt;
 
 
 import java.io.BufferedReader;
