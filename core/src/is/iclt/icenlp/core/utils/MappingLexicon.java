@@ -430,9 +430,7 @@ public class MappingLexicon {
 				mweStr = mweStr.toLowerCase();
 				if (this.hasMapForMWE(mweStr)) {
 					if (this.showAppliedActions)
-						System.out
-								.println("[debug] applied MWE rule for the mwe "
-										+ mweStr);
+						System.out.println("[debug] applied MWE rule for the mwe " + mweStr);
 
 					String lexeme = "";
 

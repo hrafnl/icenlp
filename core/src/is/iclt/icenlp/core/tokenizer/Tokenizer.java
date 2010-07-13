@@ -52,6 +52,7 @@ public class Tokenizer
     private Pattern webAddressPattern;
     private Pattern timePattern;
     private Pattern datePattern;
+    private String lastSuperBlock = null;
 
 
 	private int tokenType;
@@ -243,11 +244,14 @@ public class Tokenizer
 
     public void tokenize( String sentenc )
 	{
-		tokens.clear();
-		index = 0;
-		sentence = sentenc;
-		Token token;
-		Token lastToken;
+		this.tokens.clear();
+		this.index = 0;
+		this.sentence = sentenc;
+		
+		// here we must add this new feature that we need.
+		
+		Token token = null;
+		Token lastToken = null;
 
 		while( index < sentence.length() )
 		{
@@ -277,11 +281,21 @@ public class Tokenizer
 				if(this.isLinkedToPrevious(token.tokenCode))
 					token.linkedToPreviousWord = true;
 
+				if(this.lastSuperBlock != null) {
+					token.preSpace = this.lastSuperBlock;
+					this.lastSuperBlock = null;
+				}
 				tokens.add( token );
+				//System.out.println(token);
 				
 				// Remember last token.
 				lastToken = token;
 				
+			}
+			else
+			{
+				//if(lastToken != null)
+				//	lastToken.posSpace = this.lastSuperBlock;
 			}
 		}
 
@@ -601,15 +615,19 @@ public class Tokenizer
 		currToken.tokenCode = Token.TokenCode.tcNumber;
 	}
 
-	private void skipWhitespace( char c )
-	{
+	private void skipWhitespace( char c ) {
+		// Collect the spaces.
+		this.lastSuperBlock = "";
 		char ch = c;
+		
+		
 		boolean eofSentence = false;
-		while( !eofSentence && Character.isWhitespace( ch ) )
-		{
+		while( !eofSentence && Character.isWhitespace( ch ) ){
 			index++;
-			if( index < sentence.length() )
+			if( index < sentence.length() ){
 				ch = sentence.charAt( index );
+				this.lastSuperBlock += c;
+			}
 			else
 				eofSentence = true;
 		}
@@ -745,8 +763,14 @@ public class Tokenizer
             else if (isTime(restOfSentence))
                 ;
 			else if( Character.isLetter( ch ) ) getWord( ch );
-			else if( Character.isDigit( ch ) ) getNumber( ch );
-			else if( Character.isWhitespace( ch ) ) skipWhitespace( ch );
+			else if( Character.isDigit( ch ) )
+			{ 
+				getNumber( ch );
+			}
+			else if( Character.isWhitespace( ch ) )
+			{
+				skipWhitespace( ch );
+			}
 			else if( ch == '.' ) getPeriods();
 			else
 				// setToken increments index

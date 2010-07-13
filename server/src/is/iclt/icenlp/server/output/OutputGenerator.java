@@ -24,6 +24,7 @@ public class OutputGenerator {
 	private String taggingOutputForamt = null;
 	private boolean lemmatize = false;
 	private boolean leave_not_found_tag_unchanged = false;
+	private boolean UserIceTaggerWhitespaceBlocks = false;
 	private String not_found_tag = null;
 	private String punctuationSeparator = " ";
 	private String taggingOutputSparator = " ";
@@ -46,7 +47,12 @@ public class OutputGenerator {
 		if (this.configuration.containsKey("TaggingOutputSparator"))
 			this.taggingOutputSparator = this.configuration
 					.getValue("TaggingOutputSparator");
-
+		
+		if (this.configuration.containsKey("UserIceTaggerWhitespaceBlocks"))
+			if(this.configuration.getValue("UserIceTaggerWhitespaceBlocks").toLowerCase().equals("true"))
+				this.UserIceTaggerWhitespaceBlocks = true;
+		
+		
 		if (this.configuration.containsKey("compiled_bidix")) {
 			String compiledBidixLocation = this.configuration
 					.getValue("compiled_bidix");
@@ -222,13 +228,24 @@ public class OutputGenerator {
 					}
 				}
 				
-				// TODO: Link to next word, and add support for superblanks.
-				if (word.linkedToPreviousWord)
-					builder.append(punctuationSeparator + part);
+				if(this.UserIceTaggerWhitespaceBlocks)
+				{
+					if (word.linkedToPreviousWord)
+						builder.append(punctuationSeparator + part);
 
+					else if(word.preSpace != null)
+						builder.append(word.preSpace + part);
+					else
+						builder.append(part);
+				}
 				else
-					builder.append(taggingOutputSparator + part);
+				{
+					if (word.linkedToPreviousWord)
+						builder.append(punctuationSeparator + part);
 
+					else
+						builder.append(taggingOutputSparator + part);
+				}
 			}
 		}
 

@@ -23,6 +23,8 @@ public class Word
     public MWECode mweCode;
     public TokenCode tokenCode;
     public boolean linkedToPreviousWord;
+    public String posSpace;
+    public String preSpace;
     
     // Constructor for the class.
     public Word(String lexeme, String tag, MWECode mweCode, TokenCode tokenCode, boolean linkedToPreviousWord){

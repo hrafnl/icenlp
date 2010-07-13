@@ -34,7 +34,7 @@ public class IceTagger implements IIceTagger {
 	private Configuration configuration;
 	private IceTaggerLexicons iceLexicons = null;
 	private Lexicon tokLexicon = null;
-	private IceTaggerFacade facade;
+	private IceTaggerFacade iceTaggerFacade;
 	private boolean lemmatize = false;
 	private Lemmald lemmald = null;
 
@@ -115,10 +115,10 @@ public class IceTagger implements IIceTagger {
 				tokLexicon = new Lexicon(tokenLexicon);
 			}
 			
-			facade = new IceTaggerFacade(this.iceLexicons, this.tokLexicon);
+			iceTaggerFacade = new IceTaggerFacade(this.iceLexicons, this.tokLexicon);
 			
 			// TODO This should be handed as an option in the config file!
-			facade.dateHandling(true); // Do special date handling
+			iceTaggerFacade.dateHandling(true); // Do special date handling
 			
 			// TriTagger
 			// Let's check for the TriTagger
@@ -141,13 +141,13 @@ public class IceTagger implements IIceTagger {
 						triLexicons = new TriTaggerLexicons(tritaggerLexicon, true);
 
 					}
-					facade.createTriTagger(triLexicons);
+					iceTaggerFacade.createTriTagger(triLexicons);
 					// This will make Tritagger perform initial word class
 					// selection and final disambiguation
 					// facade.useTriTagger(true); // equivalent to
 					// facade.setModelType(IceTagger.HmmModelType.startend)
 					// This makes TriTagger only do final disambiguation
-					facade.setModelType(is.iclt.icenlp.core.icetagger.IceTagger.HmmModelType.end);
+					iceTaggerFacade.setModelType(is.iclt.icenlp.core.icetagger.IceTagger.HmmModelType.end);
 					System.out.println("[i] Tritagger is ready.");
 				}
 			}
@@ -166,17 +166,32 @@ public class IceTagger implements IIceTagger {
 		
 		try 
 		{
-			Sentences sentences = this.facade.tag(text);
+			Sentences sentences = this.iceTaggerFacade.tag(text);
 			// Create a a word list from the tagging results.
 			for (Sentence s : sentences.getSentences()) {
 				for (Token token : s.getTokens()) {
 					IceTokenTags t = ((IceTokenTags) token);
 
+					Word word;
 					if (this.lemmatize) {
 						String lemma = this.lemmald.getLemma(t);
-						returnlist.add(new Word(t.lexeme, lemma, t.getFirstTagStr(), t.mweCode, t.tokenCode, t.linkedToPreviousWord));
-					} else
-						returnlist.add(new Word(t.lexeme, t.getFirstTagStr(), t.mweCode, t.tokenCode, t.linkedToPreviousWord));
+						word = new Word(t.lexeme, lemma, t.getFirstTagStr(), t.mweCode, t.tokenCode, t.linkedToPreviousWord);
+						
+						if (t.preSpace != null){
+							word.preSpace = t.preSpace;
+						}
+							
+						returnlist.add(word);
+					} 
+					else{
+						word = new Word(t.lexeme, t.getFirstTagStr(), t.mweCode, t.tokenCode, t.linkedToPreviousWord);
+						
+						if (t.preSpace != null){
+							word.preSpace = t.preSpace;
+						}
+						
+						returnlist.add(word);
+					}
 				}
 			}
 		} 

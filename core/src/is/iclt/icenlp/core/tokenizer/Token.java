@@ -48,6 +48,8 @@ public class Token {
     
     // hs added
     public boolean linkedToPreviousWord;
+    public String preSpace = null;
+    public String posSpace = null;
     
 
     public Token()
