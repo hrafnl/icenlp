@@ -248,17 +248,13 @@ public class Tokenizer
 		this.index = 0;
 		this.sentence = sentenc;
 		
-		// here we must add this new feature that we need.
-		
 		Token token = null;
-		Token lastToken = null;
 
 		while( index < sentence.length() )
 		{
 			nextToken();
 			if( currToken.tokenCode != Token.TokenCode.tcWhitespace )
 			{
-				//System.out.println(currToken);
 				switch( tokenType )
 				{
 					case typeToken:
@@ -285,17 +281,7 @@ public class Tokenizer
 					token.preSpace = this.lastSuperBlock;
 					this.lastSuperBlock = null;
 				}
-				tokens.add( token );
-				//System.out.println(token);
-				
-				// Remember last token.
-				lastToken = token;
-				
-			}
-			else
-			{
-				//if(lastToken != null)
-				//	lastToken.posSpace = this.lastSuperBlock;
+				tokens.add( token );				
 			}
 		}
 
