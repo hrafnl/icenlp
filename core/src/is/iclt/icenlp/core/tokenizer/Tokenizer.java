@@ -611,8 +611,8 @@ public class Tokenizer
 		while( !eofSentence && Character.isWhitespace( ch ) ){
 			index++;
 			if( index < sentence.length() ){
+				this.lastSuperBlock += ch;
 				ch = sentence.charAt( index );
-				this.lastSuperBlock += c;
 			}
 			else
 				eofSentence = true;
