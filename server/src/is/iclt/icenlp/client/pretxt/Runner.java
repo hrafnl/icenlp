@@ -16,13 +16,7 @@ public class Runner {
 			List<String> lines = new LinkedList<String>();
 			while ((inLine = br.readLine()) != null)
 				lines.add(inLine.trim());
-			
-			
-			//System.out.println("Number of lines in text " + lines.size());
-			
 		
-			
-			//LinkedList<String> aperttxts = new LinkedList<String>();
 			for(String s : lines)
 			{
 				String[] cmd = {

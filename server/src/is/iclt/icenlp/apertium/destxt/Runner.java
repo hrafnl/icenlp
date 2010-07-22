@@ -29,10 +29,10 @@ public class Runner {
 	
 	public static String processLine(String line) {
 		line = line.replace("^$/$$", "\\$");
-		line = line.replace(",/,<cm>", ",<cm>");
-		line = line.replace("./.<sent>", ".<sent>");
-		line = line.replace("?/?<sent>", "?<sent>");
-		line = line.replace("!/!<sent>", "!<sent>");
+		//line = line.replace(",/,<cm>", ",<cm>");
+		//line = line.replace("./.<sent>", ".<sent>");
+		//line = line.replace("?/?<sent>", "?<sent>");
+		//line = line.replace("!/!<sent>", "!<sent>");
 		line = line.replace("^[/[$", "\\[");
 		line = line.replace("^]/]$", "\\]");
 		line = line.replace("^{/{$", "\\{");
