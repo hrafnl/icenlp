@@ -19,36 +19,30 @@
  * Hrafn Loftsson, School of Computer Science, Reykjavik University.
  * hrafn@ru.is
  */
- 
-/* This transducer marks adjectival phrases */
-/* An adjectival phrase consists of an optional adverb phrase followed by an adjective */
-/* The adverb can neither be in the comparative nor in the superlative */
-
+// this transducer removes the encoding of the tags.
 package is.iclt.icenlp.core.iceparser;
+import java.util.regex.*;
 import java.io.*;
 %%
 
 %public
-%class Phrase_AP
+%class TagDecoder
 %standalone
 %line
 %extends IceParserTransducer
 %unicode
 
 %{
-  String APOpen=" [AP ";
-  String APClose=" AP] "; 
-  
-  //java.io.Writer out = new BufferedWriter(new OutputStreamWriter(System.out, "UTF-8"));
-  java.io.Writer out = new BufferedWriter(new OutputStreamWriter(System.out));
+    java.io.Writer out = new BufferedWriter(new OutputStreamWriter(System.out));
       
-  public void parse(java.io.Writer _out) throws java.io.IOException
-  {
+      public void parse(java.io.Writer _out) throws java.io.IOException
+      {
       	out = _out;
       	while (!zzAtEOF) 
       	    yylex();
   }
   
+ 
 %}
 
 %eof{
@@ -60,17 +54,18 @@ import java.io.*;
         }
 %eof}
 
-%include regularDef.txt
+tag = \^~\$
 
-Adjective = {WordSpaces}{AdjectiveTag}
-AdverbPhrase = {OpenAdvP}~\^"aa"\${WhiteSpace}+{CloseAdvP}
-//AdverbPhrase = {OpenAdvP}{WordSpaces}"aa"{WhiteSpace}+{CloseAdvP}
-AdjectivePhrase = {AdverbPhrase}?{Adjective} 
 
 %%
+{tag}	{
+			String str = yytext();
+			str = str.substring(1,str.length()-1);
+		  	out.write(str);
+		}
 
-{MWE}			{ out.write(yytext());}
-{AdjectivePhrase}	{ out.write(APOpen+yytext()+APClose);}
-"\n"			{ //System.err.print("Reading line: " + Integer.toString(yyline+1) + "\r"); 
-			out.write("\n"); }
-.			{ out.write(yytext());}
+
+		
+"\n"		{ //System.err.print("Reading line: " + Integer.toString(yyline+1) + "\r"); 
+		out.write("\n"); }
+.		{ out.write(yytext());}

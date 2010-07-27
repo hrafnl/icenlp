@@ -77,11 +77,14 @@ public class RunIceParserOut extends RunIceParserBase
 
 		
 		sr = new StringReader("empty");
+		// TagEncode															-- TagEncode
+		TagEncoder tagEncdr = new TagEncoder(sr);
+		readwrite(tagEncdr, inputFile, outputPath+"/"+"tagencoder.out");
 
 		// Preprocess															-- Preprocess
 
 		Preprocess preprocess = new Preprocess(sr);
-		readwrite(preprocess, inputFile, outputPath+"/"+"preprocess.out");
+		readwrite(preprocess, outputPath+"/"+"tagencoder.out", outputPath+"/"+"preprocess.out");
 
 		// phrase_MWE															-- phrase_MWE
 
@@ -135,7 +138,7 @@ public class RunIceParserOut extends RunIceParserBase
 
 		// phrase_NP2															-- phrase_NP2
 		
-		if(agreement)
+		if(agreement && !markGrammarError)
 		{
 			Phrase_NP2 np2 = new Phrase_NP2(sr);
 			readwrite(np2, outputPath+"/"+"phrase_NP.out", outputPath+"/"+"phrase_NP2.out");
@@ -145,7 +148,7 @@ public class RunIceParserOut extends RunIceParserBase
 
 		Phrase_VP vp = new Phrase_VP(sr);
 		
-		if(agreement)
+		if(agreement && !markGrammarError)
 		{
 			readwrite(vp, outputPath+"/"+"phrase_NP2.out", outputPath+"/"+"phrase_VP.out");
 		}
@@ -196,6 +199,10 @@ public class RunIceParserOut extends RunIceParserBase
 			{
 				f_subj.set_doAgreementCheck(true);	
 			}
+			if(markGrammarError)
+			{
+				f_subj.set_markGrammarError(true);
+			}
 			readwrite(f_subj, outputPath+"/"+"func_qual.out", outputPath+"/"+"func_subj.out");				
 	
 
@@ -229,23 +236,27 @@ public class RunIceParserOut extends RunIceParserBase
 
 		Clean2 cl2 = new Clean2(sr);		
 
-		if(includeFunc && phrasePerLine)
+		if(includeFunc)
 			readwrite(cl2, outputPath+"/"+"func_subj2.out", outputPath+"/"+"clean2.out");
-		else if(!includeFunc && phrasePerLine)
+		else
 			readwrite(cl2, outputPath+"/"+"clean1.out", outputPath+"/"+"clean2.out");
-		else if(includeFunc && !phrasePerLine)
-			readwrite(cl2, outputPath+"/"+"func_subj2.out", outputPath+"/"+outputFile);
-		else if(!includeFunc && !phrasePerLine)
-			readwrite(cl2, outputPath+"/"+"clean1.out", outputPath+"/"+outputFile);
-
 
 		// Phrase_Per_Line														-- phrase_per_line
 
 		if(phrasePerLine)
 		{		
 			Phrase_Per_Line ppl = new Phrase_Per_Line(sr);
-			readwrite(ppl, outputPath+"/"+"clean2.out", outputPath+"/"+outputFile);	
+			readwrite(ppl, outputPath+"/"+"clean2.out", outputPath+"/"+"phrase_per_line.out");	
 		}
+		
+		// TagDecoder															-- TagDecoder
+	
+		TagDecoder tagDecdr = new TagDecoder(sr);
+		if(phrasePerLine)
+			readwrite(tagDecdr, outputPath+"/"+"phrase_per_line.out", outputPath+"/"+outputFile);
+		else
+			readwrite(tagDecdr, outputPath+"/"+"clean2.out", outputPath+"/"+outputFile);
+
 	}
     public static void main(String[] args) throws IOException 
 	{

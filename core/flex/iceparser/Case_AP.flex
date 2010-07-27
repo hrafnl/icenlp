@@ -77,6 +77,7 @@ import java.io.*;
         int len = strs.length;
         if (len >= 2) {
         	tag = strs[len-2];	/* strs[len-1] = "AP]" */
+		tag = tag.substring(1, tag.length()-1);
         	if ( (tag.charAt(0) == 'l') && (tag.length() >= 4))
         		return analyseCase(tag.charAt(3));	
         }	

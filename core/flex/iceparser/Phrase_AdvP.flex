@@ -65,14 +65,14 @@ import java.io.*;
 
 %include regularDef.txt
 
-InterjectionTag = au{WhiteSpace}+
+InterjectionTag = \^au\${WhiteSpace}+
 Interjection = {WordSpaces}{InterjectionTag}
 
 AdverbPhrase = {Adverb}
 InterjectionPhrase = {Interjection} 
 
 MainConjWords = [oO]g|[eE](n(da)?|ða|llegar)|[hH]eldur|[nN]é
-MainConjTag = c{WhiteSpace}+
+MainConjTag = \^c\${WhiteSpace}+
 MainConj = {WhiteSpace}*{MainConjWords}{WhiteSpace}+{MainConjTag}
 MainConjPhrase = {MainConj} 
 SubConjPhrase = {Conj}

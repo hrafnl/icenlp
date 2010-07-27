@@ -95,11 +95,16 @@ import is.iclt.icenlp.core.utils.IceParserUtils;
 	}
 	private String FinalCheck(String originalStr)
 	{
+	//System.out.println(originalStr);
+
 		if(!agreement && !markGrammarError)//do nothing
 		{
 			return NPOpen + originalStr + NPClose;
 		}
 		String tokenlessStr = RemoveTokens(originalStr);
+
+	//System.out.println("tokenelss: " + tokenlessStr);
+		
 		boolean allTheSame = CheckGenNumCase(tokenlessStr);
 
 		if(allTheSame)
@@ -144,15 +149,19 @@ import is.iclt.icenlp.core.utils.IceParserUtils;
 			for(int x=i+1; x<tags.length; x++)
 			{
 				int mod1, mod2;
-			
-				mod1 = GetModifier(tags[i].substring(0,1));
-				mod2 = GetModifier(tags[x].substring(0,1));
+				String tagI = tags[i].substring(1, tags[i].length()-1);
+				String tagX = tags[x].substring(1, tags[x].length()-1);
+
+				mod1 = GetModifier(tagI.substring(0,1));
+				mod2 = GetModifier(tagX.substring(0,1));
+
+			//System.out.println("Mod1 : "+mod1+"\nMod2 : "+mod2);
 
 				if(mod1 == -1 || mod2 == -1) continue;
 
 				//ef t þá verður 2 sæti að vera f
 			
-				if(tags[i].length() < 4+mod1 || tags[x].length() < 4+mod2)
+				if(tagI.length() < 4+mod1 || tagX.length() < 4+mod2)
 				{
 					continue;
 				}
@@ -160,13 +169,16 @@ import is.iclt.icenlp.core.utils.IceParserUtils;
 
 				String gen1,num1,case1, gen2,num2,case2;
 
-				gen1 = tags[i].substring(1+mod1, 2+mod1);
-				num1 = tags[i].substring(2+mod1, 3+mod1);
-				case1 = tags[i].substring(3+mod1, 4+mod1);
+				gen1 = tagI.substring(1+mod1, 2+mod1);
+				num1 = tagI.substring(2+mod1, 3+mod1);
+				case1 = tagI.substring(3+mod1, 4+mod1);
 			
-				gen2 = tags[x].substring(1+mod2, 2+mod2);
-				num2 = tags[x].substring(2+mod2, 3+mod2);
-				case2 = tags[x].substring(3+mod2, 4+mod2);
+				gen2 = tagX.substring(1+mod2, 2+mod2);
+				num2 = tagX.substring(2+mod2, 3+mod2);
+				case2 = tagX.substring(3+mod2, 4+mod2);
+				
+			//System.out.println("gnc1 : "+gen1+" - "+num1+" - "+case1);				
+			//System.out.println("gnc2 : "+gen2+" - "+num2+" - "+case2);
 
 				if( !gen1.equals(gen2) || !num1.equals(num2) || !case1.equals(case2))
 				{	
@@ -189,12 +201,12 @@ import is.iclt.icenlp.core.utils.IceParserUtils;
 
 %include regularDef.txt
 
-ArticleTag = g{Gender}{Number}{Case}{WhiteSpace}+
-PossPronounTag = fe{Gender}{Number}{Case}{WhiteSpace}+
-IndefPronounTag = fo{Gender}{Number}{Case}{WhiteSpace}+
-InterPronounTag = fs{Gender}{Number}{Case}{WhiteSpace}+
-DemonPronounTag = fa{Gender}{Number}{Case}{WhiteSpace}+
-ReflexivePronounTag = fb{Gender}{Number}{Case}{WhiteSpace}+
+ArticleTag = \^g{Gender}{Number}{Case}\${WhiteSpace}+
+PossPronounTag = \^fe{Gender}{Number}{Case}\${WhiteSpace}+
+IndefPronounTag = \^fo{Gender}{Number}{Case}\${WhiteSpace}+
+InterPronounTag = \^fs{Gender}{Number}{Case}\${WhiteSpace}+
+DemonPronounTag = \^fa{Gender}{Number}{Case}\${WhiteSpace}+
+ReflexivePronounTag = \^fb{Gender}{Number}{Case}\${WhiteSpace}+
 
 Noun = {WordSpaces}{NounTag}
 ProperNoun = {WordSpaces}{ProperNounTag}

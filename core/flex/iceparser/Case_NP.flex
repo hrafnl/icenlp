@@ -83,6 +83,10 @@ import java.io.*;
         int len = strs.length;
         if (len >= 4) {
         	tag = strs[len-2];	/* strs[len-1] = "NP]" */
+	 	
+		if(!tag.contains("]"))
+			tag = tag.substring(1, tag.length()-1);
+	
         	if (tag.equals("AP]"))	/* t.d. [NP þeirri faveþ [APd gömlu lveþvf AP] NP] */
         	{
         	   int APstart = txt.indexOf("[AP");
@@ -99,6 +103,7 @@ import java.io.*;
         	else if (tag.equals("ta") || tag.equals("tp"))		/* t.d. [NP árið nheog 1955 ta NP] */
 		{
 		    tag = strs[len-4];
+		    tag = tag.substring(1, tag.length()-1);
 		    /* System.err.println("Found the tag: " + tag); */
 		    //isHeadNP = true;  
 		    return analyseTag(tag);

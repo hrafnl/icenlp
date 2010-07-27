@@ -31,6 +31,7 @@ import java.io.*;
  */
 public class IceParserFacade
 {
+	private TagEncoder tagEncdr;
     private Preprocess preprocess_scn;
     private Phrase_MWE mwe_scn;
     private Phrase_MWEP1 mwep1_scn;
@@ -56,11 +57,13 @@ public class IceParserFacade
     private Func_SUBJ2 f_subj2_scn;
     private Clean2 cl2_scn;
     private Phrase_Per_Line ppl_scn;
+	private TagDecoder tagDecdr;
 
 
     public IceParserFacade()
 	{
         StringReader sr = new StringReader("test");
+		tagEncdr = new TagEncoder(sr);
         preprocess_scn = new Preprocess(sr);
         mwe_scn = new Phrase_MWE(sr);
         mwep1_scn = new Phrase_MWEP1(sr);
@@ -86,6 +89,7 @@ public class IceParserFacade
         f_subj2_scn = new Func_SUBJ2(sr);
         cl2_scn = new Clean2(sr);
         ppl_scn = new Phrase_Per_Line(sr);
+		tagDecdr = new TagDecoder(sr);
     }
 
 	private void print( String text )
@@ -112,11 +116,21 @@ public class IceParserFacade
 	}
 	public String parse( String text, boolean include_func, boolean one_phrase_per_line , boolean agreement, boolean markGrammarError) throws IOException
 	{
+		
 		// --------------------------------
-        //print( "preprocess" );
-
+        //print( "tagEncdr" );
 		StringReader sr = new StringReader( text );
 		StringWriter sw = new StringWriter( );
+		
+		tagEncdr.yyclose();
+		tagEncdr.yyreset(sr);
+		tagEncdr.parse(sw);		
+
+		// --------------------------------
+        //print( "preprocess" );
+        sr = new StringReader( sw.toString() );
+        sw = new StringWriter( );
+
 
         preprocess_scn.yyclose();
         preprocess_scn.yyreset(sr);
@@ -202,7 +216,7 @@ public class IceParserFacade
         np_scn.yyreset(sr);
         np_scn.parse(sw);
 		
-		if(agreement)
+		if(agreement && !markGrammarError)
 		{
 			// --------------------------------
         	//print( "phrase_NP2" );
@@ -288,6 +302,10 @@ public class IceParserFacade
 			{
 				f_subj_scn.set_doAgreementCheck(true);
 			}
+			if(markGrammarError)
+			{
+				f_subj_scn.set_markGrammarError(true);
+			}
             f_subj_scn.yyclose();
             f_subj_scn.yyreset(sr);
             f_subj_scn.parse(sw);
@@ -358,6 +376,17 @@ public class IceParserFacade
             ppl_scn.yyreset(sr);
             ppl_scn.parse(sw);
 		}
+
+		// --------------------------------
+		//print( "tagDecdr" );
+        sr = new StringReader( sw.toString() );
+        sw = new StringWriter( );		
+
+		tagDecdr.yyclose();
+		tagDecdr.yyreset(sr);
+		tagDecdr.parse(sw);
+
+
 		return sw.toString();
 	}
 

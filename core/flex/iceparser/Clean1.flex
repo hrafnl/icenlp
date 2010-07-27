@@ -42,6 +42,8 @@ import java.io.*;
 %extends IceParserTransducer
 %unicode
 
+
+
 %{
   String nomStr = "n";
   String accStr = "a";
@@ -96,8 +98,8 @@ import java.io.*;
 %include regularDef.txt
 %include funcDef.txt
 
-ProperNounTagNotGen = n{Gender}{Number}[noþ]("-"|{ArticleChar}){ProperName}{WhiteSpace}+
-ProperNounTagGen = n{Gender}{Number}e("-"|{ArticleChar}){ProperName}{WhiteSpace}+
+ProperNounTagNotGen = \^n{Gender}{Number}[noþ]("-"|{ArticleChar}){ProperName}\${WhiteSpace}+
+ProperNounTagGen = \^n{Gender}{Number}e("-"|{ArticleChar}){ProperName}\${WhiteSpace}+
 ProperNounWithQualifer = {OpenNP}g{WordSpaces}{ProperNounTagNotGen}({WordSpaces}{ProperNounTagGen})+~{CloseNP}
 
 AdvPSeq = (({OpenAdvP}~{AdverbTag}{CloseAdvP}){WhiteSpace}+){2,5}
@@ -131,16 +133,20 @@ DatNPWithNomAdjPhrase = {OpenNP}d{WhiteSpace}+{OpenAP}n~{CloseNP}
 		
 {ProperNounWithQualifer}	{
 					String str = yytext();
+
 					// Search for the first nom/acc/dat proper noun tag 
-					Pattern p = Pattern.compile("n[kvh][ef][noþ](g|-)[msö]");
+					Pattern p = Pattern.compile("\\^"+"n[kvh][ef][noþ](g|-)[msö]"+"\\$");
 					Matcher m = p.matcher(str);
 					if (m.find())
 					{
+	
 						// Return the indexes of the start char matched and the last character matched, plus one.
 						int startIdx = m.start();
 						int endIdx = m.end();
 						String tag = str.substring(startIdx,endIdx);
-						//System.err.println("Tag: " + tag);
+						tag = tag.substring(1, tag.length()-1);
+
+				//	System.err.println("Tag: " + tag);
 						String caseStr = analyseTag(tag);
 						String firstPart = str.substring(0,endIdx);
 						String secondPart = str.substring(endIdx);

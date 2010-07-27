@@ -46,8 +46,8 @@ import is.iclt.icenlp.core.utils.IceParserUtils;
 	String Func1Close=" *SUBJ>} ";
 	String Func2Open=" {*SUBJ< ";
 	String Func2Close=" *SUBJ<} ";
-	boolean agreement = false;  // -a parameter attribute
-  
+	boolean agreement = false;  // -a parameter
+    boolean markGrammarError = false; // -e parameter
 	int theIndex=0;
 
 	//java.io.Writer out = new BufferedWriter(new OutputStreamWriter(System.out, "UTF-8"));
@@ -57,6 +57,10 @@ import is.iclt.icenlp.core.utils.IceParserUtils;
 	{
 		agreement = option;
 	}  
+	public void set_markGrammarError(boolean option)
+	{
+		markGrammarError = option;
+	}
 	public void parse(java.io.Writer _out) throws java.io.IOException
 	{
 	  	out = _out;
@@ -69,41 +73,58 @@ import is.iclt.icenlp.core.utils.IceParserUtils;
 		//order of the input is not always the same and the output shouldnt be either.
 		String trueOut = createOutputString(s1,s2,s3,s4, order, true);
 		String falseOut = createOutputString(s1,s2,s3,s4, order, false);
-		
+
 		if(!agreement)
 		{
 			return trueOut;
 		}
 
 		String tokenAndWordLess = RemoveTokens(falseOut);
-		//System.err.println("Tokenless: " + tokenAndWordLess);
 
 		boolean allAgree = checkAgreement(tokenAndWordLess);
-/*
-		System.err.print("s1: " + s1 + "\n" + 
-							"s2: " + s2 + "\n" +
-							"s3: " + s3 + "\n" + 
-							"s4: " + s4 + "\n" +
-							"trueOut: " + trueOut + "\n" +
-							"falseOut: " + falseOut + "\n");*/
+
 		if(allAgree)
-		{
+		{	
 			return trueOut;
 		}
-		
+
 		return falseOut;
+	}
+
+	//inserts a questio mark to identify as a possible error
+	public String getErrTag(String str)
+	{
+		StringBuffer stb = new StringBuffer(str);
+
+		if( str.substring(1,2).equals("{") )
+			return stb.insert(str.length()-1, "?").toString();
+
+		return stb.insert(1, "?").toString();
+		
 	}
 	public String createOutputString(String s1, String s2, String s3, String s4, int order, boolean tag)
 	{
 		if(tag)
 			return s1+s2+s3+s4;
-
-		switch(order)
+		if(markGrammarError)
 		{
-			case 1:
-				return s2+s4;			
-			case 2:
-				return  s1+s3;
+			switch(order)
+			{
+				case 1:
+					return getErrTag(s1)+s2+getErrTag(s3)+s4;			
+				case 2:
+					return  s1+getErrTag(s2)+s3+getErrTag(s4);
+			}
+		}
+		else
+		{
+			switch(order)
+			{
+				case 1:
+					return s2+s4;			
+				case 2:
+					return  s1+s3;
+			}
 		}
 		
 		return "[ERR "+s1+s2+s3+s4+" ERR]";
@@ -131,20 +152,28 @@ import is.iclt.icenlp.core.utils.IceParserUtils;
 			for(int x=i+1; x<tags.length; x++)
 			{
 				int mod1, mod2;
-			
-				mod1 = GetModifier(tags[i].substring(0,1));
-				mod2 = GetModifier(tags[x].substring(0,1));
-///////////
+
+				String tagI = tags[i].substring(1, tags[i].length()-1);
+				String tagX = tags[x].substring(1, tags[x].length()-1);
+
+				mod1 = GetModifier(tagI.substring(0,1));
+				mod2 = GetModifier(tagX.substring(0,1));
+
+				if(tagI.equals("ssg") || tagI.equals("sng") || tagX.equals("ssg") || tagX.equals("sng") )
+				{
+					allTheSame = false;
+					continue;
+				}
 				if( mod1 == -1 || mod2 == -1) continue;
-				if(tags[i].length() < 5 || tags[x].length() < 5) continue;
+				if(tagI.length() < 3+mod1 || tagX.length() < 3+mod2) continue;
 
 				String pers1, pers2, nr1, nr2;
 			
-				pers1 = tags[i].substring(2 + mod1,3 + mod1);
-				nr1 = tags[i].substring(3 + mod1,4 + mod1);
+				pers1 = tagI.substring(1 + mod1,2 + mod1);
+				nr1 = tagI.substring(2 + mod1,3 + mod1);
 
-				pers2 = tags[x].substring(2 + mod2,3 + mod2);
-				nr2 = tags[x].substring(3 + mod2,4 + mod2);
+				pers2 = tagX.substring(1 + mod2,2 + mod2);
+				nr2 = tagX.substring(2 + mod2,3 + mod2);
 			
 				pers1 = IfGenderReturnPers(pers1);
 				pers2 = IfGenderReturnPers(pers2);
@@ -161,10 +190,12 @@ import is.iclt.icenlp.core.utils.IceParserUtils;
 	}
 	public static int GetModifier(String letter)
 	{
-		if( letter.equals("f") || letter.equals("n") )
+		if( letter.equals("n")  )
 			return 0;
-		if( letter.equals("s") )
+		if( letter.equals("f")  )
 			return 1;
+		if( letter.equals("s")  )
+			return 2;
 
 		return -1;
 	}
@@ -230,9 +261,10 @@ SubjectRel = {NomSubject}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{RelCP}
 
 {SubjectVerb}	
 { 
+//System.err.println("subj-1");
 	String str = yytext();
 	if (str.contains("[PP"))	/* We don't want the preposition phrase to be included */
-		StringSearch.splitString(str, "[PP", true, -1);
+		theIndex = StringSearch.splitString(str, "[PP", true, -1);
 	//else if (str.contains("{*QUAL")) {	/* Make sure the qualifier is a part of the subject */
 	//	StringSearch.splitString(str,"[VP", true, -1);		
 	//}
@@ -243,8 +275,15 @@ SubjectRel = {NomSubject}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{RelCP}
 	//		StringSearch.splitString(str,"NP]", true, 3);
 	//}
 	else
-		StringSearch.splitString(str,"[VP", true, -1);		
-	out.write(AgreementCheck(Func1Open,StringSearch.firstString,Func1Close,StringSearch.nextString,1));
+		theIndex = StringSearch.splitString(str,"[VP", true, -1);		
+	if(theIndex == -1)
+	{
+		out.write(yytext());
+	}
+	else
+	{
+		out.write(AgreementCheck(Func1Open,StringSearch.firstString,Func1Close,StringSearch.nextString,1));
+	}
 } 
 //{SubjectAPVerb}	{ 
 //			/* Find where the AP ended and insert the SUBJ label */
@@ -259,21 +298,58 @@ SubjectRel = {NomSubject}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{RelCP}
 
 {SubjectVerbMissing}	
 { 
+//System.err.println("subj-2");
 	String str = yytext();
 	if (str.contains("[PP"))
-		StringSearch.splitString(str, "[PP", true, -1);
+		theIndex = StringSearch.splitString(str, "[PP", true, -1);
 	else 
 	{
 		// Find where the NPs/NP ended and insert the SUBJ label 
 		theIndex = StringSearch.splitString(str,"NPs]", true, 4);
 		if (theIndex == -1)
-			StringSearch.splitString(str,"NP]", true, 3);		
+			theIndex = StringSearch.splitString(str,"NP]", true, 3);		
 	}
-	out.write(AgreementCheck(Func0Open,StringSearch.firstString,Func0Close,StringSearch.nextString,1));
+	if(theIndex == -1)
+	{
+		out.write(yytext());
+	}
+	else
+	{
+		out.write(AgreementCheck(Func0Open,StringSearch.firstString,Func0Close,StringSearch.nextString,1));
+	}
 } 
 		
 {VerbSubject}	
 { 
+//System.err.println("subj-3");
+//System.err.println(yytext());
+
+	String str = yytext();
+	if (str.contains(" PP]"))
+		StringSearch.splitString(str, " PP]", true, 4);
+
+	else 
+	{
+		// Find where the VP ended and insert the SUBJ label 
+		if (str.contains(" VPb]"))
+			theIndex = StringSearch.splitString(str," VPb]", true, 5);	
+		else if (str.contains(" VPs]"))
+			theIndex = StringSearch.splitString(str," VPs]", true, 5);
+		else
+			theIndex = StringSearch.splitString(str," VP]", true, 4);		
+	}
+	if(theIndex == -1)
+	{
+		out.write(yytext());
+	}
+	else
+	{
+		out.write(AgreementCheck(StringSearch.firstString,Func2Open,StringSearch.nextString,Func2Close,2));
+	}
+
+
+
+/*
 	String str = yytext();
 	if (str.contains("PP]"))
 		StringSearch.splitString(str, "PP]", true, 3);
@@ -282,17 +358,26 @@ SubjectRel = {NomSubject}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{RelCP}
 	{
 		// Find where the VP ended and insert the SUBJ label 
 		if (str.contains("VPb]"))
-			StringSearch.splitString(str,"VPb]", true, 4);	
+			theIndex = StringSearch.splitString(str,"VPb]", true, 4);	
 		else if (str.contains("VPs]"))
-			StringSearch.splitString(str,"VPs]", true, 4);
+			theIndex = StringSearch.splitString(str,"VPs]", true, 4);
 		else
-			StringSearch.splitString(str,"VP]", true, 3);		
+			theIndex = StringSearch.splitString(str,"VP]", true, 3);		
 	}
-	out.write(AgreementCheck(StringSearch.firstString,Func2Open,StringSearch.nextString,Func2Close,2));
+	if(theIndex == -1)
+	{
+		out.write(yytext());
+	}
+	else
+	{
+		out.write(AgreementCheck(StringSearch.firstString,Func2Open,StringSearch.nextString,Func2Close,2));
+	}
+*/
 }
 		
 {VerbAdvPSubject}	
 {
+//System.err.println("subj-4");
 	String str = yytext();
 	String searchFor=null;
 	if (str.contains("VPb]"))
@@ -301,8 +386,15 @@ SubjectRel = {NomSubject}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{RelCP}
 		searchFor = "VPs]";
 	else
 		searchFor = "VP]";
-	StringSearch.splitString2(yytext(),searchFor,"AdvP]");
-	out.write(AgreementCheck(StringSearch.firstString,Func2Open,StringSearch.nextString,Func2Close,2));
+	theIndex = StringSearch.splitString2(yytext(),searchFor,"AdvP]");
+	if(theIndex == -1)
+	{
+		out.write(yytext());
+	}
+	else
+	{
+		out.write(AgreementCheck(StringSearch.firstString,Func2Open,StringSearch.nextString,Func2Close,2));
+	}
 }
 			
 //{PPVerbSubject}	{ 
@@ -322,9 +414,17 @@ SubjectRel = {NomSubject}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{RelCP}
 
 {SubjectRel}	
 { 
+//System.err.println("subj-5");
 	// Find where the relative phrase started and the NP ended and insert the SUBJ label 
-	StringSearch.splitString(yytext(),"[SCP", true, -1);		
-	out.write(AgreementCheck(Func1Open,StringSearch.firstString,Func1Close,StringSearch.nextString,1));
+	theIndex = StringSearch.splitString(yytext(),"[SCP", true, -1);		
+	if(theIndex == -1)
+	{
+		out.write(yytext());
+	}
+	else
+	{
+		out.write(AgreementCheck(Func1Open,StringSearch.firstString,Func1Close,StringSearch.nextString,1));
+	}
 }
 "\n"
 { 

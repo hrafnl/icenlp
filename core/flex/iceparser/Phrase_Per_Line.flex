@@ -64,10 +64,10 @@ WordChar = [^\r\n\t\f\[\]\{\} ]
 
 Word = {WordChar}+
 Label = AdvP|APs?|NP[s\?]?|VP[bgips]?|PP|S?CP|InjP|MWE_(AdvP|AP|CP|PP)
-Func = (("*"SUBJ|"*"I?OBJ(AP|NOM)?|"*"COMP)(<|>)?)|"*"QUAL | "*"TIMEX
+Func = (("*"SUBJ|"*"I?OBJ(AP|NOM)?|"*"COMP)(<|>)?)|"*"QUAL | "*"TIMEX\??
 
 //nýtt
-Symbol = \[{WhiteSpace}*\[  | \]{WhiteSpace}*\] | \{{WhiteSpace}*\{ | \}{WhiteSpace}*\}
+Symbol = \[{WhiteSpace}*\^\[\$  | \]{WhiteSpace}*\^\]\$ | \{{WhiteSpace}*\^\{\$ | \}{WhiteSpace}*\^\}\$
 
 %state PHRASE
 %state FUNC
@@ -77,6 +77,7 @@ Symbol = \[{WhiteSpace}*\[  | \]{WhiteSpace}*\] | \{{WhiteSpace}*\{ | \}{WhiteSp
 <YYINITIAL> 
 {
 	//nýtt
+
 	{Symbol}
 	{
 		out.write(yytext()); out.write("\n");

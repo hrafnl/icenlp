@@ -64,7 +64,7 @@ import java.io.*;
 
 %include regularDef.txt
 
-PronounTag = f[abpos]({Gender}|{Person}){Number}{Case}
+PronounTag = \^f[abpos]({Gender}|{Person}){Number}{Case}\$
 
 Ada = {WhiteSpace}*[aA]ð{WhiteSpace}+{AdverbTag}
 Adc = {WhiteSpace}*[aA]ð{WhiteSpace}+{ConjTag}

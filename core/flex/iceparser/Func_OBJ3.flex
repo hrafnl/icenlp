@@ -85,7 +85,7 @@ PPPhrase = {OpenPP}~{ClosePP}
 	[NP eitt foheo vor nheo NP]
 */
 
-PronounTag = f[oa]{Gender}{Number}{Case}{WhiteSpace}+
+PronounTag = \^f[oa]{Gender}{Number}{Case}\${WhiteSpace}+
 NounNumeral = {NounTag}{WordSpaces}{NumeralTag}
 NumeralNoun = {NumeralTag}{WordSpaces}{NounTag}
 PronounNoun = {PronounTag}{WordSpaces}{NounTag}

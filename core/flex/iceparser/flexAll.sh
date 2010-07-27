@@ -23,3 +23,5 @@
 ./flexit.sh Func_OBJ2
 ./flexit.sh Func_OBJ3
 ./flexit.sh Phrase_Per_Line
+./flexit.sh TagDecoder
+./flexit.sh TagEncoder
