@@ -86,11 +86,20 @@ public class RunIceParserOut extends RunIceParserBase
 		Preprocess preprocess = new Preprocess(sr);
 		readwrite(preprocess, outputPath+"/"+"tagencoder.out", outputPath+"/"+"preprocess.out");
 
-		// phrase_MWE															-- phrase_MWE
+		// phrase_FOREIGN														-- phrase_FOREIGN
+		Phrase_FOREIGN frgn = new Phrase_FOREIGN(sr);
+		readwrite(frgn, outputPath+"/"+"preprocess.out", outputPath+"/"+"phrase_FOREIGN.out");		
+
+
 
 		Phrase_MWE mwe = new Phrase_MWE(sr);
-		readwrite(mwe, outputPath+"/"+"preprocess.out", outputPath+"/"+"phrase_MWE.out");			
+		readwrite(mwe, outputPath+"/"+"phrase_FOREIGN.out", outputPath+"/"+"phrase_MWE.out");			
 
+		// phrase_MWE															-- phrase_MWE
+/*
+		Phrase_MWE mwe = new Phrase_MWE(sr);
+		readwrite(mwe, outputPath+"/"+"preprocess.out", outputPath+"/"+"phrase_MWE.out");			
+*/
 		// phrase_MWEP1															-- phrase_MWEP1
 
 		Phrase_MWEP1 mwep1 = new Phrase_MWEP1(sr);

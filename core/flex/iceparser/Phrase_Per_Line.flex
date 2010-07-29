@@ -63,7 +63,7 @@ import java.io.*;
 WordChar = [^\r\n\t\f\[\]\{\} ]
 
 Word = {WordChar}+
-Label = AdvP|APs?|NP[s\?]?|VP[bgips]?|PP|S?CP|InjP|MWE_(AdvP|AP|CP|PP)
+Label = FRWs?|AdvP|APs?|NP[s\?]?|VP[bgips]?|PP|S?CP|InjP|MWE_(AdvP|AP|CP|PP)
 Func = (("*"SUBJ|"*"I?OBJ(AP|NOM)?|"*"COMP)(<|>)?)|"*"QUAL | "*"TIMEX\??
 
 //nýtt

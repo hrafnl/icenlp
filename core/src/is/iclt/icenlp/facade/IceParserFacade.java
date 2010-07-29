@@ -33,6 +33,7 @@ public class IceParserFacade
 {
 	private TagEncoder tagEncdr;
     private Preprocess preprocess_scn;
+	private Phrase_FOREIGN frw_scn;
     private Phrase_MWE mwe_scn;
     private Phrase_MWEP1 mwep1_scn;
     private Phrase_MWEP2 mwep2_scn;
@@ -65,6 +66,7 @@ public class IceParserFacade
         StringReader sr = new StringReader("test");
 		tagEncdr = new TagEncoder(sr);
         preprocess_scn = new Preprocess(sr);
+		frw_scn = new Phrase_FOREIGN(sr);
         mwe_scn = new Phrase_MWE(sr);
         mwep1_scn = new Phrase_MWEP1(sr);
         mwep2_scn = new Phrase_MWEP2(sr);
@@ -135,6 +137,16 @@ public class IceParserFacade
         preprocess_scn.yyclose();
         preprocess_scn.yyreset(sr);
         preprocess_scn.parse(sw);
+
+		// --------------------------------
+		//print( "Phrase_FOREIGN" );
+
+        sr = new StringReader( sw.toString() );
+        sw = new StringWriter( );
+
+		frw_scn.yyclose();
+		frw_scn.yyreset(sr);
+		frw_scn.parse(sw);
 
 		// --------------------------------
 		//print( "Phrase_MWE" );
