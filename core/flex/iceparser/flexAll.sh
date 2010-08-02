@@ -12,6 +12,7 @@
 ./flexit.sh Case_AP
 ./flexit.sh Phrase_VP
 ./flexit.sh Phrase_PP
+./flexit.sh Phrase_FOREIGN
 ./flexit.sh Clean1
 ./flexit.sh Clean2
 ./flexit.sh Func_TIMEX
