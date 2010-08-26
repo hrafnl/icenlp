@@ -428,22 +428,32 @@ public class MappingLexicon {
 					j += 1;
 				}
 				mweStr = mweStr.toLowerCase();
-				if (this.hasMapForMWE(mweStr)) {
+				if (this.hasMapForMWE(mweStr)) 
+				{
 					if (this.showAppliedActions)
 						System.out.println("[debug] applied MWE rule for the mwe " + mweStr);
 
 					String lexeme = "";
-
+					
+					// We keep the first word in the mwe.
+					Word first_mwe_word = wordList.get(begins);
+					
+					// remove the old words from the list.
 					for (i = (ends - begins); i >= 0; i--) {
 						lexeme += wordList.get(begins).getLexeme() + " ";
 						wordList.remove(begins);
 					}
+					
 					// Where we are working with MWE, we overwrite the lemma
 					// with the lexeme.
-					// lexeme.length()-1 because of the additional space at then
-					// end
+					// lexeme.length()-1 because of the additional space at then end
 					Word w = new Word(lexeme.substring(0, lexeme.length() - 1), this.getMapForMWE(mweStr), MWECode.none, null, false);
 					w.setLemma(lexeme.substring(0, lexeme.length() - 1));
+					
+					// We add the same prespace as the first word had.
+					w.preSpace = first_mwe_word.preSpace;
+					
+					// add the new word which contains the mwe.
 					wordList.add(begins, w);
 				}
 			}
