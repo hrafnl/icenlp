@@ -24,16 +24,19 @@
 package is.iclt.icenlp.core.iceparser;
 import java.util.regex.*;
 import java.io.*;
-%%
+import is.iclt.icenlp.core.utils.IceParserUtils;
+%%	
 
 %public
 %class TagEncoder
 %standalone
-%line
 %extends IceParserTransducer
 %unicode
 
 %{
+  String encO =  IceParserUtils.encodeOpen;
+  String encC =  IceParserUtils.encodeClose;
+  
     java.io.Writer out = new BufferedWriter(new OutputStreamWriter(System.out));
       
       public void parse(java.io.Writer _out) throws java.io.IOException
@@ -54,44 +57,38 @@ import java.io.*;
             e.printStackTrace();
         }
 %eof}
+//comment = "/*" ~"*/"
+%include regularDef.txt
 
-WhiteSpace = [ \t\f]
 
-WordChar = [^\r\n\t\f ]
-Word = {WordChar}+
-WordSpaces = {WhiteSpace}*{Word}
+oneWord = {WhiteSpace}*{Word}
+twin = {oneWord}{WhiteSpace}+{oneWord}
 
-twin = {WordSpaces}{WhiteSpace}+{WordSpaces}
+
 
 %%
-{twin}	{
+//{comment}	{ System.out.println("skldfja"); out.write(yytext()); }
+{twin}		{
+				String originalStr = yytext();
+				String str = originalStr.trim();
+
+				String second;
+
+				if(str.lastIndexOf(" ") != -1)
+					second = str.substring(str.lastIndexOf(" "), str.length());
+				else
+					second = str.substring(str.lastIndexOf("\t"), str.length());
+
+				second = second.trim();
+				StringBuilder b = new StringBuilder(originalStr);
+				b.replace(originalStr.lastIndexOf(second), originalStr.lastIndexOf(second) + second.length(),  encO+second+encC);
+				originalStr = b.toString();
+
+				out.write(originalStr);			
+			}
 
 
 
-
-
-			String originalStr = yytext();
-			String str = originalStr.trim();
-
-//System.err.println("err: "+str);
-			String second;
-
-			if(str.lastIndexOf(" ") != -1)
-				second = str.substring(str.lastIndexOf(" "), str.length());
-			else
-				second = str.substring(str.lastIndexOf("\t"), str.length());
-
-			second = second.trim();
-//System.err.println(second);
-			StringBuilder b = new StringBuilder(originalStr);
-			b.replace(originalStr.lastIndexOf(second), originalStr.lastIndexOf(second) + second.length(),  "^"+second+"$");
-			originalStr = b.toString();
-
-			out.write(originalStr);			
-		}
-
-
-		
 "\n"		{ //System.err.print("Reading line: " + Integer.toString(yyline+1) + "\r"); 
 		out.write("\n"); }
 .		{ out.write(yytext());}

@@ -60,12 +60,12 @@ import java.io.*;
 %include regularDef.txt
 
 
-ArticleTag = \^g{Gender}{Number}{Case}\${WhiteSpace}+
-PossPronounTag = \^fe{Gender}{Number}{Case}\${WhiteSpace}+
-IndefPronounTag = \^fo{Gender}{Number}{Case}\${WhiteSpace}+
-InterPronounTag = \^fs{Gender}{Number}{Case}\${WhiteSpace}+
-DemonPronounTag = \^fa{Gender}{Number}{Case}\${WhiteSpace}+
-ReflexivePronounTag = \^fb{Gender}{Number}{Case}\${WhiteSpace}+
+ArticleTag = {encodeOpen}g{Gender}{Number}{Case}{encodeClose}{WhiteSpace}+
+PossPronounTag = {encodeOpen}fe{Gender}{Number}{Case}{encodeClose}{WhiteSpace}+
+IndefPronounTag = {encodeOpen}fo{Gender}{Number}{Case}{encodeClose}{WhiteSpace}+
+InterPronounTag = {encodeOpen}fs{Gender}{Number}{Case}{encodeClose}{WhiteSpace}+
+DemonPronounTag = {encodeOpen}fa{Gender}{Number}{Case}{encodeClose}{WhiteSpace}+
+ReflexivePronounTag = {encodeOpen}fb{Gender}{Number}{Case}{encodeClose}{WhiteSpace}+
 
 Noun = {WordSpaces}{NounTag}
 ProperNoun = {WordSpaces}{ProperNounTag}

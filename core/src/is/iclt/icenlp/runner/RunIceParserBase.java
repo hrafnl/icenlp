@@ -29,6 +29,11 @@ public class RunIceParserBase
     protected boolean agreement=false;
 	protected boolean markGrammarError=false;
     protected boolean standardInputOutput=false;
+	protected boolean mergeTags=false;
+
+	protected int outputType=0; // 0-plain, 1-ppl, 2-json, 3-xml
+
+	private int outputSetCount=0;
 
 	protected void getParam(String[] args)
 	{
@@ -47,8 +52,6 @@ public class RunIceParserBase
 				outputPath = args[i + 1];
 			if( args[i].equals( "-f" ) )
 				includeFunc = true;
-			if( args[i].equals( "-l" ) )
-				phrasePerLine = true;
 			if( args[i].equals( "-a" ) )
 				agreement = true;	
 			if( args[i].equals( "-e" ) )
@@ -56,6 +59,42 @@ public class RunIceParserBase
 				agreement = true;	
 				markGrammarError = true;		
 			}
+			if( args[i].equals( "-m" ) )
+			{
+				mergeTags=true;
+			}
+			if( args[i].equals( "-json" ) )
+			{
+				outputType=2;
+				outputSetCount++;
+				canChooseOne();
+			}
+			if( args[i].equals( "-xml" ) )
+			{
+				outputType=3;
+				outputSetCount++;
+				canChooseOne();
+			}
+			if( args[i].equals( "-l" ) )
+			{
+				outputType=1;
+				phrasePerLine=true;
+				outputSetCount++;
+				canChooseOne();
+			}
+		}
+	}
+	protected void canChooseOne()
+	{
+		if(outputSetCount > 1)
+		{
+			System.out.println( "\nPlease only select one output type." );
+			System.out.println( "The output Parameters are the following:" );
+			System.out.println( "\t-l	One phrase per line" );
+			System.out.println( "\t-json	Output in json format " );
+			System.out.println( "\t-xml	Output in xml format " );
+			System.out.println( "\tLeave blank for plain text output\n" );
+			System.exit(0);
 		}
 	}
 	protected void showParametersExit()
@@ -70,6 +109,9 @@ public class RunIceParserBase
 		System.out.println( "        else the output is one sentence per line");
 		System.out.println( "-a 	rely on feature agreement"	 );
 		System.out.println( "-e 	Mark possible grammar errors"	 );
+		System.out.println( "-m 	Merge Function tags with Phrase tags"	 );
+		System.out.println( "-json	Output in json format"	 );
+		System.out.println( "-xml	Output in xml format"	 );
 		System.exit(0);
 	}
 

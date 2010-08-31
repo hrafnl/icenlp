@@ -46,6 +46,10 @@ import is.iclt.icenlp.core.utils.IceParserUtils;
 	String Func1Close=" *SUBJ>} ";
 	String Func2Open=" {*SUBJ< ";
 	String Func2Close=" *SUBJ<} ";
+
+	static String encO =  IceParserUtils.encodeOpen;
+	static String encC =  IceParserUtils.encodeClose;
+
 	boolean agreement = false;  // -a parameter
     boolean markGrammarError = false; // -e parameter
 	int theIndex=0;
@@ -99,7 +103,7 @@ import is.iclt.icenlp.core.utils.IceParserUtils;
 		if( str.substring(1,2).equals("{") )
 			return stb.insert(str.length()-1, "?").toString();
 
-		return stb.insert(1, "?").toString();
+		return stb.insert(str.length()-2, "?").toString();
 		
 	}
 	public String createOutputString(String s1, String s2, String s3, String s4, int order, boolean tag)
@@ -153,8 +157,8 @@ import is.iclt.icenlp.core.utils.IceParserUtils;
 			{
 				int mod1, mod2;
 
-				String tagI = tags[i].substring(1, tags[i].length()-1);
-				String tagX = tags[x].substring(1, tags[x].length()-1);
+				String tagI = tags[i].substring(encO.length(), tags[i].length()-encC.length());
+				String tagX = tags[x].substring(encO.length(), tags[x].length()-encC.length());
 
 				mod1 = GetModifier(tagI.substring(0,1));
 				mod2 = GetModifier(tagX.substring(0,1));
@@ -322,8 +326,6 @@ SubjectRel = {NomSubject}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{RelCP}
 {VerbSubject}	
 { 
 //System.err.println("subj-3");
-//System.err.println(yytext());
-
 	String str = yytext();
 	if (str.contains(" PP]"))
 		StringSearch.splitString(str, " PP]", true, 4);

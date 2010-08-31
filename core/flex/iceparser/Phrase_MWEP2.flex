@@ -65,7 +65,8 @@ PrepPart = {WhiteSpace}+{PrepTag}
 NounPart = {WhiteSpace}+{NounTag}
 MainPrepPart = (að|af|á|eftir|frá|fyrir|hjá|í|með|til|um|úr|við|yfir|undir){PrepPart}	
 
-Pair = 	[aA]ft(an|ur){AdverbPart}{MainPrepPart}				|
+Pair = 	{WhiteSpace}+(
+	[aA]ft(an|ur){AdverbPart}{MainPrepPart}				|
 	[aA]ust(an|ur){AdverbPart}{MainPrepPart}			|
 	[áÁ]{AdverbPart}(eftir|meðal|milli|móti|undan){PrepPart} 	|
 	[bB]ak{NounPart}við{PrepPart} 					|
@@ -88,10 +89,11 @@ Pair = 	[aA]ft(an|ur){AdverbPart}{MainPrepPart}				|
 	[úÚ]ti{AdverbPart}(á|í|við){PrepPart}				|
 	[vV]esta(an|ur){AdverbPart}{MainPrepPart}			|
 	[yY]fir{AdverbPart}{MainPrepPart}				|
-	[þÞ]rátt{AdverbPart}fyrir{PrepPart}
+	[þÞ]rátt{AdverbPart}fyrir{PrepPart})
 	
-NotPair = [áÁ]fram{AdverbPart}{MainPrepPart} |
-	  [þÞ]á{AdverbPart}{MainPrepPart}			
+NotPair = {WhiteSpace}+(
+	  [áÁ]fram{AdverbPart}{MainPrepPart} |
+	  [þÞ]á{AdverbPart}{MainPrepPart})
 //AdverbPrep = {WhiteSpace}+{Pair}
 
 %%

@@ -23,6 +23,7 @@
 package is.iclt.icenlp.core.iceparser;
 import java.util.regex.*;
 import java.io.*;
+import is.iclt.icenlp.core.utils.IceParserUtils;
 %%
 
 %public
@@ -33,6 +34,9 @@ import java.io.*;
 %unicode
 
 %{
+    String encO =  IceParserUtils.encodeOpen;
+    String encC =  IceParserUtils.encodeClose;
+    
     java.io.Writer out = new BufferedWriter(new OutputStreamWriter(System.out));
       
       public void parse(java.io.Writer _out) throws java.io.IOException
@@ -54,13 +58,15 @@ import java.io.*;
         }
 %eof}
 
-tag = \^~\$
+%include regularDef.txt
+
+tag = {encodeOpen}~{encodeClose}
 
 
 %%
 {tag}	{
 			String str = yytext();
-			str = str.substring(1,str.length()-1);
+			str = str.substring(encO.length(),str.length()-encC.length());
 		  	out.write(str);
 		}
 

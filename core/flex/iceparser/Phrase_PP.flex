@@ -69,11 +69,11 @@ import java.io.*;
 
 Vegna = {WhiteSpace}*vegna{WhiteSpace}+
 
-NounPhrase = {OpenNP}~{CloseNP}
+NounPhrase = {OpenNP}" "~{CloseNP} | {OpenNP}n~{CloseNP} | {OpenNP}a~{CloseNP} | {OpenNP}d~{CloseNP} | {OpenNP}g~{CloseNP} //avoid "NP?"
 NPs = {OpenNPs}~{CloseNPs}
 AdverbPrepPhrase = {MWE_PP}
 
-NPGenSpec = {OpenNP}g~\^f(p|s)hee\${WhiteSpace}+{CloseNP}
+NPGenSpec = {OpenNP}g~{encodeOpen}f(p|s)hee{encodeClose}{WhiteSpace}+{CloseNP}
 
 AdjectivePhrase = {OpenAP} ~{CloseAP}
 AdjectivePhrases = {OpenAPs}~{CloseAPs}

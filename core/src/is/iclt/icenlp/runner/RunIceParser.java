@@ -24,6 +24,7 @@ package is.iclt.icenlp.runner;
 import is.iclt.icenlp.facade.IceParserFacade;
 import is.iclt.icenlp.core.utils.FileEncoding;
 //import is.iclt.icenlp.core.utils.FileEncoding;
+import is.iclt.icenlp.core.iceparser.*;
 
 import java.io.*;
 
@@ -48,31 +49,85 @@ public class RunIceParser extends RunIceParserBase
         }
         else 
 		{
-			if(inputFile == null || outputFile == null || outputPath == null)
+			if(inputFile == null || outputFile == null)
 			{
 				showParametersExit();
 			}
            printHeader(); 
            br = FileEncoding.getReader(inputFile);
-           bw = FileEncoding.getWriter(outputPath+"/"+outputFile);
+           bw = FileEncoding.getWriter(outputFile);
            System.out.println( "Input file: " + inputFile );
-           System.out.println( "Output file: " + outputPath+"/"+outputFile );
+           System.out.println( "Output file: " + outputFile );
         }
+
+
         //System.out.println( "Default file encoding: " + FileEncoding.getEncoding());
+		StringBuffer buff = new StringBuffer();
         int count=0;
         while((str = br.readLine()) != null) 
 		{
 			count++;
 			if (!standardInputOutput && count%500==0)
 				System.out.print("Lines: " + count + "\r");
-			bw.write(ipf.parse(str, includeFunc, phrasePerLine, agreement, markGrammarError));
-			bw.write("\n");
-		}
-            bw.flush();
-            if (!standardInputOutput && count%500==0)
-                System.out.println("Lines: " + count);
+			//bw.write(ipf.parse(str, includeFunc, phrasePerLine, agreement, markGrammarError));
+			//bw.write("\n");
 
-            bw.close();
+			//if tags are merged then phrase per line is done in the outputFormatter
+			if(phrasePerLine && !mergeTags)			
+				buff.append(ipf.parse(str, includeFunc, phrasePerLine, agreement, markGrammarError));
+			else
+				buff.append(ipf.parse(str, includeFunc, false, agreement, markGrammarError));
+			buff.append("\n");
+		}
+
+		//
+		if( !( (outputType==0 || outputType==1) && !mergeTags) ) 
+		{
+			OutputFormatter of = new OutputFormatter();
+			switch (outputType) 
+			{
+			  case 0:
+					of.setPlain(true);
+					break;
+			  case 1: 
+					of.setPlainPerLine(true);				
+					break;
+			  case 2:
+					of.setJson(true);
+					break;
+			  case 3:
+					of.setXml(true);
+					break;
+			  default:
+					of.setPlain(true);
+					break;
+			}
+			if(mergeTags)
+				of.setMergeTags(true);
+
+			StringReader sr = new StringReader( buff.toString() );
+			StringWriter sw = new StringWriter( );		
+
+			of.yyclose();
+			of.yyreset(sr);
+			of.parse(sw);
+
+			bw.write(sw.toString());
+
+			sr.close();
+			sw.close();
+		}
+		else
+		{
+			bw.write(buff.toString());
+		}
+       
+        //if (!standardInputOutput && count%500==0)
+          //  System.out.println("Lines: " + count);
+
+		
+		bw.flush();
+        bw.close();
     }
 
     public static void main(String[] args) throws IOException 

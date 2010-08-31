@@ -75,7 +75,7 @@ PPPhrase = {OpenPP}~{ClosePP}
 	[NP nokkrum fokfþ dögum nkfþ NP] [AdvP síðar/seinna aam AdvP]
 */
 
-NumberTag = \^t[ao]\${WhiteSpace}+
+NumberTag = {encodeOpen}t[ao]{encodeClose}{WhiteSpace}+
 NounNumeral = {WordSpaces}({NounTag}{WordSpaces}){NumberTag}
 AdjPhrase = {OpenAP}a?~{CloseAP}
 AdvPWords =  {OpenAdvP}{WhiteSpace}+s(íðar|einna){WhiteSpace}+{AdverbTag}{CloseAdvP}

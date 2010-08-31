@@ -29,6 +29,14 @@ import java.io.*;
  */
 public class IceParserUtils 
 {
+	// if encode string is altered, it also has to be changed in core/flex/iceparser/regularDef.txt
+	public static String encodeOpen = "^";
+	public static String encodeClose = "$";	
+
+	//needed when the tags are compiled as patterns.
+	public static String regexEncodeOpen = "\\^";
+	public static String regexEncodeClose = "\\$";
+	
 	public IceParserUtils()
 	{
 	}

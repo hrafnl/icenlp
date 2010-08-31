@@ -33,6 +33,7 @@
 package is.iclt.icenlp.core.iceparser;
 import java.util.regex.*;
 import java.io.*;
+import is.iclt.icenlp.core.utils.IceParserUtils;
 %%
 
 %public
@@ -45,6 +46,12 @@ import java.io.*;
 
 
 %{
+  String encO =  IceParserUtils.encodeOpen;
+  String encC =  IceParserUtils.encodeClose;
+  
+  String rEncO =  IceParserUtils.regexEncodeOpen;
+  String rEncC =  IceParserUtils.regexEncodeClose;
+
   String nomStr = "n";
   String accStr = "a";
   String datStr = "d";
@@ -98,8 +105,8 @@ import java.io.*;
 %include regularDef.txt
 %include funcDef.txt
 
-ProperNounTagNotGen = \^n{Gender}{Number}[noþ]("-"|{ArticleChar}){ProperName}\${WhiteSpace}+
-ProperNounTagGen = \^n{Gender}{Number}e("-"|{ArticleChar}){ProperName}\${WhiteSpace}+
+ProperNounTagNotGen = {encodeOpen}n{Gender}{Number}[noþ]("-"|{ArticleChar}){ProperName}{encodeClose}{WhiteSpace}+
+ProperNounTagGen = {encodeOpen}n{Gender}{Number}e("-"|{ArticleChar}){ProperName}{encodeClose}{WhiteSpace}+
 ProperNounWithQualifer = {OpenNP}g{WordSpaces}{ProperNounTagNotGen}({WordSpaces}{ProperNounTagGen})+~{CloseNP}
 
 AdvPSeq = (({OpenAdvP}~{AdverbTag}{CloseAdvP}){WhiteSpace}+){2,5}
@@ -133,9 +140,11 @@ DatNPWithNomAdjPhrase = {OpenNP}d{WhiteSpace}+{OpenAP}n~{CloseNP}
 		
 {ProperNounWithQualifer}	{
 					String str = yytext();
-
+	System.out.println(yytext());
 					// Search for the first nom/acc/dat proper noun tag 
-					Pattern p = Pattern.compile("\\^"+"n[kvh][ef][noþ](g|-)[msö]"+"\\$");
+					//Pattern p = Pattern.compile("\\^"+"n[kvh][ef][noþ](g|-)[msö]"+"\\$");
+					Pattern p = Pattern.compile(rEncO+"n[kvh][ef][noþ](g|-)[msö]"+rEncC);
+
 					Matcher m = p.matcher(str);
 					if (m.find())
 					{
@@ -144,7 +153,7 @@ DatNPWithNomAdjPhrase = {OpenNP}d{WhiteSpace}+{OpenAP}n~{CloseNP}
 						int startIdx = m.start();
 						int endIdx = m.end();
 						String tag = str.substring(startIdx,endIdx);
-						tag = tag.substring(1, tag.length()-1);
+						tag = tag.substring(encO.length(), tag.length()-encC.length());
 
 				//	System.err.println("Tag: " + tag);
 						String caseStr = analyseTag(tag);
@@ -155,6 +164,7 @@ DatNPWithNomAdjPhrase = {OpenNP}d{WhiteSpace}+{OpenAP}n~{CloseNP}
 						//System.err.println("First part: " + firstPart);
 						//System.err.println("Second  part: " + secondPart);
 						firstPart = firstPart.replaceFirst("\\[NPg",replacementStr);
+	System.out.println(firstPart + " NP]" + " [NPg " + secondPart);
 						out.write(firstPart + " NP]" + " [NPg " + secondPart);
 					}
 					//else

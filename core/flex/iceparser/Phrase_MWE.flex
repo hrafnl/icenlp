@@ -22,6 +22,12 @@
  
 /* This transducer groups multiword expressions  */
 
+/*
+	KNOWN PROBLEM
+
+If words like "aðeins og" appear in a text, phrase_mwe will recognize it as "eins og"
+because no whitespace is required before the word. 
+*/
 package is.iclt.icenlp.core.iceparser;
 import java.io.*;
 %%
@@ -64,7 +70,9 @@ import java.io.*;
 
 %include regularDef.txt
 
-PronounTag = \^f[abpos]({Gender}|{Person}){Number}{Case}\$
+
+PronounTag = {encodeOpen}f[abpos]({Gender}|{Person}){Number}{Case}{encodeClose}//þessi var fyrir
+
 
 Ada = {WhiteSpace}*[aA]ð{WhiteSpace}+{AdverbTag}
 Adc = {WhiteSpace}*[aA]ð{WhiteSpace}+{ConjTag}
@@ -217,7 +225,7 @@ Ofugu = {WhiteSpace}*[öÖ]fugu{WhiteSpace}+{AdjectiveTag}
 Ollu = {WhiteSpace}*[öÖ]llu{WhiteSpace}+{PronounTag}
 	
 		
-MWEAdv = 	{Adp}({Nyju}|{Sjalfsogdu}|{Visu}|{Minnsta}{Kosti}|({Nokkru}|{Odru}){Leyti}) 		|
+MWEAdv =	{Adp}({Nyju}|{Sjalfsogdu}|{Visu}|{Minnsta}{Kosti}|({Nokkru}|{Odru}){Leyti}) 		|
 		({Alls}|{Annars}|{Einhvers}){Stadar} 		|
 		{Afa}{Og}{Tila}					|
 		{Aftur}{Ap}({Bak}|{Moti})			|
@@ -273,6 +281,7 @@ MWEA =		({Alls}|{Annars}|{Einhvers}|{Einsp}|{Ferns}|{Hvers}|{Margs}	|
 		{Hvers}{Kyns}	|
 		{Thess}{Hattar}
 
+
 MWEC =		({Af}|{Ur})?{Thvi}{Adc} 	| 
 		{Aa}{Medan}			|
 		{Eftir}{Adc} 			|
@@ -282,15 +291,16 @@ MWEC =		({Af}|{Ur})?{Thvi}{Adc} 	|
 		{Hvorki}{Meiraa}{Ne}{Minna}{En}	|
 		{Svo}{Adc}			|
 		{Svo}{Mikid}?{Sem}		|
-		{Tilp}({Adi}|{Adc}) 	|	
+		{Tilp}({Adi}|{Adc}) 		|	
 		{Tilp}{Thess}({Adi}|{Adc})? 	|	
 		{An}{Thess}({Adi}|{Adc})? 	|	
-/*		({Tilp}|{An}){Thess}?({Adi}|{Adc}) 	|	*/
+//		({Tilp}|{An}){Thess}?({Adi}|{Adc}) 	|	
 		{Um}{Leid}{Og}			|
 		{Vegna}{Thess}{Adc}		|
 		{Thar}({Tila}|{Sem})		|
 		{Tho}{Adc}			|
-		{Thvia}{Adeins}?{Adc} 
+		{Thvia}{Adeins}?{Adc}
+		
 
 %%
 {MWEC}		{ out.write(OpenC+yytext()+CloseC);}

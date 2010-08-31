@@ -18,35 +18,40 @@ Degree = [fme]		/* f=positive, m=comparative, e=superlative */
 ArticleChar = "g"
 ProperName = [msö]
 
-AdverbTag = \^aa[me]?\${WhiteSpace}+
+// if encode string is altered, it also has to be changed in core/src/is/iclt/icenlp/core/utils/IceParserUtils.java
+encodeOpen = "^"
+encodeClose =  "$"
+
+AdverbTag = {encodeOpen}aa[me]?{encodeClose}{WhiteSpace}+
 Adverb = {WordSpaces}{AdverbTag}
-AbbrevTag = \^as\${WhiteSpace}+
+AbbrevTag = {encodeOpen}as{encodeClose}{WhiteSpace}+
 Abbreviation = {WordSpaces}{AbbrevTag}
 
-AdjectiveTag = \^l{Gender}{Number}{Case}{Declension}{Degree}\$
+AdjectiveTag = {encodeOpen}l{Gender}{Number}{Case}{Declension}{Degree}{encodeClose}
 
-ConjTag = \^ct?\${WhiteSpace}+
+ConjTag = {encodeOpen}ct?{encodeClose}{WhiteSpace}+
 Conj = {WordSpaces}{ConjTag}
 
-InfinitiveTag = \^cn\$
+InfinitiveTag = {encodeOpen}cn{encodeClose}
 
-PrepTag = \^a{ObliqueCase}[em]?\${WhiteSpace}+
-PrepTagAccDat = \^a[oþ][em]?\${WhiteSpace}+
-PrepTagGen = \^ae\${WhiteSpace}+
+PrepTag = {encodeOpen}a{ObliqueCase}[em]?{encodeClose}{WhiteSpace}+
+PrepTagAccDat = {encodeOpen}a[oþ][em]?{encodeClose}{WhiteSpace}+
+PrepTagGen = {encodeOpen}ae{encodeClose}{WhiteSpace}+
 Preposition = {WordSpaces}{PrepTag}
 PrepositionAccDat = {WordSpaces}{PrepTagAccDat}
 PrepositionGen = {WordSpaces}{PrepTagGen}
 
-VerbTag = \^s{Mood}{Voice}({Person}{Number}{Tense} | {Gender}{Number}{Case})?\$
-VerbFiniteTag = \^s[bfv]{Voice}{Person}{Number}{Tense}\${WhiteSpace}+
-VerbInfinitiveTag = \^sn[mg]\${WhiteSpace}+
+VerbTag = {encodeOpen}s{Mood}{Voice}({Person}{Number}{Tense} | {Gender}{Number}{Case})?{encodeClose}
+VerbFiniteTag = {encodeOpen}s[bfv]{Voice}{Person}{Number}{Tense}{encodeClose}{WhiteSpace}+
+VerbInfinitiveTag = {encodeOpen}sn[mg]{encodeClose}{WhiteSpace}+
 
 // The next definition causes problems because x can be a word!
-//NounTag = \^n{Gender}{Number}{Case}{ArticleChar}?\${WhiteSpace}+ | x
-NounTag = \^n{Gender}{Number}{Case}{ArticleChar}?\${WhiteSpace}+ 
-ProperNounTag = \^n{Gender}{Number}{Case}("-"|{ArticleChar}){ProperName}\${WhiteSpace}+
-NumeralTag = \^t([aop]|f{Gender}{Number}{Case})\${WhiteSpace}+
-PersPronounTag = \^fp({Gender}|{Person}){Number}{Case}\${WhiteSpace}+
+//NounTag = {encodeOpen}n{Gender}{Number}{Case}{ArticleChar}?{encodeClose}{WhiteSpace}+ | x
+NounTag = {encodeOpen}n{Gender}{Number}{Case}{ArticleChar}?{encodeClose}{WhiteSpace}+ 
+ProperNounTag = {encodeOpen}n{Gender}{Number}{Case}("-"|{ArticleChar}){ProperName}{encodeClose}{WhiteSpace}+
+NumeralTag = {encodeOpen}t([aop]|f{Gender}{Number}{Case}){encodeClose}{WhiteSpace}+
+PersPronounTag = {encodeOpen}fp({Gender}|{Person}){Number}{Case}{encodeClose}{WhiteSpace}+
+
 
 OpenAdvP = "[AdvP"
 CloseAdvP = "AdvP]"
@@ -79,7 +84,7 @@ CloseVPp = "VPp]"
 OpenPP = "[PP"
 ClosePP = " PP]"	/* Extra space because of conflict with "MWE_PP]" */
 
-Comma = ","{WhiteSpace}+\^","\$
+Comma = ","{WhiteSpace}+{encodeOpen}","{encodeClose}
 //ConjPhrase = {OpenCP}{WhiteSpace}+(og|eða|né|heldur|en)~c{WhiteSpace}+{CloseCP}
 ConjPhrase = {OpenCP}~{CloseCP}
 ConjPhraseOrComma = {ConjPhrase} | {Comma}
@@ -122,5 +127,5 @@ APsDat = {OpenNPs}{WhiteSpace}+{OpenAP}d~{CloseAPs}
 APsGen = {OpenNPs}{WhiteSpace}+{OpenAP}g~{CloseAPs}
 
 
-NPNum = {OpenNP}" "~\^t(a|p)\${WhiteSpace}+{CloseNP}
+NPNum = {OpenNP} ~{encodeOpen}t(a|p){encodeClose}{WhiteSpace}+{CloseNP}
 

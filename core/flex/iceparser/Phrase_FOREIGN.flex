@@ -62,7 +62,7 @@ import java.io.*;
 
 %include regularDef.txt
 
-ForeignTag = \^e\$
+ForeignTag = {encodeOpen}e{encodeClose}{WhiteSpace}+
 
 ForeignWord = {WordSpaces}{ForeignTag}
 ForeignWords = {ForeignWord}{WhiteSpace}*({ForeignWord}{WhiteSpace}*)+

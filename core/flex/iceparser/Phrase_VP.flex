@@ -91,9 +91,9 @@ import java.io.*;
 %include regularDef.txt
 %include verbLexicon.txt
 
-VerbPastPartTag = \^sþ{Voice}{Gender}{Number}{Case}\$
-VerbPresentPartTag = \^slg\$
-VerbSupineTag = \^ss{Voice}\$
+VerbPastPartTag = {encodeOpen}sþ{Voice}{Gender}{Number}{Case}{encodeClose}
+VerbPresentPartTag = {encodeOpen}slg{encodeClose}
+VerbSupineTag = {encodeOpen}ss{Voice}{encodeClose}
 
 AdverbPhrase = {OpenAdvP}~{CloseAdvP}
 VerbBeAndTag =	{WhiteSpace}*{VerbBe}{WhiteSpace}+{VerbFiniteTag}

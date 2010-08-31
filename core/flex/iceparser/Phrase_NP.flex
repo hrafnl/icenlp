@@ -54,6 +54,8 @@
 /* gamla, litla og mjóa manninum (adj phrases, noun)		*/
 /* fyrstu átta vikunum (adj phrase, numeral, noun)		*/
 
+
+
 package is.iclt.icenlp.core.iceparser;
 import java.io.*;
 import java.util.*;
@@ -72,6 +74,9 @@ import is.iclt.icenlp.core.utils.IceParserUtils;
 	String NPClose=" NP] ";
 	String ErrNPOpen=" [NP? ";
 	String ErrNPClose=" NP?] ";
+	
+	static String encO =  IceParserUtils.encodeOpen;
+	static String encC =  IceParserUtils.encodeClose;
 
 	boolean agreement = false;  // -a parameter attribute	;
 	boolean markGrammarError = false;
@@ -93,6 +98,7 @@ import is.iclt.icenlp.core.utils.IceParserUtils;
 	    	while (!zzAtEOF) 
 	    	    yylex();
 	}
+
 	private String FinalCheck(String originalStr)
 	{
 	//System.out.println(originalStr);
@@ -149,9 +155,9 @@ import is.iclt.icenlp.core.utils.IceParserUtils;
 			for(int x=i+1; x<tags.length; x++)
 			{
 				int mod1, mod2;
-				String tagI = tags[i].substring(1, tags[i].length()-1);
-				String tagX = tags[x].substring(1, tags[x].length()-1);
-
+				String tagI = tags[i].substring(encO.length(), tags[i].length()-encC.length());
+				String tagX = tags[x].substring(encO.length(), tags[x].length()-encC.length());
+				
 				mod1 = GetModifier(tagI.substring(0,1));
 				mod2 = GetModifier(tagX.substring(0,1));
 
@@ -201,12 +207,12 @@ import is.iclt.icenlp.core.utils.IceParserUtils;
 
 %include regularDef.txt
 
-ArticleTag = \^g{Gender}{Number}{Case}\${WhiteSpace}+
-PossPronounTag = \^fe{Gender}{Number}{Case}\${WhiteSpace}+
-IndefPronounTag = \^fo{Gender}{Number}{Case}\${WhiteSpace}+
-InterPronounTag = \^fs{Gender}{Number}{Case}\${WhiteSpace}+
-DemonPronounTag = \^fa{Gender}{Number}{Case}\${WhiteSpace}+
-ReflexivePronounTag = \^fb{Gender}{Number}{Case}\${WhiteSpace}+
+ArticleTag = {encodeOpen}g{Gender}{Number}{Case}{encodeClose}{WhiteSpace}+
+PossPronounTag = {encodeOpen}fe{Gender}{Number}{Case}{encodeClose}{WhiteSpace}+
+IndefPronounTag = {encodeOpen}fo{Gender}{Number}{Case}{encodeClose}{WhiteSpace}+
+InterPronounTag = {encodeOpen}fs{Gender}{Number}{Case}{encodeClose}{WhiteSpace}+
+DemonPronounTag = {encodeOpen}fa{Gender}{Number}{Case}{encodeClose}{WhiteSpace}+
+ReflexivePronounTag = {encodeOpen}fb{Gender}{Number}{Case}{encodeClose}{WhiteSpace}+
 
 Noun = {WordSpaces}{NounTag}
 ProperNoun = {WordSpaces}{ProperNounTag}
@@ -237,18 +243,21 @@ AdjAP = {AdjectivePhrases}{Numeral}?{NounProperPoss}
 ProperNounNP = {Title}?{ProperNoun}+({ReflexivePronoun}|{PossPronoun})?
 NounNP = {Noun}({ReflexivePronoun}|{Numeral}|{DemonPronoun}?{IndefPronoun}|{PossPronoun})?
 
-NounPhrase = {Hvad} | {HvadaNP} | {ReflNP} | {ArticleNP} | {DemonNP} | {IndefNP} | {PersNP} | {PossNP} |
-		{NumNP} | {AdjAP} | {NounNP} | {ProperNounNP}
+
+NounPhrase = {Hvad} | {HvadaNP} | {ReflNP} | {ArticleNP} | {DemonNP} | {IndefNP} | {PersNP} | {PossNP} | {NumNP} | {AdjAP} | {NounNP} | {ProperNounNP}
+
 
 %%
 
-{MWE}			{ out.write(yytext());} 		/* Don't touch multi-word expression */ 
+{MWE}			{ out.write(yytext());} 		// Don't touch multi-word expression 
 
 {NounPhrase}
 {
 	String str = yytext();		
 	out.write(FinalCheck(str));
 }
+
+
 
 "\n"		{ //System.err.print("Reading line: " + Integer.toString(yyline+1) + "\r"); 
 		out.write("\n"); }

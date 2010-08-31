@@ -12,7 +12,6 @@
 ./flexit.sh Case_AP
 ./flexit.sh Phrase_VP
 ./flexit.sh Phrase_PP
-./flexit.sh Phrase_FOREIGN
 ./flexit.sh Clean1
 ./flexit.sh Clean2
 ./flexit.sh Func_TIMEX
@@ -24,5 +23,6 @@
 ./flexit.sh Func_OBJ2
 ./flexit.sh Func_OBJ3
 ./flexit.sh Phrase_Per_Line
+./flexit.sh Phrase_FOREIGN
 ./flexit.sh TagDecoder
 ./flexit.sh TagEncoder

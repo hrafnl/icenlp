@@ -29,7 +29,7 @@ import java.io.*;
 
 public class RunIceParserOut extends RunIceParserBase
 {	
-	private void readwrite(IceParserTransducer klasi, String inputFileAndPath, String outputFileAndPath) throws IOException
+	private void readwrite(IceParserTransducer transducer, String inputFileAndPath, String outputFileAndPath) throws IOException
 	{
 		BufferedReader br;
         BufferedWriter bw;
@@ -45,9 +45,9 @@ public class RunIceParserOut extends RunIceParserBase
 				sr = new StringReader(str);
 				sw = new StringWriter();
 			
-				klasi.yyclose();
-				klasi.yyreset(sr);
-				klasi.parse(sw);
+				transducer.yyclose();
+				transducer.yyreset(sr);
+				transducer.parse(sw);
 
                 bw.write(sw.toString());           
 				bw.write("\n");
@@ -55,6 +55,63 @@ public class RunIceParserOut extends RunIceParserBase
 		
 		bw.flush();
 		bw.close();
+	}
+	private void formatter(OutputFormatter of, String inputFileAndPath, String outputFileAndPath, int outputType, boolean mergeTags) throws IOException
+	{
+		BufferedReader br;
+		BufferedWriter bw;
+
+		StringReader sr;
+		StringWriter sw;
+		String str;
+
+		br = FileEncoding.getReader(inputFileAndPath);
+		bw = FileEncoding.getWriter(outputFileAndPath);
+
+		StringBuffer buf = new StringBuffer();
+
+		while((str = br.readLine()) != null)
+		{
+			buf.append(str+"\n");	
+		}
+
+		sr = new StringReader(buf.toString());
+		sw = new StringWriter();
+	
+
+		// 0-plain, 1-ppl, 2-json, 3-xml
+		switch (outputType) 
+		{
+		  case 0:
+				of.setPlain(true);
+				break;
+		  case 1: 
+				of.setPlainPerLine(true);				
+				break;
+		  case 2:
+				of.setJson(true);
+				break;
+		  case 3:
+				of.setXml(true);
+				break;
+		  default:
+				of.setPlain(true);
+				break;	
+		}
+				
+		if(mergeTags)
+			of.setMergeTags(true);
+
+		of.yyclose();
+		of.yyreset(sr);
+		of.parse(sw);
+
+        bw.write(sw.toString());           
+		bw.write("\n");
+
+		bw.flush();
+		bw.close();
+		br.close();
 	}
     private void parse() throws IOException
     {	
@@ -74,7 +131,7 @@ public class RunIceParserOut extends RunIceParserBase
 		System.out.println( "annotate functions on: " + includeFunc);
 		System.out.println( "Agreement on: " + agreement);
 		System.out.println( "Grammar check on: " + markGrammarError);
-
+		System.out.println( "Merge tags: " + mergeTags);
 		
 		sr = new StringReader("empty");
 		// TagEncode															-- TagEncode
@@ -90,16 +147,11 @@ public class RunIceParserOut extends RunIceParserBase
 		Phrase_FOREIGN frgn = new Phrase_FOREIGN(sr);
 		readwrite(frgn, outputPath+"/"+"preprocess.out", outputPath+"/"+"phrase_FOREIGN.out");		
 
-
+		// phrase_MWE															-- phrase_MWE
 
 		Phrase_MWE mwe = new Phrase_MWE(sr);
 		readwrite(mwe, outputPath+"/"+"phrase_FOREIGN.out", outputPath+"/"+"phrase_MWE.out");			
 
-		// phrase_MWE															-- phrase_MWE
-/*
-		Phrase_MWE mwe = new Phrase_MWE(sr);
-		readwrite(mwe, outputPath+"/"+"preprocess.out", outputPath+"/"+"phrase_MWE.out");			
-*/
 		// phrase_MWEP1															-- phrase_MWEP1
 
 		Phrase_MWEP1 mwep1 = new Phrase_MWEP1(sr);
@@ -134,17 +186,17 @@ public class RunIceParserOut extends RunIceParserBase
 		// phrase_NP															-- phrase_NP
 
 		Phrase_NP np = new Phrase_NP(sr);
+
 		if(agreement)
 		{
 			np.set_doAgreementCheck(true);	
 		}
 		if(markGrammarError)
 		{
-			np.set_markGrammarError(true);
+			np.set_markGrammarError(true); 
 		}
 		readwrite(np, outputPath+"/"+"phrase_APs.out", outputPath+"/"+"phrase_NP.out");
 		
-
 		// phrase_NP2															-- phrase_NP2
 		
 		if(agreement && !markGrammarError)
@@ -250,22 +302,39 @@ public class RunIceParserOut extends RunIceParserBase
 		else
 			readwrite(cl2, outputPath+"/"+"clean1.out", outputPath+"/"+"clean2.out");
 
-		// Phrase_Per_Line														-- phrase_per_line
-
-		if(phrasePerLine)
-		{		
-			Phrase_Per_Line ppl = new Phrase_Per_Line(sr);
-			readwrite(ppl, outputPath+"/"+"clean2.out", outputPath+"/"+"phrase_per_line.out");	
-		}
-		
-		// TagDecoder															-- TagDecoder
-	
+		// Phrase Per Line														-- Phrase Per Line
+		// Decoder																-- Decoder 
+		// Formatter															-- Formatter
+		Phrase_Per_Line ppl = new Phrase_Per_Line(sr);
 		TagDecoder tagDecdr = new TagDecoder(sr);
-		if(phrasePerLine)
-			readwrite(tagDecdr, outputPath+"/"+"phrase_per_line.out", outputPath+"/"+outputFile);
-		else
-			readwrite(tagDecdr, outputPath+"/"+"clean2.out", outputPath+"/"+outputFile);
 
+
+		// 0-plain, 1-ppl, 2-json, 3-xml
+		if( (outputType==0 || outputType==1) && !mergeTags)
+		{
+			if(outputType==0)
+			{
+				// decode straight to outputfile
+				readwrite(tagDecdr, outputPath+"/"+"clean2.out", outputFile);
+			}
+			else
+			{
+				//decode from phrase per line to output file
+				readwrite(ppl, outputPath+"/"+"clean2.out", outputPath+"/"+"phrase_per_line.out");	
+				readwrite(tagDecdr, outputPath+"/"+"phrase_per_line.out", outputFile);
+			}
+		}
+		else
+		{
+			readwrite(tagDecdr, outputPath+"/"+"clean2.out", outputPath+"/"+"decoded.out");
+			OutputFormatter of = new OutputFormatter();
+			formatter(of, outputPath+"/"+"decoded.out", outputFile, outputType, mergeTags); 
+
+		}
+
+
+
+		
 	}
     public static void main(String[] args) throws IOException 
 	{

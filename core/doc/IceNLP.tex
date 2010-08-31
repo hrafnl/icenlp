@@ -717,12 +717,16 @@ If all goes well, four files, corpus.ngrams, corpus.lex, corpus.orig.lex and cor
 
 \subsection{IceParser}
 To start the parser, open a terminal, go to the \textbf{bat/iceparser} directory and type in the following command:\\ \\
-{\bf ./iceParser.sh} <inputFile> <outputFile> [optional param] \\ \\
+{\bf ./iceParser.sh} -i <inputFile> -o <outputFile> [optional param] \\ \\
 The optional parameters are:
 \begin{itemize}
 \item \emph{-f}: \emph{IceParser} annotates grammatical functions (as well as constituent structure).
 \item \emph{-l}: \emph{IceParser} writes out one phrase/syntactic function in each line. Otherwise, the output is one sentence per line.
 \item \emph{-a}: Feature agreement is used rather than only relying on word order, for example when grouping words into noun phrases and annotating subjects of verbs.
+\item \emph{-e}: Marks possible grammatical errors. 
+\item \emph{-m}: Merge function tags with phrase tags.
+\item \emph{-json}: \emph{IceParser} writes the output in json format.
+\item \emph{-xml}: \emph{IceParser} writes the output in xml format.
 \end{itemize}
 
 Note that \emph{IceParser} assumes that the input file has one sentence per line.
@@ -733,13 +737,13 @@ The name of the file is \emph{200sent\_func.gdc} and it has been hand-annotated 
 The original text is in the file \emph{200sent.txt}.
 
 The following command makes \emph{IceParser} annotate the original file with constituent structure and grammatical functions: \\ \\
-{\bf ./iceParser.sh} 200sent.txt 200sent.out -f -l \\
+{\bf ./iceParser.sh} -i 200sent.txt -o 200sent.out -f -l \\
 
 The hand-annotated file \emph{200sent\_func.gdc} and the parser generated file \emph{200sent.out} can then be compared by using utilities like Unix \emph{diff}.
 
 \emph{IceParser} can, additionally, be made to generate output files corresponding to the result of each of its individual finite-state transducers.
 In that case, type in: \\ \\
-{\bf ./iceparserOut.sh} 200sent.txt 200sent.out . \\
+{\bf ./iceparserOut.sh} -i 200sent.txt -o 200sent.out -p . \\
 
 The third command-line parameter above denotes the path for the output files. The output files are text files with the \emph{.out} ending.
 

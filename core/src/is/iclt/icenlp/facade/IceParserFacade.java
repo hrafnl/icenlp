@@ -59,6 +59,7 @@ public class IceParserFacade
     private Clean2 cl2_scn;
     private Phrase_Per_Line ppl_scn;
 	private TagDecoder tagDecdr;
+	private OutputFormatter of;
 
 
     public IceParserFacade()
@@ -92,6 +93,7 @@ public class IceParserFacade
         cl2_scn = new Clean2(sr);
         ppl_scn = new Phrase_Per_Line(sr);
 		tagDecdr = new TagDecoder(sr);
+		of = new OutputFormatter();
     }
 
 	private void print( String text )
@@ -377,7 +379,7 @@ public class IceParserFacade
         cl2_scn.yyreset(sr);
         cl2_scn.parse(sw);
 
-		if( one_phrase_per_line )
+		if( one_phrase_per_line)
 		{
             sr = new StringReader( sw.toString() );
             sw = new StringWriter( );
@@ -397,7 +399,6 @@ public class IceParserFacade
 		tagDecdr.yyclose();
 		tagDecdr.yyreset(sr);
 		tagDecdr.parse(sw);
-
 
 		return sw.toString();
 	}
