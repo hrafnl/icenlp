@@ -140,7 +140,7 @@ DatNPWithNomAdjPhrase = {OpenNP}d{WhiteSpace}+{OpenAP}n~{CloseNP}
 		
 {ProperNounWithQualifer}	{
 					String str = yytext();
-	System.out.println(yytext());
+
 					// Search for the first nom/acc/dat proper noun tag 
 					//Pattern p = Pattern.compile("\\^"+"n[kvh][ef][noþ](g|-)[msö]"+"\\$");
 					Pattern p = Pattern.compile(rEncO+"n[kvh][ef][noþ](g|-)[msö]"+rEncC);
@@ -164,7 +164,7 @@ DatNPWithNomAdjPhrase = {OpenNP}d{WhiteSpace}+{OpenAP}n~{CloseNP}
 						//System.err.println("First part: " + firstPart);
 						//System.err.println("Second  part: " + secondPart);
 						firstPart = firstPart.replaceFirst("\\[NPg",replacementStr);
-	System.out.println(firstPart + " NP]" + " [NPg " + secondPart);
+
 						out.write(firstPart + " NP]" + " [NPg " + secondPart);
 					}
 					//else
