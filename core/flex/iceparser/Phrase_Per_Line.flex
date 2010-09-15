@@ -64,7 +64,7 @@ WordChar = [^\r\n\t\f\[\]\{\} ]
 
 Word = {WordChar}+
 Label = FRWs?|AdvP|APs?|NP[s\?]?|VP[bgips]?|PP|S?CP|InjP|MWE_(AdvP|AP|CP|PP)
-Func = (("*"SUBJ|"*"I?OBJ(AP|NOM)?|"*"COMP)(<|>)?)|"*"QUAL | "*"TIMEX\??
+Func = (("*"SUBJ|"*"I?OBJ(AP|NOM)?|"*"COMP)(<|>)?\??)|"*"QUAL | "*"TIMEX\??
 
 //nýtt
 Symbol = \[{WhiteSpace}*{encodeOpen}\[{encodeClose}  | \]{WhiteSpace}*{encodeOpen}\]{encodeClose} | \{{WhiteSpace}*{encodeOpen}\{{encodeClose} | \}{WhiteSpace}*{encodeOpen}\}{encodeClose}
