@@ -59,8 +59,11 @@ OpenAP = "[AP"
 CloseAP = "AP]"
 OpenAPs = "[APs"
 CloseAPs = "APs]"
-OpenNP = "[NP"
-CloseNP = "NP]"
+//OpenNP = "[NP"
+//CloseNP = "NP]"
+// If a question mark appears in the NP label then the corresponding NP has a potential error
+OpenNP = "[NP"\??
+CloseNP = NP\??]
 OpenNPs = "[NPs"
 CloseNPs = "NPs]"
 OpenCP = "[CP"

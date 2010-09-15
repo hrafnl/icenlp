@@ -1,8 +1,9 @@
 OpenQual = "{*QUAL"
 CloseQual= "*QUAL}"
 
-OpenSubj = "{*SUBJ"[<>]?
-CloseSubj = "*SUBJ"[<>]?"}"
+/* If a question mark appears at then end of a subject label then there is possible an error in the subject */
+OpenSubj = "{*SUBJ"[<>]?\??
+CloseSubj = "*SUBJ"[<>]?\??"}"
 
 OpenObj = "{*OBJ"(AP|NOM)?[<>]
 CloseObj = "*OBJ"(AP|NOM)?[<>]"}"

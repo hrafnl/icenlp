@@ -66,8 +66,6 @@ import java.io.*;
 %include funcDef.txt
 %include verbLexicon.txt
 
-//VPBe = {OpenVPb}~{CloseVPb}
-//Function = {FuncQualifier} | {FuncSubject} | {FuncObject} | {FuncObjectI} | {FuncComplement}
 Subject = {NomSubject}({WhiteSpace}+{FuncQualifier})?
 
 PP = {OpenPP}~{ClosePP}
