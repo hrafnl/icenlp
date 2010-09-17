@@ -22,7 +22,10 @@
 package is.iclt.icenlp.runner;
 
 public class RunIceParserBase
-{	
+{
+    //protected int outputType=0; // 0-plain, 1-ppl, 2-json, 3-xml
+    protected enum OutputType {plain, phrase_per_line, json, xml}
+
 	protected String inputFile=null, outputFile=null, outputPath=null;
 	protected boolean includeFunc = false;
 	protected boolean phrasePerLine = false;
@@ -31,9 +34,8 @@ public class RunIceParserBase
     protected boolean standardInputOutput=false;
 	protected boolean mergeTags=false;
 
-	protected int outputType=0; // 0-plain, 1-ppl, 2-json, 3-xml
-
 	private int outputSetCount=0;
+    protected OutputType outputType=OutputType.plain;
 
 	protected void getParam(String[] args)
 	{
@@ -65,19 +67,19 @@ public class RunIceParserBase
 			}
 			if( args[i].equals( "-json" ) )
 			{
-				outputType=2;
+				outputType=OutputType.json;
 				outputSetCount++;
 				canChooseOne();
 			}
 			if( args[i].equals( "-xml" ) )
 			{
-				outputType=3;
+				outputType=OutputType.xml;;
 				outputSetCount++;
 				canChooseOne();
 			}
 			if( args[i].equals( "-l" ) )
 			{
-				outputType=1;
+				outputType=OutputType.phrase_per_line;;
 				phrasePerLine=true;
 				outputSetCount++;
 				canChooseOne();
@@ -108,8 +110,8 @@ public class RunIceParserBase
 		System.out.println( "-l      one phrase/function per line in the output");
 		System.out.println( "        else the output is one sentence per line");
 		System.out.println( "-a 	rely on feature agreement"	 );
-		System.out.println( "-e 	Mark possible grammar errors"	 );
-		System.out.println( "-m 	Merge Function tags with Phrase tags"	 );
+		System.out.println( "-e 	Mark possible grammatical errors"	 );
+		System.out.println( "-m 	Merge function tags with phrase tags"	 );
 		System.out.println( "-json	Output in json format"	 );
 		System.out.println( "-xml	Output in xml format"	 );
 		System.exit(0);

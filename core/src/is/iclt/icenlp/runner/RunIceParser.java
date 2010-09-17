@@ -81,21 +81,21 @@ public class RunIceParser extends RunIceParserBase
 		}
 
 		//
-		if( !( (outputType==0 || outputType==1) && !mergeTags) ) 
+		if( !( (outputType==OutputType.plain || outputType==OutputType.phrase_per_line) && !mergeTags) )
 		{
 			OutputFormatter of = new OutputFormatter();
 			switch (outputType) 
 			{
-			  case 0:
+			  case plain:
 					of.setPlain(true);
 					break;
-			  case 1: 
+			  case phrase_per_line:
 					of.setPlainPerLine(true);				
 					break;
-			  case 2:
+			  case json:
 					of.setJson(true);
 					break;
-			  case 3:
+			  case xml:
 					of.setXml(true);
 					break;
 			  default:

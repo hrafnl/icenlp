@@ -245,7 +245,7 @@ Four different types of syntactic functions are annotated: genitive qualifiers, 
 Curly brackets are used for denoting the beginning and the end of a syntactic function, and special function tags are used for labels (*QUAL, *SUBJ, *OBJ/*OBJAP/*OBJNOM/*IOBJ/*COMP, *TIMEX).
 Please refer to \citep{lof06c}, for a thorough description of the annotation scheme used.
 
-In total, \emph{IceParser} consists of about 20 finite-state transducers.
+In total, \emph{IceParser} consists of about 25 finite-state transducers.
 The parser is implemented in Java and the lexical analyser generator tool JFlex (http://jflex.de/).
 
 \section{Lemmald}
@@ -723,9 +723,9 @@ The optional parameters are:
 \begin{itemize}
 \item \emph{-f}: \emph{IceParser} annotates grammatical functions (as well as constituent structure).
 \item \emph{-l}: \emph{IceParser} writes out one phrase/syntactic function in each line. Otherwise, the output is one sentence per line.
-\item \emph{-a}: Feature agreement is used rather than only relying on word order, for example when grouping words into noun phrases and annotating subjects of verbs.
-\item \emph{-e}: Marks possible grammatical errors. 
-\item \emph{-m}: Merge function tags with phrase tags.
+\item \emph{-a}: \emph{IceParser} uses feature agreement rather than only relying on word order, when grouping words into noun phrases and annotating subjects of verbs.
+\item \emph{-e}: \emph{IceParser} attaches a question mark (?) to the end of labels for NPs and/or subjects to denote possible grammatical errors.
+\item \emph{-m}: \emph{IceParser} merges function tags with phrase tags.
 \item \emph{-json}: \emph{IceParser} writes the output in json format.
 \item \emph{-xml}: \emph{IceParser} writes the output in xml format.
 \end{itemize}

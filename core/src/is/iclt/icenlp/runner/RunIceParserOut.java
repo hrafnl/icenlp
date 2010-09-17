@@ -56,7 +56,7 @@ public class RunIceParserOut extends RunIceParserBase
 		bw.flush();
 		bw.close();
 	}
-	private void formatter(OutputFormatter of, String inputFileAndPath, String outputFileAndPath, int outputType, boolean mergeTags) throws IOException
+	private void formatter(OutputFormatter of, String inputFileAndPath, String outputFileAndPath, OutputType outputType, boolean mergeTags) throws IOException
 	{
 		BufferedReader br;
 		BufferedWriter bw;
@@ -78,20 +78,18 @@ public class RunIceParserOut extends RunIceParserBase
 		sr = new StringReader(buf.toString());
 		sw = new StringWriter();
 	
-
-		// 0-plain, 1-ppl, 2-json, 3-xml
 		switch (outputType) 
 		{
-		  case 0:
+		  case plain:
 				of.setPlain(true);
 				break;
-		  case 1: 
+		  case phrase_per_line:
 				of.setPlainPerLine(true);				
 				break;
-		  case 2:
+		  case json:
 				of.setJson(true);
 				break;
-		  case 3:
+		  case xml:
 				of.setXml(true);
 				break;
 		  default:
@@ -310,9 +308,9 @@ public class RunIceParserOut extends RunIceParserBase
 
 
 		// 0-plain, 1-ppl, 2-json, 3-xml
-		if( (outputType==0 || outputType==1) && !mergeTags)
+		if( (outputType==OutputType.plain || outputType==OutputType.phrase_per_line) && !mergeTags)
 		{
-			if(outputType==0)
+			if(outputType==OutputType.plain)
 			{
 				// decode straight to outputfile
 				readwrite(tagDecdr, outputPath+"/"+"clean2.out", outputFile);

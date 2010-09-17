@@ -218,14 +218,17 @@ public class IceParserFacade
 		//print( "Phrase_NP" );
 		sr = new StringReader( sw.toString() );
 		sw = new StringWriter( );
-		if(agreement)
+		/*if(agreement)
 		{
 			np_scn.set_doAgreementCheck(true);
 		}
 		if(markGrammarError)
 		{
 			np_scn.set_markGrammarError(true);
-		}
+		}*/
+        np_scn.set_doAgreementCheck(agreement);
+        np_scn.set_markGrammarError(markGrammarError);
+
         np_scn.yyclose();
         np_scn.yyreset(sr);
         np_scn.parse(sw);
@@ -312,14 +315,17 @@ public class IceParserFacade
 			//print( "Func_SUBJ" );
 			sr = new StringReader( sw.toString() );
 			sw = new StringWriter( );
-			if(agreement)
+			/*if(agreement)
 			{
 				f_subj_scn.set_doAgreementCheck(true);
 			}
 			if(markGrammarError)
 			{
 				f_subj_scn.set_markGrammarError(true);
-			}
+			}*/
+            f_subj_scn.set_doAgreementCheck(agreement);
+            f_subj_scn.set_markGrammarError(markGrammarError);
+
             f_subj_scn.yyclose();
             f_subj_scn.yyreset(sr);
             f_subj_scn.parse(sw);
