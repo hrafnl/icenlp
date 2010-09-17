@@ -81,42 +81,13 @@ public class RunIceParser extends RunIceParserBase
 		}
 
 		//
-		if( !( (outputType==OutputType.plain || outputType==OutputType.phrase_per_line) && !mergeTags) )
+		if( !( (outputType== OutputFormatter.OutputType.plain || outputType== OutputFormatter.OutputType.phrase_per_line) && !mergeTags) )
 		{
 			OutputFormatter of = new OutputFormatter();
             StringReader sr = new StringReader( buff.toString() );
 			StringWriter sw = new StringWriter( );
-            //of.parse(sw, outputType);
             of.parse(sr, sw, outputType, mergeTags);
 
-			/*switch (outputType)
-			{
-			  case plain:
-					of.setPlain(true);
-					break;
-			  case phrase_per_line:
-					of.setPlainPerLine(true);				
-					break;
-			  case json:
-					of.setJson(true);
-					break;
-			  case xml:
-					of.setXml(true);
-					break;
-			  default:
-					of.setPlain(true);
-					break;
-			}
-			if(mergeTags)
-				of.setMergeTags(true);
-
-			StringReader sr = new StringReader( buff.toString() );
-			StringWriter sw = new StringWriter( );		
-
-			of.yyclose();
-			of.yyreset(sr);
-			of.parse(sw);
-            */
 			bw.write(sw.toString());
 
 			sr.close();
@@ -130,7 +101,6 @@ public class RunIceParser extends RunIceParserBase
         //if (!standardInputOutput && count%500==0)
           //  System.out.println("Lines: " + count);
 
-		
 		bw.flush();
         bw.close();
     }

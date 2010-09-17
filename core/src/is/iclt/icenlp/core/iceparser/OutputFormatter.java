@@ -9,7 +9,8 @@ import java.util.regex.*;
 enum OutputFormatter_Type { FUNC, PHRASE, WORDS, WORD, TAG, ROOT, SENTENCE }
 
 public class OutputFormatter
-{	
+{
+    public enum OutputType {plain, phrase_per_line, json, xml}
 	private static OutputFormatter_Part root;
 
 	private static boolean mergeTags = false;
@@ -78,7 +79,7 @@ public class OutputFormatter
 		write(root);
 	}
 
-    public void parse(java.io.StringReader in, java.io.StringWriter _out, RunIceParserBase.OutputType outType, boolean mergeTags) throws java.io.IOException
+    public void parse(java.io.StringReader in, java.io.StringWriter _out, OutputType outType, boolean mergeTags) throws java.io.IOException
     {
             this.r = in;
             switch (outType)

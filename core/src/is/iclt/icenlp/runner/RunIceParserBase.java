@@ -21,11 +21,10 @@
  */
 package is.iclt.icenlp.runner;
 
+import is.iclt.icenlp.core.iceparser.OutputFormatter;
+
 public class RunIceParserBase
 {
-    //protected int outputType=0; // 0-plain, 1-ppl, 2-json, 3-xml
-    public enum OutputType {plain, phrase_per_line, json, xml}
-
 	protected String inputFile=null, outputFile=null, outputPath=null;
 	protected boolean includeFunc = false;
 	protected boolean phrasePerLine = false;
@@ -35,7 +34,7 @@ public class RunIceParserBase
 	protected boolean mergeTags=false;
 
 	private int outputSetCount=0;
-    protected OutputType outputType=OutputType.plain;
+    protected OutputFormatter.OutputType outputType= OutputFormatter.OutputType.plain;
 
 	protected void getParam(String[] args)
 	{
@@ -67,19 +66,19 @@ public class RunIceParserBase
 			}
 			if( args[i].equals( "-json" ) )
 			{
-				outputType=OutputType.json;
+				outputType= OutputFormatter.OutputType.json;
 				outputSetCount++;
 				canChooseOne();
 			}
 			if( args[i].equals( "-xml" ) )
 			{
-				outputType=OutputType.xml;;
+				outputType= OutputFormatter.OutputType.xml;;
 				outputSetCount++;
 				canChooseOne();
 			}
 			if( args[i].equals( "-l" ) )
 			{
-				outputType=OutputType.phrase_per_line;;
+				outputType= OutputFormatter.OutputType.phrase_per_line;;
 				phrasePerLine=true;
 				outputSetCount++;
 				canChooseOne();
