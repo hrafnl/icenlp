@@ -1,6 +1,27 @@
+/*
+ * Copyright (C) 2010 Ragnar Lárus Sigurðsson
+ *
+ * This file is part of the IceNLP toolkit.
+ * IceNLP is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * IceNLP is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with IceNLP. If not,  see <http://www.gnu.org/licenses/>.
+ *
+ * Contact information:
+ * Hrafn Loftsson, School of Computer Science, Reykjavik University.
+ * hrafn@ru.is
+ */
+
 package is.iclt.icenlp.core.iceparser;
 
-import is.iclt.icenlp.runner.RunIceParserBase;
 
 import java.io.*;
 import java.util.*;
@@ -68,7 +89,6 @@ public class OutputFormatter
 	}
 	public void parse(java.io.StringWriter _out) throws java.io.IOException
 	{
-		String str;
 		w = _out;
 
 		root = read();
@@ -79,9 +99,12 @@ public class OutputFormatter
 		write(root);
 	}
 
-    public void parse(java.io.StringReader in, java.io.StringWriter _out, OutputType outType, boolean mergeTags) throws java.io.IOException
+    //public void parse(java.io.StringReader in, java.io.StringWriter _out, OutputType outType, boolean mergeTags) throws java.io.IOException
+    public String parse(String str, OutputType outType, boolean mergeTags) throws java.io.IOException
     {
-            this.r = in;
+            this.r = new StringReader( str );
+			this.w = new StringWriter( );
+
             switch (outType)
 			{
 			  case plain:
@@ -103,13 +126,14 @@ public class OutputFormatter
 			if(mergeTags)
 				setMergeTags(true);
 
-           w = _out;
 		   root = read();
 
 		   if(mergeTags)
 			  root = mergeFuncPhrase(root, null);
 
 		   write(root);
+           // Return the result of the StringWriter;
+           return w.toString();
     }
 
 	public OutputFormatter()

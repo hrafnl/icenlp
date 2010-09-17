@@ -73,34 +73,27 @@ public class RunIceParser extends RunIceParserBase
 			//bw.write("\n");
 
 			//if tags are merged then phrase per line is done in the outputFormatter
-			if(phrasePerLine && !mergeTags)			
-				buff.append(ipf.parse(str, includeFunc, phrasePerLine, agreement, markGrammarError));
-			else
-				buff.append(ipf.parse(str, includeFunc, false, agreement, markGrammarError));
+			//if(phrasePerLine && !mergeLabels)
+				buff.append(ipf.parse(str, outputType, includeFunc, phrasePerLine, agreement, markGrammarError, mergeLabels));
+			//else
+				//buff.append(ipf.parse(str, includeFunc, false, agreement, markGrammarError));
 			buff.append("\n");
 		}
+        bw.write(buff.toString());
 
-		//
-		if( !( (outputType== OutputFormatter.OutputType.plain || outputType== OutputFormatter.OutputType.phrase_per_line) && !mergeTags) )
+		/*
+		if( !( (outputType== OutputFormatter.OutputType.plain || outputType== OutputFormatter.OutputType.phrase_per_line) && !mergeLabels) )
 		{
 			OutputFormatter of = new OutputFormatter();
-            StringReader sr = new StringReader( buff.toString() );
-			StringWriter sw = new StringWriter( );
-            of.parse(sr, sw, outputType, mergeTags);
+            String result = of.parse(buff.toString(), outputType, mergeLabels);
 
-			bw.write(sw.toString());
-
-			sr.close();
-			sw.close();
+			bw.write(result);
 		}
 		else
 		{
 			bw.write(buff.toString());
-		}
+		}*/
        
-        //if (!standardInputOutput && count%500==0)
-          //  System.out.println("Lines: " + count);
-
 		bw.flush();
         bw.close();
     }

@@ -30,6 +30,7 @@ import is.iclt.icenlp.core.tritagger.TriTaggerLexicons;
 import is.iclt.icenlp.core.tokenizer.Sentences;
 import is.iclt.icenlp.core.utils.Lexicon;
 import is.iclt.icenlp.core.utils.FileEncoding;
+import is.iclt.icenlp.core.iceparser.OutputFormatter;
 
 import javax.swing.*;
 import java.io.*;
@@ -50,7 +51,7 @@ public class TagAndParse implements ActionListener {
     private JTextArea textTagged;
     private JTextArea textParsed;
     private JCheckBox checkIncludeFunc, checkPhrasePerLine, checkTokenPerLine;
-    private JCheckBox checkPotentialErrors, checkFeatureAgreement;
+    private JCheckBox checkPotentialErrors, checkFeatureAgreement, checkMergeLabels;
     // checkTriTagger=true if use TriTagger with IceTagger
     // checkOnlYTriTagger=true if only use TriTagger for tagging (not IceTagger)
     private JCheckBox checkTriTagger, checkOnlyTriTagger;
@@ -58,6 +59,8 @@ public class TagAndParse implements ActionListener {
     private TriTaggerFacade tritagger;
     private IceParserFacade parser;
     private String modelPath="../../ngrams/models/";
+    OutputFormatter outFormatter;
+    OutputFormatter.OutputType outputType = OutputFormatter.OutputType.plain;
 
 
    public TagAndParse() throws IOException
@@ -68,6 +71,7 @@ public class TagAndParse implements ActionListener {
         tagger = new IceTaggerFacade(IceTagger.HmmModelType.startend);
         tritagger = new TriTaggerFacade();
         parser = new IceParserFacade();
+        outFormatter = new OutputFormatter();
 
    }
 
@@ -128,6 +132,19 @@ public class TagAndParse implements ActionListener {
        return buf.toString();
     }
 
+    /*private String mergeLabels(String str) throws IOException
+    {
+
+         if (checkPhrasePerLine.isSelected())
+            outputType = OutputFormatter.OutputType.phrase_per_line;
+         else
+            outputType = OutputFormatter.OutputType.plain;
+
+         str = outFormatter.parse(str, outputType, true);
+         return str;
+    }*/
+
+
     public void actionPerformed(ActionEvent e) {
        String taggedStr=null;
        if (e.getActionCommand().equals("Analyse"))
@@ -145,23 +162,23 @@ public class TagAndParse implements ActionListener {
                     textTagged.setText(taggedStr);
                 textTagged.setCaretPosition(0);
 
-               // Redding í bili.  Finna þarf út úr því hvernig action er sett upp fyrir checkBox
-                if (checkPotentialErrors.isSelected())
-                    checkFeatureAgreement.setSelected(true);
 
                 try {
-                    String parsedStr = parser.parse(taggedStr, checkIncludeFunc.isSelected(), checkPhrasePerLine.isSelected(), checkFeatureAgreement.isSelected(), checkPotentialErrors.isSelected());
+                     if (checkPhrasePerLine.isSelected())
+                        outputType = OutputFormatter.OutputType.phrase_per_line;
+                     else
+                        outputType = OutputFormatter.OutputType.plain;
+                     String parsedStr = parser.parse(taggedStr, outputType, checkIncludeFunc.isSelected(), checkPhrasePerLine.isSelected(), checkFeatureAgreement.isSelected(), checkPotentialErrors.isSelected(), checkMergeLabels.isSelected());
+
+                    //if (checkMergeLabels.isSelected())
+                    //    parsedStr = mergeLabels(parsedStr);
+
                     textParsed.setText(parsedStr);
                     textParsed.setCaretPosition(0);
                 }
                 catch (IOException ex) {System.err.println("IOException: " + ex.getMessage()); }
            }
        }
-       /*else if (e.getActionCommand().equals("Errors"))
-       {
-           if (checkPotentialErrors.isSelected())
-               checkFeatureAgreement.setSelected(true);
-       } */
        
        else if (e.getActionCommand().equals("Stop"))
          System.exit(0);
@@ -218,10 +235,12 @@ public class TagAndParse implements ActionListener {
                 checkTokenPerLine.setSelected(false); // turn  the check box on or off
                 checkPotentialErrors = new JCheckBox("Mark grammatical errors");
                 checkPotentialErrors.setSelected(false); // turn  the check box on or off
-                //checkPotentialErrors.addActionListener();
+                checkPotentialErrors.addActionListener(new CheckBoxAction());
                 checkPotentialErrors.setActionCommand("Errors");
                 checkFeatureAgreement = new JCheckBox("Rely on feature agreement");
                 checkFeatureAgreement.setSelected(false); // turn  the check box on or off
+                checkMergeLabels = new JCheckBox("Merge function and phrase labels");
+                checkMergeLabels.setSelected(false); // turn  the check box on or off
 
 
                 JLabel labAnalyse = new JLabel("Text to analyse:");
@@ -244,6 +263,7 @@ public class TagAndParse implements ActionListener {
                 JPanel checkBoxPanel3 = new JPanel(new FlowLayout());
                 checkBoxPanel3.add(checkFeatureAgreement);
                 checkBoxPanel3.add(checkPotentialErrors);
+                checkBoxPanel3.add(checkMergeLabels);
 
                 pane.add(checkBoxPanel, BorderLayout.CENTER);
                 pane.add(checkBoxPanel2, BorderLayout.CENTER);
@@ -287,8 +307,8 @@ public class TagAndParse implements ActionListener {
    public static void main(String[] args)
    throws IOException {
 
-       //TagAndParse app = new TagAndParse();
-       TagAndParse app = new TagAndParse(true);
+       TagAndParse app = new TagAndParse();
+       //TagAndParse app = new TagAndParse(true);
 
        if (args.length == 1) {
           app.createAndShowGUI(args[0]);
@@ -298,4 +318,11 @@ public class TagAndParse implements ActionListener {
         }
 
    }
+
+   public class CheckBoxAction implements ActionListener{
+    public void actionPerformed(ActionEvent e){
+      if (checkPotentialErrors.isSelected())
+        checkFeatureAgreement.setSelected(true);
+    }
+  }
 }

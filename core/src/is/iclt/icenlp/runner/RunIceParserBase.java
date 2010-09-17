@@ -31,7 +31,7 @@ public class RunIceParserBase
     protected boolean agreement=false;
 	protected boolean markGrammarError=false;
     protected boolean standardInputOutput=false;
-	protected boolean mergeTags=false;
+	protected boolean mergeLabels=false;
 
 	private int outputSetCount=0;
     protected OutputFormatter.OutputType outputType= OutputFormatter.OutputType.plain;
@@ -62,7 +62,7 @@ public class RunIceParserBase
 			}
 			if( args[i].equals( "-m" ) )
 			{
-				mergeTags=true;
+				mergeLabels=true;
 			}
 			if( args[i].equals( "-json" ) )
 			{
@@ -110,7 +110,7 @@ public class RunIceParserBase
 		System.out.println( "        else the output is one sentence per line");
 		System.out.println( "-a 	rely on feature agreement"	 );
 		System.out.println( "-e 	Mark possible grammatical errors"	 );
-		System.out.println( "-m 	Merge function tags with phrase tags"	 );
+		System.out.println( "-m 	Merge function labels with phrase labels"	 );
 		System.out.println( "-json	Output in json format"	 );
 		System.out.println( "-xml	Output in xml format"	 );
 		System.exit(0);

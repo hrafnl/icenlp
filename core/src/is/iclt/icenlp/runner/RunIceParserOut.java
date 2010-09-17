@@ -75,18 +75,16 @@ public class RunIceParserOut extends RunIceParserBase
 			buf.append(str+"\n");	
 		}
 
-		sr = new StringReader(buf.toString());
-		sw = new StringWriter();
+        String result = of.parse(buf.toString(), outputType, mergeTags);
 
-        of.parse(sr, sw, outputType, mergeTags);
-
-        bw.write(sw.toString());           
+        bw.write(result);
 		bw.write("\n");
 
 		bw.flush();
 		bw.close();
 		br.close();
 	}
+    
     private void parse() throws IOException
     {	
 		if(inputFile == null || outputFile == null || outputPath == null)
@@ -105,7 +103,7 @@ public class RunIceParserOut extends RunIceParserBase
 		System.out.println( "annotate functions on: " + includeFunc);
 		System.out.println( "Agreement on: " + agreement);
 		System.out.println( "Grammar check on: " + markGrammarError);
-		System.out.println( "Merge tags: " + mergeTags);
+		System.out.println( "Merge labels: " + mergeLabels);
 		
 		sr = new StringReader("empty");
 		// TagEncode															-- TagEncode
@@ -283,7 +281,7 @@ public class RunIceParserOut extends RunIceParserBase
 		TagDecoder tagDecdr = new TagDecoder(sr);
 
 
-		if( (outputType== OutputFormatter.OutputType.plain || outputType== OutputFormatter.OutputType.phrase_per_line) && !mergeTags)
+		if( (outputType== OutputFormatter.OutputType.plain || outputType== OutputFormatter.OutputType.phrase_per_line) && !mergeLabels)
 		{
 			if(outputType== OutputFormatter.OutputType.plain)
 			{
@@ -301,7 +299,7 @@ public class RunIceParserOut extends RunIceParserBase
 		{
 			readwrite(tagDecdr, outputPath+"/"+"clean2.out", outputPath+"/"+"decoded.out");
 			OutputFormatter of = new OutputFormatter();
-			formatter(of, outputPath+"/"+"decoded.out", outputFile, outputType, mergeTags); 
+			formatter(of, outputPath+"/"+"decoded.out", outputFile, outputType, mergeLabels); 
 
 		}
 

@@ -59,7 +59,7 @@ public class IceParserFacade
     private Clean2 cl2_scn;
     private Phrase_Per_Line ppl_scn;
 	private TagDecoder tagDecdr;
-	private OutputFormatter of;
+	private OutputFormatter outFormatter;
 
 
     public IceParserFacade()
@@ -93,7 +93,7 @@ public class IceParserFacade
         cl2_scn = new Clean2(sr);
         ppl_scn = new Phrase_Per_Line(sr);
 		tagDecdr = new TagDecoder(sr);
-		of = new OutputFormatter();
+		outFormatter = new OutputFormatter();
     }
 
 	private void print( String text )
@@ -101,7 +101,7 @@ public class IceParserFacade
 		//System.out.println( text );
 	}
 
-	public String parse( String text ) throws IOException
+	/*public String parse( String text ) throws IOException
 	{
 		return parse( text, false, false );
 	}
@@ -109,16 +109,17 @@ public class IceParserFacade
 	public String parse( String text, boolean include_func ) throws IOException
 	{
 		return parse( text, include_func, false );
-	}
+	}*/
+
 	public String parse( String text, boolean include_func, boolean one_phrase_per_line ) throws IOException
 	{
-		return parse( text, include_func, one_phrase_per_line, false );
+		return parse( text, OutputFormatter.OutputType.plain, include_func, one_phrase_per_line, false, false, false);
 	}
-	public String parse( String text, boolean include_func, boolean one_phrase_per_line , boolean agreement) throws IOException
+	/*public String parse( String text, boolean include_func, boolean one_phrase_per_line , boolean agreement) throws IOException
 	{
-		return parse( text, include_func, one_phrase_per_line, agreement, false);
-	}
-	public String parse( String text, boolean include_func, boolean one_phrase_per_line , boolean agreement, boolean markGrammarError) throws IOException
+		return parse( text, include_func, one_phrase_per_line, agreement, false, false);
+	}*/
+	public String parse( String text, OutputFormatter.OutputType outType, boolean include_func, boolean one_phrase_per_line , boolean agreement, boolean markGrammarError, boolean mergeLabels) throws IOException
 	{
 		
 		// --------------------------------
@@ -218,14 +219,7 @@ public class IceParserFacade
 		//print( "Phrase_NP" );
 		sr = new StringReader( sw.toString() );
 		sw = new StringWriter( );
-		/*if(agreement)
-		{
-			np_scn.set_doAgreementCheck(true);
-		}
-		if(markGrammarError)
-		{
-			np_scn.set_markGrammarError(true);
-		}*/
+
         np_scn.set_doAgreementCheck(agreement);
         np_scn.set_markGrammarError(markGrammarError);
 
@@ -315,14 +309,7 @@ public class IceParserFacade
 			//print( "Func_SUBJ" );
 			sr = new StringReader( sw.toString() );
 			sw = new StringWriter( );
-			/*if(agreement)
-			{
-				f_subj_scn.set_doAgreementCheck(true);
-			}
-			if(markGrammarError)
-			{
-				f_subj_scn.set_markGrammarError(true);
-			}*/
+			
             f_subj_scn.set_doAgreementCheck(agreement);
             f_subj_scn.set_markGrammarError(markGrammarError);
 
@@ -385,7 +372,8 @@ public class IceParserFacade
         cl2_scn.yyreset(sr);
         cl2_scn.parse(sw);
 
-		if( one_phrase_per_line)
+        //if labels are merged then phrase per line is done in the outputFormatter
+		if( one_phrase_per_line && !mergeLabels)
 		{
             sr = new StringReader( sw.toString() );
             sw = new StringWriter( );
@@ -406,10 +394,18 @@ public class IceParserFacade
 		tagDecdr.yyreset(sr);
 		tagDecdr.parse(sw);
 
-		return sw.toString();
+        // Run the Output formatter?
+        if (mergeLabels || (! (outType == OutputFormatter.OutputType.plain || outType == OutputFormatter.OutputType.phrase_per_line)))
+        {
+            OutputFormatter of = new OutputFormatter();
+            String result = of.parse(sw.toString(), outType, mergeLabels);
+            return result;
+        }
+        else
+		    return sw.toString();
 	}
 
-	public static void main( String[] args )
+	/*public static void main( String[] args )
 	{
 		System.out.println( "Testing parser" );
 		long start = System.currentTimeMillis();
@@ -430,6 +426,5 @@ public class IceParserFacade
 		long duration = (end-start);
 		System.out.println( "Time (msec):"+duration );
 
-
-	}
+	}*/
 }
