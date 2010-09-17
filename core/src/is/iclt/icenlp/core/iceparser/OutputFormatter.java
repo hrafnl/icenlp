@@ -78,15 +78,15 @@ public class OutputFormatter
 	}
 
 // yyreset yyclose and parse are here to match the transducers.
-	public void yyreset(java.io.StringReader in)
+	/*public void yyreset(java.io.StringReader in)
 	{
 		this.r = in;
-	}
-	public void yyclose()  throws java.io.IOException
+	}*/
+	/*public void yyclose()  throws java.io.IOException
 	{	
 		if(r!=null)
 			r.close();
-	}
+	}*/
 	public void parse(java.io.StringWriter _out) throws java.io.IOException
 	{
 		w = _out;
