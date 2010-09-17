@@ -132,18 +132,6 @@ public class TagAndParse implements ActionListener {
        return buf.toString();
     }
 
-    /*private String mergeLabels(String str) throws IOException
-    {
-
-         if (checkPhrasePerLine.isSelected())
-            outputType = OutputFormatter.OutputType.phrase_per_line;
-         else
-            outputType = OutputFormatter.OutputType.plain;
-
-         str = outFormatter.parse(str, outputType, true);
-         return str;
-    }*/
-
 
     public void actionPerformed(ActionEvent e) {
        String taggedStr=null;
@@ -170,9 +158,6 @@ public class TagAndParse implements ActionListener {
                         outputType = OutputFormatter.OutputType.plain;
                      String parsedStr = parser.parse(taggedStr, outputType, checkIncludeFunc.isSelected(), checkPhrasePerLine.isSelected(), checkFeatureAgreement.isSelected(), checkPotentialErrors.isSelected(), checkMergeLabels.isSelected());
 
-                    //if (checkMergeLabels.isSelected())
-                    //    parsedStr = mergeLabels(parsedStr);
-
                     textParsed.setText(parsedStr);
                     textParsed.setCaretPosition(0);
                 }
@@ -196,9 +181,7 @@ public class TagAndParse implements ActionListener {
 
                 Dimension textDimension = new Dimension(300,300);
                 Font myFont = new Font("Courier", Font.PLAIN, 16);
-                textInput = new JTextArea(
-                            "",rows,cols
-                    );
+                textInput = new JTextArea("",rows,cols);
                 textInput.setLineWrap(true);
                 textInput.setWrapStyleWord(true);
                 textInput.setFont(myFont);
@@ -307,8 +290,8 @@ public class TagAndParse implements ActionListener {
    public static void main(String[] args)
    throws IOException {
 
-       TagAndParse app = new TagAndParse();
-       //TagAndParse app = new TagAndParse(true);
+       //TagAndParse app = new TagAndParse();
+       TagAndParse app = new TagAndParse(true);
 
        if (args.length == 1) {
           app.createAndShowGUI(args[0]);
