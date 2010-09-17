@@ -99,8 +99,8 @@ public class RunIceParserOut extends RunIceParserBase
 		System.out.println( "Input file: " + inputFile );
         System.out.println( "Output file: " + outputFile );
 		System.out.println( "Output path: " + outputPath);
-		System.out.println( "Phrase per line on: " + phrasePerLine);
-		System.out.println( "annotate functions on: " + includeFunc);
+		//System.out.println( "Phrase per line on: " + phrasePerLine);
+		System.out.println( "Annotate functions on: " + includeFunc);
 		System.out.println( "Agreement on: " + agreement);
 		System.out.println( "Grammar check on: " + markGrammarError);
 		System.out.println( "Merge labels: " + mergeLabels);

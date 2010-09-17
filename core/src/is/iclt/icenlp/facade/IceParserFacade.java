@@ -96,30 +96,16 @@ public class IceParserFacade
 		outFormatter = new OutputFormatter();
     }
 
-	private void print( String text )
-	{
-		//System.out.println( text );
-	}
-
-	/*public String parse( String text ) throws IOException
-	{
-		return parse( text, false, false );
-	}
-
-	public String parse( String text, boolean include_func ) throws IOException
-	{
-		return parse( text, include_func, false );
-	}*/
 
 	public String parse( String text, boolean include_func, boolean one_phrase_per_line ) throws IOException
 	{
-		return parse( text, OutputFormatter.OutputType.plain, include_func, one_phrase_per_line, false, false, false);
+		if (one_phrase_per_line)
+            return parse( text, OutputFormatter.OutputType.phrase_per_line, include_func, false, false, false);
+        else
+            return parse( text, OutputFormatter.OutputType.plain, include_func, false, false, false);
 	}
-	/*public String parse( String text, boolean include_func, boolean one_phrase_per_line , boolean agreement) throws IOException
-	{
-		return parse( text, include_func, one_phrase_per_line, agreement, false, false);
-	}*/
-	public String parse( String text, OutputFormatter.OutputType outType, boolean include_func, boolean one_phrase_per_line , boolean agreement, boolean markGrammarError, boolean mergeLabels) throws IOException
+
+	public String parse( String text, OutputFormatter.OutputType outType, boolean include_func, boolean agreement, boolean markGrammarError, boolean mergeLabels) throws IOException
 	{
 		
 		// --------------------------------
@@ -373,7 +359,8 @@ public class IceParserFacade
         cl2_scn.parse(sw);
 
         //if labels are merged then phrase per line is done in the outputFormatter
-		if( one_phrase_per_line && !mergeLabels)
+		//if( one_phrase_per_line && !mergeLabels)
+        if( outType == OutputFormatter.OutputType.phrase_per_line && !mergeLabels)
 		{
             sr = new StringReader( sw.toString() );
             sw = new StringWriter( );

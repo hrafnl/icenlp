@@ -70,7 +70,7 @@ public class RunIceParser extends RunIceParserBase
 			if (!standardInputOutput && count%500==0)
 				System.out.print("Lines: " + count + "\r");
 
-			buff.append(ipf.parse(str, outputType, includeFunc, phrasePerLine, agreement, markGrammarError, mergeLabels));
+			buff.append(ipf.parse(str, outputType, includeFunc, agreement, markGrammarError, mergeLabels));
 			if (!mergeLabels)
                 buff.append("\n");
 		}

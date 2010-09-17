@@ -27,7 +27,7 @@ public class RunIceParserBase
 {
 	protected String inputFile=null, outputFile=null, outputPath=null;
 	protected boolean includeFunc = false;
-	protected boolean phrasePerLine = false;
+	//protected boolean phrasePerLine = false;
     protected boolean agreement=false;
 	protected boolean markGrammarError=false;
     protected boolean standardInputOutput=false;
@@ -79,7 +79,7 @@ public class RunIceParserBase
 			if( args[i].equals( "-l" ) )
 			{
 				outputType= OutputFormatter.OutputType.phrase_per_line;;
-				phrasePerLine=true;
+				//phrasePerLine=true;
 				outputSetCount++;
 				canChooseOne();
 			}
