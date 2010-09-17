@@ -144,6 +144,11 @@ public class TagAndParse implements ActionListener {
                 else
                     textTagged.setText(taggedStr);
                 textTagged.setCaretPosition(0);
+
+               // Redding í bili.  Finna þarf út úr því hvernig action er sett upp fyrir checkBox
+                if (checkPotentialErrors.isSelected())
+                    checkFeatureAgreement.setSelected(true);
+
                 try {
                     String parsedStr = parser.parse(taggedStr, checkIncludeFunc.isSelected(), checkPhrasePerLine.isSelected(), checkFeatureAgreement.isSelected(), checkPotentialErrors.isSelected());
                     textParsed.setText(parsedStr);
@@ -152,8 +157,14 @@ public class TagAndParse implements ActionListener {
                 catch (IOException ex) {System.err.println("IOException: " + ex.getMessage()); }
            }
        }
+       /*else if (e.getActionCommand().equals("Errors"))
+       {
+           if (checkPotentialErrors.isSelected())
+               checkFeatureAgreement.setSelected(true);
+       } */
+       
        else if (e.getActionCommand().equals("Stop"))
-        System.exit(0);
+         System.exit(0);
    }
 
     public void createComponents(Container pane) {
@@ -207,6 +218,8 @@ public class TagAndParse implements ActionListener {
                 checkTokenPerLine.setSelected(false); // turn  the check box on or off
                 checkPotentialErrors = new JCheckBox("Mark grammatical errors");
                 checkPotentialErrors.setSelected(false); // turn  the check box on or off
+                //checkPotentialErrors.addActionListener();
+                checkPotentialErrors.setActionCommand("Errors");
                 checkFeatureAgreement = new JCheckBox("Rely on feature agreement");
                 checkFeatureAgreement.setSelected(false); // turn  the check box on or off
 

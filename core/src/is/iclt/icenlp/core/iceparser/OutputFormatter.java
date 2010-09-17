@@ -1,5 +1,7 @@
 package is.iclt.icenlp.core.iceparser;
 
+import is.iclt.icenlp.runner.RunIceParserBase;
+
 import java.io.*;
 import java.util.*;
 import java.util.regex.*;
@@ -75,6 +77,40 @@ public class OutputFormatter
 
 		write(root);
 	}
+
+    public void parse(java.io.StringReader in, java.io.StringWriter _out, RunIceParserBase.OutputType outType, boolean mergeTags) throws java.io.IOException
+    {
+            this.r = in;
+            switch (outType)
+			{
+			  case plain:
+					setPlain(true);
+					break;
+			  case phrase_per_line:
+					setPlainPerLine(true);
+					break;
+			  case json:
+					setJson(true);
+					break;
+			  case xml:
+					setXml(true);
+					break;
+			  default:
+					setPlain(true);
+					break;
+			}
+			if(mergeTags)
+				setMergeTags(true);
+
+           w = _out;
+		   root = read();
+
+		   if(mergeTags)
+			  root = mergeFuncPhrase(root, null);
+
+		   write(root);
+    }
+
 	public OutputFormatter()
 	{
 	}

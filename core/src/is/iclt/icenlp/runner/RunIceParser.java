@@ -84,7 +84,12 @@ public class RunIceParser extends RunIceParserBase
 		if( !( (outputType==OutputType.plain || outputType==OutputType.phrase_per_line) && !mergeTags) )
 		{
 			OutputFormatter of = new OutputFormatter();
-			switch (outputType) 
+            StringReader sr = new StringReader( buff.toString() );
+			StringWriter sw = new StringWriter( );
+            //of.parse(sw, outputType);
+            of.parse(sr, sw, outputType, mergeTags);
+
+			/*switch (outputType)
 			{
 			  case plain:
 					of.setPlain(true);
@@ -111,7 +116,7 @@ public class RunIceParser extends RunIceParserBase
 			of.yyclose();
 			of.yyreset(sr);
 			of.parse(sw);
-
+            */
 			bw.write(sw.toString());
 
 			sr.close();

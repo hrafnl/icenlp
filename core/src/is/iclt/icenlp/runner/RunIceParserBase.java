@@ -24,7 +24,7 @@ package is.iclt.icenlp.runner;
 public class RunIceParserBase
 {
     //protected int outputType=0; // 0-plain, 1-ppl, 2-json, 3-xml
-    protected enum OutputType {plain, phrase_per_line, json, xml}
+    public enum OutputType {plain, phrase_per_line, json, xml}
 
 	protected String inputFile=null, outputFile=null, outputPath=null;
 	protected boolean includeFunc = false;

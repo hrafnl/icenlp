@@ -64,6 +64,10 @@ import is.iclt.icenlp.core.utils.IceParserUtils;
 	public void set_markGrammarError(boolean option)
 	{
 		markGrammarError = option;
+		// If we want grammatical errors to be shown then make sure that the agreement flag is true as well
+                if (markGrammarError)
+                        agreement = true;
+
 	}
 	public void parse(java.io.Writer _out) throws java.io.IOException
 	{
