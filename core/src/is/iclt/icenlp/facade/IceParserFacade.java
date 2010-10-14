@@ -384,14 +384,18 @@ public class IceParserFacade
         // Run the Output formatter?
         if (mergeLabels || (! (outType == OutputFormatter.OutputType.plain || outType == OutputFormatter.OutputType.phrase_per_line)))
         {
-            OutputFormatter of = new OutputFormatter();
-            String result = of.parse(sw.toString(), outType, mergeLabels);
+
+            String result = outFormatter.parse(sw.toString(), outType, mergeLabels);
             return result;
         }
         else
 		    return sw.toString();
 	}
 
+    public String finish()
+    {
+        return outFormatter.finish();
+    }
 	/*public static void main( String[] args )
 	{
 		System.out.println( "Testing parser" );

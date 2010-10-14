@@ -56,6 +56,7 @@ public class RunIceParserOut extends RunIceParserBase
 		bw.flush();
 		bw.close();
 	}
+
 	private void formatter(OutputFormatter of, String inputFileAndPath, String outputFileAndPath, OutputFormatter.OutputType outputType, boolean mergeTags) throws IOException
 	{
 		BufferedReader br;
@@ -68,18 +69,20 @@ public class RunIceParserOut extends RunIceParserBase
 		br = FileEncoding.getReader(inputFileAndPath);
 		bw = FileEncoding.getWriter(outputFileAndPath);
 
-		StringBuffer buf = new StringBuffer();
+		//StringBuffer buf = new StringBuffer();
 
 		while((str = br.readLine()) != null)
 		{
-			buf.append(str+"\n");	
+			//buf.append(str+"\n");
+            //String result = of.parse(buf.toString(), outputType, mergeTags);
+            bw.write(of.parse(str, outputType, mergeTags));
+            bw.write("\n");
 		}
 
-        String result = of.parse(buf.toString(), outputType, mergeTags);
-
-        bw.write(result);
-		bw.write("\n");
-
+        //String result = of.parse(buf.toString(), outputType, mergeTags);
+        //bw.write(result);
+		//bw.write("\n");
+        bw.write(of.finish());
 		bw.flush();
 		bw.close();
 		br.close();
@@ -291,7 +294,7 @@ public class RunIceParserOut extends RunIceParserBase
 			else
 			{
 				//decode from phrase per line to output file
-				readwrite(ppl, outputPath+"/"+"clean2.out", outputPath+"/"+"phrase_per_line.out");	
+				readwrite(ppl, outputPath+"/"+"clean2.out", outputPath+"/"+"phrase_per_line.out");
 				readwrite(tagDecdr, outputPath+"/"+"phrase_per_line.out", outputFile);
 			}
 		}

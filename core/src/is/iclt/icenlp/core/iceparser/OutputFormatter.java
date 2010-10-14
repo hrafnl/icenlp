@@ -32,46 +32,16 @@ enum OutputFormatter_Type { FUNC, PHRASE, WORDS, WORD, TAG, ROOT, SENTENCE }
 public class OutputFormatter
 {
     public enum OutputType {plain, phrase_per_line, json, xml}
-	private static OutputFormatter_Part root;
+	private OutputFormatter_Part root;
 
-	private static boolean mergeTags = false;
+	private boolean mergeTags = false;
+    private OutputType outType;
 
-	private static boolean Json = false;
-	private static boolean xml = false;
-	private static boolean plain = false;
-	private static boolean plainPerLine = false;
-	
+    private boolean firstLine=true;
+	private StringReader r;
+	private StringWriter w;
 
-	private static StringReader r;
-	private static StringWriter w;
-
-	private void allFalse()
-	{
-		Json = false;
-		xml = false;
-		plain = false;
-		plainPerLine = false;
-	}
-	public void setJson(boolean newVal)
-	{	
-		allFalse();
-		Json = newVal;
-	}
-	public void setXml(boolean newVal)
-	{
-		allFalse();
-		xml = newVal;
-	}
-	public void setPlain(boolean newVal)
-	{
-		allFalse();
-		plain = newVal;
-	}
-	public void setPlainPerLine(boolean  newVal)
-	{
-		allFalse();
-		plainPerLine = newVal;
-	}
+    
 	public void setMergeTags(boolean newVal)
 	{
 		mergeTags = newVal;
@@ -105,7 +75,8 @@ public class OutputFormatter
             this.r = new StringReader( str );
 			this.w = new StringWriter( );
 
-            switch (outType)
+            this.outType = outType;
+            /*switch (outType)
 			{
 			  case plain:
 					setPlain(true);
@@ -122,7 +93,7 @@ public class OutputFormatter
 			  default:
 					setPlain(true);
 					break;
-			}
+			}*/
 			if(mergeTags)
 				setMergeTags(true);
 
@@ -133,6 +104,8 @@ public class OutputFormatter
 
 		   write(root);
            // Return the result of the StringWriter;
+
+           firstLine = false;
            return w.toString();
     }
 
@@ -179,7 +152,7 @@ public class OutputFormatter
 		else 
 			return parent;
 	}
-	private static void print(String text)	
+	private void print(String text)	
 	{
 		try
 		{
@@ -190,26 +163,43 @@ public class OutputFormatter
 			System.err.println(e);
 		}
 	}
-	private static void write(OutputFormatter_Part root)
+
+    public String finish()
+    {
+        String str="";
+        if(outType == OutputType.json)
+            str = "\t}\n}"+"\n";
+		else if(outType == OutputType.xml)
+            str = "</ParsedText>"+"\n";
+
+        return str;
+    }
+
+	private void write(OutputFormatter_Part root)
 	{
-		if(Json)
+		if(outType == OutputType.json)
 		{
+            if (firstLine)
+              print("{\n\t\"Parsed Text\":{"+"\n");
 			writeJson(root);
 		}
-		else if(xml)
+		else if(outType == OutputType.xml)
 		{
+            if (firstLine)
+                print("<ParsedText>"+"\n");
 			writeXml(root);
 		}
-		else if(plain)
+		else if(outType == OutputType.plain)
 		{
 			writePlaintext(root);
 		}
-		else if(plainPerLine)
+		else if(outType == OutputType.phrase_per_line)
 		{
 			writePlainPerLine(root);
 		}
 	}
-	private static OutputFormatter_Part read() throws IOException 
+
+	private OutputFormatter_Part read() throws IOException 
 	{
 		String str;
 		OutputFormatter_Part root = new OutputFormatter_Part(OutputFormatter_Type.ROOT);
@@ -401,13 +391,13 @@ public class OutputFormatter
 //
 //Plaintext one phrase per line
 //
-	private static void writePlainPerLine(OutputFormatter_Part root)
+	private void writePlainPerLine(OutputFormatter_Part root)
 	{
 		plainPerLineTree(root.children, 0);
 	}
 
 
-	private static void plainPerLineTree(ArrayList<OutputFormatter_Part> list, int depth)
+	private void plainPerLineTree(ArrayList<OutputFormatter_Part> list, int depth)
 	{
 		for(OutputFormatter_Part child : list)
 		{
@@ -447,11 +437,11 @@ public class OutputFormatter
 //
 //Plaintext
 //
-	private static void writePlaintext(OutputFormatter_Part root)
+	private void writePlaintext(OutputFormatter_Part root)
 	{
 		plaintextTree(root.children);
 	}
-	private static void plaintextTree(ArrayList<OutputFormatter_Part> list)
+	private void plaintextTree(ArrayList<OutputFormatter_Part> list)
 	{
 		for(OutputFormatter_Part child : list)
 		{
@@ -479,13 +469,11 @@ public class OutputFormatter
 //
 //XML
 //
-	private static void writeXml(OutputFormatter_Part root)
+	private void writeXml(OutputFormatter_Part root)
 	{
-		print("<ParsedText>"+"\n");
 		printXmltree(root.children, "\t");
-		print("</ParsedText>"+"\n");
 	}
-	private static void printXmltree(ArrayList<OutputFormatter_Part> list, String indent)
+	private void printXmltree(ArrayList<OutputFormatter_Part> list, String indent)
 	{
 		for (OutputFormatter_Part var : list) 
 		{	
@@ -517,15 +505,12 @@ public class OutputFormatter
 //
 //Json
 //
-
-	private static void writeJson(OutputFormatter_Part root)
+	private void writeJson(OutputFormatter_Part root)
 	{
-		print("{\n\t\"Parsed Text\":{"+"\n");
 		printJtree(root.children, "\t\t");
-		print("\t}\n}"+"\n");
 	}
 
-	private static void printJtree(ArrayList<OutputFormatter_Part> list, String indent)
+	private void printJtree(ArrayList<OutputFormatter_Part> list, String indent)
 	{
 		int count = 0;
 		for (OutputFormatter_Part var : list) 

@@ -60,9 +60,7 @@ public class RunIceParser extends RunIceParserBase
            System.out.println( "Output file: " + outputFile );
         }
 
-
         //System.out.println( "Default file encoding: " + FileEncoding.getEncoding());
-		StringBuffer buff = new StringBuffer();
         int count=0;
         while((str = br.readLine()) != null) 
 		{
@@ -70,12 +68,12 @@ public class RunIceParser extends RunIceParserBase
 			if (!standardInputOutput && count%500==0)
 				System.out.print("Lines: " + count + "\r");
 
-			buff.append(ipf.parse(str, outputType, includeFunc, agreement, markGrammarError, mergeLabels));
-			if (!mergeLabels)
-                buff.append("\n");
+            bw.write(ipf.parse(str, outputType, includeFunc, agreement, markGrammarError, mergeLabels));
+            // If mergeLabels is true then the output formatter will append a newline character
+            if (!mergeLabels)
+                bw.write("\n");
 		}
-        bw.write(buff.toString());
-       
+        bw.write(ipf.finish());  // Adds some endings to the stream if needed
 		bw.flush();
         bw.close();
     }
