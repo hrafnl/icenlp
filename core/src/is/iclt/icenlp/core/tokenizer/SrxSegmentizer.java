@@ -20,6 +20,7 @@
 package is.iclt.icenlp.core.tokenizer;
 
 import is.iclt.icenlp.core.utils.FileOperations;
+import is.iclt.icenlp.core.utils.FileEncoding;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -56,7 +57,8 @@ public class SrxSegmentizer {
   public SrxSegmentizer(final String language) {
     this.language = language;
     try {
-      srxReader = new BufferedReader(new InputStreamReader( Object.class.getClass().getResourceAsStream( RULES ) ));
+      //srxReader = new BufferedReader(new InputStreamReader( Object.class.getClass().getResourceAsStream( RULES ) ));
+      srxReader = new BufferedReader(new InputStreamReader( Object.class.getClass().getResourceAsStream( RULES ), FileEncoding.ENCODING));  
     } catch (Exception e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
