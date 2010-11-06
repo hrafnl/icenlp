@@ -41,10 +41,13 @@ public class FileOperations {
      * @param filename Name of the file to be read.
      * @return The content of the file as a String.
      */
+    public static final String ENCODING = "UTF-8";
+
     public static String fileToString( String filename ){
         String contents = null;
         try {
-            contents = FileUtils.readFileToString(new File(filename));
+            //contents = FileUtils.readFileToString(new File(filename));
+            contents = FileUtils.readFileToString(new File(filename), ENCODING);
         } catch (IOException ex) {
             System.out.println("Could not read file '"+filename+"'!");
             ex.printStackTrace();
@@ -60,7 +63,8 @@ public class FileOperations {
 	 */
     public static void stringToFile( String filename, String data ){
         try {
-            FileUtils.writeStringToFile(new File(filename), data);
+            //FileUtils.writeStringToFile(new File(filename), data);
+            FileUtils.writeStringToFile(new File(filename), data, ENCODING);
         } catch (IOException ex) {
             System.out.println("Could not write to file '"+filename+"'!");
             ex.printStackTrace();
