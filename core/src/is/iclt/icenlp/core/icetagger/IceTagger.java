@@ -61,6 +61,10 @@ public class IceTagger
 	public static final int sentenceStartLowerCase = 1;
 	private int sentenceStart;
     private HmmModelType modelType = HmmModelType.none; // no HMM model as a default
+    // HL: Added 26.11.2010  - If true, then numbers are always tagged with "ta"
+    private boolean sameTagForAllNumbers = true;
+    // HL: Added 26.11.2010 -  If true then don't ignore the last letter of Proper nouns
+    private boolean namedEntityRecognition = false;
 
     public IceTagger( int sentenceStart, IceLog log, IceMorphy morphoAnalyzer, Lexicon baseDict,
                       Lexicon mainDict,
@@ -98,6 +102,16 @@ public class IceTagger
     public void setTriTagger(TriTagger tagger)
     {
         triTagger = tagger;
+    }
+
+    public void setSameTagForAllNumbers(boolean flag)
+    {
+        sameTagForAllNumbers = flag;
+    }
+
+    public void setNamedEntityRecognition(boolean flag)
+    {
+        namedEntityRecognition = flag;
     }
 
     public void setHmmModelType(HmmModelType theModelType)
@@ -145,6 +159,37 @@ public class IceTagger
 				numAmbiguousTokens++;    // Increase the number of ambiguous words
 				totalTagsAmbiguous += numTags;
 			}
+    }
+
+    private void assignTagToNumber(IceTokenTags currToken)
+    {
+		dictionaryTokenLookup( currToken, false );    // Don't ignore case
+		// Override the lexicon!
+        if (sameTagForAllNumbers)
+           currToken.setTag( IceTag.tagOrdinal );
+        else {
+		    if( currToken.lexeme.matches( "[0-9\\-\\/\\.,]+%" ) )
+		        currToken.setTag( IceTag.tagPercentage );
+		    else
+			    currToken.setTag( IceTag.tagOrdinal );
+        }
+		currToken.setUnknownType( IceTokenTags.UnknownType.guessed );
+        //System.out.println(currToken.lexeme + ": " + currToken.allTagStrings());
+    }
+
+    private void assignTagToAbbreviation(IceTokenTags currToken)
+    {
+    	if( Character.isLowerCase( currToken.lexeme.charAt( 0 ) ) )
+			dictionaryTokenLookup( currToken, true );     // Lookup ignore case
+		else
+		{ // Probably a proper noun abbreviation
+			dictionaryTokenLookup( currToken, false );    // Lookup don't ignore case
+			if( currToken.noTags() )                     // If still no tags
+			{
+				currToken.setTag( IceTag.tagProperNoun );  // Default proper noun
+				currToken.setUnknownType( IceTokenTags.UnknownType.guessed );
+			}
+		}
     }
 
     /**
@@ -242,31 +287,10 @@ public class IceTagger
 				currToken.setTag( currToken.lexeme );
 			// A Cardinal: A token with tokenCode=tcNumber
 			else if( currToken.tokenCode == Token.TokenCode.tcNumber )
-			{
-				dictionaryTokenLookup( currToken, false );    // Don't ignore case
-				// Override the lexicon!
-				if( currToken.lexeme.matches( "[0-9\\-\\/\\.,]+%" ) )
-					currToken.setTag( IceTag.tagPercentage );
-				else
-					currToken.setTag( IceTag.tagOrdinal );
-				currToken.setUnknownType( IceTokenTags.UnknownType.guessed );
-				//}
-			}
+                assignTagToNumber(currToken);
 			// An abbreviation
 			else if( currToken.tokenCode == Token.TokenCode.tcAbbrev )
-			{
-				if( Character.isLowerCase( currToken.lexeme.charAt( 0 ) ) )
-					dictionaryTokenLookup( currToken, true );     // Lookup ignore case
-				else
-				{ // Probably a proper noun abbreviation
-					dictionaryTokenLookup( currToken, false );    // Lookup don't ignore case
-					if( currToken.noTags() )                     // If still no tags
-					{
-						currToken.setTag( IceTag.tagProperNoun );  // Default proper noun
-						currToken.setUnknownType( IceTokenTags.UnknownType.guessed );
-					}
-				}
-			}
+                assignTagToAbbreviation(currToken);
 			else if
 				// ProperNoun: A token with a capital first letter and not appearing at the beginning of a sentence
 				// and not already marked as an abbreviation
@@ -297,15 +321,12 @@ public class IceTagger
 				{
 					dictionaryTokenLookup( currToken, true ); // First ignore case
 					if( currToken.noTags() ) // The word then could be a proper noun
-					{
 						dictionaryTokenLookup( currToken, false ); // Now don't ignore case
-					}
 				}
-
 				else // i > 0 || sentenceStart == sentenceStartLowerCase
 				{
 					// Use this if every sentence starts with a lower case except proper nouns
-					dictionaryTokenLookup( currToken, false );   // Ignore case
+					dictionaryTokenLookup( currToken, false );   // Don't ignore case
 					if( i == 0 && currToken.noTags() && Character.isUpperCase( currToken.lexeme.charAt( 0 ) ) )
 						currToken.setUnknownType( IceTokenTags.UnknownType.properNoun );
 				}
@@ -363,6 +384,8 @@ public class IceTagger
 		{
 			currToken = (IceTokenTags)tokens.get( i );
             currToken.cleanTags();
+            if (!namedEntityRecognition)
+                currToken.cleanProperNounTags();
         }
         removeSubjectObjectMarkings();
 	}
@@ -502,7 +525,8 @@ public class IceTagger
 	private void disambiguate()
 	{
 		ambiguator.setTokens( myTokens );
-		processNumericConstants();
+        if (!sameTagForAllNumbers)
+		    processNumericConstants();
 		phrases.findIdioms( myTokens );
 		phrasalVerbs();
 

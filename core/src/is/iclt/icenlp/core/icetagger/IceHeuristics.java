@@ -1455,9 +1455,14 @@ public class IceHeuristics
 				}
 			}
 		}
-		if( !subjFound && mainSubjIndex >= 0 )
-			subj = (IceTokenTags)tokens.get( mainSubjIndex );
-
+		//if( !subjFound && mainSubjIndex >= 0 )
+        if( !subjFound)
+        {
+            if (mainSubjIndex >= 0 )
+			    subj = (IceTokenTags)tokens.get( mainSubjIndex );
+            else
+                subj=null;
+        }                   
 		return subj;
 	}
 

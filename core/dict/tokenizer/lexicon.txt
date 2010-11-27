@@ -392,6 +392,7 @@ við_sjálfan_sig=MWE
 í_dag=MWE
 í_einu_vetfangi=MWE
 í_framtíðinni=MWE
+í_fyrra=MWE
 í_fyrrasumar=MWE
 í_fyrravor=MWE
 í_fyrsta_lagi=MWE

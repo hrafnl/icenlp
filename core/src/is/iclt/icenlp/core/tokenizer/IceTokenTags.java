@@ -1136,6 +1136,18 @@ public boolean personNumberMatch(IceTokenTags tok)
         changeReflexivePronounTags();
     }
 
+    public void cleanProperNounTags()
+    // Removes named entity distinction from proper nouns
+    {
+        ArrayList tags = getTags();
+		for( int j = 0; j < tags.size(); j++ )
+		{
+            IceTag tag = (IceTag)tags.get( j );
+            if (tag.isProperNoun())
+                tag.setOtherName();
+        }
+    }
+
     private void cleanVerbTags()
     {
         ArrayList tags = getTags();

@@ -252,6 +252,12 @@ public class IceTag extends Tag {
 
    }
 
+   public void setOtherName()
+   {
+       if (isProperNoun())
+         tagStr.setCharAt(5, cOtherName);
+   }
+
    public void setPersonName()
    {
        if (isProperNoun())

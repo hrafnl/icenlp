@@ -84,6 +84,9 @@ public class RunIceTagger
     protected IceTaggerOutput iceOutput = null;
     private IceTaggerLexicons iceLex=null;
     private TriTaggerLexicons triLex=null;
+    private boolean sameTagForAllNumbers = true;
+    private boolean namedEntityRecognition = false;
+
 
     private void showParametersExit()
     {
@@ -141,7 +144,8 @@ public class RunIceTagger
 		System.out.println( "  -bt (base tagging)" );
 		System.out.println( "  -nf (do not perform full disambiguation)" );
 		System.out.println( "  -ns (do not perform strict tokenization)" );
-
+        System.out.println( "  -num (use various possible tags for numbers)" );
+        System.out.println( "  -ner (named entity recognition for proper nouns)" );
 	}
 
 	private void checkParameters()
@@ -357,6 +361,10 @@ public class RunIceTagger
 				fullOutput = true;
 			else if( args[i].equals( "-ns" ) )
 				strictTokenization = false;
+            else if( args[i].equals( "-num" ) )
+				sameTagForAllNumbers = false;
+            else if( args[i].equals( "-ner" ) )
+				namedEntityRecognition = true;
             else if( args[i].equals( "-mt" ) )
 				modelTypeStr = args[i + 1];
             else if( args[i].equals( "-m" ) )
@@ -697,6 +705,9 @@ private void setDefaults()
                iceLex.verbObj,
                iceLex.verbAdverb,
                baseTagging, fullDisambiguation, triTagger, modelType);
+
+        tagger.setSameTagForAllNumbers(sameTagForAllNumbers);
+        tagger.setNamedEntityRecognition(namedEntityRecognition);
     }
 
     private void initStatistics() {
