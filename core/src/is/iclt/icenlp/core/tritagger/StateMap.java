@@ -34,7 +34,8 @@ import java.util.ArrayList;
  */
 public class StateMap {
     HashMap myStateIDs;       // Maps tags (or pair of tags) to integer identifiers
-    private final int maxNumberStates = 65356;
+    //private final int maxNumberStates = 65536;
+    private final int maxNumberStates = 1310727;
     String[] myStates;         // Maps integer identifiers to tags
 
     public StateMap()
