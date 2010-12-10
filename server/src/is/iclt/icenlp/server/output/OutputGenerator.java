@@ -21,7 +21,7 @@ public class OutputGenerator {
 	// Private member variables.
 	private Configuration configuration;
 	private MappingLexicon mapperLexicon = null;
-	private String taggingOutputForamt = null;
+	private String outputFormat = null;
 	private boolean lemmatize = false;
 	private boolean leave_not_found_tag_unchanged = false;
 	private boolean UserIceTaggerWhitespaceBlocks = false;
@@ -107,15 +107,14 @@ public class OutputGenerator {
 		}
 
 		// Check for the tagging output
-		if (this.configuration.containsKey("taggingoutputformat")) {
-			this.taggingOutputForamt = this.configuration
-					.getValue("taggingoutputformat");
+		if (this.configuration.containsKey("Outputformat")) {
+			this.outputFormat = this.configuration.getValue("Outputformat");
 
-			if (this.taggingOutputForamt.contains("[LEMMA]")) {
+			if (this.outputFormat.contains("[LEMMA]")) {
 				this.lemmatize = true;
 			}
 
-			System.out.println("[i] tagging output format: " + this.taggingOutputForamt + '.');
+			System.out.println("[i] Output format: " + this.outputFormat + '.');
 		}
 
 		try {
@@ -149,7 +148,7 @@ public class OutputGenerator {
 			if (this.lemmatize)
 				this.iceTagger.lemmatize(true);
 
-			if (this.taggingOutputForamt.contains("[FUNC]"))
+			if (this.outputFormat.contains("[FUNC]"))
 				this.iceParser = IceParser.instance();
 
 		} catch (Exception e) {
@@ -180,7 +179,7 @@ public class OutputGenerator {
 		StringBuilder builder = new StringBuilder();
 
 		// If we have not set any tagging output
-		if (this.taggingOutputForamt == null) {
+		if (this.outputFormat == null) {
 			for (Word word : wordList) {
 				if (word.linkedToPreviousWord)
 					builder.append(punctuationSeparator + word.getLexeme()
@@ -198,7 +197,7 @@ public class OutputGenerator {
 			for (Word word : wordList) {
 
 				String part = null;
-				part = this.taggingOutputForamt.replace("[LEXEME]", word.getLexeme());
+				part = this.outputFormat.replace("[LEXEME]", word.getLexeme());
 				part = part.replace("[TAG]", word.getTag());
 				if (this.iceParser != null) {
 					if (word.parseString == null)
@@ -209,17 +208,21 @@ public class OutputGenerator {
 
 				if (this.lemmatize)
 					part = part.replace("[LEMMA]", word.getLemma());
+				
 				// TODO: This is Apertium specific, must be moved from there, and be configurable.
 				if (this.fstp != null && !word.isOnlyOutputLexeme()) {
 					String check = "^" + word.getLemma() + word.getTag() + "$";
+					System.out.println("BIDIX-Check string: " + check);
 					String res = fstp.biltrans(check, true);
-					if (res.startsWith("^@")) {
-						
+					
+					if (res.startsWith("^@")) 
+					{	
 						if (this.configuration.debugMode()) 
 							System.out.println("[debug] word " + word.getLemma() + " not found in bidix");
 
-						part = this.taggingOutputForamt.replace("[LEXEME]", word.getLexeme());
-						part = part.replace("[LEMMA]", "*" + word.getLexeme());
+						part = this.outputFormat.replace("[LEXEME]", word.getLexeme());
+						// COMMENT: ekki stjarna, heldur @
+						part = part.replace("[LEMMA]", "@" + word.getLexeme());
 						part = part.replace("[TAG]", "");
 						if (word.parseString != null)
 							part = part.replace("[FUNC]", word.parseString);
