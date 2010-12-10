@@ -222,7 +222,7 @@ public class OutputGenerator {
 
 						part = this.outputFormat.replace("[LEXEME]", word.getLexeme());
 						// COMMENT: ekki stjarna, heldur @
-						part = part.replace("[LEMMA]", "@" + word.getLexeme());
+						part = part.replace("[LEMMA]", "*" + word.getLexeme());
 						part = part.replace("[TAG]", "");
 						if (word.parseString != null)
 							part = part.replace("[FUNC]", word.parseString);
