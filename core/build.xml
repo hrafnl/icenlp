@@ -64,6 +64,7 @@
 			</fileset>
             <fileset dir="./">
 		<include name="dict/icetagger/*.dict" />
+		<!-- The following line should be commented out if otbBin.dict is not to be distributed -->
                 <exclude name="dict/icetagger/otbBin.dict" />
 		<include name="dict/tokenizer/*" />
                 <include name="dict/tritagger/*.dict" />
