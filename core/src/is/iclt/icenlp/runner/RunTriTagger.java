@@ -193,7 +193,7 @@ public class RunTriTagger {
        System.out.println("  -of <1|2> (output format)");
        System.out.println("  -ss <upper|lower>" );
        System.out.println("  -cs (case sensitive)" );
-       System.out.println("  -b <backup dictionaryOtb>");
+       System.out.println("  -b <backup dictionary>");
        System.out.println("  -p <idioms/phrases dictionary>");
        System.out.println("  -im (use IceMorphy)");
        System.out.println("  -d <dictionary>");

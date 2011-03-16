@@ -86,8 +86,11 @@ public class Ngrams {
     private void init2()
     {
         //theta = computeTheta();
-        // Hardcoded, because of mismatch with the TnT tagger!
-        theta = 0.03712932;
+        // We have not been able to get the same number for theta as TnT does, despite following the
+        // description in Brants paper
+        // For now, we hard code theta the max number in the range given by Brants
+        //theta = 0.03712932;
+        theta = 0.10;
         entropy = computeEntropy();
     }
 
@@ -165,10 +168,13 @@ public class Ngrams {
     // theta is the standard deviation of the maximum likelihood probabilities of the tags (Brants, 2000)
     private double computeTheta()
     {
+        double probTag=0.0;
         int numTags = myTags.size();
-        //double averageTagProb = (double)1.0/numTags;
+        double averageTagProb = (double)1.0/numTags;
+        //System.out.println("Average tag probability: " + averageTagProb);
         // The following statements compute the same value as the statement above
-        double tagProbTotal=0.0, probTag = 0.0;
+        /*
+        double tagProbTotal=0.0;
         for (int i=0; i<numTags; i++)
         {
             String tag = (String)myTags.elementAt(i);
@@ -178,7 +184,8 @@ public class Ngrams {
                 tagProbTotal += probTag;
             }
         }
-        double averageTagProb = tagProbTotal / (numTags-1);     // Subtract 1 because of the boundary tag
+        averageTagProb = tagProbTotal / (numTags);     // Subtract 1 because of the boundary tag
+        */
 
 
         double sum=0.0;
@@ -188,13 +195,20 @@ public class Ngrams {
             if (!tag.equals(boundaryTag))
             {
                 probTag = getUnigramProb(tag);
+                //System.out.println(tag + "\t" + getFrequency(tag));
+                //System.out.println(tag + "\t" + probTag);
                 double x = probTag - averageTagProb;
                 sum = sum + x*x;
             }
         }
         // Brants (2000) talks about using standard deviation but his formula is actually the variance
-        return Math.sqrt((double)sum/(numTags-2));              // Subtract 1 because of the boundary tag
-        //return (double)sum/(numTags-1);
+        //return Math.sqrt((double)sum/(numTags-2));              // Subtract 1 because of the boundary tag
+        double theTheta = Math.sqrt(sum/(numTags-2));           // Subtract 1 because of the boundary tag
+        // The above calculation of theta does not return a number close to what TnT returns.
+        // The next statement is a hack!
+        //theTheta = theTheta * 5.6;                              // A hack in order to g
+        //System.out.println("Theta is: " +  theTheta);
+        return theTheta;
     }
 
     private String getLambda(Properties parameters, String lambdaKey)
@@ -272,6 +286,7 @@ public class Ngrams {
            currLine = input.readLine();
        }
        input.close();
+       //System.out.println("Corpus size: " + corpusSize);
     }
 
     private int getFrequencyUsingKey(String key)
