@@ -53,7 +53,7 @@ public class TriTaggerLexicons {
     // The nameInPath parameter is just used to be able to use two constructors
     public TriTaggerLexicons(String modelNameWithPath, boolean nameInPath, boolean createSuffixes) throws IOException {
         ngrams = new Ngrams( modelNameWithPath+ngramsEnding, modelNameWithPath+lambdaEnding);
-		freqLexicon = new FreqLexicon( modelNameWithPath+lexEnding, FreqLexicon.formatFrequency, createSuffixes );
+        freqLexicon = new FreqLexicon( modelNameWithPath+lexEnding, FreqLexicon.formatFrequency, createSuffixes );
     }
 
      public TriTaggerLexicons(InputStream ngrams_is, InputStream lambda_is, InputStream frequency_is, boolean createSuffixes) throws IOException

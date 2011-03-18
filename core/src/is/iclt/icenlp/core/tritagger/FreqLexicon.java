@@ -50,11 +50,13 @@ public class FreqLexicon {
    private int corpusSizeLower=0;      // The corpus size behind lower case suffixes
    private int corpusSizeUpper=0;     // The corpus size behind upper case suffixes
    private boolean suffixesCreated;
-   private double theta;                        // Used for smoothing suffix lexical probabilities
+   //private double theta;                        // Used for smoothing suffix lexical probabilities
    private int myFormat;                // The format of the lexicon
    public static final int formatFrequency=0;   // Use to state that the lexicon has frequency figures
    public static final int formatNoFrequency=1; // Use to state that the lexicon has no frequency figures
-
+   // If the following string appears in the frequency file it denotes that the entries that follow should not
+   // be used to derive suffix info
+   public static final String noSuffixes = "[NOSUFFIXES]";
 
     // Each key (word) is mapped to a Vector
     // The vector consists of is.iclt.icenlp.core.tritagger.FreqLexEntry objects
@@ -106,6 +108,25 @@ public class FreqLexicon {
         return suffixesCreated;
     }
 
+    private void printHeapSize()
+    {
+        // Get current size of heap in bytes
+        long heapSize = Runtime.getRuntime().totalMemory();
+
+        // Get maximum size of heap in bytes. The heap cannot grow beyond this size.
+        // Any attempt will result in an OutOfMemoryException.
+        long heapMaxSize = Runtime.getRuntime().maxMemory();
+
+        // Get amount of free memory within the heap in bytes. This size will increase
+        // after garbage collection and decrease as new objects are created.
+        long heapFreeSize = Runtime.getRuntime().freeMemory();
+
+        System.out.println("HeapSize: " + heapSize);
+        System.out.println("HeapMaxSize: " + heapMaxSize);
+        System.out.println("HeapFreeSize: " + heapFreeSize);
+
+    }
+
     private void loadFile(BufferedReader input, boolean doCreateSuffixes)
     throws IOException
     {
@@ -113,14 +134,27 @@ public class FreqLexicon {
        String key="";
        FreqLexEntry entry;
        int freq=1, keyFreq, tagStart, tagIncrement;
+       //int lines=0;
 
        corpusSize=0;
-       // A word is the key and a vector of lexicon entries (is.iclt.icenlp.core.tritagger.FreqLexEntry) are values.
+       // A word is the key and a vector of lexicon entries (FreqLexEntry) are values.
        // The line looks like: w freq t1 freq (t2 freq) (t3 freq) ... (tn freq)
+
+       //printHeapSize(); 
        String currLine = input.readLine();
        while (currLine != null)
        {
-           if (currLine.length() != 0 && currLine.charAt(0) != '[')   // Not an empty line and not a comment
+           //lines++;
+           //System.out.println("Line: " + lines + "\r");
+
+           // If we find the following line in the frequency file, then it denotes that we
+           // should not use the rest of the file to derive suffix info
+           if (currLine.equals(noSuffixes)) {
+                doCreateSuffixes = false;
+                //System.out.println("Found noSuffix marker!");
+           }
+
+           else if (currLine.length() != 0 && currLine.charAt(0) != '[')   // Not an empty line and not a comment
            {
               Vector entries = new Vector();
               strs = currLine.split("\\s");   // Split the line
@@ -166,10 +200,10 @@ public class FreqLexicon {
     }
 
 
-    public double getTheta()
+    /*public double getTheta()
     {
         return theta;
-    }
+    }*/
 
     public Vector getTagsUpper()
     {
@@ -210,9 +244,9 @@ public class FreqLexicon {
            return myTagsLower;
     }
 
+    /*
     // theta is the standard deviation of the maximum likelihood probabilities of the tags (Brants, 2000)
-
-    private double computeTheta()
+    private double computeTheta()     // This is carried out in the Ngrams class
     {
         Vector vUpper = getTags(myTagsUpper);
         Vector vLower = getTags(myTagsLower);
@@ -221,24 +255,6 @@ public class FreqLexicon {
         int numTagsUpper = vUpper.size();
         int numTagsLower = vLower.size();
         int numTags = numTagsUpper + numTagsLower;
-        /*
-        double total = 0.0;
-        // Compute the average
-        for (int i=0; i<numTagsUpper; i++)
-        {
-            String tag = (String)vUpper.elementAt(i);
-            Integer intObj = (Integer)myTagsUpper.get(tag);
-            int freq = intObj.intValue();
-            total += (double)freq/numTags;          // total = total + P(tag_i)
-        }
-        for (int i=0; i<numTagsLower; i++)
-        {
-            String tag = (String)vLower.elementAt(i);
-            Integer intObj = (Integer)myTagsLower.get(tag);
-            int freq = intObj.intValue();
-            total += (double)freq/numTags;
-        }
-        double averageTagProb = total / numTags;*/
         double averageTagProb = (double)1.0/numTags;
 
         // Now compute the standard deviation
@@ -264,7 +280,7 @@ public class FreqLexicon {
         // Brants (2000) talks about using standard deviation but his formula is actually the variance
         return Math.sqrt((double)sum/(numTags-1));
         //return (double)sum/(numTags-1);
-    }
+    } */
 
     // Returns the probability of the supplied tag with the regard to a suffix trie
     /*public double getProbTagSuffixTrie(String tag, boolean isUpperCase)
@@ -473,10 +489,13 @@ public class FreqLexicon {
 
     private void addSuffixEntry(String suffix, Vector vectorToAdd, HashMap theHashMap)
     {
+        // We have to make copies of the entries in the vector vectorToAdd and use those entries
+        // in the hashmap, because else we are manipulating the same objects (FreqLexEntry) as used in the word hashmap!
         FreqLexEntry entryToAdd;
         Vector myVector = (Vector)theHashMap.get(suffix);
         if (myVector == null)  // If nothing is there yet
         {
+
             myVector = new Vector();
             for (int i=0; i<vectorToAdd.size(); i++)
             {
@@ -486,7 +505,7 @@ public class FreqLexicon {
             }
             theHashMap.put(suffix, myVector);     // The suffix is the key, the value is a vector of LexEntries
         }
-        else {  // The vector is already there - its values no need to be updated
+        else {  // The vector is already there - its values now need to be updated
             for (int i=0; i<vectorToAdd.size(); i++)  // Loop through the vector which holds entries to be added
             {
                 entryToAdd = (FreqLexEntry)vectorToAdd.elementAt(i);
