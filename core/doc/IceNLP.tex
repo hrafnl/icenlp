@@ -33,7 +33,7 @@ A Natural Language Processing Toolkit for Icelandic \\ \ \\ \ \\ \ \\
 \begin{document}
 \hyphenation{Ice-Tagger Ice-Morphy Reykja-vik}
 \label{firstpage}
-\date{September 2010}
+\date{March 2011}
 \maketitle
 \newpage
 \tableofcontents
@@ -51,13 +51,13 @@ The tokeniser is used for tokenising stream of characters into linguistic units 
 
 \emph{IceTagger} is a linguistic rule-based tagger for tagging Icelandic text\footnote{As apposed to a data-driven tagger trainable on different languages.} \citep{lof06,lof08}.
 It uses a large part-of-speech (POS) tagset consisting of about 700 tags (see Section \ref{sec:tagset}).
-Evaluation has shown that IceTagger achieves higher accuracy than the best performing data-driven tagger when tested using the same test corpora and the same ratio of unknown words \citep{lof08,hel04}.
+Evaluation has shown that \textit{IceTagger} achieves higher accuracy than the best performing data-driven tagger when tested using the same test corpora and the same ratio of unknown words \citep{lof08,hel04}.
 The average tagging accuracy, computed when tagging test corpora derived from the \emph{Icelandic Frequency Dictionary} (\emph{IFD}) corpus \citep{pin91}, is 91.76\%\footnote{All tagging accuray is measured using a corrected version of the IFD corpus \citep{lof09}.}.
 \emph{IceTagger} is now able to produce the lemma of a word form, thanks to an integration with \emph{Lemmald} (see below).
 
 \emph{TriTagger} is a re-implementation of the well known TnT trigram tagger \citep{bra00}.
 When \emph{TriTagger} is used to fully disambiguate words, to which \emph{IceTagger} is not able to assign unambiguous tags, an accuracy of 92.01\% is achieved \citep{lof06b,lof09b}.
-Furthermore, an accuracy of 92.51\% is achieved by using TriTagger as a word class tagger during initial disambiguation and then using IceTagger to disambiguate tags that are consistent with the chosen word class \citep{lof09b}.
+Furthermore, an accuracy of 92.51\% is achieved by using \textit{TriTagger} as a word class tagger during initial disambiguation and then using \textit{IceTagger} to disambiguate tags that are consistent with the chosen word class \citep{lof09b}.
 
 \emph{IceParser} is a shallow parser based on the incremental finite-state parsing technique \citep{mok97}.
 It labels both constituent structure and grammatical functions.
@@ -483,13 +483,13 @@ To understand fully some of the other parameters you need to consult \citep{lof0
 \item \emph{SENTENCE\_START}: \emph{upper|lower}. \emph{upper}: Every sentence starts with an upper case letter. \emph{lower}: Every sentence starts with a lower case letter, except when the first word is a proper noun.
 \item \emph{LOG\_FILE}: The name of a log file if one is desired. The log file will list debugging information.
 \item \emph{FULL\_DISAMBIGUATION}: \emph{yes|no}. This applies to words which the tagger can not fully disambiguate. If this value is \emph{yes} the tagger will either select the tag with the highest frequency or call \emph{TriTagger} for full disambiguation (see next parameter). If the value is \emph{no} the tagger will return all the tags that could not be eliminated.
-\item \emph{MODEL\_TYPE}: \emph{start|end|startend}. If \emph{start}, an n-gram model (see the \emph{MODEL} parameter) is used for choosing the word class during initial disambiguation, and then IceTagger is used to disambiguate tags that are consistent with the chosen word class. If \emph{end}, the n-gram model is only run in the last phase to fully disambiguate words to which \emph{IceTagger} is not able to assign unambiguous tags.  If \emph{startend}, the n-gram model is used both at the start and in the last phase.  
+\item \emph{MODEL\_TYPE}: \emph{start|end|startend}. If \emph{start}, an n-gram model (see the \emph{MODEL} parameter) is used for choosing the word class during initial disambiguation, and then \textit{IceTagger} is used to disambiguate tags that are consistent with the chosen word class. If \emph{end}, the n-gram model is only run in the last phase to fully disambiguate words to which \emph{IceTagger} is not able to assign unambiguous tags.  If \emph{startend}, the n-gram model is used both at the start and in the last phase.  
 \item \emph{FULL\_OUTPUT}: \emph{yes|no}. If \emph{yes} the tagger will write  subject-verb-object information and information on prepositional phrases to the output file and detailed information for unknown words. If \emph{no} then only unknown words are marked.
 \item \emph{BASE\_TAGGING}: \emph{yes|no}. If \emph{yes} the tagger will only assign a single tag to each word based on maximum frequency.
-\item \emph{TAG\_MAP\_DICT}: The name of the dictionary used for mapping the tags used internally by IceTagger to some other tagset.
-\item \emph{LEMMATIZE}: \emph{yes|no}. If \emph{yes} then IceTagger outputs the lemma, in addition to the word and its tag. Note that the lemma is only written out if \emph{OUTPUT\_FORMAT}=1. 
+\item \emph{TAG\_MAP\_DICT}: The name of the dictionary used for mapping the tags used internally by \textit{IceTagger} to some other tagset.
+\item \emph{LEMMATIZE}: \emph{yes|no}. If \emph{yes} then \textit{IceTagger} outputs the lemma, in addition to the word and its tag. Note that the lemma is only written out if \emph{OUTPUT\_FORMAT}=1. 
 \item \emph{STRICT}: \emph{yes|no}. Strict tokenisation or not. Used by the tokeniser, see section \ref{sec:tok}.
-\item For typical use of IceTagger, the user does not need to provide values for the following parameters, because as a default the corresponding files are read directly from the \emph{IceNLPCore.jar} file:
+\item For typical use of \textit{IceTagger}, the user does not need to provide values for the following parameters, because as a default the corresponding files are read directly from the \emph{IceNLPCore.jar} file:
 \begin{itemize}
 \item \emph{MODEL}: The name of an n-gram model. The n-gram model is only used if the \emph{MODEL\_TYPE} parameter has a value (and if \emph{FULL\_DISAMBIGUATION=yes}). If \emph{MODEL\_TYPE} has no value then \emph{IceTagger} performs full disambiguation by selecting the tag with the highest frequency.
 \item \emph{BASE\_DICT}: The name of the base dictionary of words and associated tags. Its format can be seen in section \ref{sec:dict}.
@@ -498,11 +498,11 @@ To understand fully some of the other parameters you need to consult \citep{lof0
 \item \emph{VERB\_PREP\_DICT}: The name of the dictionary for verb-preposition pairs and associated cases.
 \item \emph{VERB\_OBJ\_DICT}: The name of the dictionary for verbs and corresponding cases for their objects.
 \item \emph{VERB\_ADVERB\_DICT}: The name of the dictionary for verb-particle (phrasal verb) information.
-\item \emph{ENDINGS\_BASE}: The name of the base dictionary listing possible tags for different endings. Used by IceMorphy.
-\item \emph{ENDINGS\_DICT}: The name of the main dictionary listing possible tags for different endings. Used by IceMorphy.
-\item \emph{ENDINGS\_PROPER\_DICT}: The name of the main dictionary listing possible tags for different proper name endings. Used by IceMorphy.
-\item \emph{PREFIXES\_DICT}: The name of the prefixes dictionary. Used by IceMorphy.
-\item \emph{TAG\_FREQUENCY\_FILE}: The name of the tag frequency file. This file is only used by IceMorphy when \emph{BASE\_TAGGING}=\emph{yes}.
+\item \emph{ENDINGS\_BASE}: The name of the base dictionary listing possible tags for different endings. Used by \textit{IceMorphy}.
+\item \emph{ENDINGS\_DICT}: The name of the main dictionary listing possible tags for different endings. Used by \textit{IceMorphy}.
+\item \emph{ENDINGS\_PROPER\_DICT}: The name of the main dictionary listing possible tags for different proper name endings. Used by \textit{IceMorphy}.
+\item \emph{PREFIXES\_DICT}: The name of the prefixes dictionary. Used by \textit{IceMorphy}.
+\item \emph{TAG\_FREQUENCY\_FILE}: The name of the tag frequency file. This file is only used by \textit{IceMorphy} when \emph{BASE\_TAGGING}=\emph{yes}.
 \item \emph{TOKEN\_DICT}: The name of the file used by the tokeniser to recognise abbreviations, see section \ref{sec:tok}.
 \end{itemize}
 \end{itemize}
@@ -510,13 +510,13 @@ To understand fully some of the other parameters you need to consult \citep{lof0
 \textbf{./icetagger.sh} -i <inputFile> -o <outputFile> -d <dictionary> -lf 2 \ldots, etc. \\ \\
 The parameters supplied this way correspond to the attributes and values above.
 The name of the parameters can be seen by typing: \textbf{./icetagger.sh -help} \\ \\
-For running IceTagger with all the default settings, issue either of the commands: 
+For running \textit{IceTagger} with all the default settings, issue either of the commands: 
 \begin{itemize} 
 \item \textbf{./icetagger.sh} -i <inputfile> -o <outputfile>
 \item \textbf{./icetagger.sh} -f <filelist> 
 \end{itemize}
 
-Furthermore, if neither the -i/-o parameters nor the -f parameter are provided, IceTagger reads from standard input and writes to standard output. For example, the following Linux command can be used to make IceTagger tag the string ``Ég á stóran hund'' (and write the output to the screen): 
+Furthermore, if neither the -i/-o parameters nor the -f parameter are provided, \textit{IceTagger} reads from standard input and writes to standard output. For example, the following Linux command can be used to make \textit{IceTagger} tag the string ``Ég á stóran hund'' (and write the output to the screen): 
 \begin{verbatim}
 echo "Ég á stóran hund" | ./icetagger.sh 
 \end{verbatim}
@@ -532,8 +532,8 @@ echo "Ég á stóran hund" | ./icetagger.sh
 %A precise description of how to use \emph{IceTagger} in this case will follow in a later version of this User Guide.
 
 \subsection{Lemmald}
-The lemmatizer can be used as part of IceTagger by supplying the \textit{-lem} parameter and specifying output
-format \textit{1}. See section \ref{sec:icetagger_usage} on IceTagger usage for further information. 
+The lemmatizer can be used as part of \textit{IceTagger} by supplying the \textit{-lem} parameter and specifying output
+format \textit{1}. See section \ref{sec:icetagger_usage} on \textit{IceTagger} usage for further information. 
 An example of such usage is the following:
 
 \begin{verbatim}
@@ -635,7 +635,7 @@ The parameters of the <paramFile> are described below.
 \item \emph{LOG\_FILE}: The name of a log file if one is desired. The log file will list debugging information.
 \item \emph{SEPARATOR}: \emph{space|equal}. Specifies the character used as a separator between a word and its tag(s).
 \item \emph{TAGSEPARATOR}: \emph{space|underscore}. Specifies the character used as a separator between the tags.
-\item For typical use of IceMorphy, the user does not need to provide values for the following parameters, because as a default the corresponding files are read directly from the \emph{IceNLPCore.jar} file:
+\item For typical use of \textit{IceMorphy}, the user does not need to provide values for the following parameters, because as a default the corresponding files are read directly from the \emph{IceNLPCore.jar} file:
 \begin{itemize}
 \item \emph{DICT}: The name of the main dictionary of words and associated tags. See section \ref{sec:icetagger_usage}.
 \item \emph{BASE\_DICT}: The name of the base dictionary. See section \ref{sec:icetagger_usage}.
@@ -665,7 +665,7 @@ This file has a number of attribute-value pairs whose values can be changed:
 \item \emph{SENTENCE\_START}: See section \ref{sec:icetagger_usage}.
 \item \emph{CASE\_SENSITIVE}: \emph{yes|no}. The default is \emph{no} which means that \emph{TriTagger} does case-insensitive lookup into the main dictionary for the first word of a sentence. If that fails, the tagger tries case-sensitive lookup. If this parameter is set to \emph{yes}, then case-insensitive lookup is not performed. 
 \item \emph{NGRAM}: \emph{2}=bigrams, \emph{3}=trigrams.
-\item For typical use of TriTagger, the user does not need to provide values for the following parameters, because as a default the corresponding files are read directly from the \emph{IceNLPCore.jar} file:
+\item For typical use of \textit{TriTagger}, the user does not need to provide values for the following parameters, because as a default the corresponding files are read directly from the \emph{IceNLPCore.jar} file:
 \begin{itemize}
 \item \emph{MODEL}: The name of the model derived from a training corpus. The model consists of a n-gram file, a lexicon and a file with lambda (smoothing) parameters. This model name should not have any extension. For example, if \emph{MODEL}=otb, then the program will load the files \emph{otb.ngram}, \emph{otb.lex} and \emph{otb.lambda} (see section \ref{sec:train}).
 \item \emph{STRICT}: See section \ref{sec:icetagger_usage}.
@@ -686,12 +686,19 @@ This file has a number of attribute-value pairs whose values can be changed:
 The parameters supplied this way correspond to the attributes and values above.
 The name of the parameters can be seen by typing: \textbf{./tritagger -help}
 
-Furthermore, if the -i/-o parameters are not provided, TriTagger reads from standard input and writes to standard output. For example, the following Linux command can be used to make TriTagger tag the string ``Ég á stóran hund'' (and write the output to the screen): 
+Furthermore, if the -i/-o parameters are not provided, \textit{TriTagger} reads from standard input and writes to standard output. For example, the following Linux command can be used to make \textit{TriTagger} tag the string ``Ég á stóran hund'' (and write the output to the screen): 
 \begin{verbatim}
 echo "Ég á stóran hund" | ./tritagger.sh 
 \end{verbatim}
 \end{itemize}
 
+As mentioned above, one of the files resulting from the training phase is a lexicon file (with the extension \textit{.lex}), containing the tag profile for each word.
+It is worth noting, that in some cases one might want to extend this file, for example by adding data to it from some other data resource than the training corpus.
+If one does only want \textit{TriTagger} do use data derived from the training corpus (but not also from the other data resource) for suffix handling, then a single line containing the following string can be put into the \textit{.lex} file right after the last entry (word) derived from the training corpus:
+\begin{verbatim}
+[NOSUFFIXES] 
+\end{verbatim}
+During the loading of the lexicon, \textit{TriTagger} will then not use entries in the lexicon, that appear after this specially marked string, for suffix handling.
 
 \subsubsection{Training}
 \label{sec:train}
@@ -790,7 +797,7 @@ For example, the file \emph{test.txt} in the \textbf{bat/demo} directory can be 
 
 Tagging and parsing can also be tested by running the \textbf{/.tagAndParse.sh} command in the \textbf{bat/demo} directory.  
 
-In that case, the \emph{test.txt} file is used as the input to the tagger.  The output of the tagger is then piped into IceParser, which finally produces the file \emph{parse.out} as output.
+In that case, the \emph{test.txt} file is used as the input to the tagger.  The output of the tagger is then piped into \textit{IceParser}, which finally produces the file \emph{parse.out} as output.
 
 
 \newpage
