@@ -181,8 +181,12 @@ public class RunIceMorphy {
                 items = line.split(separator);    // split using "="
                 if (separator.equals(" ") && tagSeparator.equals(" ")) {
                     tok.lexeme = items[0];
-                    for (int i=1; i<items.length; i++)
+                    for (int i=1; i<items.length; i++) {
+                        if (i==1)
+                          tags = items[i];
+                        else
                             tags = tags + " " + items[i];
+                    }
                 }
                 // This case is possible $\delta$=÷106\prómill=tp
                 else if (separator.equals("=") && items.length > 2)
