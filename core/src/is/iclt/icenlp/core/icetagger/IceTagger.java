@@ -36,7 +36,6 @@ import java.util.ArrayList;
  * <li>Hrafn Loftsson. 2006. Tagging a morphologically complex language using heuristics. In T. Salakoski, F. Ginter, S. Pyysalo and T. Pahikkala (eds.), Advances in Natural Language Processing, 5th International Conference on NLP, FinTAL 2006, Proceedings. Turku, Finland.</li>
  * @author Hrafn Loftsson
  */
-
 public class IceTagger
 {
     public enum HmmModelType {start, end, startend, none} // start and/or end with a HMM model or no model at all
@@ -626,7 +625,6 @@ public class IceTagger
         }
     }
 
-
     /**
      * Tags the supplied tokens.
      * @param tokens  The tokens
@@ -642,13 +640,14 @@ public class IceTagger
 			morpho.setTokens( myTokens );
 			morpho.morphoAnalysis();
 			checkAssignment();
-            if( startWithHmmModel && triTagger != null ) {
+            if( startWithHmmModel && triTagger != null ) 
+            {
                 tagWithTriTagger();
             }
+            
             disambiguate();
 		}
 		cleanTags();
-
 
         if( endWithHmmModel && triTagger != null )
         {
@@ -656,5 +655,42 @@ public class IceTagger
 			triTagger.tagTokens( myTokens, false );
 		}
 	}
+    
+    /**
+     * Tags the tokens supplied by an external morpho analyzer
+     * @param tokens
+     */
+    public void tagExternalTokens( ArrayList<IceTokenTags> tokens )
+	{
+        myTokens = tokens;
 
+        if( startWithHmmModel && triTagger != null ) 
+        {
+            tagWithTriTagger();
+        }
+        
+        // Test for unknown words
+        for(IceTokenTags itt: tokens)
+        {
+        	if(itt.isUnknown())
+        	{
+        		// TODO: Check on case sensitivity
+        		dictionaryTokenLookup(itt, false);
+        	}
+        }
+        
+        // This morpho analysis will only run on words with no tags
+        morpho.setTokens(myTokens);
+		morpho.morphoAnalysis();
+        
+		// Do the tagging
+        disambiguate();
+		cleanTags();
+
+        if( endWithHmmModel && triTagger != null )
+        {
+			enforceOneTagSVOVerb();        // We will assume that the first SVO verb is the correct one!
+			triTagger.tagTokens( myTokens, false );
+		}
+	}
 }

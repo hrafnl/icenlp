@@ -21,6 +21,7 @@
  */
 package is.iclt.icenlp.core.tokenizer;
 
+import is.iclt.icenlp.core.utils.IceTag;
 import is.iclt.icenlp.core.utils.Tag;
 import is.iclt.icenlp.core.tokenizer.Token;
 
@@ -158,6 +159,17 @@ public class TokenTags extends Token
     {
         if (!tagExists(t))
             tags.add(new Tag(t));
+    }
+    
+    public void addTagWithLemma(String t, String lemma)
+    {
+    	if (!tagExists(t))
+    	{
+    		IceTag ta = new IceTag(t);
+    		ta.setLemma(lemma);
+    		
+    		tags.add(ta);
+    	}
     }
 
     public void addTagFront(String t)

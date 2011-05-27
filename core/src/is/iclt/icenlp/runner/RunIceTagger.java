@@ -21,6 +21,9 @@
  */
 package is.iclt.icenlp.runner;
 
+import is.iclt.icenlp.core.apertium.ApertiumEntry;
+import is.iclt.icenlp.core.apertium.LexicalUnit;
+import is.iclt.icenlp.core.apertium.LtProcParser;
 import is.iclt.icenlp.core.icetagger.IceTagger;
 import is.iclt.icenlp.core.icetagger.IceTaggerOutput;
 import is.iclt.icenlp.core.icetagger.IceTaggerLexicons;
@@ -49,18 +52,18 @@ import java.util.Date;
  */
 public class RunIceTagger
 {
-	private String inputFile;
+	protected String inputFile;
     protected String outputFile;
     private String logFile;
     protected String fileList=null;
-    private String tokenDictPath = null;
+    protected String tokenDictPath = null;
 	private String baseDictPath, dictPath, prefixesDictPath, idiomsDictPath;
 	private String verbPrepDictPath, verbObjDictPath, verbAdverbDictPath;
 	protected String tagFrequencyFile, tagMapFile, endingsBasePath, endingsDictPath, endingsProperDictPath;
     private String lineFormatStr, outputFormatStr, sentenceStartStr, separatorStr;
     private String modelStr, modelTypeStr;
     private String fullOutputStr, lemmatizeStr;
-    private Lexicon tokLex;
+    protected Lexicon tokLex;
     protected boolean standardInputOutput=false;
     protected boolean fullOutput = false;
 	private boolean baseTagging = false;
@@ -74,7 +77,7 @@ public class RunIceTagger
     private int lineFormat = Segmentizer.tokenPerLine;    // Default is one token per line
     protected int outputFormat = Segmentizer.tokenPerLine;    // Default is one word/tag per line
     private int sentenceStart;   // Sentences start with upper case or lower case letters?
-    private IceTagger tagger;
+    protected IceTagger tagger;
 	private Segmentizer segmentizer;
 	protected Tokenizer tokenizer;
 	protected IceLog logger = null;               // Log object
@@ -86,7 +89,7 @@ public class RunIceTagger
     private TriTaggerLexicons triLex=null;
     private boolean sameTagForAllNumbers = true;
     private boolean namedEntityRecognition = false;
-
+    protected String externalAnalysis = "icenlp"; // Default use iceNLP as the external morpho analyzer
 
     private void showParametersExit()
     {
@@ -146,8 +149,10 @@ public class RunIceTagger
 		System.out.println( "  -ns (do not perform strict tokenization)" );
         System.out.println( "  -num (use various possible tags for numbers)" );
         System.out.println( "  -ner (named entity recognition for proper nouns)" );
+        System.out.println( "  -x <icenlp|apertium> (external morpho analysis, default icenlp)" );
 	}
 
+    // Checks if the used parameters have any errors in them
 	private void checkParameters()
 	{
 		boolean error = false;
@@ -227,6 +232,11 @@ public class RunIceTagger
             System.err.println("Exiting!");
 			System.exit( 0 );
         }
+		if( !externalAnalysis.matches("icenlp|apertium") )
+		{
+			System.out.println( "Parameter: " + "EXTERNAL_ANALYSIS" + " needs to be either icenlp or apertium" );
+			error = true;
+		}
 	}
 
 	private void getFormat()
@@ -248,7 +258,7 @@ public class RunIceTagger
 
     }
 
-	private void loadParameters( String filename )
+	protected void loadParameters( String filename )
 			throws IOException
 	{
 		Properties parameters = new Properties();
@@ -282,6 +292,7 @@ public class RunIceTagger
         tagMapFile =   parameters.getProperty( "TAG_MAP_DICT");
         lemmatizeStr =   parameters.getProperty( "LEMMATIZE");
         fullOutputStr = parameters.getProperty( "FULL_OUTPUT" );
+        externalAnalysis = parameters.getProperty( "EXTERNAL_ANALYSIS" );
 		String fullDisambiguationStr = parameters.getProperty( "FULL_DISAMBIGUATION", "yes" );
 		String baseTaggingStr = parameters.getProperty( "BASE_TAGGING", "no" );
 		String strictTokenizationStr = parameters.getProperty( "STRICT", "yes" );
@@ -369,11 +380,13 @@ public class RunIceTagger
 				modelTypeStr = args[i + 1];
             else if( args[i].equals( "-m" ) )
 				modelStr = args[i + 1];
+            else if( args[i].equals( "-x" ) )
+            	externalAnalysis = args[i + 1];
         }
 		getFormat();
 	}
 
-private void setDefaults()
+	private void setDefaults()
 	{
 		logFile = "";
 		modelStr = "";
@@ -383,8 +396,6 @@ private void setDefaults()
 		separatorStr = "space";
 		sentenceStartStr = "upper";
     }
-
-
 
 	protected void printResults(BufferedWriter outFile) throws IOException
 	{
@@ -472,7 +483,9 @@ private void setDefaults()
            System.out.println("Tagging file: " + currFile + "; output: " + taggedOutputFile);
 
            initStatistics();
+
            tagText(output);
+           
            currFile = input.readLine();
         }
         input.close();
@@ -507,11 +520,11 @@ private void setDefaults()
                     tokenizer.tokenizeSplit( sentence );    // Only split on whitespace
                 else
                     tokenizer.tokenize( sentence );     // Perform more intelligent tokenization
-
+                
                 if( tokenizer.tokens.size() > 0 )
 				{
 					tokenizer.splitAbbreviations();
-					tagger.tagTokens( tokenizer.tokens );
+					tagger.tagTokens( tokenizer.tokens ); // Tokens are empty here
 
 					if( baseTagging )
 					    printResultsBaseTagging(outFile);
@@ -520,6 +533,7 @@ private void setDefaults()
 				}
 			}
 		}
+		
         outFile.flush();
 		outFile.close();
 
@@ -550,21 +564,22 @@ private void setDefaults()
 
         if( args.length >= 1 && args[0].equals( "-p" ) )
 		{
-				paramFile = args[1];
-                loadParameters( paramFile );
+			paramFile = args[1];
+            loadParameters( paramFile );
 		}
         else
 		{
-				setDefaults();
-				getParameters( args );
-                // If neither reading input from a file nor a filelist then read from standard input
-                if (inputFile == null && fileList == null) {
-                    standardInputOutput = true;
-                    if (!changedDefaultInputFormat)
-                        lineFormat = Segmentizer.sentencePerLine;   // Assume one sentence per line
-                    if (!changedDefaultOutputFormat)
-                        outputFormat = Segmentizer.sentencePerLine;
-                }
+			setDefaults();
+			getParameters( args );
+	        // If neither reading input from a file nor a filelist then read from standard input
+	        if (inputFile == null && fileList == null)
+	        {
+	            standardInputOutput = true;
+	            if (!changedDefaultInputFormat)
+	                lineFormat = Segmentizer.sentencePerLine;   // Assume one sentence per line
+	            if (!changedDefaultOutputFormat)
+	                outputFormat = Segmentizer.sentencePerLine;
+	        }
         }
     }
 
@@ -657,14 +672,18 @@ private void setDefaults()
         InputStream tokenDictIStream = (tokenDictPath == null ? tokResources.isLexicon : new BufferedInputStream(new FileInputStream( tokenDictPath )));
         tokLex = new Lexicon(tokenDictIStream);
 
-        if (inputFile != null)
-            segmentizer = new Segmentizer( inputFile, lineFormat, tokLex );
-            //segmentizer = new Segmentizer( inputFile, lineFormat, tokenDictPath );
-        // Reading from standard input?
-        else if (standardInputOutput) {
-             BufferedReader in = FileEncoding.getReader(System.in);
-             segmentizer = new Segmentizer(in, lineFormat, tokLex);
-             //segmentizer = new Segmentizer(in, lineFormat, tokenDictPath);
+        // We want to use the segmentizer when we are using the icenlp morpho
+        if(externalAnalysis.equals("icenlp"))
+        {
+	        if (inputFile != null)
+	            segmentizer = new Segmentizer( inputFile, lineFormat, tokLex );
+	            //segmentizer = new Segmentizer( inputFile, lineFormat, tokenDictPath );
+	        // Reading from standard input?
+	        else if (standardInputOutput) {
+	             BufferedReader in = FileEncoding.getReader(System.in);
+	             segmentizer = new Segmentizer(in, lineFormat, tokLex);
+	             //segmentizer = new Segmentizer(in, lineFormat, tokenDictPath);
+	        }
         }
 
         //tokenizer = new Tokenizer( Tokenizer.typeIceTokenTags, strictTokenization, tokenDictPath );
@@ -718,13 +737,17 @@ private void setDefaults()
 
     protected void performTagging() throws IOException
     {
-        if (standardInputOutput) {
+        if(standardInputOutput) 
+        {
             BufferedWriter out = FileEncoding.getWriter(System.out);
-            tagText(out);
+            
+         	tagText(out);
         }
-        else if (fileList == null) {
+        else if (fileList == null) 
+        {
             BufferedWriter out = FileEncoding.getWriter(outputFile);
-            tagText(out);
+
+          	tagText(out);
         }
         else
             tagAllFiles();
@@ -744,7 +767,6 @@ private void setDefaults()
             printHeader();
             printInfoBeforeTagging();
         }
-
         Date before = new Date();
         dateFormatter = new SimpleDateFormat();
 

@@ -27,6 +27,7 @@ package is.iclt.icenlp.core.utils;
  */
 public class Tag {
    protected StringBuffer tagStr;
+   protected String lemma; // Added to store the lemma from an external morpho analyzer
    protected boolean valid;
 
    public Tag()
@@ -45,6 +46,16 @@ public class Tag {
    public void setValid(boolean v)
    {
        valid = v;
+   }
+   
+   public void setLemma(String lemma)
+   {
+	   this.lemma = lemma;
+   }
+   
+   public String getLemma()
+   {
+	   return lemma;
    }
 
    public boolean isValid()

@@ -18,6 +18,7 @@
 	<property name="commons_logging" location="${lib}/commons-logging-1.1.1.jar" />
 	<property name="commons_cli" location="${lib}/commons-cli-1.2.jar" />
 	<property name="xerces" location="${lib}/xerces.jar" />
+	<property name="junit" location="${lib}/junit-4.8.2.jar" />
 
     	<property name="version" value="11.03" />
 	<property name="jar_name" value="IceNLPCore" />
@@ -26,9 +27,20 @@
 		<pathelement location="${segment}" />
 		<pathelement location="${commons_io}" />
 		<pathelement location="${commons_logging}" />
-	    <pathelement location="${commons_cli}" />
+	    	<pathelement location="${commons_cli}" />
 		<pathelement location="${xerces}" />
-	</path>			
+		<pathelement location="${junit}" />
+	</path>
+
+	<path id="classpath.test">
+		<pathelement location="${build}" />
+		<pathelement location="${segment}" />
+                <pathelement location="${commons_io}" />
+                <pathelement location="${commons_logging}" />
+                <pathelement location="${commons_cli}" />
+                <pathelement location="${xerces}" />
+                <pathelement location="${junit}" />
+	</path>
 
 	<target name="init" depends="clean" >
 		<tstamp /> <!-- Create the timestamp for the build -->
@@ -38,17 +50,36 @@
 		<mkdir dir="${dist}/${package}" />
 	</target>
 
+	<target name="makerules" depends="init" description="Runs the make rules file">
+		<exec executable="bash" newenvironment="false" dir="flex/icetagger">
+			<arg value="makeRules.sh" />
+		</exec>
 
-	<target name="compile" depends="init" description="Compiles all the source files">
-        	<exec executable="bash" newenvironment="false" dir="flex/icetagger">
-            		<arg value="makeRules.sh" /></exec>
+		<!-- wait for the generated file to appear -->
+		<waitfor maxwait="30" maxwaitunit="second">
+			<and>
+				<available file="${src}/is/iclt/icenlp/core/icetagger/IceLocalRules.java"/>
+			</and>
+		</waitfor>
+	</target>
+
+	<target name="compile" depends="makerules" description="Compiles all the source files">
 		<javac srcdir="${src}" destdir="${build}">
-			 <classpath refid="classpath" /> 		
-			 <!-- <compilerarg value="-Xlint"/> /-->
-	    </javac>
-	</target>	
+			<classpath refid="classpath" /> 		
+			<!-- <compilerarg value="-Xlint"/> /-->
+		</javac>
+	</target>
+
+	<target name="junit" depends="compile" description="Runs the JUnit tests">
+		<junit fork="no" haltonfailure="yes">
+			<classpath refid="classpath.test" />
+			<formatter type="brief" usefile="false" />
+
+			<test name="is.iclt.icenlp.core.tests.AllTests" />
+		</junit>
+	</target>
 	
-	<target name="release-jar" depends="compile, init" description="Compiles a release version of IceNLP">
+	<target name="release-jar" depends="junit, compile, init, makerules" description="Compiles a release version of IceNLP">
 	    <manifestclasspath property="jar.classpath" jarfile="${dist}/${jar_name}.jar">
 	      <classpath refid="classpath"/>
 	    </manifestclasspath>  
@@ -89,8 +120,7 @@
 		<copy file="${dist}/${jar_name}.jar" todir="${dist}/${package}/dist" />
 		<copy todir="${dist}/${package}/bat">
 			<fileset dir="bat" />
-		</copy>
-		
+		</copy>		
 	    <chmod perm="+x" dir="${dist}/${package}/bat" includes="**/*.sh" />		 
 		
 		<copy todir="${dist}/${package}/dict">
@@ -128,6 +158,8 @@
         	<!-- Delete the ${build} and ${dist} directory trees -->
         	<delete dir="${build}"/>
         	<delete dir="${dist}"/>
+		<!-- Delete the generated rules file -->
+		<delete file="${src}/is/iclt/icenlp/core/icetagger/IceLocalRules.java"/>
     	</target>
 	
 	

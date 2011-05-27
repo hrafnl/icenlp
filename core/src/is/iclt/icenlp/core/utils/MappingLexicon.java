@@ -27,6 +27,9 @@ public class MappingLexicon {
 
 	// Hash map for direct tags mappings.
 	private HashMap<String, String> tagMaps;
+	
+	// Hash map for inverted tag mappings
+	private HashMap<String, String> invertedTagMaps;
 
 	// Hash map for exceptions.
 	private HashMap<String, List<Pair<String, String>>> lemmaExceptionRuleMap;
@@ -50,6 +53,9 @@ public class MappingLexicon {
 	// Boolean flag to controls whether we output what are rules are applied.
 	// used in debug mode.
 	private boolean showAppliedActions;
+	
+	// Inverse the tag mapping
+	private boolean useInverseMapping = false;
 
 	// String that contains the tag that is used when no mappings are found
 	// for a given tag.
@@ -65,6 +71,7 @@ public class MappingLexicon {
 	protected MappingLexicon(boolean leaveNotFoundTagUnchanged,
 			boolean showAppliedActions, String notFoundMappingTag) {
 		this.tagMaps = new HashMap<String, String>();
+		this.invertedTagMaps = new HashMap<String, String>();
 		this.lemmaExceptionRuleMap = new HashMap<String, List<Pair<String, String>>>();
 		this.lexemeExceptionRuleMap = new HashMap<String, List<Pair<String, String>>>();
 		this.mweRuleMap = new HashMap<String, String>();
@@ -103,6 +110,40 @@ public class MappingLexicon {
 			String notFoundMappingTag) throws Exception {
 		this(leaveNotFoundTagUnchanged, showAppliedActions, notFoundMappingTag);
 
+		FileInputStream fstream = new FileInputStream(mappingFile);
+		readConfigFile(fstream);
+	}
+	
+	/**
+	 * Constructor for the MapperLexicon class. This constructor initializes all
+	 * the member variables and sets the to the values that are passed via the
+	 * constructor. Then the mapping file is read and rules are added to the
+	 * rule maps that are kept in memory.
+	 * 
+	 * @param mappingFile
+	 *            A full path to the mapping file.
+	 * @param showLexiconStatusOutput
+	 *            Flag to controls whether we print overview of the rules that
+	 *            were read from the mapping file.
+	 * @param leaveNotFoundTagUnchanged
+	 *            Flag to controls whether tag that do not have any mappings are
+	 *            left unchanged or changed to notFoundMappingTag.
+	 * @param showAppliedActions
+	 *            Flag to controls whether we print applied rules to standard
+	 *            output.
+	 * @param notFoundMappingTag
+	 *            The mapping tag that is used if leaveNotFoundTagUnchanged is
+	 *            false and a given tag does not have any mapping tag.
+	 * @param inverseMapping
+	 * 			  Flag to tell the mapper to inverse the tagMap
+	 * @throws Exception
+	 *             If mapping file is not found.
+	 */
+	public MappingLexicon(String mappingFile, boolean showLexiconStatusOutput,
+			boolean leaveNotFoundTagUnchanged, boolean showAppliedActions,
+			String notFoundMappingTag, boolean inverseMapping) throws Exception {
+		this(leaveNotFoundTagUnchanged, showAppliedActions, notFoundMappingTag);
+		useInverseMapping = inverseMapping;
 		FileInputStream fstream = new FileInputStream(mappingFile);
 		readConfigFile(fstream);
 	}
@@ -215,10 +256,44 @@ public class MappingLexicon {
 				else {
 					switch (type) {
 					case tagmapping:
-						if (strLine.matches("\\S+\\s+\\S+")) {
+						if (strLine.matches("\\S+\\s+\\S+"))
+						{
 							String key = strLine.split("\\s+")[0];
 							String value = strLine.split("\\s+")[1];
-							this.tagMaps.put(key, value);
+							
+							// Without inverse mapping
+							if(useInverseMapping == false)
+							{
+								this.tagMaps.put(key, value);
+							}
+							// With inverse mapping
+							else
+							{
+								// Add to the regular mapping
+								this.tagMaps.put(key, value);
+								
+								// Add to the inverted map
+								
+								// There are a few duplicate values
+								// Some logic to handle them.
+								if(value.equals("<num>"))
+								{
+									this.invertedTagMaps.put(value, "ta");
+								}
+								else if(value.equals("<vblex><actv><imp><p2><sg>"))
+								{
+									this.invertedTagMaps.put(value, "sbg2en");
+								}
+								else if(value.equals("<vblex><actv><inf>"))
+								{
+									this.invertedTagMaps.put(value, "sng");
+								}
+								else
+								{
+									this.invertedTagMaps.put(value, key);
+								}
+							}
+							
 							break;
 						} else {
 							System.out
@@ -487,10 +562,52 @@ public class MappingLexicon {
 		if (ignoreCase)
 			tag = tag.toLowerCase();
 
-		if (this.tagMaps.containsKey(tag))
-			return this.tagMaps.get(tag);
-
-		return null;
+		return this.tagMaps.get(tag);
+	}
+	
+	/**
+	 * This is only used when the inverted tag map is in use
+	 * This will return null if inverted tag map is not set
+	 * 
+	 * @param tag
+	 * @return The inverse mapping
+	 */
+	public String getInvertedTagMap(String tag, String word)
+	{
+		if(!useInverseMapping)
+		{
+			return null;
+		}
+		
+		// We have one lemma exception rule
+		if(hasExceptionRulesForLemma(word.toLowerCase()))
+		{
+			List<Pair<String, String>> ex = getExceptionRulesForLemma(word.toLowerCase());
+			
+			String correct = ex.get(0).one;
+			String replace = ex.get(0).two;
+			
+			return this.invertedTagMaps.get(tag.replaceAll(replace, correct));
+		}
+		
+		// We have one lexeme exception rule
+		if(hasExceptionRulesForLexeme(word.toLowerCase()))
+		{
+			List<Pair<String, String>> ex = getExceptionRulesForLexeme(word.toLowerCase());
+			
+			String correct = ex.get(0).one;
+			String replace = ex.get(0).two;
+			
+			return this.invertedTagMaps.get(tag.replaceAll(replace, correct));
+		}
+		
+		// Sentance endings become the word itself
+		if(tag.equals("<sent>"))
+		{
+			return word;
+		}
+		
+		return this.invertedTagMaps.get(tag);
 	}
 
 	private List<Pair<String, String>> getExceptionRulesForLemma(String lemma) {

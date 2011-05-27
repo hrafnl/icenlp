@@ -2227,7 +2227,9 @@ public class IceMorphy {
 		{
 			currToken = (IceTokenTags)tokens.get( i );
 			if( currToken.noTags() )
+			{
 				morphoAnalysisToken( currToken, prevToken );
+			}
             
             prevToken = currToken;
 		}
