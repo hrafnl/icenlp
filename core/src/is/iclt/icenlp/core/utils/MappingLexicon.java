@@ -579,10 +579,13 @@ public class MappingLexicon {
 			return null;
 		}
 		
+		// Remove the spaces from the word while checking since the exception list has it setup that way
+		String fixedWord = word.replace(" ", "").toLowerCase();
+		
 		// We have one lemma exception rule
-		if(hasExceptionRulesForLemma(word.toLowerCase()))
+		if(hasExceptionRulesForLemma(fixedWord))
 		{
-			List<Pair<String, String>> ex = getExceptionRulesForLemma(word.toLowerCase());
+			List<Pair<String, String>> ex = getExceptionRulesForLemma(fixedWord);
 			
 			String correct = ex.get(0).one;
 			String replace = ex.get(0).two;
@@ -591,9 +594,9 @@ public class MappingLexicon {
 		}
 		
 		// We have one lexeme exception rule
-		if(hasExceptionRulesForLexeme(word.toLowerCase()))
+		if(hasExceptionRulesForLexeme(fixedWord))
 		{
-			List<Pair<String, String>> ex = getExceptionRulesForLexeme(word.toLowerCase());
+			List<Pair<String, String>> ex = getExceptionRulesForLexeme(fixedWord);
 			
 			String correct = ex.get(0).one;
 			String replace = ex.get(0).two;
