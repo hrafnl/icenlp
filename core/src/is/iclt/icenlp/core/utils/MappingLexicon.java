@@ -579,8 +579,8 @@ public class MappingLexicon {
 			return null;
 		}
 		
-		// Remove the spaces from the word while checking since the exception list has it setup that way
-		String fixedWord = word.replace(" ", "").toLowerCase();
+		// Set the word to lower case
+		String fixedWord = word.toLowerCase();
 		
 		// We have one lemma exception rule
 		if(hasExceptionRulesForLemma(fixedWord))

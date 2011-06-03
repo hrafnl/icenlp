@@ -23,4 +23,24 @@ public class ApertiumEntry
 	{
 		return possibleLexicalUnits;
 	}
+	
+	// Removes the lu from the list of lexical units
+	public void removeLexicalUnit(LexicalUnit lu)
+	{
+		possibleLexicalUnits.remove(lu);
+	}
+	
+	// Returns true if any lexical unit is a verb
+	public boolean isAnyLuAVerb()
+	{
+		for(LexicalUnit lu: possibleLexicalUnits)
+		{
+			if(lu.isVerb())
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
 }

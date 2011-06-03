@@ -52,7 +52,20 @@ public class LtProcParser
 					String lemma = slashSplit[i].substring(0, tagStart);
 					String symbols = slashSplit[i].substring(tagStart);
 					
-					lexicalUnit.add(new LexicalUnit(lemma, symbols));
+					LexicalUnit lu = new LexicalUnit(lemma, symbols);
+					
+					// If there is a hash sign # in the symbol
+					// Then it is "Start of invariable part of multiword marker."
+					// Remove it and add to the lemma
+					if(symbols.contains("#"))
+					{
+						String[] splitSymbols = symbols.split("#");
+						
+						lu.setSymbols(splitSymbols[0]);
+						lu.setLemma(lemma + splitSymbols[1]);
+					}
+					
+					lexicalUnit.add(lu);
 				}
 			}
 			

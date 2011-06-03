@@ -60,7 +60,13 @@ public class RunIceTaggerApertium extends RunIceTagger
 	{
 		RunIceTaggerApertium runner = new RunIceTaggerApertium();
 		Date before = runner.initialize(args);
-		runner.lemmald = Lemmald.getInstance();
+		
+		// Lemmald is only used when icemorphy tokenizes, since we don't have the lemma there.
+		// In apertium we get the lemma from lt-proc
+		if(runner.externalAnalysis.equals("icenlp"))
+		{
+			runner.lemmald = Lemmald.getInstance();
+		}
 
 		// create new instance of the mapping lexicon.
 		runner.mappingLexicon = new MappingLexicon(runner.tagMapFile, false, false, false, "<NOT MAPPED>", true);

@@ -26,6 +26,11 @@ public class LexicalUnit
 		return lemma;
 	}
 	
+	public void setLemma(String lemma)
+	{
+		this.lemma = lemma;
+	}
+	
 	public String getSymbols()
 	{
 		return symbols;
