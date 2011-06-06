@@ -16,6 +16,7 @@ public class IceNLPTokenConverter
 	private ArrayList<ApertiumEntry> entries;
 	private MappingLexicon mapping;
 	private Lexicon baseDict;
+	private Lexicon otbDict;
 	
 	public IceNLPTokenConverter(ArrayList<ApertiumEntry> entries, MappingLexicon mapping) throws IOException
 	{
@@ -24,6 +25,7 @@ public class IceNLPTokenConverter
 		
 		IceTaggerResources resource = new IceTaggerResources();
 		this.baseDict = new Lexicon(resource.isDictionaryBase);
+		this.otbDict = new Lexicon(resource.isDictionary);
 	}
 	
 	/**
@@ -64,62 +66,109 @@ public class IceNLPTokenConverter
 		return list;
 	}
 	
-	// Handles normal converting
 	private void handleNormal(IceTokenTags ice, ApertiumEntry ae)
 	{
-		// Add all the tags
-		for(LexicalUnit lu: ae.getPossibleLexicalUnits())
+		String tags = baseDict.lookup(ice.lexeme, true);
+		
+		// If the tag is not in the base dict, we will use the otb dict.
+		if(tags == null)
 		{
-			String tag;
+			tags = otbDict.lookup(ice.lexeme, true);
+		}
+		
+		// Here we only work on words that have a tag set
+		if(tags != null)
+		{	
+			// Now we should have the tag, if not, the word is not in any dictionary.
+			// Split it and loop through each element
+			String[] tagSplit = tags.split("_");
 			
-			// Check if it is a preposition or if it is a verb
-			// Then we only use the results from the base dict
-			// If the word is not in the baseDict, we skip this action
-			if(lu.isPreposition() && baseDict.lookup(ice.lexeme, true) != null)
+			// For each tag
+			for(String tag: tagSplit)
 			{
-				tag = baseDict.lookup(ice.lexeme, true);
-				
-				// Most likely this tag has many results split by _
-				if(tag.contains("_"))
+				// Look at each apertium entries tag to see if it matches with the tag
+				// Insert that tag first into tag list
+				for(LexicalUnit lu: ae.getPossibleLexicalUnits())
 				{
-					String[] split = tag.split("_");
+					// Fix the lu if possible
+					lexicalUnitFixes(lu);
 					
-					// Add each result as a separate tag
-					for(String s: split)
+					String invTag = mapping.getInvertedTagMap(lu.getSymbols(), lu.getLemma());
+					
+					// We found the correct lu
+					if(invTag != null && tag.equals(invTag))
 					{
-						ice.addTagWithLemma(s, lu.getLemma());
+						ice.addTagWithLemma(tag, lu.getLemma());
+						
+						// Remove the lu since we found it.
+						ae.removeLexicalUnit(lu);
+						
+						break;
 					}
-				}
-				else
-				{
-					// No underscore, that means it's only 1 tag
-					ice.addTagWithLemma(tag, lu.getLemma());
 				}
 			}
-			else
+			
+			// Here we have a possibility that there are still possible lexical units
+			// Then we add them in the order they are now
+			for(LexicalUnit lu: ae.getPossibleLexicalUnits())
 			{
-				// If we find <det><qnt> we convert it to <prn><qnt>
-				if(lu.getSymbols().contains("<det><qnt>"))
-				{
-					String symbols = lu.getSymbols();
-					symbols = symbols.replace("<det><qnt>", "<prn><qnt>");
-					
-					// If we find a strong inflection, we remove it in this case
-					if(symbols.endsWith("<sta>"))
-					{
-						symbols = symbols.replaceAll("<sta>", "");
-					}
-					
-					lu.setSymbols(symbols);
-				}
+				// Fix the lu if possible
+				lexicalUnitFixes(lu);
 				
-				tag = mapping.getInvertedTagMap(lu.getSymbols(), lu.getLemma());
+				String invTag = mapping.getInvertedTagMap(lu.getSymbols(), lu.getLemma());
+				
+				if(invTag != null)
+				{
+					ice.addTagWithLemma(invTag, lu.getLemma());
+				}
+			}
+		}
+		else
+		{
+			// If we still have no tags, then the word is in none of our dictionaries and
+			// we need to blindly convert it (which might fail)
+			for(LexicalUnit lu: ae.getPossibleLexicalUnits())
+			{
+				// Fix the lu if possible
+				lexicalUnitFixes(lu);
+				
+				String tag = mapping.getInvertedTagMap(lu.getSymbols(), lu.getLemma());
 				
 				ice.addTagWithLemma(tag, lu.getLemma());
 			}
 		}
 	}
 	
+	// Performs fixes to the lexical unit if needed
+	// So it confirms to the icenlp tags
+	private void lexicalUnitFixes(LexicalUnit lu)
+	{
+		// Changes <det><qnt> to <prn><qnt>, also removes <sta> if there is
+		if(!lu.isVerb() && lu.getSymbols().contains("<det><qnt>"))
+		{
+			String symbols = lu.getSymbols();
+			symbols = symbols.replace("<det><qnt>", "<prn><qnt>");
+			
+			// If we find a strong inflection, we remove it in this case
+			if(symbols.endsWith("<sta>"))
+			{
+				symbols = symbols.replaceAll("<sta>", "");
+			}
+			
+			lu.setSymbols(symbols);
+		}
+		
+		// #TODO Temporary solution, until apertium is updated
+		// If we have <sta> in a <pp> verb, we remove <sta>
+		// <pp> verbs do not have a strong inflection.
+		if(lu.isVerb() && lu.getSymbols().contains("<pp>") && lu.getSymbols().contains("<sta>"))
+		{
+			String newSymbols = lu.getSymbols();
+			newSymbols = newSymbols.replace("<sta>", "");
+			lu.setSymbols(newSymbols);
+		}
+	}
+
 	// Handles conversion of verbs
 	private void handleVerb(IceTokenTags ice, ApertiumEntry ae)
 	{
@@ -145,15 +194,8 @@ public class IceNLPTokenConverter
 				// We check each lu tag to see if that lu has the same tag (minus the extra info)
 				for(LexicalUnit lu: ae.getPossibleLexicalUnits())
 				{
-					// #TODO Temporary solution, until apertium is updated
-					// If we have <sta> in a <pp> verb, we remove <sta>
-					// <pp> verbs do not have a strong inflection.
-					if(lu.getSymbols().contains("<pp>") && lu.getSymbols().contains("<sta>"))
-					{
-						String newSymbols = lu.getSymbols();
-						newSymbols = newSymbols.replace("<sta>", "");
-						lu.setSymbols(newSymbols);
-					}
+					// Fix the lu if possible
+					lexicalUnitFixes(lu);
 					
 					String invertedTag = mapping.getInvertedTagMap(lu.getSymbols(), lu.getLemma());
 					
