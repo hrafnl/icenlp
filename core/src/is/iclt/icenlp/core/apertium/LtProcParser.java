@@ -31,15 +31,17 @@ public class LtProcParser
 			// Create the array of possible lexical units
 			ArrayList<LexicalUnit> lexicalUnit = new ArrayList<LexicalUnit>();
 			
-			// If there is nothing to split by (then we most likely have characters like .:() etc)
-			if(slashSplit.length == 1)
-			{
-				lexicalUnit.add(new LexicalUnit(sf, sf));
-			}
 			// If we found an unknown word
-			else if(slashSplit.length == 2 && slashSplit[1].startsWith("*"))
+			if(slashSplit.length == 2 && slashSplit[1].startsWith("*"))
 			{
 				lexicalUnit.add(new LexicalUnit(sf, sf, true));
+			}
+			// We found a possible space and/or other non letter characters ()'" etc
+			else if(slashSplit.length == 1 && !slashSplit[0].contains("<"))
+			{
+				// Mark it as a space lexical unit
+				LexicalUnit lu = new LexicalUnit(slashSplit[0], slashSplit[0], true, true);
+				lexicalUnit.add(lu);
 			}
 			else
 			{
@@ -86,10 +88,9 @@ public class LtProcParser
 		ArrayList<String> result = new ArrayList<String>();
 		
 		// Remove the empty results
-		// TODO: Should we keep the spaces?
 		for(String s: splitResult)
 		{
-			if(!s.isEmpty() && !s.equals(" "))
+			if(!s.isEmpty())
 			{
 				result.add(s);
 			}
@@ -98,9 +99,3 @@ public class LtProcParser
 		return result;
 	}
 }
-
-
-
-
-
-

@@ -48,10 +48,23 @@ public class IceNLPTokenConverter
 			{
 				handleVerb(ice, ae);
 			}
-			else if(ae.getPossibleLexicalUnits().get(0).isUnknown())
+			else if(ae.getPossibleLexicalUnits().get(0).isUnknown() && !ae.getPossibleLexicalUnits().get(0).isSpace())
 			{
 				// We might have an unknown word
 				handleUnknown(ice, counter);
+			}
+			// lt-proc treats ()' as spaces, but IceNLP does not
+			else if(ae.getPossibleLexicalUnits().get(0).isSpace())
+			{
+				ice.lexeme = ice.lexeme.trim();
+				
+				if(ice.lexeme.isEmpty())
+				{
+					continue;
+				}
+				
+				// "Space" characters have themselves as tags
+				ice.addTag(ice.lexeme);
 			}
 			else
 			{
@@ -68,12 +81,15 @@ public class IceNLPTokenConverter
 	
 	private void handleNormal(IceTokenTags ice, ApertiumEntry ae)
 	{
-		String tags = baseDict.lookup(ice.lexeme, true);
+		// If it is a MWE, it is stored with _ instead of spaces in the dicts
+		String lookupStr = ice.lexeme.replace(" ", "_");
+		
+		String tags = baseDict.lookup(lookupStr, false);
 		
 		// If the tag is not in the base dict, we will use the otb dict.
 		if(tags == null)
 		{
-			tags = otbDict.lookup(ice.lexeme, true);
+			tags = otbDict.lookup(lookupStr, false);
 		}
 		
 		// Here we only work on words that have a tag set

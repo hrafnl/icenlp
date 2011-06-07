@@ -6,6 +6,7 @@ public class LexicalUnit
 	private String lemma;
 	private String symbols;
 	private boolean unknown;
+	private boolean space;
 	
 	public LexicalUnit(String lemma, String symbols)
 	{
@@ -19,6 +20,14 @@ public class LexicalUnit
 		this.lemma = lemma;
 		this.symbols = symbols;
 		this.unknown = unknown;
+	}
+	
+	public LexicalUnit(String lemma, String symbols, boolean unknown, boolean space)
+	{
+		this.lemma = lemma;
+		this.symbols = symbols;
+		this.unknown = unknown;
+		this.space = space;
 	}
 	
 	public String getLemma()
@@ -44,6 +53,11 @@ public class LexicalUnit
 	public boolean isUnknown()
 	{
 		return unknown;
+	}
+	
+	public boolean isSpace()
+	{
+		return space;
 	}
 	
 	public boolean isPreposition()
