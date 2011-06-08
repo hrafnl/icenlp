@@ -43,4 +43,23 @@ public class ApertiumEntry
 		
 		return false;
 	}
+
+	// Returns true if the surface form has space in it
+	public boolean isMWE()
+	{
+		return surfaceForm.contains(" ") && surfaceForm.length() > 1;
+	}
+
+	public boolean isAnyLuPreposition()
+	{
+		for(LexicalUnit lu: possibleLexicalUnits)
+		{
+			if(lu.isPreposition())
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
 }

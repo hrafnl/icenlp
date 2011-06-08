@@ -157,9 +157,21 @@ public class RunIceTaggerApertium extends RunIceTagger
 			// Create the appertium -> iceNLP converter
 			converter = new IceNLPTokenConverter(entries, mappingLexicon);
 			tokens = converter.convert();
+			
+			//for(IceTokenTags itt: tokens)
+			//{
+				//System.out.println("L:"+itt.lexeme + ":" + itt.allTagStringsWithSeparator(" "));
+			//}
 
 			// Do the actual tagging
 			tagger.tagExternalTokens(tokens);
+			
+			//System.out.println("After.");
+			
+			//for(IceTokenTags itt: tokens)
+			//{
+				//System.out.println("L:"+itt.lexeme + ":" + itt.allTagStringsWithSeparator(" "));
+			//}
 			
 			// Display the results
 			printResultsExternal(outFile, tokens);

@@ -32,24 +32,24 @@ public class LtProcParserTests
 		assertTrue("List is null.", list != null);
 	}
 	
-	//@Test
+	@Test
 	public void correctSize()
 	{
-		assertTrue("List size is " + list.size() + " it should be 4.", list.size() == 4);
+		assertTrue("List size is " + list.size() + " it should be 6.", list.size() == 6);
 	}
 	
-	//@Test
+	@Test
 	public void correctSurfaceForms()
 	{
 		String errormsg = "Surface Form not correct.";
 		
 		assertTrue(errormsg, list.get(0).getSurfaceForm().equals("Hann"));
-		assertTrue(errormsg, list.get(1).getSurfaceForm().equals("er"));
-		assertTrue(errormsg, list.get(2).getSurfaceForm().equals("góður"));
-		assertTrue(errormsg, list.get(3).getSurfaceForm().equals("."));
+		assertTrue(errormsg, list.get(2).getSurfaceForm().equals("er"));
+		assertTrue(errormsg, list.get(4).getSurfaceForm().equals("góður"));
+		assertTrue(errormsg, list.get(5).getSurfaceForm().equals("."));
 	}
 	
-	//@Test
+	@Test
 	public void correctLexicalUnits()
 	{
 		String errormsg = "Lexical unit not correct.";
@@ -62,24 +62,24 @@ public class LtProcParserTests
 		assertTrue(errormsg, list.get(0).getPossibleLexicalUnits().get(1).getSymbols().equals("<prn><p3><m><sg><acc>"));
 		
 		// er
-		assertTrue(errormsg, list.get(1).getPossibleLexicalUnits().get(0).getLemma().equals("er"));
-		assertTrue(errormsg, list.get(1).getPossibleLexicalUnits().get(0).getSymbols().equals("<cnjsub>"));
+		assertTrue(errormsg, list.get(2).getPossibleLexicalUnits().get(0).getLemma().equals("er"));
+		assertTrue(errormsg, list.get(2).getPossibleLexicalUnits().get(0).getSymbols().equals("<cnjsub>"));
 		
-		assertTrue(errormsg, list.get(1).getPossibleLexicalUnits().get(1).getLemma().equals("er"));
-		assertTrue(errormsg, list.get(1).getPossibleLexicalUnits().get(1).getSymbols().equals("<rel><an><mf><sp>"));
+		assertTrue(errormsg, list.get(2).getPossibleLexicalUnits().get(1).getLemma().equals("er"));
+		assertTrue(errormsg, list.get(2).getPossibleLexicalUnits().get(1).getSymbols().equals("<rel><an><mf><sp>"));
 		
-		assertTrue(errormsg, list.get(1).getPossibleLexicalUnits().get(2).getLemma().equals("vera"));
-		assertTrue(errormsg, list.get(1).getPossibleLexicalUnits().get(2).getSymbols().equals("<vbser><pri><p3><sg>"));
+		assertTrue(errormsg, list.get(2).getPossibleLexicalUnits().get(2).getLemma().equals("vera"));
+		assertTrue(errormsg, list.get(2).getPossibleLexicalUnits().get(2).getSymbols().equals("<vbser><pri><p3><sg>"));
 		
-		assertTrue(errormsg, list.get(1).getPossibleLexicalUnits().get(3).getLemma().equals("vera"));
-		assertTrue(errormsg, list.get(1).getPossibleLexicalUnits().get(3).getSymbols().equals("<vbser><pri><p1><sg>"));
+		assertTrue(errormsg, list.get(2).getPossibleLexicalUnits().get(3).getLemma().equals("vera"));
+		assertTrue(errormsg, list.get(2).getPossibleLexicalUnits().get(3).getSymbols().equals("<vbser><pri><p1><sg>"));
 		
 		// góður
-		assertTrue(errormsg, list.get(2).getPossibleLexicalUnits().get(0).getLemma().equals("góður"));
-		assertTrue(errormsg, list.get(2).getPossibleLexicalUnits().get(0).getSymbols().equals("<adj><pst><m><sg><nom><sta>"));
+		assertTrue(errormsg, list.get(4).getPossibleLexicalUnits().get(0).getLemma().equals("góður"));
+		assertTrue(errormsg, list.get(4).getPossibleLexicalUnits().get(0).getSymbols().equals("<adj><pst><m><sg><nom><sta>"));
 		
 		// .
-		assertTrue(errormsg, list.get(3).getPossibleLexicalUnits().get(0).getLemma().equals("."));
-		assertTrue(errormsg, list.get(3).getPossibleLexicalUnits().get(0).getSymbols().equals("<sent>"));
+		assertTrue(errormsg, list.get(5).getPossibleLexicalUnits().get(0).getLemma().equals("."));
+		assertTrue(errormsg, list.get(5).getPossibleLexicalUnits().get(0).getSymbols().equals("<sent>"));
 	}
 }

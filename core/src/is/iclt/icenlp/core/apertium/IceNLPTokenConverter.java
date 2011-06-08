@@ -43,8 +43,28 @@ public class IceNLPTokenConverter
 			IceTokenTags ice = new IceTokenTags();
 			ice.lexeme = ae.getSurfaceForm();
 			
+			if(ae.isAnyLuPreposition())
+			{
+				handlePreposition(ice, ae);
+			}
+			else if(ae.isMWE())
+			{
+				for(LexicalUnit lu: ae.getPossibleLexicalUnits())
+				{
+					// Fix the lu if possible
+					lexicalUnitFixes(lu);
+					
+					String invTag = mapping.getInvertedTagMap(lu.getSymbols(), lu.getLemma());
+					
+					// TODO Might be an issue if we need that symbol set
+					if(invTag != null)
+					{
+						ice.addTagWithLemma(invTag, lu.getLemma());
+					}
+				}
+			}
 			// If we have a verb in any of the lu's
-			if(ae.isAnyLuAVerb())
+			else if(ae.isAnyLuAVerb())
 			{
 				handleVerb(ice, ae);
 			}
@@ -133,6 +153,7 @@ public class IceNLPTokenConverter
 				
 				String invTag = mapping.getInvertedTagMap(lu.getSymbols(), lu.getLemma());
 				
+				// TODO Might be an issue if we need that symbol set
 				if(invTag != null)
 				{
 					ice.addTagWithLemma(invTag, lu.getLemma());
@@ -148,6 +169,7 @@ public class IceNLPTokenConverter
 				// Fix the lu if possible
 				lexicalUnitFixes(lu);
 				
+				// TODO Check for null
 				String tag = mapping.getInvertedTagMap(lu.getSymbols(), lu.getLemma());
 				
 				ice.addTagWithLemma(tag, lu.getLemma());
@@ -233,6 +255,58 @@ public class IceNLPTokenConverter
 			// We have now added all the tags found in the base dict
 			// It is possible there are still possible lexical units, but currently we don't care
 			// We trust the base dict.
+		}
+		else
+		{
+			// If we still have no tags, then the word is in none of our dictionaries and
+			// we need to blindly convert it (which might fail)
+			for(LexicalUnit lu: ae.getPossibleLexicalUnits())
+			{
+				// Fix the lu if possible
+				lexicalUnitFixes(lu);
+				
+				// TODO Check for null
+				String tag = mapping.getInvertedTagMap(lu.getSymbols(), lu.getLemma());
+				
+				ice.addTagWithLemma(tag, lu.getLemma());
+			}
+		}
+	}
+	
+	private void handlePreposition(IceTokenTags ice, ApertiumEntry ae)
+	{
+		String baseTag;
+		
+		// MWE prepositions only use the last word for the lookup
+		if(ae.isMWE())
+		{
+			String[] mweSplit = ice.lexeme.split(" ");
+			int length = mweSplit.length;
+			
+			baseTag = baseDict.lookup(mweSplit[length-1], true);
+		}
+		else
+		{
+			// Normal lookup
+			baseTag = baseDict.lookup(ice.lexeme, true);
+		}
+		
+		// We find that verb in the base dictionary
+		if(baseTag != null)
+		{
+			// Then we use those results and ignore the results from lt-proc
+			String baseTagSplit[] = baseTag.split("_");
+			
+			for(String tag: baseTagSplit)
+			{
+				ice.addTagWithLemma(tag, ice.lexeme);
+			}
+		}
+		else
+		{
+			// TODO remove
+			System.out.println("ERROR:"+ice.lexeme);
+			System.exit(0);
 		}
 	}
 	
