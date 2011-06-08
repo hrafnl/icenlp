@@ -28,6 +28,20 @@ public class IceNLPTokenConverter
 		this.otbDict = new Lexicon(resource.isDictionary);
 	}
 	
+	// Returns the tags from the dictionaries
+	private String dictLookup(String lexeme, boolean useOtbDict)
+	{
+		String tags = baseDict.lookup(lexeme, true);
+		
+		// If the tag is not in the base dict, we will use the otb dict.
+		if(useOtbDict && tags == null)
+		{
+			tags = otbDict.lookup(lexeme, true);
+		}
+		
+		return tags;
+	}
+	
 	/**
 	 * Converts the apertium entries to a IceNLP token
 	 * @return An Array of IceTokenTags
@@ -101,20 +115,12 @@ public class IceNLPTokenConverter
 	
 	private void handleNormal(IceTokenTags ice, ApertiumEntry ae)
 	{
-		// If it is a MWE, it is stored with _ instead of spaces in the dicts
-		String lookupStr = ice.lexeme.replace(" ", "_");
-		
-		String tags = baseDict.lookup(lookupStr, false);
-		
-		// If the tag is not in the base dict, we will use the otb dict.
-		if(tags == null)
-		{
-			tags = otbDict.lookup(lookupStr, false);
-		}
+		// Get the tags from the dict, using otb as well
+		String tags = dictLookup(ice.lexeme, true);
 		
 		// Here we only work on words that have a tag set
 		if(tags != null)
-		{	
+		{
 			// Now we should have the tag, if not, the word is not in any dictionary.
 			// Split it and loop through each element
 			String[] tagSplit = tags.split("_");
@@ -146,34 +152,13 @@ public class IceNLPTokenConverter
 			
 			// Here we have a possibility that there are still possible lexical units
 			// Then we add them in the order they are now
-			for(LexicalUnit lu: ae.getPossibleLexicalUnits())
-			{
-				// Fix the lu if possible
-				lexicalUnitFixes(lu);
-				
-				String invTag = mapping.getInvertedTagMap(lu.getSymbols(), lu.getLemma());
-				
-				// TODO Might be an issue if we need that symbol set
-				if(invTag != null)
-				{
-					ice.addTagWithLemma(invTag, lu.getLemma());
-				}
-			}
+			standardConvert(ice, ae);
 		}
 		else
 		{
 			// If we still have no tags, then the word is in none of our dictionaries and
 			// we need to blindly convert it (which might fail)
-			for(LexicalUnit lu: ae.getPossibleLexicalUnits())
-			{
-				// Fix the lu if possible
-				lexicalUnitFixes(lu);
-				
-				// TODO Check for null
-				String tag = mapping.getInvertedTagMap(lu.getSymbols(), lu.getLemma());
-				
-				ice.addTagWithLemma(tag, lu.getLemma());
-			}
+			standardConvert(ice, ae);
 		}
 	}
 	
@@ -210,7 +195,8 @@ public class IceNLPTokenConverter
 	// Handles conversion of verbs
 	private void handleVerb(IceTokenTags ice, ApertiumEntry ae)
 	{
-		String baseTag = baseDict.lookup(ice.lexeme, true);
+		// Get the tags from the dict, not using otb
+		String baseTag = dictLookup(ice.lexeme, false);
 		
 		// We find that verb in the base dictionary
 		if(baseTag != null)
@@ -260,16 +246,7 @@ public class IceNLPTokenConverter
 		{
 			// If we still have no tags, then the word is in none of our dictionaries and
 			// we need to blindly convert it (which might fail)
-			for(LexicalUnit lu: ae.getPossibleLexicalUnits())
-			{
-				// Fix the lu if possible
-				lexicalUnitFixes(lu);
-				
-				// TODO Check for null
-				String tag = mapping.getInvertedTagMap(lu.getSymbols(), lu.getLemma());
-				
-				ice.addTagWithLemma(tag, lu.getLemma());
-			}
+			standardConvert(ice, ae);
 		}
 	}
 	
@@ -281,14 +258,13 @@ public class IceNLPTokenConverter
 		if(ae.isMWE())
 		{
 			String[] mweSplit = ice.lexeme.split(" ");
-			int length = mweSplit.length;
 			
-			baseTag = baseDict.lookup(mweSplit[length-1], true);
+			baseTag = dictLookup(mweSplit[mweSplit.length-1], false);
 		}
 		else
 		{
 			// Normal lookup
-			baseTag = baseDict.lookup(ice.lexeme, true);
+			baseTag = dictLookup(ice.lexeme, false);
 		}
 		
 		// We find that verb in the base dictionary
@@ -320,6 +296,27 @@ public class IceNLPTokenConverter
 		if(counter != 0 && Character.isUpperCase(ice.lexeme.charAt(0)))
 		{
 			ice.setUnknownType(IceTokenTags.UnknownType.properNoun);
+		}
+	}
+	
+	// Standard Apertium to IceNLP conversion with no grammar logic
+	// "Blind" conversion
+	// Converts the lexical units of the apertium entry to ice token tags
+	private void standardConvert(IceTokenTags ice, ApertiumEntry ae)
+	{
+		// If we still have no tags, then the word is in none of our dictionaries and
+		// we need to blindly convert it (which might fail)
+		for(LexicalUnit lu: ae.getPossibleLexicalUnits())
+		{
+			// Fix the lu if possible
+			lexicalUnitFixes(lu);
+			
+			String tag = mapping.getInvertedTagMap(lu.getSymbols(), lu.getLemma());
+			
+			if(tag != null)
+			{
+				ice.addTagWithLemma(tag, lu.getLemma());
+			}
 		}
 	}
 }

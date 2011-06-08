@@ -468,8 +468,6 @@ RULE tag.isVerbPastParticiple()
 	&& !prevToken.isVerbBe() && (nextToken == null || !nextToken.isVerbBe()) ;
 // HL: 13.03.2010 Þú GERÐIR það sjálfur
 RULE tag.isVerbPastParticiple() && currToken.lexeme.equalsIgnoreCase("gerðir") && prevToken.isPersonalPronoun() ;
-// HL: 08.06.2011  Remove past participle readings
-//RULE tag.isVerbPastParticiple() && currToken.isAdjective() && nextToken != null && nextToken.isOnlyWordClass(NOUN) ; 
 RULE prevToken.isVerbSpecialAuxiliary() ;
 // skal (ekki) hita
 RULE currToken.isVerbInfinitive() 
@@ -532,8 +530,6 @@ RULE nextToken.isNoun() && tag.isVerbPresentPart() && currToken.isAdjective() ;
 //	&& currToken.genderNumberCaseMatch(nextToken) && nextToken.isOnlyCase(DATIVE) ;
 // HL: 13.03.2010 select the adjective; "reiðir íbúar höfuðborgarinnar"
 RULE nextToken.isOnlyWordClass(NOUN) && currToken.isAdjective() && (currToken.isVerbIndicative() || currToken.isVerbSubjunctive()) && !tag.personGenderNumberMatch(nextToken.getTags()) && currToken.genderNumberCaseMatch(nextToken) ;
-// HL: 08.06.2011  Remove past participle readings
-//RULE tag.isVerbPastParticiple() && currToken.isAdjective() && nextToken.isOnlyWordClass(NOUN); 
  // engin LEIÐ var, select the noun, ok is "hverjir GETA verið ..."
 RULE nextToken.isVerbBe() && !nextToken.isVerbSupine() 
 	&& prevToken != null && prevToken.isIndefinitePronoun() && currToken.isNoun() ;
