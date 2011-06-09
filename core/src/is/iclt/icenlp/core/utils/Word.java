@@ -18,6 +18,7 @@ public class Word
     private String lemma;
     public String parseString = null;
     private boolean onlyOutputLexeme;
+    private boolean unknown = false;
     
     // Public member variables.
     public MWECode mweCode;
@@ -42,6 +43,16 @@ public class Word
         this.lemma = lemma;
         this.tokenCode = tokenCode;
         this.linkedToPreviousWord = linkedToPreviousWord;
+    }
+    
+    public Word(String lexeme, String lemma, String tag, MWECode mweCode, TokenCode tokenCode, boolean linkedToPreviousWord, boolean unknown){
+        this.lexeme = lexeme;
+        this.tag = tag;
+        this.mweCode = mweCode;
+        this.lemma = lemma;
+        this.tokenCode = tokenCode;
+        this.linkedToPreviousWord = linkedToPreviousWord;
+        this.unknown = unknown;
     }
     
     /**
@@ -111,8 +122,13 @@ public class Word
 		return onlyOutputLexeme;
 	}
 
-    
-    
+    /**
+     * Get function for unknown member variable.
+     * @return true/false value for unknown
+     */
+    public boolean isUnknown() {
+    	return unknown;
+    }
 	
 	/**
 	 * Set function for onlyOutputLexeme member variable. When this value is set, then

@@ -44,10 +44,12 @@ public class ApertiumEntry
 		return false;
 	}
 
-	// Returns true if the surface form has space in it
+	// Returns true if the trimmed surface form has a space in it
 	public boolean isMWE()
 	{
-		return surfaceForm.contains(" ") && surfaceForm.length() > 1;
+		String trimSurfaceForm = surfaceForm.trim();
+		
+		return trimSurfaceForm.contains(" ") && trimSurfaceForm.length() > 1;
 	}
 
 	public boolean isAnyLuPreposition()

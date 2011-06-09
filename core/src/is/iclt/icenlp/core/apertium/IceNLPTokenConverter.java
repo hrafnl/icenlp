@@ -63,23 +63,12 @@ public class IceNLPTokenConverter
 			}
 			else if(ae.isMWE())
 			{
-				for(LexicalUnit lu: ae.getPossibleLexicalUnits())
-				{
-					// Fix the lu if possible
-					lexicalUnitFixes(lu);
-					
-					String invTag = mapping.getInvertedTagMap(lu.getSymbols(), lu.getLemma());
-					
-					// TODO Might be an issue if we need that symbol set
-					if(invTag != null)
-					{
-						ice.addTagWithLemma(invTag, lu.getLemma());
-					}
-				}
+				// Multi word expressions are handled in a standard way.
+				standardConvert(ice, ae);
 			}
-			// If we have a verb in any of the lu's
 			else if(ae.isAnyLuAVerb())
 			{
+				// If we have a verb in any of the lu's
 				handleVerb(ice, ae);
 			}
 			else if(ae.getPossibleLexicalUnits().get(0).isUnknown() && !ae.getPossibleLexicalUnits().get(0).isSpace())
@@ -92,6 +81,7 @@ public class IceNLPTokenConverter
 			{
 				ice.lexeme = ice.lexeme.trim();
 				
+				// If it is empty, then it was 1 or more spaces.
 				if(ice.lexeme.isEmpty())
 				{
 					continue;

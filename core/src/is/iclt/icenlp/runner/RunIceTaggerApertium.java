@@ -132,7 +132,9 @@ public class RunIceTaggerApertium extends RunIceTagger
 				tagText(out);
 		}
 		else
+		{
 			tagAllFiles();
+		}
 
 		logger.close();
 	}
@@ -157,25 +159,12 @@ public class RunIceTaggerApertium extends RunIceTagger
 			// Create the appertium -> iceNLP converter
 			converter = new IceNLPTokenConverter(entries, mappingLexicon);
 			tokens = converter.convert();
-			
-			//for(IceTokenTags itt: tokens)
-			//{
-				//System.out.println("L:"+itt.lexeme + ":" + itt.allTagStringsWithSeparator(" "));
-			//}
 
 			// Do the actual tagging
 			tagger.tagExternalTokens(tokens);
 			
-			//System.out.println("After.");
-			
-			//for(IceTokenTags itt: tokens)
-			//{
-				//System.out.println("L:"+itt.lexeme + ":" + itt.allTagStringsWithSeparator(" "));
-			//}
-			
 			// Display the results
 			printResultsExternal(outFile, tokens);
-			
 			outFile.flush();
 		}
 
@@ -200,8 +189,13 @@ public class RunIceTaggerApertium extends RunIceTagger
 		{
 			// Strange place to count this. Can we move this somewhere else?
 			numTokens++;
-			if (t.isUnknown())
+			
+			// Unknown check
+			boolean unknown = t.isUnknown();
+			if (unknown)
+			{
 				numUnknowns++;
+			}
 
 			// Make sure we use lower case for lexemes before we ask for the
 			// lemma
@@ -210,8 +204,7 @@ public class RunIceTaggerApertium extends RunIceTagger
 			else
 				lexeme = t.lexeme;
 
-			wordList.add(new Word(t.lexeme, t.getFirstTag().getLemma(), t.getFirstTagStr(), t.mweCode, t.tokenCode,
-					t.linkedToPreviousWord));
+			wordList.add(new Word(t.lexeme, t.getFirstTag().getLemma(), t.getFirstTagStr(), t.mweCode, t.tokenCode, t.linkedToPreviousWord, unknown));
 		}
 
 		this.mappingLexicon.processWordList(wordList);
@@ -224,26 +217,73 @@ public class RunIceTaggerApertium extends RunIceTagger
 			if (outputFormat == Segmentizer.tokenPerLine)
 			{
 				if (showSurfaceForm)
-					outFile.write("^" + word.getLexeme() + "/" + word.getLemma() + word.getTag() + "$");
+				{
+					// We display unknown words in a different way
+					if(word.isUnknown())
+					{
+						outFile.write("^" + word.getLexeme() + "/*" + word.getLexeme() + "$");
+					}
+					else
+					{
+						// Handling the printing of "space" characters
+						// They have empty tags
+						if(word.getTag().equals("") && word.getLemma() == null)
+						{
+							outFile.write("^" + word.getLexeme() + "/" + word.getLexeme() + "$");
+						}
+						else
+						{
+							outFile.write("^" + word.getLexeme() + "/" + word.getLemma() + word.getTag() + "$");
+						}
+					}
+				}
 				else
+				{
 					outFile.write("^" + word.getLemma() + word.getTag() + "$");
+				}
+				
 				outFile.newLine();
 			}
 			else
 			{
 				if (!word.linkedToPreviousWord)
+				{
 					output = output + " ";
+				}
+					
 				if (showSurfaceForm)
-					output = output + "^" + word.getLexeme() + "/" + word.getLemma() + word.getTag() + "$";
+				{
+					if(word.isUnknown())
+					{
+						output = output + "^" + word.getLexeme() + "/*" + word.getLexeme() + "$";
+					}
+					else
+					{
+						// Handling the printing of "space" characters
+						// They have empty tags
+						if(word.getTag().equals("") && word.getLemma() == null)
+						{
+							output = output + "^" + word.getLexeme() + "/" + word.getLexeme() + "$";
+						}
+						else
+						{
+							output = output + "^" + word.getLexeme() + "/" + word.getLemma() + word.getTag() + "$";
+						}
+					}
+				}
 				else
+				{
 					output = output + "^" + word.getLemma() + word.getTag() + "$";
+				}
 			}
 		}
 		if (outputFormat != Segmentizer.tokenPerLine)
 		{
 			// Remove the first char if it is a space.
 			if (output.charAt(0) == ' ')
+			{
 				output = output.substring(1, output.length());
+			}
 			outFile.write(output);
 		}
 		outFile.newLine();
