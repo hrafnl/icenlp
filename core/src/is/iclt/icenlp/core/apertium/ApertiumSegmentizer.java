@@ -5,55 +5,80 @@ package is.iclt.icenlp.core.apertium;
 
 import is.iclt.icenlp.core.utils.FileEncoding;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ApertiumSegmentizer
 {
-	private String toSegment;
-	private ArrayList<String> segments;
-	private int current;
 	private BufferedReader input;
+	private String currentSentence;
 	
 	static private final String SPLIT_ON = "(?<=%1$s)"; // Look behind regex
 	
 	public ApertiumSegmentizer(InputStream stream) throws IOException
 	{
 		input = FileEncoding.getReader(stream);
-		current = 0;
-		segments = new ArrayList<String>();
 		
-		segmentize();
+		currentSentence = readOneSentance();
 	}
 	
-	private void segmentize() throws IOException
+	public ApertiumSegmentizer(String inputFile) throws IOException
 	{
+		input = FileEncoding.getReader(inputFile);
+		
+		currentSentence = readOneSentance();
+	}
+
+	/**
+	 * This reads from the input stream until it hits a <sent>
+	 * 
+	 * @return String
+	 * @throws IOException 
+	 */
+	private String readOneSentance() throws IOException
+	{
+		int readInt = 0;
+		
+		String match = "<sent>$";
 		StringBuilder sb = new StringBuilder();
 		
-		while(input.ready())
+		// Read one character
+		while((readInt = input.read()) != -1)
 		{
-			sb.append(input.readLine());
+			char readChar = (char)readInt;
+			
+			// Add it to the string builder
+			sb.append(readChar);
+			
+			// Check if the end sentence match is found
+			if(readChar == '$' && sb.toString().contains(match))
+			{
+				break;
+			}
 		}
 		
-		String segment = sb.toString();
-		
-		String[] segmentSplit = segment.split(String.format(SPLIT_ON, "<sent>\\$"));
-		
-		for(String s: segmentSplit)
-		{
-			segments.add(s.trim());
-		}
+		return sb.toString();
 	}
 	
 	public boolean hasMoreSentences()
 	{
-		return current != segments.size();
+		return currentSentence != null && currentSentence.length() > 0;
 	}
 	
-	public String getNextSentence()
+	public String getSentance()
+	{	
+		return currentSentence;
+	}
+	
+	public void processNextSentence() throws IOException
 	{
-		return segments.get(current++);
+		currentSentence = readOneSentance();
 	}
 }

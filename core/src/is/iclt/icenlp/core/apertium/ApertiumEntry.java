@@ -43,6 +43,12 @@ public class ApertiumEntry
 		
 		return false;
 	}
+	
+	// Returns true if there is only one LU and it is unknown
+	public boolean isUnknown()
+	{
+		return possibleLexicalUnits.size() == 1 && possibleLexicalUnits.get(0).isUnknown();
+	}
 
 	// Returns true if the trimmed surface form has a space in it
 	public boolean isMWE()

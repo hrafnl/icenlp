@@ -30,6 +30,7 @@ import is.iclt.icenlp.core.lemmald.Lemmald;
 import is.iclt.icenlp.core.tokenizer.IceTokenTags;
 import is.iclt.icenlp.core.tokenizer.Segmentizer;
 import is.iclt.icenlp.core.utils.FileEncoding;
+import is.iclt.icenlp.core.utils.IceTag;
 import is.iclt.icenlp.core.utils.MappingLexicon;
 import is.iclt.icenlp.core.utils.Word;
 
@@ -117,9 +118,13 @@ public class RunIceTaggerApertium extends RunIceTagger
 
 			// External morpho analyzer
 			if (externalAnalysis.equals("apertium"))
+			{
 				tagTextExternal(out);
+			}
 			else
+			{
 				tagText(out);
+			}
 		}
 		else if (fileList == null)
 		{
@@ -127,9 +132,13 @@ public class RunIceTaggerApertium extends RunIceTagger
 
 			// External morpho analyzer
 			if (externalAnalysis.equals("apertium"))
+			{
 				tagTextExternal(out);
+			}
 			else
+			{
 				tagText(out);
+			}
 		}
 		else
 		{
@@ -142,7 +151,16 @@ public class RunIceTaggerApertium extends RunIceTagger
 	// Tags a text using an external morpho analyzer
 	protected void tagTextExternal(BufferedWriter outFile) throws IOException
 	{
-		ApertiumSegmentizer segmentizer = new ApertiumSegmentizer(System.in);
+		ApertiumSegmentizer segmentizer;
+		
+		if(inputFile != null)
+		{
+			segmentizer = new ApertiumSegmentizer(inputFile);
+		}
+		else
+		{
+			segmentizer = new ApertiumSegmentizer(System.in);
+		}
 		
 		LtProcParser lps;
 		ArrayList<ApertiumEntry> entries;
@@ -153,7 +171,7 @@ public class RunIceTaggerApertium extends RunIceTagger
 		while(segmentizer.hasMoreSentences())
 		{
 			// Send the lt-proc string into the parser
-			lps = new LtProcParser(segmentizer.getNextSentence());
+			lps = new LtProcParser(segmentizer.getSentance());
 			entries = lps.parse();
 
 			// Create the appertium -> iceNLP converter
@@ -164,8 +182,11 @@ public class RunIceTaggerApertium extends RunIceTagger
 			tagger.tagExternalTokens(tokens);
 			
 			// Display the results
-			printResultsExternal(outFile, tokens);
+			printResultsExternal(outFile, tokens, entries);
+			
 			outFile.flush();
+			
+			segmentizer.processNextSentence();
 		}
 
 		outFile.close();
@@ -179,7 +200,7 @@ public class RunIceTaggerApertium extends RunIceTagger
 	}
 
 	// we override printResults.
-	protected void printResultsExternal(BufferedWriter outFile, ArrayList<IceTokenTags> tokens) throws IOException
+	protected void printResultsExternal(BufferedWriter outFile, ArrayList<IceTokenTags> tokens, ArrayList<ApertiumEntry> entries) throws IOException
 	{
 		String lexeme;
 		List<Word> wordList = new LinkedList<Word>();
@@ -192,21 +213,38 @@ public class RunIceTaggerApertium extends RunIceTagger
 			
 			// Unknown check
 			boolean unknown = t.isUnknown();
+			
+			// Unknown checks
+			if(!unknown)
+			{
+				// If word is unknown external (marked as unknown from ltproc
+				// or if the word is marked as a foreign word
+				// Then it is unknown
+				if(t.isUnknownExternal() || ((IceTag)t.getFirstTag()).isForeign())
+				{
+					unknown = true;
+				}
+			}
+			
 			if (unknown)
 			{
 				numUnknowns++;
 			}
 
-			// Make sure we use lower case for lexemes before we ask for the
-			// lemma
+			// Make sure we use lower case for lexemes before we ask for the lemma
 			if (!t.isProperNoun() && Character.isUpperCase(t.lexeme.charAt(0)))
+			{
 				lexeme = t.lexeme.toLowerCase();
+			}
 			else
+			{
 				lexeme = t.lexeme;
+			}
 
 			wordList.add(new Word(t.lexeme, t.getFirstTag().getLemma(), t.getFirstTagStr(), t.mweCode, t.tokenCode, t.linkedToPreviousWord, unknown));
 		}
 
+		// Maps back from the IceNLP tags to the Apertium tags
 		this.mappingLexicon.processWordList(wordList);
 
 		// Create output string that will be sent to the client.
@@ -277,6 +315,7 @@ public class RunIceTaggerApertium extends RunIceTagger
 				}
 			}
 		}
+		
 		if (outputFormat != Segmentizer.tokenPerLine)
 		{
 			// Remove the first char if it is a space.
@@ -304,12 +343,15 @@ public class RunIceTaggerApertium extends RunIceTagger
 			if (t.isUnknown())
 				numUnknowns++;
 
-			// Make sure we use lower case for lexemes before we ask for the
-			// lemma
+			// Make sure we use lower case for lexemes before we ask for the lemma
 			if (!t.isProperNoun() && Character.isUpperCase(t.lexeme.charAt(0)))
+			{
 				lexeme = t.lexeme.toLowerCase();
+			}
 			else
+			{
 				lexeme = t.lexeme;
+			}
 
 			wordList.add(new Word(t.lexeme, this.lemmald.lemmatize(lexeme, t.getFirstTagStr()).getLemma(), t
 					.getFirstTagStr(), t.mweCode, t.tokenCode, t.linkedToPreviousWord));

@@ -5,6 +5,8 @@ import is.iclt.icenlp.core.tokenizer.IceTokenTags;
 import is.iclt.icenlp.core.utils.Lexicon;
 import is.iclt.icenlp.core.utils.MappingLexicon;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -173,11 +175,18 @@ public class IceNLPTokenConverter
 		
 		// #TODO Temporary solution, until apertium is updated
 		// If we have <sta> in a <pp> verb, we remove <sta>
+		// If we have <vei> in a <pp> verb, we remove <vei>
 		// <pp> verbs do not have a strong inflection.
 		if(lu.isVerb() && lu.getSymbols().contains("<pp>") && lu.getSymbols().contains("<sta>"))
 		{
 			String newSymbols = lu.getSymbols();
 			newSymbols = newSymbols.replace("<sta>", "");
+			lu.setSymbols(newSymbols);
+		}
+		else if(lu.isVerb() && lu.getSymbols().contains("<pp>") && lu.getSymbols().contains("<vei>"))
+		{
+			String newSymbols = lu.getSymbols();
+			newSymbols = newSymbols.replace("<vei>", "");
 			lu.setSymbols(newSymbols);
 		}
 	}
@@ -270,16 +279,21 @@ public class IceNLPTokenConverter
 		}
 		else
 		{
-			// TODO remove
-			System.out.println("ERROR:"+ice.lexeme);
-			System.exit(0);
+			// We have not found the preposition and mark it as unknown
+			// for the tagger to guess
+			handleUnknown(ice, 0);
 		}
 	}
 	
 	// Handles unknown words
 	private void handleUnknown(IceTokenTags ice, int counter)
 	{
+		// This means IceNLP needs to guess it's tags
 		ice.setUnknown(true);
+		
+		// This means we remember that it was an unknown from this external source
+		// Since programs later in the pipeline need to know that.
+		ice.setUnknownExternal(true);
 		
 		// Check if it is a possible proper noun
 		// First character is upper case in a word that is not the first one
