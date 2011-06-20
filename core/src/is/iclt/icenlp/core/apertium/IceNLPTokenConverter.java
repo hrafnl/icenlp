@@ -53,6 +53,10 @@ public class IceNLPTokenConverter
 		ArrayList<IceTokenTags> list = new ArrayList<IceTokenTags>();
 		int counter = 0; // Used to find proper nouns.
 		
+		// Goes through all the lexical units in each apertium entry and cleans it up
+		// This is done here so it's not needed to be done within the handlers
+		cleanLexicalUnits(entries);
+		
 		for(ApertiumEntry ae: entries)
 		{
 			// Add the lexeme
@@ -105,6 +109,55 @@ public class IceNLPTokenConverter
 		return list;
 	}
 	
+	// Cleans up the lexical units.
+	private void cleanLexicalUnits(ArrayList<ApertiumEntry> entries)
+	{
+		for(ApertiumEntry ae: entries)
+		{
+			for(LexicalUnit lu: ae.getPossibleLexicalUnits())
+			{
+				// Changes <det><qnt> to <prn><qnt>, also removes <sta> if there is
+				if(lu.isDet() && lu.getSymbols().contains("<det><qnt>"))
+				{
+					String symbols = lu.getSymbols();
+					symbols = symbols.replace("<det><qnt>", "<prn><qnt>");
+					
+					// If we find a strong inflection, we remove it in this case
+					if(symbols.endsWith("<sta>"))
+					{
+						symbols = symbols.replaceAll("<sta>", "");
+					}
+					
+					lu.setSymbols(symbols);
+					
+					break;
+				}
+				
+				// #TODO Temporary solution, until apertium is updated
+				// If we have <sta> in a <pp> verb, we remove <sta>
+				// If we have <vei> in a <pp> verb, we remove <vei>
+				// <pp> verbs do not have a strong inflection.
+				if(lu.isVerb() && lu.getSymbols().contains("<pp>"))
+				{
+					if(lu.getSymbols().contains("<sta>"))
+					{
+						String newSymbols = lu.getSymbols();
+						newSymbols = newSymbols.replace("<sta>", "");
+						lu.setSymbols(newSymbols);
+					}
+					else if(lu.getSymbols().contains("<vei>"))
+					{
+						String newSymbols = lu.getSymbols();
+						newSymbols = newSymbols.replace("<vei>", "");
+						lu.setSymbols(newSymbols);
+					}
+					
+					break;
+				}
+			}
+		}
+	}
+
 	private void handleNormal(IceTokenTags ice, ApertiumEntry ae)
 	{
 		// Get the tags from the dict, using otb as well
@@ -124,9 +177,6 @@ public class IceNLPTokenConverter
 				// Insert that tag first into tag list
 				for(LexicalUnit lu: ae.getPossibleLexicalUnits())
 				{
-					// Fix the lu if possible
-					lexicalUnitFixes(lu);
-					
 					String invTag = mapping.getInvertedTagMap(lu.getSymbols(), lu.getLemma());
 					
 					// We found the correct lu
@@ -141,54 +191,11 @@ public class IceNLPTokenConverter
 					}
 				}
 			}
-			
-			// Here we have a possibility that there are still possible lexical units
-			// Then we add them in the order they are now
-			standardConvert(ice, ae);
 		}
-		else
-		{
-			// If we still have no tags, then the word is in none of our dictionaries and
-			// we need to blindly convert it (which might fail)
-			standardConvert(ice, ae);
-		}
-	}
-	
-	// Performs fixes to the lexical unit if needed
-	// So it confirms to the icenlp tags
-	private void lexicalUnitFixes(LexicalUnit lu)
-	{
-		// Changes <det><qnt> to <prn><qnt>, also removes <sta> if there is
-		if(!lu.isVerb() && lu.getSymbols().contains("<det><qnt>"))
-		{
-			String symbols = lu.getSymbols();
-			symbols = symbols.replace("<det><qnt>", "<prn><qnt>");
-			
-			// If we find a strong inflection, we remove it in this case
-			if(symbols.endsWith("<sta>"))
-			{
-				symbols = symbols.replaceAll("<sta>", "");
-			}
-			
-			lu.setSymbols(symbols);
-		}
-		
-		// #TODO Temporary solution, until apertium is updated
-		// If we have <sta> in a <pp> verb, we remove <sta>
-		// If we have <vei> in a <pp> verb, we remove <vei>
-		// <pp> verbs do not have a strong inflection.
-		if(lu.isVerb() && lu.getSymbols().contains("<pp>") && lu.getSymbols().contains("<sta>"))
-		{
-			String newSymbols = lu.getSymbols();
-			newSymbols = newSymbols.replace("<sta>", "");
-			lu.setSymbols(newSymbols);
-		}
-		else if(lu.isVerb() && lu.getSymbols().contains("<pp>") && lu.getSymbols().contains("<vei>"))
-		{
-			String newSymbols = lu.getSymbols();
-			newSymbols = newSymbols.replace("<vei>", "");
-			lu.setSymbols(newSymbols);
-		}
+
+		// If we still have no tags, or no tags found, and the word is in none of our dictionaries
+		// we need to blindly convert it (which might fail)
+		standardConvert(ice, ae);
 	}
 
 	// Handles conversion of verbs
@@ -217,9 +224,6 @@ public class IceNLPTokenConverter
 				// We check each lu tag to see if that lu has the same tag (minus the extra info)
 				for(LexicalUnit lu: ae.getPossibleLexicalUnits())
 				{
-					// Fix the lu if possible
-					lexicalUnitFixes(lu);
-					
 					String invertedTag = mapping.getInvertedTagMap(lu.getSymbols(), lu.getLemma());
 					
 					// We have the found the lexical unit that has the base tag
@@ -312,9 +316,6 @@ public class IceNLPTokenConverter
 		// we need to blindly convert it (which might fail)
 		for(LexicalUnit lu: ae.getPossibleLexicalUnits())
 		{
-			// Fix the lu if possible
-			lexicalUnitFixes(lu);
-			
 			String tag = mapping.getInvertedTagMap(lu.getSymbols(), lu.getLemma());
 			
 			if(tag != null)

@@ -72,4 +72,9 @@ public class LexicalUnit
 			   symbols.contains("<vbhaver>") ||
 			   symbols.contains("<vaux>");
 	}
+	
+	public boolean isDet()
+	{
+		return symbols.contains("<det>");
+	}
 }

@@ -58,7 +58,7 @@ public class ApertiumSegmentizer
 			sb.append(readChar);
 			
 			// Check if the end sentence match is found
-			if(readChar == '$' && sb.toString().contains(match))
+			if(readChar == '$' && sb.toString().endsWith(match))
 			{
 				break;
 			}

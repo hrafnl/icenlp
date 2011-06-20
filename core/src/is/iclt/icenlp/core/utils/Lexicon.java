@@ -106,23 +106,20 @@ public class Lexicon {
 	 * Look up a word in the lexicon. If the given word form is contained in the
 	 * lexicon, the associated entry is returned as a String, otherwise null.
 	 */
-	public String lookup(String word, boolean ignoreCase) {
-
+	public String lookup(String word, boolean ignoreCase)
+	{
 		String lookupWord;
 
-		if (ignoreCase)
+		if(ignoreCase)
+		{
 			lookupWord = word.toLowerCase();
+		}
 		else
+		{
 			lookupWord = word;
-
-		String entry = storage.getProperty(lookupWord, null);
-		if (entry == null && ignoreCase) {
-			lookupWord = word.toLowerCase();
-			entry = storage.getProperty(lookupWord, null);
 		}
 
-		return entry;
-
+		return storage.getProperty(lookupWord, null);
 	}
 
 } // end of class is.iclt.icenlp.core.utils.Lexicon
