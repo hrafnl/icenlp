@@ -205,7 +205,7 @@ public class RunIceTaggerApertium extends RunIceTagger
 		String lexeme;
 		List<Word> wordList = new LinkedList<Word>();
 		
-		// Nothing to tokenize
+		// Nothing to tokenize		
 		if(tokens.size() == 0)
 		{
 			return;
@@ -339,6 +339,12 @@ public class RunIceTaggerApertium extends RunIceTagger
 	{
 		String lexeme;
 		List<Word> wordList = new LinkedList<Word>();
+		
+		// Nothing to tokenize		
+		if(tokenizer.tokens.size() == 0)
+		{
+			return;
+		}
 
 		// create word objects and add them to the wordlist.
 		for (Object o : tokenizer.tokens)

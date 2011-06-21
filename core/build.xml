@@ -61,6 +61,7 @@
 				<available file="${src}/is/iclt/icenlp/core/icetagger/IceLocalRules.java"/>
 			</and>
 		</waitfor>
+		<echo message="Rules file created." level="info" />
 	</target>
 
 	<target name="compile" depends="makerules" description="Compiles all the source files">
