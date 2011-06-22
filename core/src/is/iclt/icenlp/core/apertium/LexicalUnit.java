@@ -7,26 +7,27 @@ public class LexicalUnit
 	private String symbols;
 	private boolean unknown;
 	private boolean space;
+	private boolean ignore;
 	
 	public LexicalUnit(String lemma, String symbols)
 	{
 		this.lemma = lemma;
 		this.symbols = symbols;
 		this.unknown = false;
+		this.ignore = false;
 	}
 	
 	public LexicalUnit(String lemma, String symbols, boolean unknown)
 	{
-		this.lemma = lemma;
-		this.symbols = symbols;
+		this(lemma, symbols);
+		
 		this.unknown = unknown;
 	}
 	
 	public LexicalUnit(String lemma, String symbols, boolean unknown, boolean space)
 	{
-		this.lemma = lemma;
-		this.symbols = symbols;
-		this.unknown = unknown;
+		this(lemma, symbols, unknown);
+		
 		this.space = space;
 	}
 	
@@ -50,6 +51,11 @@ public class LexicalUnit
 		this.symbols = symbols;
 	}
 	
+	public void setIgnore(boolean ignore)
+	{
+		this.ignore = ignore;
+	}
+	
 	public boolean isUnknown()
 	{
 		return unknown;
@@ -58,6 +64,11 @@ public class LexicalUnit
 	public boolean isSpace()
 	{
 		return space;
+	}
+	
+	public boolean isIgnore()
+	{
+		return ignore;
 	}
 	
 	public boolean isPreposition()

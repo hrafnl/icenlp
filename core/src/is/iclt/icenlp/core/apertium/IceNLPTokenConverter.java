@@ -116,21 +116,32 @@ public class IceNLPTokenConverter
 		{
 			for(LexicalUnit lu: ae.getPossibleLexicalUnits())
 			{
-				// Changes <det><qnt> to <prn><qnt>, also removes <sta> if there is
-				if(lu.isDet() && lu.getSymbols().contains("<det><qnt>"))
+				if(lu.isDet())
 				{
-					String symbols = lu.getSymbols();
-					symbols = symbols.replace("<det><qnt>", "<prn><qnt>");
-					
-					// If we find a strong inflection, we remove it in this case
-					if(symbols.endsWith("<sta>"))
+					// If it is a <det><ind> then we mark it to be ignored
+					if(lu.getSymbols().contains("<det><ind>"))
 					{
-						symbols = symbols.replaceAll("<sta>", "");
+						lu.setIgnore(true);
+						
+						break;
 					}
 					
-					lu.setSymbols(symbols);
-					
-					break;
+					// Changes <det><qnt> to <prn><qnt>, also removes <sta> if there is
+					if(lu.getSymbols().contains("<det><qnt>"))
+					{
+						String symbols = lu.getSymbols();
+						symbols = symbols.replace("<det><qnt>", "<prn><qnt>");
+						
+						// If we find a strong inflection, we remove it in this case
+						if(symbols.endsWith("<sta>"))
+						{
+							symbols = symbols.replaceAll("<sta>", "");
+						}
+						
+						lu.setSymbols(symbols);
+						
+						break;
+					}
 				}
 				
 				// #TODO Temporary solution, until apertium is updated
@@ -177,6 +188,11 @@ public class IceNLPTokenConverter
 				// Insert that tag first into tag list
 				for(LexicalUnit lu: ae.getPossibleLexicalUnits())
 				{
+					if(lu.isIgnore())
+					{
+						continue;
+					}
+					
 					String invTag = mapping.getInvertedTagMap(lu.getSymbols(), lu.getLemma());
 					
 					// We found the correct lu
@@ -224,6 +240,11 @@ public class IceNLPTokenConverter
 				// We check each lu tag to see if that lu has the same tag (minus the extra info)
 				for(LexicalUnit lu: ae.getPossibleLexicalUnits())
 				{
+					if(lu.isIgnore())
+					{
+						continue;
+					}
+					
 					String invertedTag = mapping.getInvertedTagMap(lu.getSymbols(), lu.getLemma());
 					
 					// We have the found the lexical unit that has the base tag
@@ -316,6 +337,11 @@ public class IceNLPTokenConverter
 		// we need to blindly convert it (which might fail)
 		for(LexicalUnit lu: ae.getPossibleLexicalUnits())
 		{
+			if(lu.isIgnore())
+			{
+				continue;
+			}
+			
 			String tag = mapping.getInvertedTagMap(lu.getSymbols(), lu.getLemma());
 			
 			if(tag != null)

@@ -5,10 +5,8 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 
 import is.iclt.icenlp.core.apertium.ApertiumEntry;
-import is.iclt.icenlp.core.apertium.LexicalUnit;
 import is.iclt.icenlp.core.apertium.LtProcParser;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
