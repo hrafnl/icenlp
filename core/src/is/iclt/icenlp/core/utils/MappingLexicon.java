@@ -558,9 +558,12 @@ public class MappingLexicon {
 		}
 	}
 
-	private String lookupTagmap(String tag, boolean ignoreCase) {
+	public String lookupTagmap(String tag, boolean ignoreCase)
+	{
 		if (ignoreCase)
+		{
 			tag = tag.toLowerCase();
+		}
 
 		return this.tagMaps.get(tag);
 	}

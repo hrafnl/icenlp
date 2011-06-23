@@ -24,6 +24,7 @@ package is.iclt.icenlp.runner;
 import is.iclt.icenlp.core.apertium.ApertiumEntry;
 import is.iclt.icenlp.core.apertium.ApertiumSegmentizer;
 import is.iclt.icenlp.core.apertium.IceNLPTokenConverter;
+import is.iclt.icenlp.core.apertium.LemmaGuesser;
 import is.iclt.icenlp.core.apertium.LexicalUnit;
 import is.iclt.icenlp.core.apertium.LtProcParser;
 import is.iclt.icenlp.core.lemmald.Lemmald;
@@ -182,7 +183,7 @@ public class RunIceTaggerApertium extends RunIceTagger
 			tagger.tagExternalTokens(tokens);
 			
 			// Display the results
-			printResultsExternal(outFile, tokens, entries);
+			printResultsExternal(outFile, tokens, entries, mappingLexicon);
 			
 			outFile.flush();
 			
@@ -200,10 +201,11 @@ public class RunIceTaggerApertium extends RunIceTagger
 	}
 
 	// we override printResults.
-	protected void printResultsExternal(BufferedWriter outFile, ArrayList<IceTokenTags> tokens, ArrayList<ApertiumEntry> entries) throws IOException
+	protected void printResultsExternal(BufferedWriter outFile, ArrayList<IceTokenTags> tokens, ArrayList<ApertiumEntry> entries, MappingLexicon mappingLexicon) throws IOException
 	{
 		String lexeme;
 		List<Word> wordList = new LinkedList<Word>();
+		LemmaGuesser guesser;
 		
 		// Nothing to tokenize		
 		if(tokens.size() == 0)
@@ -246,8 +248,19 @@ public class RunIceTaggerApertium extends RunIceTagger
 			{
 				lexeme = t.lexeme;
 			}
+			
+			String lemma = t.getFirstTag().getLemma();
+			
+			// If we have lost the lemma on the way
+			// this usually happens when IceTagger is forced to guess the symbols
+			// We don't concider external unknown words, since they display their lexeme as the lemma
+			if(lemma == null && !t.isUnknownExternal())
+			{
+				guesser = new LemmaGuesser(lexeme, entries, t.getFirstTagStr(), mappingLexicon);
+				lemma = guesser.guess();
+			}
 
-			wordList.add(new Word(t.lexeme, t.getFirstTag().getLemma(), t.getFirstTagStr(), t.mweCode, t.tokenCode, t.linkedToPreviousWord, unknown));
+			wordList.add(new Word(t.lexeme, lemma, t.getFirstTagStr(), t.mweCode, t.tokenCode, t.linkedToPreviousWord, unknown));
 		}
 
 		// Maps back from the IceNLP tags to the Apertium tags
