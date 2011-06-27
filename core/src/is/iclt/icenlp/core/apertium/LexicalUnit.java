@@ -8,6 +8,7 @@ public class LexicalUnit
 	private boolean unknown;
 	private boolean space;
 	private boolean ignore;
+	private boolean linkedToPreviousWord;
 	
 	public LexicalUnit(String lemma, String symbols)
 	{
@@ -15,6 +16,7 @@ public class LexicalUnit
 		this.symbols = symbols;
 		this.unknown = false;
 		this.ignore = false;
+		this.linkedToPreviousWord = false;
 	}
 	
 	public LexicalUnit(String lemma, String symbols, boolean unknown)
@@ -56,6 +58,11 @@ public class LexicalUnit
 		this.ignore = ignore;
 	}
 	
+	public void setLinkedToPreviousWord(boolean linkedToPreviousWord)
+	{
+		this.linkedToPreviousWord = linkedToPreviousWord;
+	}
+	
 	public boolean isUnknown()
 	{
 		return unknown;
@@ -71,9 +78,24 @@ public class LexicalUnit
 		return ignore;
 	}
 	
+	public boolean isLinkedToPreviousWord()
+	{
+		return linkedToPreviousWord;
+	}
+	
 	public boolean isPreposition()
 	{
 		return symbols.equals("<pr>");
+	}
+	
+	public boolean isProperNoun()
+	{
+		return symbols.startsWith("<np>");
+	}
+	
+	public boolean isPronoun()
+	{
+		return symbols.startsWith("<prn>");
 	}
 	
 	public boolean isVerb()

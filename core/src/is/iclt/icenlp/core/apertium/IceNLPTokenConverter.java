@@ -114,6 +114,31 @@ public class IceNLPTokenConverter
 		{
 			for(LexicalUnit lu: ae.getPossibleLexicalUnits())
 			{
+				if(lu.isProperNoun())
+				{
+					// If it is a <np><org>, we change the org to a <np><al>
+					if(lu.getSymbols().contains("<org>"))
+					{
+						String symbols = lu.getSymbols();
+						
+						lu.setSymbols(symbols.replace("<org>", "<al>"));
+						
+						continue;
+					}
+				}
+				
+				if(lu.isPronoun())
+				{
+					if(lu.getSymbols().contains("<ref>") && lu.getSymbols().contains("<p3>") && lu.getSymbols().contains("<acc>"))
+					{
+						String symbols = lu.getSymbols();
+						
+						lu.setSymbols(symbols.replace("<p3>", ""));
+						
+						continue;
+					}
+				}
+				
 				if(lu.isDet())
 				{
 					// If it is a <det><ind> then we mark it to be ignored
@@ -121,7 +146,7 @@ public class IceNLPTokenConverter
 					{
 						lu.setIgnore(true);
 						
-						break;
+						continue;
 					}
 					
 					// Changes <det><qnt> to <prn><qnt>, also removes <sta> if there is
@@ -138,7 +163,7 @@ public class IceNLPTokenConverter
 						
 						lu.setSymbols(symbols);
 						
-						break;
+						continue;
 					}
 				}
 				
@@ -151,17 +176,17 @@ public class IceNLPTokenConverter
 					if(lu.getSymbols().contains("<sta>"))
 					{
 						String newSymbols = lu.getSymbols();
-						newSymbols = newSymbols.replace("<sta>", "");
-						lu.setSymbols(newSymbols);
+						
+						lu.setSymbols(newSymbols.replace("<sta>", ""));
 					}
 					else if(lu.getSymbols().contains("<vei>"))
 					{
 						String newSymbols = lu.getSymbols();
-						newSymbols = newSymbols.replace("<vei>", "");
-						lu.setSymbols(newSymbols);
+						
+						lu.setSymbols(newSymbols.replace("<vei>", ""));
 					}
 					
-					break;
+					continue;
 				}
 			}
 		}
@@ -181,7 +206,7 @@ public class IceNLPTokenConverter
 			
 			// For each tag
 			for(String tag: tagSplit)
-			{
+			{	
 				// Look at each apertium entries tag to see if it matches with the tag
 				// Insert that tag first into tag list
 				for(LexicalUnit lu: ae.getPossibleLexicalUnits())
@@ -197,6 +222,11 @@ public class IceNLPTokenConverter
 					if(invTag != null && tag.equals(invTag))
 					{
 						ice.addTagWithLemma(tag, lu.getLemma());
+						
+						if(lu.isLinkedToPreviousWord())
+						{
+							ice.linkedToPreviousWord = true;
+						}
 						
 						// Remove the lu since we found it.
 						ae.removeLexicalUnit(lu);
@@ -250,6 +280,11 @@ public class IceNLPTokenConverter
 					{
 						// Add it to the tag list
 						ice.addTagWithLemma(base, lu.getLemma());
+						
+						if(lu.isLinkedToPreviousWord())
+						{
+							ice.linkedToPreviousWord = true;
+						}
 						
 						// Remove it from the possible list
 						ae.removeLexicalUnit(lu);
@@ -345,6 +380,11 @@ public class IceNLPTokenConverter
 			if(tag != null)
 			{
 				ice.addTagWithLemma(tag, lu.getLemma());
+				
+				if(lu.isLinkedToPreviousWord())
+				{
+					ice.linkedToPreviousWord = true;
+				}
 			}
 		}
 	}
