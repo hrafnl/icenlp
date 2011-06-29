@@ -61,14 +61,14 @@ public class IceNLPTokenConverter
 			IceTokenTags ice = new IceTokenTags();
 			ice.lexeme = ae.getSurfaceForm();
 			
-			if(ae.isAnyLuPreposition())
-			{
-				handlePreposition(ice, ae);
-			}
-			else if(ae.isMWE())
+			if(ae.isMWE())
 			{
 				// Multi word expressions are handled in a standard way.
 				standardConvert(ice, ae);
+			}
+			else if(ae.isAnyLuPreposition())
+			{
+				handlePreposition(ice, ae);
 			}
 			else if(ae.isAnyLuAVerb())
 			{
@@ -122,6 +122,16 @@ public class IceNLPTokenConverter
 						String symbols = lu.getSymbols();
 						
 						lu.setSymbols(symbols.replace("<org>", "<al>"));
+						
+						continue;
+					}
+					
+					// If it is a <np><cog>, we change the cog to a <np><al>
+					if(lu.getSymbols().contains("<cog>"))
+					{
+						String symbols = lu.getSymbols();
+						
+						lu.setSymbols(symbols.replace("<cog>", "<al>"));
 						
 						continue;
 					}
