@@ -27,7 +27,8 @@ import java.util.ArrayList;
  * Encapsulates sentences as a list of Sentence objects.
  * @author Sverrir Sigmundarson
  */
-public class Sentences {
+public class Sentences
+{
     private ArrayList<Sentence> mySentences;
 
     public Sentences()
@@ -45,7 +46,7 @@ public class Sentences {
         mySentences.add(sent);
     }
 
-   public String toStringNewline(boolean markUnknown)
+    public String toStringNewline(boolean markUnknown)
 	{
 		StringBuilder b = new StringBuilder( );
 
@@ -58,7 +59,7 @@ public class Sentences {
 		return b.toString();
 	}
 
-     public String toString()
+    public String toString()
 	{
 		StringBuilder b = new StringBuilder( );
 
@@ -70,4 +71,9 @@ public class Sentences {
         }
 		return b.toString();
 	}
+    
+    public int size()
+    {
+    	return mySentences.size();
+    }
 }

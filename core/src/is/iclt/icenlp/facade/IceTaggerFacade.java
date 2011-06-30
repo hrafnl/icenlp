@@ -21,6 +21,10 @@
  */
 package is.iclt.icenlp.facade;
 
+import is.iclt.icenlp.core.apertium.ApertiumEntry;
+import is.iclt.icenlp.core.apertium.ApertiumSegmentizer;
+import is.iclt.icenlp.core.apertium.IceNLPTokenConverter;
+import is.iclt.icenlp.core.apertium.LtProcParser;
 import is.iclt.icenlp.core.icemorphy.IceMorphy;
 import is.iclt.icenlp.core.icetagger.IceTagger;
 import is.iclt.icenlp.core.icetagger.IceTaggerLexicons;
@@ -32,6 +36,7 @@ import is.iclt.icenlp.core.tritagger.TriTagger;
 import is.iclt.icenlp.core.tritagger.TriTaggerResources;
 import is.iclt.icenlp.core.utils.*;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -219,5 +224,40 @@ public class IceTaggerFacade
         }
 
         return sents;
+    }
+    
+    public IceTokenSentences tagExternal(String text, MappingLexicon mappingLexicon) throws IOException
+    {
+    	IceTokenSentence sent = null;
+    	IceTokenSentences sents = new IceTokenSentences();
+    	
+    	ApertiumSegmentizer segmentizer = new ApertiumSegmentizer(new ByteArrayInputStream(text.getBytes()));
+		
+		LtProcParser lps;
+		ArrayList<ApertiumEntry> entries;
+		
+		IceNLPTokenConverter converter;
+		ArrayList<IceTokenTags> tokens;
+		
+		while(segmentizer.hasMoreSentences())
+		{
+			// Send the lt-proc string into the parser
+			lps = new LtProcParser(segmentizer.getSentance());
+			entries = lps.parse();
+
+			// Create the appertium -> iceNLP converter
+			converter = new IceNLPTokenConverter(entries, mappingLexicon);
+			tokens = converter.convert();
+
+			// Do the actual tagging
+			tagger.tagExternalTokens(tokens);
+			
+			sent = new IceTokenSentence(tokens);
+            sents.add(sent);
+			
+			segmentizer.processNextSentence();
+		}
+		
+		return sents;
     }
 }

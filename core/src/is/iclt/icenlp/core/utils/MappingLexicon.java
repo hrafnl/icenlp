@@ -178,6 +178,39 @@ public class MappingLexicon {
 				"/dict/icetagger/otb.apertium.dict");
 		readConfigFile(fstream);
 	}
+	
+	/**
+	 * Constructor for the MapperLexicon class. This constructor initializes all
+	 * the member variables and sets the to the values that are passed via the
+	 * constructor. With this constructor the mapping file is read from the
+	 * IceNLPCore jar file.
+	 * 
+	 * @param showLexiconStatusOutput
+	 *            Flag to controls whether we print overview of the rules that
+	 *            were read from the mapping file.
+	 * @param leaveNotFoundTagUnchanged
+	 *            Flag to controls whether tag that do not have any mappings are
+	 *            left unchanged or changed to notFoundMappingTag.
+	 * @param showAppliedActions
+	 *            Flag to controls whether we print applied rules to standard
+	 *            output.
+	 * @param notFoundMappingTag
+	 *            The mapping tag that is used if leaveNotFoundTagUnchanged is
+	 *            false and a given tag does not have any mapping tag.
+	 * @param inverseMapping
+	 * 			  Flag to tell the mapper to inverse the tagMap
+	 * @throws Exception
+	 *             If mapping file is not found.
+	 */
+	public MappingLexicon(boolean showLexiconStatusOutput,
+			boolean leaveNotFoundTagUnchanged, boolean showAppliedActions,
+			String notFoundMappingTag, boolean inverseMapping) throws Exception {
+		this(leaveNotFoundTagUnchanged, showAppliedActions, notFoundMappingTag);
+		useInverseMapping = inverseMapping;
+		InputStream fstream = getClass().getResourceAsStream(
+				"/dict/icetagger/otb.apertium.dict");
+		readConfigFile(fstream);
+	}
 
 	private void showStatusOutput() {
 		System.out.println("[i] Number of mapping rules: "

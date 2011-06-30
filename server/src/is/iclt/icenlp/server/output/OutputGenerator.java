@@ -9,6 +9,7 @@ import java.util.List;
 
 import is.iclt.icenlp.IceParser.IceParser;
 import is.iclt.icenlp.common.configuration.Configuration;
+import is.iclt.icenlp.core.tokenizer.Segmentizer;
 import is.iclt.icenlp.core.utils.MappingLexicon;
 import is.iclt.icenlp.core.utils.Word;
 import is.iclt.icenlp.icetagger.IceTagger;
@@ -25,6 +26,7 @@ public class OutputGenerator {
 	private boolean lemmatize = false;
 	private boolean leave_not_found_tag_unchanged = false;
 	private boolean UserIceTaggerWhitespaceBlocks = false;
+	private String externalMorpho = "icenlp"; // Default's to IceNLP as a default morpho analyser.
 	private String not_found_tag = null;
 	private String punctuationSeparator = " ";
 	private String taggingOutputSparator = " ";
@@ -32,7 +34,8 @@ public class OutputGenerator {
 	private IceTagger iceTagger;
 	private IceParser iceParser;
 
-	public OutputGenerator() throws Exception {
+	public OutputGenerator() throws Exception
+	{
 		// Get instance of IceTagger.
 		this.iceTagger = IceTagger.instance();
 
@@ -52,6 +55,8 @@ public class OutputGenerator {
 			if(this.configuration.getValue("UserIceTaggerWhitespaceBlocks").toLowerCase().equals("true"))
 				this.UserIceTaggerWhitespaceBlocks = true;
 		
+		if (this.configuration.containsKey("ExternalMorpho"))
+			this.externalMorpho = this.configuration.getValue("ExternalMorpho").toLowerCase();
 		
 		if (this.configuration.containsKey("compiled_bidix")) {
 			String compiledBidixLocation = this.configuration
@@ -109,8 +114,9 @@ public class OutputGenerator {
 		// Check for the tagging output
 		if (this.configuration.containsKey("Outputformat")) {
 			this.outputFormat = this.configuration.getValue("Outputformat");
-
-			if (this.outputFormat.contains("[LEMMA]")) {
+			
+			if(this.outputFormat.contains("[LEMMA]") && externalMorpho.equals("icenlp"))
+			{
 				this.lemmatize = true;
 			}
 
@@ -123,11 +129,25 @@ public class OutputGenerator {
 				String mappingLexicon = this.configuration
 						.getValue("mappinglexicon");
 
-				if (mappingLexicon.toLowerCase().equals("icenlp")) {
-					System.out.println("[i] Reading mapping lexicon from IceNLP resource.");
-					this.mapperLexicon = new MappingLexicon(true,
-							this.leave_not_found_tag_unchanged,
-							this.configuration.debugMode(), this.not_found_tag);
+				if (mappingLexicon.toLowerCase().equals("icenlp"))
+				{
+					// We want to use apertium external morpho, then we want the inverse mapping lexicon as well
+					if(this.externalMorpho.equals("apertium"))
+					{
+						System.out.println("[i] Reading mapping lexicon from IceNLP resource with regular and inverted mapping.");
+						
+						this.mapperLexicon = new MappingLexicon(true,
+								this.leave_not_found_tag_unchanged,
+								this.configuration.debugMode(), this.not_found_tag, true);
+					}
+					else
+					{
+						System.out.println("[i] Reading mapping lexicon from IceNLP resource.");
+						
+						this.mapperLexicon = new MappingLexicon(true,
+								this.leave_not_found_tag_unchanged,
+								this.configuration.debugMode(), this.not_found_tag);
+					}
 				} else {
 					System.out.println("[i] Reading mapping lexicon from: " + mappingLexicon + '.');
 					this.mapperLexicon = new MappingLexicon(mappingLexicon,
@@ -144,13 +164,15 @@ public class OutputGenerator {
 						System.out.println("[i] Leave Unknown lexemes of length 1 disabled.");
 				}
 			}
-
-			if (this.lemmatize)
+			
+			if(this.lemmatize)
+			{
 				this.iceTagger.lemmatize(true);
+			}
 
 			if (this.outputFormat.contains("[FUNC]"))
 				this.iceParser = IceParser.instance();
-
+			
 		} catch (Exception e) {
 			throw e;
 		}
@@ -257,5 +279,69 @@ public class OutputGenerator {
 			return builder.toString().substring(1);
 
 		return builder.toString();
+	}
+	
+	/**
+	 * This generates an output but using the external morpho analysing version of IceTagger
+	 * @param text To generate
+	 * @return Generated text
+	 */
+	public String generateExternalOutput(String text)
+	{
+		// We must have something to tag
+		if (text.trim().length() == 0)
+		{
+			return "";
+		}
+
+		List<Word> wordList;
+		
+		try
+		{
+			wordList = this.iceTagger.tagExternal(text, this.mapperLexicon);
+		}
+		catch (IceTaggerException e)
+		{
+			System.out.println("[!!] error in IceTagger: " + e.getMessage());
+			return "";
+		}
+
+		// Apply mapping rules to the word list.
+		if (this.mapperLexicon != null)
+			this.mapperLexicon.processWordList(wordList);
+
+		// Create output string that will be sent to the client.
+		StringBuilder builder = new StringBuilder();
+
+		// Create output string that will be sent to the client.
+		String output = "";
+
+		for (Word word : wordList)
+		{
+			if (!word.linkedToPreviousWord)
+			{
+				output = output + " ";
+			}
+				
+			if(word.isUnknown())
+			{
+				output = output + "^" + word.getLexeme() + "/*" + word.getLexeme() + "$";
+			}
+			else
+			{
+				// Handling the printing of "space" characters
+				// They have empty tags
+				if(word.getTag().equals("") && word.getLemma() == null)
+				{
+					output = output + "^" + word.getLexeme() + "/" + word.getLexeme() + "$";
+				}
+				else
+				{
+					output = output + "^" + word.getLexeme() + "/" + word.getLemma() + word.getTag() + "$";
+				}
+			}
+		}
+		
+		return output;
 	}
 }

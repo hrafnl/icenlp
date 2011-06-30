@@ -27,7 +27,9 @@ import java.util.ArrayList;
  * Encapsulates a sentence as a list of tokens.
  * @author Sverrir Sigmundarson
  */
-public class Sentence {  // The parameterized type should be of class Token or any subclass
+//The parameterized type should be of class Token or any subclass
+public class Sentence
+{
     private ArrayList<Token> myTokens;
 
     public Sentence()
@@ -42,7 +44,7 @@ public class Sentence {  // The parameterized type should be of class Token or a
             myTokens.add(tok);
     }
 
-    public ArrayList<Token> getTokens()
+    public ArrayList<?> getTokens()
 	{
 		return myTokens;
 	}

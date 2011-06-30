@@ -1,16 +1,21 @@
 package is.iclt.icenlp.icetagger;
 
 import is.iclt.icenlp.common.configuration.Configuration;
+import is.iclt.icenlp.core.apertium.LemmaGuesser;
 import is.iclt.icenlp.core.icetagger.IceTaggerLexicons;
 import is.iclt.icenlp.core.icetagger.IceTaggerResources;
+import is.iclt.icenlp.core.tokenizer.IceTokenSentences;
 import is.iclt.icenlp.core.tokenizer.IceTokenTags;
 import is.iclt.icenlp.core.tokenizer.Sentence;
+import is.iclt.icenlp.core.tokenizer.IceTokenSentence;
 import is.iclt.icenlp.core.tokenizer.Sentences;
 import is.iclt.icenlp.core.tokenizer.Token;
 import is.iclt.icenlp.core.tokenizer.TokenizerResources;
 import is.iclt.icenlp.core.tritagger.TriTaggerLexicons;
 import is.iclt.icenlp.core.tritagger.TriTaggerResources;
+import is.iclt.icenlp.core.utils.IceTag;
 import is.iclt.icenlp.core.utils.Lexicon;
+import is.iclt.icenlp.core.utils.MappingLexicon;
 import is.iclt.icenlp.core.utils.Word;
 import is.iclt.icenlp.facade.IceTaggerFacade;
 import is.iclt.icenlp.lemmald.Lemmald;
@@ -169,7 +174,7 @@ public class IceTagger implements IIceTagger {
 			Sentences sentences = this.iceTaggerFacade.tag(text);
 			// Create a a word list from the tagging results.
 			for (Sentence s : sentences.getSentences()) {
-				for (Token token : s.getTokens()) {
+				for (Object token : s.getTokens()) {
 					IceTokenTags t = ((IceTokenTags) token);
 
 					Word word;
@@ -203,7 +208,79 @@ public class IceTagger implements IIceTagger {
 		return returnlist; 
 	}
 	
-	public void lemmatize(boolean value) {
+	public List<Word> tagExternal(String text, MappingLexicon mappingLexicon) throws IceTaggerException
+	{
+		List<Word> returnlist = new LinkedList<Word>();
+		String lexeme;
+		LemmaGuesser guesser;
+		
+		if (text.length() == 0)
+		{
+			return returnlist;
+		}
+		
+		try
+		{
+			IceTokenSentences sentences = this.iceTaggerFacade.tagExternal(text, mappingLexicon);
+			
+			// Create a a word list from the tagging results.
+			for (IceTokenSentence s : sentences.getSentences())
+			{
+				for(Object token : s.getTokens())
+				{
+					IceTokenTags t = (IceTokenTags)token;
+					
+					// Unknown check
+					boolean unknown = t.isUnknown();
+					
+					// Unknown checks
+					if(!unknown)
+					{
+						// If word is unknown external (marked as unknown from ltproc
+						// or if the word is marked as a foreign word
+						// Then it is unknown
+						if(t.isUnknownExternal() || ((IceTag)t.getFirstTag()).isForeign())
+						{
+							unknown = true;
+						}
+					}
+
+					// Make sure we use lower case for lexemes before we ask for the lemma
+					if (!t.isProperNoun() && Character.isUpperCase(t.lexeme.charAt(0)))
+					{
+						lexeme = t.lexeme.toLowerCase();
+					}
+					else
+					{
+						lexeme = t.lexeme;
+					}
+					
+					String lemma = t.getFirstTag().getLemma();
+					
+					// If we have lost the lemma on the way
+					// this usually happens when IceTagger is forced to guess the symbols
+					// We don't concider external unknown words, since they display their lexeme as the lemma
+					if(lemma == null && !t.isUnknownExternal())
+					{
+						//guesser = new LemmaGuesser(lexeme, entries, t.getFirstTagStr(), mappingLexicon);
+						//lemma = guesser.guess();
+					}
+
+					returnlist.add(new Word(t.lexeme, lemma, t.getFirstTagStr(), t.mweCode, t.tokenCode, t.linkedToPreviousWord, unknown));
+				}
+			}
+		} 
+		catch (IOException e) 
+		{
+			e.printStackTrace();
+			throw new IceTaggerException(e.getMessage(), e);
+		}
+		
+		return returnlist;
+	}
+	
+	public void lemmatize(boolean value)
+	{	
 		this.lemmatize = value;
 		if(value)
 			this.lemmald = Lemmald.instance();

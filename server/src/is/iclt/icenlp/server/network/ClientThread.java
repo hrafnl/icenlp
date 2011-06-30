@@ -25,12 +25,15 @@ public class ClientThread implements Runnable {
 	private InputStream istream;
     private boolean debugMode;
     private OutputGenerator outputGenerator;
+    private Configuration configuration;
 
-	public ClientThread(Socket socket, OutputGenerator generator) {
+	public ClientThread(Socket socket, OutputGenerator generator)
+	{
+		this.configuration = Configuration.getInstance();
 		this.outputGenerator = generator;
 		this.socket = socket;
 		this.alive = true;
-        this.debugMode = Configuration.getInstance().debugMode(); 
+        this.debugMode = configuration.debugMode(); 
 
 		try {
 			this.ostream = socket.getOutputStream();
@@ -104,19 +107,27 @@ public class ClientThread implements Runnable {
 					// Let's check out the output that the clients will be
 					// receiving and let's create a replay for the client.
 					String taggedString = null;
-					try {
-						// wrap to function.
-						java.lang.StringBuilder b = new StringBuilder();
-						
-						String[] lines = strFromClient.split("\n");
-						String res = "";
-						for(String s : lines){
-							String strOUt = this.outputGenerator.generateOutput(s);
-							res += this.outputGenerator.generateOutput(s) + "\n";
-							b.append(strOUt+"\n");
+					try 
+					{
+						if(this.configuration.containsKey("ExternalMorpho") && this.configuration.getValue("ExternalMorpho").equals("apertium"))
+						{
+							taggedString = this.outputGenerator.generateExternalOutput(strFromClient);
 						}
-				
-						taggedString = b.toString();
+						else
+						{
+							// wrap to function.
+							java.lang.StringBuilder b = new StringBuilder();
+							
+							String[] lines = strFromClient.split("\n");
+							
+							for(String s : lines)
+							{
+								String strOut = this.outputGenerator.generateOutput(s);
+								b.append(strOut+"\n");
+							}
+					
+							taggedString = b.toString();
+						}
 						
 						if (this.debugMode)
 							System.out.println("[debug] Reply string from IceNLP that will be sent to client is: " + taggedString);
