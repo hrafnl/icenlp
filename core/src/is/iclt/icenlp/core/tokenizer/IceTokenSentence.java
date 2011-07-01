@@ -5,7 +5,7 @@ import java.util.ArrayList;
 // Extends Sentence but uses IceTokenTag instead of Token
 // Because there is data within IceTokenTag that get's cut off
 // Like Lemma information
-public class IceTokenSentence extends Sentence
+public class IceTokenSentence
 {
 	private ArrayList<IceTokenTags> myTokens;
 
@@ -24,7 +24,7 @@ public class IceTokenSentence extends Sentence
         }
     }
 
-    public ArrayList<?> getTokens()
+    public ArrayList<IceTokenTags> getTokens()
 	{
 		return myTokens;
 	}

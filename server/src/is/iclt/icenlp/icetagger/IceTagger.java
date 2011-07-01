@@ -1,6 +1,7 @@
 package is.iclt.icenlp.icetagger;
 
 import is.iclt.icenlp.common.configuration.Configuration;
+import is.iclt.icenlp.core.apertium.ApertiumEntry;
 import is.iclt.icenlp.core.apertium.LemmaGuesser;
 import is.iclt.icenlp.core.icetagger.IceTaggerLexicons;
 import is.iclt.icenlp.core.icetagger.IceTaggerResources;
@@ -9,18 +10,19 @@ import is.iclt.icenlp.core.tokenizer.IceTokenTags;
 import is.iclt.icenlp.core.tokenizer.Sentence;
 import is.iclt.icenlp.core.tokenizer.IceTokenSentence;
 import is.iclt.icenlp.core.tokenizer.Sentences;
-import is.iclt.icenlp.core.tokenizer.Token;
 import is.iclt.icenlp.core.tokenizer.TokenizerResources;
 import is.iclt.icenlp.core.tritagger.TriTaggerLexicons;
 import is.iclt.icenlp.core.tritagger.TriTaggerResources;
 import is.iclt.icenlp.core.utils.IceTag;
 import is.iclt.icenlp.core.utils.Lexicon;
 import is.iclt.icenlp.core.utils.MappingLexicon;
+import is.iclt.icenlp.core.utils.Pair;
 import is.iclt.icenlp.core.utils.Word;
 import is.iclt.icenlp.facade.IceTaggerFacade;
 import is.iclt.icenlp.lemmald.Lemmald;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -221,7 +223,9 @@ public class IceTagger implements IIceTagger {
 		
 		try
 		{
-			IceTokenSentences sentences = this.iceTaggerFacade.tagExternal(text, mappingLexicon);
+			Pair<IceTokenSentences, ArrayList<ApertiumEntry>> facadePairs = this.iceTaggerFacade.tagExternal(text, mappingLexicon);
+			IceTokenSentences sentences = facadePairs.one;
+			ArrayList<ApertiumEntry> entries = facadePairs.two;
 			
 			// Create a a word list from the tagging results.
 			for (IceTokenSentence s : sentences.getSentences())
@@ -262,8 +266,8 @@ public class IceTagger implements IIceTagger {
 					// We don't concider external unknown words, since they display their lexeme as the lemma
 					if(lemma == null && !t.isUnknownExternal())
 					{
-						//guesser = new LemmaGuesser(lexeme, entries, t.getFirstTagStr(), mappingLexicon);
-						//lemma = guesser.guess();
+						guesser = new LemmaGuesser(lexeme, entries, t.getFirstTagStr(), mappingLexicon);
+						lemma = guesser.guess();
 					}
 
 					returnlist.add(new Word(t.lexeme, lemma, t.getFirstTagStr(), t.mweCode, t.tokenCode, t.linkedToPreviousWord, unknown));

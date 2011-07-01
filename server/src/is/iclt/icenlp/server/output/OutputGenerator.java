@@ -9,7 +9,6 @@ import java.util.List;
 
 import is.iclt.icenlp.IceParser.IceParser;
 import is.iclt.icenlp.common.configuration.Configuration;
-import is.iclt.icenlp.core.tokenizer.Segmentizer;
 import is.iclt.icenlp.core.utils.MappingLexicon;
 import is.iclt.icenlp.core.utils.Word;
 import is.iclt.icenlp.icetagger.IceTagger;
@@ -308,7 +307,9 @@ public class OutputGenerator {
 
 		// Apply mapping rules to the word list.
 		if (this.mapperLexicon != null)
+		{
 			this.mapperLexicon.processWordList(wordList);
+		}
 
 		// Create output string that will be sent to the client.
 		StringBuilder builder = new StringBuilder();

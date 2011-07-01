@@ -226,7 +226,7 @@ public class IceTaggerFacade
         return sents;
     }
     
-    public IceTokenSentences tagExternal(String text, MappingLexicon mappingLexicon) throws IOException
+    public Pair<IceTokenSentences, ArrayList<ApertiumEntry>> tagExternal(String text, MappingLexicon mappingLexicon) throws IOException
     {
     	IceTokenSentence sent = null;
     	IceTokenSentences sents = new IceTokenSentences();
@@ -234,7 +234,7 @@ public class IceTaggerFacade
     	ApertiumSegmentizer segmentizer = new ApertiumSegmentizer(new ByteArrayInputStream(text.getBytes()));
 		
 		LtProcParser lps;
-		ArrayList<ApertiumEntry> entries;
+		ArrayList<ApertiumEntry> entries = null;
 		
 		IceNLPTokenConverter converter;
 		ArrayList<IceTokenTags> tokens;
@@ -258,6 +258,6 @@ public class IceTaggerFacade
 			segmentizer.processNextSentence();
 		}
 		
-		return sents;
+		return new Pair<IceTokenSentences, ArrayList<ApertiumEntry>>(sents, entries);
     }
 }

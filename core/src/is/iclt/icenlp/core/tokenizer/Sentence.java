@@ -44,7 +44,7 @@ public class Sentence
             myTokens.add(tok);
     }
 
-    public ArrayList<?> getTokens()
+    public ArrayList<Token> getTokens()
 	{
 		return myTokens;
 	}
