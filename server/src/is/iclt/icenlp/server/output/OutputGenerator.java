@@ -22,6 +22,8 @@ public class OutputGenerator {
 	private Configuration configuration;
 	private MappingLexicon mapperLexicon = null;
 	private String outputFormat = null;
+	private String unknownOutputFormat = null;
+	private String spaceOutputFormat = null;
 	private boolean lemmatize = false;
 	private boolean leave_not_found_tag_unchanged = false;
 	private boolean UserIceTaggerWhitespaceBlocks = false;
@@ -120,6 +122,20 @@ public class OutputGenerator {
 			}
 
 			System.out.println("[i] Output format: " + this.outputFormat + '.');
+		}
+		
+		if(this.configuration.containsKey("UnknownOutputformat"))
+		{
+			this.unknownOutputFormat = this.configuration.getValue("UnknownOutputformat");
+			
+			System.out.println("[i] Unknown Output format: " + this.unknownOutputFormat + '.');
+		}
+		
+		if(this.configuration.containsKey("SpaceOutputformat"))
+		{
+			this.spaceOutputFormat = this.configuration.getValue("SpaceOutputformat");
+			
+			System.out.println("[i] Space character Output format: " + this.spaceOutputFormat + '.');
 		}
 
 		try {
@@ -314,35 +330,47 @@ public class OutputGenerator {
 		// Create output string that will be sent to the client.
 		StringBuilder builder = new StringBuilder();
 
-		// Create output string that will be sent to the client.
-		String output = "";
-
 		for (Word word : wordList)
 		{
 			if (!word.linkedToPreviousWord)
 			{
-				output = output + " ";
+				builder.append(" ");
 			}
 				
-			if(word.isUnknown())
+			if(word.isUnknown() && this.unknownOutputFormat != null)
 			{
-				output = output + "^" + word.getLexeme() + "/*" + word.getLexeme() + "$";
+				String unknown = this.unknownOutputFormat;
+				
+				unknown = unknown.replace("[LEXEME]", word.getLexeme());
+				unknown = unknown.replace("[LEMMA]", word.getLexeme());
+				
+				builder.append(unknown);
 			}
 			else
 			{
 				// Handling the printing of "space" characters
 				// They have empty tags
-				if(word.getTag().equals("") && word.getLemma() == null)
+				if(word.getTag().equals("") && word.getLemma() == null && this.spaceOutputFormat != null)
 				{
-					output = output + "^" + word.getLexeme() + "/" + word.getLexeme() + "$";
+					String space = this.spaceOutputFormat;
+					
+					space = space.replace("[LEXEME]", word.getLexeme());
+					
+					builder.append(space);
 				}
 				else
 				{
-					output = output + "^" + word.getLexeme() + "/" + word.getLemma() + word.getTag() + "$";
+					String normal = this.outputFormat;
+					
+					normal = normal.replace("[LEXEME]", word.getLexeme());
+					normal = normal.replace("[LEMMA]", word.getLemma());
+					normal = normal.replace("[TAG]", word.getTag());
+					
+					builder.append(normal);
 				}
 			}
 		}
 		
-		return output;
+		return builder.toString();
 	}
 }
