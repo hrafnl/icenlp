@@ -182,6 +182,9 @@ public class RunIceTaggerApertium extends RunIceTagger
 			// Do the actual tagging
 			tagger.tagExternalTokens(tokens);
 			
+			// Reverts some changes IceTagger makes
+			converter.changeReflexivePronounTags(tokens);
+			
 			// Display the results
 			printResultsExternal(outFile, tokens, entries, mappingLexicon);
 			

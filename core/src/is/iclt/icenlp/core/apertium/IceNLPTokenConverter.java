@@ -2,6 +2,7 @@ package is.iclt.icenlp.core.apertium;
 
 import is.iclt.icenlp.core.icetagger.IceTaggerResources;
 import is.iclt.icenlp.core.tokenizer.IceTokenTags;
+import is.iclt.icenlp.core.utils.IceTag;
 import is.iclt.icenlp.core.utils.Lexicon;
 import is.iclt.icenlp.core.utils.MappingLexicon;
 
@@ -132,18 +133,6 @@ public class IceNLPTokenConverter
 						String symbols = lu.getSymbols();
 						
 						lu.setSymbols(symbols.replace("<cog>", "<al>"));
-						
-						continue;
-					}
-				}
-				
-				if(lu.isPronoun())
-				{
-					if(lu.getSymbols().contains("<ref>") && lu.getSymbols().contains("<p3>") && lu.getSymbols().contains("<acc>"))
-					{
-						String symbols = lu.getSymbols();
-						
-						lu.setSymbols(symbols.replace("<p3>", ""));
 						
 						continue;
 					}
@@ -397,5 +386,25 @@ public class IceNLPTokenConverter
 				}
 			}
 		}
+	}
+	
+	// Cleans back changes that the IceTagger makes that we do not want, but only applies when using apertium
+    public void changeReflexivePronounTags(ArrayList<IceTokenTags> tokens)
+	{
+    	for(IceTokenTags itt: tokens)
+    	{
+			if( itt.isPersonalPronoun() &&
+				    ( itt.lexeme.equalsIgnoreCase( "sig" ) || itt.lexeme.equalsIgnoreCase( "sér" ) ||
+				      itt.lexeme.equalsIgnoreCase( "sín" ) ) )
+			{
+				ArrayList tags = itt.getTags();
+				for( int j = 0; j < tags.size(); j++ )
+				{
+					IceTag tag = (IceTag)tags.get( j );
+					if( tag.getTagStr().substring( 0, 2 ).equals( "fp" ) )
+						tag.setTagStr( "fb" + tag.getTagStr().substring( 2, 5 ) );
+				}
+			}
+    	}
 	}
 }

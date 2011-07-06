@@ -252,6 +252,9 @@ public class IceTaggerFacade
 			// Do the actual tagging
 			tagger.tagExternalTokens(tokens);
 			
+			// Convert back reflexive changes that IceTagger did
+			converter.changeReflexivePronounTags(tokens);
+			
 			sent = new IceTokenSentence(tokens);
             sents.add(sent);
 			
