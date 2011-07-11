@@ -78,6 +78,16 @@ public class LexicalUnit
 		return ignore;
 	}
 	
+	public boolean isSentence()
+	{
+		return symbols.equals("<sent>");
+	}
+	
+	public boolean isComma()
+	{
+		return symbols.equals("<cm>");
+	}
+	
 	public boolean isLinkedToPreviousWord()
 	{
 		return linkedToPreviousWord;

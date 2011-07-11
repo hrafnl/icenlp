@@ -44,6 +44,12 @@ public class ApertiumEntry
 		return false;
 	}
 	
+	// Returns true for <cm> and <sent>
+	public boolean isSeperator()
+	{
+		return possibleLexicalUnits.get(0).isComma() || possibleLexicalUnits.get(0).isSentence();
+	}
+	
 	// Returns true if there is only one LU and it is unknown
 	public boolean isUnknown()
 	{
