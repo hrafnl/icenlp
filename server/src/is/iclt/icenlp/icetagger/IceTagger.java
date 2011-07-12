@@ -215,6 +215,7 @@ public class IceTagger implements IIceTagger {
 		List<Word> returnlist = new LinkedList<Word>();
 		String lexeme;
 		LemmaGuesser guesser;
+		Word newWord = null;
 		
 		if (text.length() == 0)
 		{
@@ -269,8 +270,11 @@ public class IceTagger implements IIceTagger {
 						guesser = new LemmaGuesser(lexeme, entries, t.getFirstTagStr(), mappingLexicon);
 						lemma = guesser.guess();
 					}
-
-					returnlist.add(new Word(t.lexeme, lemma, t.getFirstTagStr(), t.mweCode, t.tokenCode, t.linkedToPreviousWord, unknown));
+					
+					newWord = new Word(t.lexeme, lemma, t.getFirstTagStr(), t.mweCode, t.tokenCode, t.linkedToPreviousWord, unknown);
+					newWord.preSpace = t.preSpace;
+					
+					returnlist.add(newWord);
 				}
 			}
 		} 

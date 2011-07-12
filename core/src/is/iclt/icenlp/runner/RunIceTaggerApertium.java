@@ -209,6 +209,7 @@ public class RunIceTaggerApertium extends RunIceTagger
 		String lexeme;
 		List<Word> wordList = new LinkedList<Word>();
 		LemmaGuesser guesser;
+		Word newWord = null;
 		
 		// Nothing to tokenize		
 		if(tokens.size() == 0)
@@ -262,8 +263,11 @@ public class RunIceTaggerApertium extends RunIceTagger
 				guesser = new LemmaGuesser(lexeme, entries, t.getFirstTagStr(), mappingLexicon);
 				lemma = guesser.guess();
 			}
-
-			wordList.add(new Word(t.lexeme, lemma, t.getFirstTagStr(), t.mweCode, t.tokenCode, t.linkedToPreviousWord, unknown));
+			
+			newWord = new Word(t.lexeme, lemma, t.getFirstTagStr(), t.mweCode, t.tokenCode, t.linkedToPreviousWord, unknown);
+			newWord.preSpace = t.preSpace;
+			
+			wordList.add(newWord);
 		}
 
 		// Maps back from the IceNLP tags to the Apertium tags
@@ -285,16 +289,12 @@ public class RunIceTaggerApertium extends RunIceTagger
 					}
 					else
 					{
-						// Handling the printing of "space" characters
-						// They have empty tags
-						if(word.getTag().equals("") && word.getLemma() == null)
+						if(word.preSpace != null)
 						{
-							outFile.write("^" + word.getLexeme() + "/" + word.getLexeme() + "$");
+							outFile.write(word.preSpace);
 						}
-						else
-						{
-							outFile.write("^" + word.getLexeme() + "/" + word.getLemma() + word.getTag() + "$");
-						}
+						
+						outFile.write("^" + word.getLexeme() + "/" + word.getLemma() + word.getTag() + "$");
 					}
 				}
 				else
@@ -306,11 +306,6 @@ public class RunIceTaggerApertium extends RunIceTagger
 			}
 			else
 			{
-				if (!word.linkedToPreviousWord)
-				{
-					output = output + " ";
-				}
-					
 				if (showSurfaceForm)
 				{
 					if(word.isUnknown())
@@ -319,16 +314,12 @@ public class RunIceTaggerApertium extends RunIceTagger
 					}
 					else
 					{
-						// Handling the printing of "space" characters
-						// They have empty tags
-						if(word.getTag().equals("") && word.getLemma() == null)
+						if(word.preSpace != null)
 						{
-							output = output + "^" + word.getLexeme() + "/" + word.getLexeme() + "$";
+							output = output + word.preSpace;
 						}
-						else
-						{
-							output = output + "^" + word.getLexeme() + "/" + word.getLemma() + word.getTag() + "$";
-						}
+						
+						output = output + "^" + word.getLexeme() + "/" + word.getLemma() + word.getTag() + "$";
 					}
 				}
 				else

@@ -332,10 +332,10 @@ public class OutputGenerator {
 
 		for (Word word : wordList)
 		{
-			if (!word.linkedToPreviousWord)
-			{
-				builder.append(" ");
-			}
+			//if (!word.linkedToPreviousWord)
+			//{
+			//	builder.append(" ");
+			//}
 				
 			if(word.isUnknown() && this.unknownOutputFormat != null)
 			{
@@ -348,26 +348,18 @@ public class OutputGenerator {
 			}
 			else
 			{
-				// Handling the printing of "space" characters
-				// They have empty tags
-				if(word.getTag().equals("") && word.getLemma() == null && this.spaceOutputFormat != null)
+				String normal = this.outputFormat;
+				
+				normal = normal.replace("[LEXEME]", word.getLexeme());
+				normal = normal.replace("[LEMMA]", word.getLemma());
+				normal = normal.replace("[TAG]", word.getTag());
+				
+				if(word.preSpace != null)
 				{
-					String space = this.spaceOutputFormat;
-					
-					space = space.replace("[LEXEME]", word.getLexeme());
-					
-					builder.append(space);
+					builder.append(word.preSpace);
 				}
-				else
-				{
-					String normal = this.outputFormat;
-					
-					normal = normal.replace("[LEXEME]", word.getLexeme());
-					normal = normal.replace("[LEMMA]", word.getLemma());
-					normal = normal.replace("[TAG]", word.getTag());
-					
-					builder.append(normal);
-				}
+				
+				builder.append(normal);
 			}
 		}
 		

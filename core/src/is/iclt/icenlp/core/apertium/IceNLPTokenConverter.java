@@ -18,7 +18,9 @@ public class IceNLPTokenConverter
 	private MappingLexicon mapping;
 	private Lexicon baseDict;
 	private Lexicon otbDict;
-	private boolean previousWordSpace = false;
+	
+	private boolean linkedToPreviousWord = false;
+	private String preSpace = null;
 	
 	public IceNLPTokenConverter(ArrayList<ApertiumEntry> entries, MappingLexicon mapping) throws IOException
 	{
@@ -84,19 +86,10 @@ public class IceNLPTokenConverter
 			}
 			// lt-proc treats ()' as spaces, but IceNLP does not
 			else if(ae.getPossibleLexicalUnits().get(0).isSpace())
-			{	
-				ice.lexeme = ice.lexeme.trim();
-				
-				// If it is empty, then it was 1 or more spaces.
-				if(ice.lexeme.isEmpty())
-				{
-					previousWordSpace = true;
-					
-					continue;
-				}
-				
-				// "Space" characters have themselves as tags
-				ice.addTagWithLemma(ice.lexeme, ice.lexeme);
+			{
+				// "Space" characters are not tags, we add them to the next tag.
+				preSpace = ice.lexeme;
+				continue;
 			}
 			else if(ae.isSeperator())
 			{
@@ -109,10 +102,14 @@ public class IceNLPTokenConverter
 				handleNormal(ice, ae);
 			}
 			
+			if(preSpace != null)
+			{
+				ice.preSpace = preSpace;
+				preSpace = null;
+			}
+			
 			list.add(ice);
 			counter++;
-			
-			previousWordSpace = false;
 		}
 		
 		return list;
@@ -355,11 +352,7 @@ public class IceNLPTokenConverter
 	// Seperators have themselves as tags and are linked to the previous word
 	private void handleSeperators(IceTokenTags ice, ApertiumEntry ae)
 	{
-		if(!previousWordSpace)
-		{
-			ice.linkedToPreviousWord = true;
-		}
-		
+		ice.linkedToPreviousWord = true;
 		ice.addTagWithLemma(ice.lexeme, ice.lexeme);
 	}
 	
