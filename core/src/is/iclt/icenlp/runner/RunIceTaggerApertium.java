@@ -278,6 +278,11 @@ public class RunIceTaggerApertium extends RunIceTagger
 
 		for (Word word : wordList)
 		{
+			if(word.preSpace != null)
+			{
+				output = output + word.preSpace;
+			}
+			
 			if (outputFormat == Segmentizer.tokenPerLine)
 			{
 				if (showSurfaceForm)
@@ -289,11 +294,6 @@ public class RunIceTaggerApertium extends RunIceTagger
 					}
 					else
 					{
-						if(word.preSpace != null)
-						{
-							outFile.write(word.preSpace);
-						}
-						
 						outFile.write("^" + word.getLexeme() + "/" + word.getLemma() + word.getTag() + "$");
 					}
 				}
@@ -314,11 +314,6 @@ public class RunIceTaggerApertium extends RunIceTagger
 					}
 					else
 					{
-						if(word.preSpace != null)
-						{
-							output = output + word.preSpace;
-						}
-						
 						output = output + "^" + word.getLexeme() + "/" + word.getLemma() + word.getTag() + "$";
 					}
 				}

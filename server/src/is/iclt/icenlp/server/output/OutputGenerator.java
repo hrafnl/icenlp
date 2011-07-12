@@ -332,11 +332,11 @@ public class OutputGenerator {
 
 		for (Word word : wordList)
 		{
-			//if (!word.linkedToPreviousWord)
-			//{
-			//	builder.append(" ");
-			//}
-				
+			if(word.preSpace != null)
+			{
+				builder.append(word.preSpace);
+			}
+			
 			if(word.isUnknown() && this.unknownOutputFormat != null)
 			{
 				String unknown = this.unknownOutputFormat;
@@ -353,11 +353,6 @@ public class OutputGenerator {
 				normal = normal.replace("[LEXEME]", word.getLexeme());
 				normal = normal.replace("[LEMMA]", word.getLemma());
 				normal = normal.replace("[TAG]", word.getTag());
-				
-				if(word.preSpace != null)
-				{
-					builder.append(word.preSpace);
-				}
 				
 				builder.append(normal);
 			}
