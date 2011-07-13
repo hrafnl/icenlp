@@ -1,5 +1,6 @@
 package is.iclt.icenlp.core.apertium;
 
+import is.iclt.icenlp.core.icetagger.IceTaggerLexicons;
 import is.iclt.icenlp.core.icetagger.IceTaggerResources;
 import is.iclt.icenlp.core.tokenizer.IceTokenTags;
 import is.iclt.icenlp.core.utils.IceTag;
@@ -22,14 +23,13 @@ public class IceNLPTokenConverter
 	private boolean linkedToPreviousWord = false;
 	private String preSpace = null;
 	
-	public IceNLPTokenConverter(ArrayList<ApertiumEntry> entries, MappingLexicon mapping) throws IOException
+	public IceNLPTokenConverter(ArrayList<ApertiumEntry> entries, MappingLexicon mapping, IceTaggerLexicons iceLex) throws IOException
 	{
 		this.entries = entries;
 		this.mapping = mapping;
 		
-		IceTaggerResources resource = new IceTaggerResources();
-		this.baseDict = new Lexicon(resource.isDictionaryBase);
-		this.otbDict = new Lexicon(resource.isDictionary);
+		this.baseDict = iceLex.morphyLexicons.baseDict;
+		this.otbDict = iceLex.morphyLexicons.dict;
 	}
 	
 	// Returns the tags from the dictionaries

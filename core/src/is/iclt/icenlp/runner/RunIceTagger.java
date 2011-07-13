@@ -85,7 +85,7 @@ public class RunIceTagger
 	protected int numTokens = 0;                // Number of tokens
     private SimpleDateFormat dateFormatter;
     protected IceTaggerOutput iceOutput = null;
-    private IceTaggerLexicons iceLex=null;
+    protected IceTaggerLexicons iceLex=null;
     private TriTaggerLexicons triLex=null;
     private boolean sameTagForAllNumbers = true;
     private boolean namedEntityRecognition = false;

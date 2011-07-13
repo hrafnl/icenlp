@@ -60,6 +60,7 @@ public class IceTaggerFacade
     private IceTagger tagger;
     private Segmentizer segmentizer;
     private Lexicon mapper;
+    private IceTaggerLexicons iceLexicons;
 
     public IceTaggerFacade(IceTaggerLexicons iceLexicons, Lexicon tokenizerLexicon) throws IOException
     {
@@ -70,6 +71,7 @@ public class IceTaggerFacade
         //this.tokenizer.findMultiWords( false );
 
         initIceTagger(iceLexicons);
+        this.iceLexicons = iceLexicons;
     }
     
     public IceTaggerFacade(IceTaggerLexicons iceLexicons, Lexicon tokenizerLexicon, String morphyLexiconsDictFileWithLocation) throws IOException
@@ -246,7 +248,7 @@ public class IceTaggerFacade
 			entries = lps.parse();
 
 			// Create the appertium -> iceNLP converter
-			converter = new IceNLPTokenConverter(entries, mappingLexicon);
+			converter = new IceNLPTokenConverter(entries, mappingLexicon, iceLexicons);
 			tokens = converter.convert();
 
 			// Do the actual tagging
