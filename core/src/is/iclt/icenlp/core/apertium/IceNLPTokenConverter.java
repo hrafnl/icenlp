@@ -53,7 +53,7 @@ public class IceNLPTokenConverter
 	public ArrayList<IceTokenTags> convert()
 	{
 		ArrayList<IceTokenTags> list = new ArrayList<IceTokenTags>();
-		int counter = 0; // Used to find proper nouns.
+		int counter = 0; // Used to find proper nouns and other checks
 		
 		// Goes through all the lexical units in each apertium entry and cleans it up
 		// This is done here so it's not needed to be done within the handlers
@@ -65,7 +65,20 @@ public class IceNLPTokenConverter
 			IceTokenTags ice = new IceTokenTags();
 			ice.lexeme = ae.getSurfaceForm();
 			
-			if(ae.isMWE())
+			// We first check for unknown words, then we check for spaces, then we can process normally.
+			if(ae.getPossibleLexicalUnits().get(0).isUnknown() && !ae.getPossibleLexicalUnits().get(0).isSpace())
+			{
+				// We might have an unknown word
+				handleUnknown(ice, counter);
+			}
+			// lt-proc treats ()' as spaces, but IceNLP does not
+			else if(ae.getPossibleLexicalUnits().get(0).isSpace())
+			{
+				// "Space" characters are not tags, we add them to the next tag.
+				preSpace = ice.lexeme;
+				continue;
+			}
+			else if(ae.isMWE())
 			{
 				// Multi word expressions are handled in a standard way.
 				standardConvert(ice, ae);
@@ -78,18 +91,6 @@ public class IceNLPTokenConverter
 			{
 				// If we have a verb in any of the lu's
 				handleVerb(ice, ae);
-			}
-			else if(ae.getPossibleLexicalUnits().get(0).isUnknown() && !ae.getPossibleLexicalUnits().get(0).isSpace())
-			{
-				// We might have an unknown word
-				handleUnknown(ice, counter);
-			}
-			// lt-proc treats ()' as spaces, but IceNLP does not
-			else if(ae.getPossibleLexicalUnits().get(0).isSpace())
-			{
-				// "Space" characters are not tags, we add them to the next tag.
-				preSpace = ice.lexeme;
-				continue;
 			}
 			else if(ae.isSeperator())
 			{
@@ -176,7 +177,7 @@ public class IceNLPTokenConverter
 				// #TODO Temporary solution, until apertium is updated
 				// If we have <sta> in a <pp> verb, we remove <sta>
 				// If we have <vei> in a <pp> verb, we remove <vei>
-				// <pp> verbs do not have a strong inflection.
+				// <pp> verbs do not have strong or weak inflections.
 				if(lu.isVerb() && lu.getSymbols().contains("<pp>"))
 				{
 					if(lu.getSymbols().contains("<sta>"))
