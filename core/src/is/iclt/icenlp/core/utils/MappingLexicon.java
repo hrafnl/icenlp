@@ -360,15 +360,19 @@ public class MappingLexicon {
 					case lexeme:
 						if (strLine.matches("\\S+\\s+\\S+\\s+\\S+")) {
 							String[] str = strLine.split("\\s+");
+							
+							// Used to handle MWE within the lexeme exception list
+							String lexeme = str[0].replace("_", " ");
+							
 							if (!this.lexemeExceptionRuleMap
-									.containsKey(str[0])) {
+									.containsKey(lexeme)) {
 								List<Pair<String, String>> emptyPairList = new LinkedList<Pair<String, String>>();
-								this.lexemeExceptionRuleMap.put(str[0],
+								this.lexemeExceptionRuleMap.put(lexeme,
 										emptyPairList);
 							}
 							Pair<String, String> pair = new Pair<String, String>(
 									str[1], str[2]);
-							this.lexemeExceptionRuleMap.get(str[0]).add(pair);
+							this.lexemeExceptionRuleMap.get(lexeme).add(pair);
 							break;
 						} else {
 							System.out

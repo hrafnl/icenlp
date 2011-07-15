@@ -17,6 +17,7 @@
 as <abbr>
 aam <adv><comp>
 aae <adv><sup>
+aa <cnjadv>
 aa <adv><pst>
 aa <adv>
 aþm <pr>
@@ -25,6 +26,7 @@ au <ij>
 ao <pr>
 aþ <pr>
 ae <pr>
+c <cnjcoo>
 c <cnjsub>
 c <cnj>
 ct <rel><an><mf><sp>
@@ -653,6 +655,55 @@ lvfþof <adj><pst><f><pl><dat><idk>
 lkfþof <adj><pst><m><pl><dat><idk>
 lhfþof <adj><pst><nt><pl><dat><idk>
 
+# Tölulýsingarorð, t.d. fyrstur, annar
+lveoso <adj><ord><f><sg><acc><sta>
+lkeoso <adj><ord><m><sg><acc><sta>
+lheoso <adj><ord><nt><sg><acc><sta>
+lvfoso <adj><ord><f><pl><acc><sta>
+lkfoso <adj><ord><m><pl><acc><sta>
+lhfoso <adj><ord><nt><pl><acc><sta>
+lvenso <adj><ord><f><sg><nom><sta>
+lkenso <adj><ord><m><sg><nom><sta>
+lhenso <adj><ord><nt><sg><nom><sta>
+lvfnso <adj><ord><f><pl><nom><sta>
+lkfnso <adj><ord><m><pl><nom><sta>
+lhfnso <adj><ord><nt><pl><nom><sta>
+lveeso <adj><ord><f><sg><gen><sta>
+lkeeso <adj><ord><m><sg><gen><sta>
+lheeso <adj><ord><nt><sg><gen><sta>
+lvfeso <adj><ord><f><pl><gen><sta>
+lkfeso <adj><ord><m><pl><gen><sta>
+lhfeso <adj><ord><nt><pl><gen><sta>
+lveþso <adj><ord><f><sg><dat><sta>
+lkeþso <adj><ord><m><sg><dat><sta>
+lheþso <adj><ord><nt><sg><dat><sta>
+lvfþso <adj><ord><f><pl><dat><sta>
+lkfþso <adj><ord><m><pl><dat><sta>
+lhfþso <adj><ord><nt><pl><dat><sta>
+lveovo <adj><ord><f><sg><acc><vei>
+lkeovo <adj><ord><m><sg><acc><vei>
+lheovo <adj><ord><nt><sg><acc><vei>
+lvfovo <adj><ord><f><pl><acc><vei>
+lkfovo <adj><ord><m><pl><acc><vei>
+lhfovo <adj><ord><nt><pl><acc><vei>
+lvenvo <adj><ord><f><sg><nom><vei>
+lkenvo <adj><ord><m><sg><nom><vei>
+lhenvo <adj><ord><nt><sg><nom><vei>
+lvfnvo <adj><ord><f><pl><nom><vei>
+lkfnvo <adj><ord><m><pl><nom><vei>
+lhfnvo <adj><ord><nt><pl><nom><vei>
+lveevo <adj><ord><f><sg><gen><vei>
+lkeevo <adj><ord><m><sg><gen><vei>
+lheevo <adj><ord><nt><sg><gen><vei>
+lvfevo <adj><ord><f><pl><gen><vei>
+lkfevo <adj><ord><m><pl><gen><vei>
+lhfevo <adj><ord><nt><pl><gen><vei>
+lveþvo <adj><ord><f><sg><dat><vei>
+lkeþvo <adj><ord><m><sg><dat><vei>
+lheþvo <adj><ord><nt><sg><dat><vei>
+lvfþvo <adj><ord><f><pl><dat><vei>
+lkfþvo <adj><ord><m><pl><dat><vei>
+lhfþvo <adj><ord><nt><pl><dat><vei>
 
 [LEMMA]
 ###############################################################
@@ -691,7 +742,7 @@ hvert <adv> <adv><itg>
 hví <adv> <adv><itg>
 
 að <cnj> <cnjsub>
-annaðhvort <cnj> <cnjsub>
+annaðhvort <cnj> <cnjcoo>
 bæði <cnj> <cnjsub>
 og <cnj> <cnjcoo>
 eð <cnj> <cnjsub>
@@ -721,6 +772,27 @@ uns <cnj> <cnjsub>
 þó <cnj> <cnjsub>
 þótt <cnj> <cnjsub>
 
+#MWE Exceptions
+eftir_að <adv> <cnjadv>
+án_þess <adv> <cnjadv>
+um_leið_og <adv> <cnjadv>
+þar_til <adv> <cnjadv>
+þannig_að <adv> <cnjadv>
+ekki_fyrr_en <adv> <cnjadv>
+enda_þótt <adv> <cnjadv>
+alveg_eins_og <adv> <cnjadv>
+heldur_en <cnj> <cnjcoo>
+rétt_eins_og <adv> <cnjadv>
+engu_líkara_en <adv> <cnjadv>
+frá_og_með <adv> <cnjadv>
+skömmu_eftir_að <adv> <cnjadv>
+með_tilliti_til <adv> <cnjadv>
+sem_og <adv> <cnjadv>
+því_aðeins_að <adv> <cnjadv>
+svo_mikið_sem <adv> <cnjadv>
+svo_framarlega_sem <adv> <cnjadv>
+þangað_til_að <adv> <cnjadv>
+undireins_og <adv> <cnjadv>
 
 [MWE]
 ########################################

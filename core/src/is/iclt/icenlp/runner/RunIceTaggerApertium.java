@@ -25,7 +25,6 @@ import is.iclt.icenlp.core.apertium.ApertiumEntry;
 import is.iclt.icenlp.core.apertium.ApertiumSegmentizer;
 import is.iclt.icenlp.core.apertium.IceNLPTokenConverter;
 import is.iclt.icenlp.core.apertium.LemmaGuesser;
-import is.iclt.icenlp.core.apertium.LexicalUnit;
 import is.iclt.icenlp.core.apertium.LtProcParser;
 import is.iclt.icenlp.core.lemmald.Lemmald;
 import is.iclt.icenlp.core.tokenizer.IceTokenTags;
@@ -36,7 +35,6 @@ import is.iclt.icenlp.core.utils.MappingLexicon;
 import is.iclt.icenlp.core.utils.Word;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -257,7 +255,7 @@ public class RunIceTaggerApertium extends RunIceTagger
 			
 			// If we have lost the lemma on the way
 			// this usually happens when IceTagger is forced to guess the symbols
-			// We don't concider external unknown words, since they display their lexeme as the lemma
+			// We don't consider external unknown words, since they display their lexeme as the lemma
 			if(lemma == null && !t.isUnknownExternal())
 			{
 				guesser = new LemmaGuesser(lexeme, entries, t.getFirstTagStr(), mappingLexicon);
@@ -277,14 +275,14 @@ public class RunIceTaggerApertium extends RunIceTagger
 		String output = "";
 
 		for (Word word : wordList)
-		{
-			if(word.preSpace != null)
-			{
-				output = output + word.preSpace;
-			}
-			
+		{	
 			if (outputFormat == Segmentizer.tokenPerLine)
 			{
+				if(word.preSpace != null)
+				{
+					outFile.write(word.preSpace);
+				}
+				
 				if (showSurfaceForm)
 				{
 					// We display unknown words in a different way
@@ -306,6 +304,11 @@ public class RunIceTaggerApertium extends RunIceTagger
 			}
 			else
 			{
+				if(word.preSpace != null)
+				{
+					output = output + word.preSpace;
+				}
+				
 				if (showSurfaceForm)
 				{
 					if(word.isUnknown())

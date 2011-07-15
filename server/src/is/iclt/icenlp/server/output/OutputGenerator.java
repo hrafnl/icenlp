@@ -304,7 +304,7 @@ public class OutputGenerator {
 	public String generateExternalOutput(String text)
 	{
 		// We must have something to tag
-		if (text.trim().length() == 0)
+		if(text.trim().length() == 0)
 		{
 			return "";
 		}
