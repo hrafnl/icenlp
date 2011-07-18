@@ -14,10 +14,30 @@
 ; <sent>
 : <sent>
 , <cm>
+
+# A hack for mappings that include tags with multiple readings: <mf> = masculine,feminine,neuter, <sp> = singular,plural
+fsken_fskfn_fsven_fsvfn <prn><itg><mf><sp><nom>
+fskeo_fskfo_fsveo_fsvfo <prn><itg><mf><sp><acc>
+fskeþ_fskfþ_fsveþ_fsvfþ <prn><itg><mf><sp><dat>
+fskee_fskfe_fsvee_fsvfe <prn><itg><mf><sp><gen>
+
+# A hack for tveimur, tveggja, þremur, þriggja, fjórum, fjögurra, hundrað ...
+tfkfn_tfvfn <num><mf><pl><nom>
+tfkfo_tfvfo <num><mf><pl><acc>
+tfkfþ_tfvfþ <num><mf><pl><dat>
+tfkfe_tfvfe <num><mf><pl><gen>
+
+# A hack for comparative adjectives, like "betri"
+lkenvm_lkfnvm_lvenvm_lvfnvm <adj><comp><mf><sp><nom><vei>
+lkeovm_lkfovm_lveovm_lvfovm <adj><comp><mf><sp><acc><vei>
+lkeþvm_lkfþvm_lveþvm_lvfþvm <adj><comp><mf><sp><dat><vei>
+lkeevm_lkfevm_lveevm_lvfevm <adj><comp><mf><sp><gen><vei>
+
 as <abbr>
 aam <adv><comp>
 aae <adv><sup>
 aa <cnjadv>
+aa <adv><itg>
 aa <adv><pst>
 aa <adv>
 aþm <pr>
@@ -705,6 +725,7 @@ lvfþvo <adj><ord><f><pl><dat><vei>
 lkfþvo <adj><ord><m><pl><dat><vei>
 lhfþvo <adj><ord><nt><pl><dat><vei>
 
+
 [LEMMA]
 ###############################################################
 # This section contains tag mapping exception rules for lemmata.
@@ -742,6 +763,7 @@ hvert <adv> <adv><itg>
 hví <adv> <adv><itg>
 
 að <cnj> <cnjsub>
+afhverju <adv> <adv><itg>
 annaðhvort <cnj> <cnjcoo>
 bæði <cnj> <cnjsub>
 og <cnj> <cnjcoo>
@@ -755,6 +777,8 @@ enn <cnj> <cnjcoo>
 er <cnj> <cnjsub>
 fyrst <cnj> <cnjsub>
 heldur <cnj> <cnjsub>
+hverskonar <adv> <adv><itg>
+hversu <adv> <adv><itg>
 hvorki <cnj> <cnjsub>
 hvort <cnj> <cnjsub>
 meðan <cnj> <cnjsub>
@@ -773,26 +797,31 @@ uns <cnj> <cnjsub>
 þótt <cnj> <cnjsub>
 
 #MWE Exceptions
-eftir_að <adv> <cnjadv>
+af_hverju <adv> <adv><itg>
+alveg_eins_og <adv> <cnjadv>
 án_þess <adv> <cnjadv>
-um_leið_og <adv> <cnjadv>
-þar_til <adv> <cnjadv>
-þannig_að <adv> <cnjadv>
+eftir_að <adv> <cnjadv>
 ekki_fyrr_en <adv> <cnjadv>
 enda_þótt <adv> <cnjadv>
-alveg_eins_og <adv> <cnjadv>
-heldur_en <cnj> <cnjcoo>
-rétt_eins_og <adv> <cnjadv>
 engu_líkara_en <adv> <cnjadv>
 frá_og_með <adv> <cnjadv>
-skömmu_eftir_að <adv> <cnjadv>
+heldur_en <cnj> <cnjcoo>
+hvers_konar <adv> <adv><itg>
+hvers_vegna <adv> <adv><itg>
 með_tilliti_til <adv> <cnjadv>
+rétt_eins_og <adv> <cnjadv>
 sem_og <adv> <cnjadv>
-því_aðeins_að <adv> <cnjadv>
+skömmu_eftir_að <adv> <cnjadv>
 svo_mikið_sem <adv> <cnjadv>
 svo_framarlega_sem <adv> <cnjadv>
-þangað_til_að <adv> <cnjadv>
+um_leið_og <adv> <cnjadv>
 undireins_og <adv> <cnjadv>
+ýmiss_konar <adv> <adv><itg>
+þangað_til_að <adv> <cnjadv>
+þannig_að <adv> <cnjadv>
+þar_til <adv> <cnjadv>
+því_aðeins_að <adv> <cnjadv>
+því_ekki_það <adv> <adv><itg>
 
 [MWE]
 ########################################
