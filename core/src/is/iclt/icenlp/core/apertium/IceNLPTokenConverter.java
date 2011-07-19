@@ -198,6 +198,75 @@ public class IceNLPTokenConverter
 			}
 		}
 	}
+	
+	// Processes the apertium entries based on the tag and adds them in the correct order to the IceTokenTag
+	private void processMapping(String tag, String cleanTag, IceTokenTags ice, ApertiumEntry ae)
+	{
+		// Look at each apertium entries tag to see if it matches with the tag
+		// Insert that tag first into tag list
+		for(LexicalUnit lu: ae.getPossibleLexicalUnits())
+		{
+			if(lu.isIgnore())
+			{
+				continue;
+			}
+			
+			String invTag = mapping.getInvertedTagMap(lu.getSymbols(), lu.getLemma());
+			
+			// If it is a multi tag set, which does not happen often
+			// but needs to be handled differently
+			if(invTag != null && invTag.contains("_"))
+			{
+				// Then we split it
+				String[] multiTag = invTag.split("_");
+				
+				boolean tagFound = false;
+				
+				// Then we go through
+				for(String mTag: multiTag)
+				{
+					// If we find the tag within the multi tag
+					// Then we add them all
+					if(mTag.equals(cleanTag))
+					{
+						tagFound = true;
+						
+						ice.addAllTagsWithLemma(invTag, lu.getLemma());
+						
+						if(lu.isLinkedToPreviousWord())
+						{
+							ice.linkedToPreviousWord = true;
+						}
+						
+						// Remove the lu since we found it.
+						ae.removeLexicalUnit(lu);
+						
+						break;
+					}
+				}
+				
+				if(tagFound)
+				{
+					break;
+				}
+			}
+			// We found the correct lu
+			else if(invTag != null && invTag.equals(cleanTag))
+			{
+				ice.addTagWithLemma(tag, lu.getLemma());
+				
+				if(lu.isLinkedToPreviousWord())
+				{
+					ice.linkedToPreviousWord = true;
+				}
+				
+				// Remove the lu since we found it.
+				ae.removeLexicalUnit(lu);
+				
+				break;
+			}
+		}
+	}
 
 	private void handleNormal(IceTokenTags ice, ApertiumEntry ae)
 	{
@@ -214,33 +283,7 @@ public class IceNLPTokenConverter
 			// For each tag
 			for(String tag: tagSplit)
 			{	
-				// Look at each apertium entries tag to see if it matches with the tag
-				// Insert that tag first into tag list
-				for(LexicalUnit lu: ae.getPossibleLexicalUnits())
-				{
-					if(lu.isIgnore())
-					{
-						continue;
-					}
-					
-					String invTag = mapping.getInvertedTagMap(lu.getSymbols(), lu.getLemma());
-					
-					// We found the correct lu
-					if(invTag != null && tag.equals(invTag))
-					{
-						ice.addTagWithLemma(tag, lu.getLemma());
-						
-						if(lu.isLinkedToPreviousWord())
-						{
-							ice.linkedToPreviousWord = true;
-						}
-						
-						// Remove the lu since we found it.
-						ae.removeLexicalUnit(lu);
-						
-						break;
-					}
-				}
+				processMapping(tag, tag, ice, ae);
 			}
 		}
 
@@ -272,34 +315,7 @@ public class IceNLPTokenConverter
 					cleanbase = cleanbase.split("<")[0];
 				}
 				
-				// We check each lu tag to see if that lu has the same tag (minus the extra info)
-				for(LexicalUnit lu: ae.getPossibleLexicalUnits())
-				{
-					if(lu.isIgnore())
-					{
-						continue;
-					}
-					
-					String invertedTag = mapping.getInvertedTagMap(lu.getSymbols(), lu.getLemma());
-					
-					// We have the found the lexical unit that has the base tag
-					if(invertedTag != null && invertedTag.equals(cleanbase))
-					{
-						// Add it to the tag list
-						ice.addTagWithLemma(base, lu.getLemma());
-						
-						if(lu.isLinkedToPreviousWord())
-						{
-							ice.linkedToPreviousWord = true;
-						}
-						
-						// Remove it from the possible list
-						ae.removeLexicalUnit(lu);
-						
-						// Stop looping and try out the next base
-						break;
-					}
-				}
+				processMapping(base, cleanbase, ice, ae);
 			}
 			
 			// We have now added all the tags found in the base dict
@@ -383,7 +399,7 @@ public class IceNLPTokenConverter
 		// If we still have no tags, then the word is in none of our dictionaries and
 		// we need to blindly convert it (which might fail)
 		for(LexicalUnit lu: ae.getPossibleLexicalUnits())
-		{
+		{	
 			if(lu.isIgnore())
 			{
 				continue;

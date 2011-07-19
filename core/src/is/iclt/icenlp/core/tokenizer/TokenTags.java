@@ -225,6 +225,20 @@ public class TokenTags extends Token
            for (int i=0; i<tags.length; i++)
               addTag(tags[i]);
     }
+    
+    public void addAllTagsWithLemma(String t, String lemma)
+    {
+        String tagStr;
+        // Add all possible tags; tags are separated by "_"
+        tagStr = t;
+
+        String[] tags = splitTags(tagStr);
+        
+        for (int i=0; i<tags.length; i++)
+        {
+        	addTagWithLemma(t, lemma);
+        }
+    }
 
     public void addAllTagsWithSeparator(String t, String sep)
     {

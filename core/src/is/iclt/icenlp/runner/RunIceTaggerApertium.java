@@ -258,8 +258,8 @@ public class RunIceTaggerApertium extends RunIceTagger
 			// We don't consider external unknown words, since they display their lexeme as the lemma
 			if(lemma == null && !t.isUnknownExternal())
 			{
-				guesser = new LemmaGuesser(lexeme, entries, t.getFirstTagStr(), mappingLexicon);
-				lemma = guesser.guess();
+				//guesser = new LemmaGuesser(lexeme, entries, t.getFirstTagStr(), mappingLexicon);
+				//lemma = guesser.guess();
 			}
 			
 			newWord = new Word(t.lexeme, lemma, t.getFirstTagStr(), t.mweCode, t.tokenCode, t.linkedToPreviousWord, unknown);
