@@ -36,6 +36,32 @@ lkeevm_lkfevm_lveevm_lvfevm <adj><comp><mf><sp><gen><vei>
 # Indeclineable adjectives, only analysed as <adj> in Apertium
 lkenof_lkeoof_lkeþof_lkeeof_lvenof_lveoof_lveþof_lveeof_lhenof_lheoof_lheþof_lheeof_lkfnof_lkfoof_lkfþof_lkfeof_lvfnof_lvfoof_lvfþof_lvfeof_lhfnof_lhfoof_lhfþof_lhfeof <adj>
 
+# A few indefinite pronouns are analysed as determiners in Apertium.  We map them to indefinite pronouns
+foken <det><ind><m><sg><nom>
+fokeo <det><ind><m><sg><acc>
+fokeþ <det><ind><m><sg><dat>
+fokee <det><ind><m><sg><gen>
+foven <det><ind><f><sg><nom>
+foveo <det><ind><f><sg><acc>
+foveþ <det><ind><f><sg><dat>
+fovee <det><ind><f><sg><gen>
+fohen <det><ind><nt><sg><nom>
+foheo <det><ind><nt><sg><acc>
+foheþ <det><ind><nt><sg><dat>
+fohee <det><ind><nt><sg><gen>
+fokfn <det><ind><m><pl><nom>
+fokfo <det><ind><m><pl><acc>
+fokfþ <det><ind><m><pl><dat>
+fokfe <det><ind><m><pl><gen>
+fovfn <det><ind><f><pl><nom>
+fovfo <det><ind><f><pl><acc>
+fovfþ <det><ind><f><pl><dat>
+fovfe <det><ind><f><pl><gen>
+fohfn <det><ind><nt><pl><nom>
+fohfo <det><ind><nt><pl><acc>
+fohfþ <det><ind><nt><pl><dat>
+fohfe <det><ind><nt><pl><gen>
+
 as <abbr>
 aam <adv><comp>
 aae <adv><sup>
@@ -740,6 +766,15 @@ hafa <vblex><actv> <vbhaver>
 mega <vblex><actv> <vaux>
 munu <vblex><actv> <vaux>
 skulu <vblex><actv> <vaux>
+
+# A few indefinite pronouns are analysed as determiners in Apertium.
+annar <prn> <det>
+báðir <prn> <det>
+enginn <prn> <det>
+einhver <prn> <det>
+neinn <prn> <det>
+slíkur <prn> <det>
+ýmis <prn> <det>
 
 Samfylking <al> <org>
 Landsbanki <al> <org>

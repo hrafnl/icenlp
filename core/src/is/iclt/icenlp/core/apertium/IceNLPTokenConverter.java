@@ -149,12 +149,12 @@ public class IceNLPTokenConverter
 				if(lu.isDet())
 				{
 					// If it is a <det><ind> then we mark it to be ignored
-					if(lu.getSymbols().contains("<det><ind>"))
-					{
-						lu.setIgnore(true);
+					//if(lu.getSymbols().contains("<det><ind>"))
+					//{
+					//	lu.setIgnore(true);
 						
-						continue;
-					}
+					//	continue;
+					//}
 					
 					// Changes <det><qnt> to <prn><qnt>, also removes <sta> if there is
 					if(lu.getSymbols().contains("<det><qnt>"))
