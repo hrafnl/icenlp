@@ -15,23 +15,26 @@
 : <sent>
 , <cm>
 
-# A hack for mappings that include tags with multiple readings: <mf> = masculine,feminine,neuter, <sp> = singular,plural
+# Mappings that include tags with multiple readings: <mf> = masculine,feminine,neuter, <sp> = singular,plural
 fsken_fskfn_fsven_fsvfn <prn><itg><mf><sp><nom>
 fskeo_fskfo_fsveo_fsvfo <prn><itg><mf><sp><acc>
 fskeþ_fskfþ_fsveþ_fsvfþ <prn><itg><mf><sp><dat>
 fskee_fskfe_fsvee_fsvfe <prn><itg><mf><sp><gen>
 
-# A hack for tveimur, tveggja, þremur, þriggja, fjórum, fjögurra, hundrað ...
+# tveimur, tveggja, þremur, þriggja, fjórum, fjögurra, hundrað ...
 tfkfn_tfvfn <num><mf><pl><nom>
 tfkfo_tfvfo <num><mf><pl><acc>
 tfkfþ_tfvfþ <num><mf><pl><dat>
 tfkfe_tfvfe <num><mf><pl><gen>
 
-# A hack for comparative adjectives, like "betri"
+# Comparative adjectives, like "betri"
 lkenvm_lkfnvm_lvenvm_lvfnvm <adj><comp><mf><sp><nom><vei>
 lkeovm_lkfovm_lveovm_lvfovm <adj><comp><mf><sp><acc><vei>
 lkeþvm_lkfþvm_lveþvm_lvfþvm <adj><comp><mf><sp><dat><vei>
 lkeevm_lkfevm_lveevm_lvfevm <adj><comp><mf><sp><gen><vei>
+
+# Indeclineable adjectives, only analysed as <adj> in Apertium
+lkenof_lkeoof_lkeþof_lkeeof_lvenof_lveoof_lveþof_lveeof_lhenof_lheoof_lheþof_lheeof_lkfnof_lkfoof_lkfþof_lkfeof_lvfnof_lvfoof_lvfþof_lvfeof_lhfnof_lhfoof_lhfþof_lhfeof <adj>
 
 as <abbr>
 aam <adv><comp>
