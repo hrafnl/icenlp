@@ -660,10 +660,10 @@ public class IceTagger
      * Tags the tokens supplied by an external morpho analyzer
      * @param tokens
      */
-    public void tagExternalTokens( ArrayList<IceTokenTags> tokens )
+    public void tagExternalTokens(ArrayList<IceTokenTags> tokens)
 	{
         myTokens = tokens;
-
+        
         if( startWithHmmModel && triTagger != null ) 
         {
             tagWithTriTagger();
@@ -674,7 +674,6 @@ public class IceTagger
         {
         	if(itt.isUnknown())
         	{
-        		// TODO: Check on case sensitivity
         		dictionaryTokenLookup(itt, false);
         	}
         }

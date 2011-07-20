@@ -1,7 +1,6 @@
 package is.iclt.icenlp.core.apertium;
 
 import is.iclt.icenlp.core.icetagger.IceTaggerLexicons;
-import is.iclt.icenlp.core.icetagger.IceTaggerResources;
 import is.iclt.icenlp.core.tokenizer.IceTokenTags;
 import is.iclt.icenlp.core.utils.IceTag;
 import is.iclt.icenlp.core.utils.Lexicon;
@@ -147,15 +146,7 @@ public class IceNLPTokenConverter
 				}
 				
 				if(lu.isDet())
-				{
-					// If it is a <det><ind> then we mark it to be ignored
-					//if(lu.getSymbols().contains("<det><ind>"))
-					//{
-					//	lu.setIgnore(true);
-						
-					//	continue;
-					//}
-					
+				{					
 					// Changes <det><qnt> to <prn><qnt>, also removes <sta> if there is
 					if(lu.getSymbols().contains("<det><qnt>"))
 					{
@@ -231,7 +222,11 @@ public class IceNLPTokenConverter
 					{
 						tagFound = true;
 						
-						ice.addAllTagsWithLemma(invTag, lu.getLemma());
+						// We found a tag that matches, then we add them all in order
+						for(String addTag: multiTag)
+						{
+							ice.addTagWithLemma(addTag, lu.getLemma());
+						}
 						
 						if(lu.isLinkedToPreviousWord())
 						{

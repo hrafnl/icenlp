@@ -25,6 +25,7 @@ import is.iclt.icenlp.core.apertium.ApertiumEntry;
 import is.iclt.icenlp.core.apertium.ApertiumSegmentizer;
 import is.iclt.icenlp.core.apertium.IceNLPTokenConverter;
 import is.iclt.icenlp.core.apertium.LemmaGuesser;
+import is.iclt.icenlp.core.apertium.LexicalUnit;
 import is.iclt.icenlp.core.apertium.LtProcParser;
 import is.iclt.icenlp.core.lemmald.Lemmald;
 import is.iclt.icenlp.core.tokenizer.IceTokenTags;

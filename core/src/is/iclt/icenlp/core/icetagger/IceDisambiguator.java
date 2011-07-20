@@ -157,6 +157,7 @@ public class IceDisambiguator {
        for (int i=0; i<=maxIndex; i++)
        {
             currToken = (IceTokenTags)tokens.get(i);
+            
             if (i>1)
                 prevprevToken = (IceTokenTags)tokens.get(i-2);
             if (i<maxIndex)
