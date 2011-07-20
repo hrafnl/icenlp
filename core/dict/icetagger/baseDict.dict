@@ -648,6 +648,7 @@ orðin=sþgven<v>_sþghfn<v>_nhfng_nhfog
 orðið=ssg<v>_sþghen<v>_nheog_nheng
 orðnir=sþgkfn<v>
 orðnar=sþgvfn<v>
+verandi=slg
 
 verða=sng<v>_sfg3fn<v>
 #Indicative - Framsöguháttur
@@ -2291,8 +2292,8 @@ nutu=sfg3fþ
 njóti=svg3en_svg1en_svg3fn
 njótir=svg2en
 njóti=svg3eþ_svg1eþ
-njótum=svg1fþ
-njótið=svg2fþ
+njótum=sfg1fþ_svg1fþ
+njótið=sfg2fþ_svg2fþ
 nyti=svg3eþ_svg1eþ
 nytir=svg2eþ
 nytum=svg1fþ
@@ -2637,7 +2638,8 @@ skriðnar=sþgvfn_lvfnsf_lvfosf
 
 slá=sng_sfg3fn_nven_nveo_nveþ
 slæ=sfg1en
-slærð=sfg3en_sfvg2en
+slærð=sfg2en
+slær=sfg3en
 sláum=sfg1fn_svg1fn
 sláið=sfg2fn_svg2fn
 sló=sfg3eþ_sfg1eþ
@@ -2708,7 +2710,6 @@ snúa=sng_sfg3fn
 sný=sfg1en_sfg3en
 snýrð=sfg3en_sfg2en
 snúum=sfg1fn_svg1fn
-snúið=sfg2fn_svg2fn
 sneri=sfg3eþ_sfg1eþ_svg3eþ_svg1eþ
 snéri=sfg3eþ_sfg1eþ_svg3eþ_svg1eþ
 snerir=sfg2eþ_svg2eþ
@@ -2725,7 +2726,7 @@ snúir=svg2en
 #Past participle - Lýsingarháttur þátíðar
 snúinn=sþgken_lkensf_lkeosf
 snúin=sþgven_sþghfn_lvensf_lhfnsf_lhfosf
-snúið=ssg_sþghen_lhensf_lheosf
+snúið=ssg_sþghen_lhensf_lheosf_sfg2fn_svg2fn
 snúnir=sþgkfn_lkfnsf
 snúnar=sþgvfn_lvfnsf_lvfosf
 
@@ -2791,9 +2792,9 @@ stóðuð=sfg2fþ
 stóðu=sfg3fþ
 #Subjunctive - Viðtengingarháttur
 standi=nheþ_svg3en_svg1en_svg3fn
-standir=svg2fn
+standir=svg2en
 stæði=svg3eþ_svg1eþ_nhen_nheo_nheþ_nhfn_nhfo
-stæðir=svg2fþ
+stæðir=svg2eþ
 stæðum=svg1fþ_nhfþ
 stæðuð=svg2fþ
 stæðu=svg3fþ_nveo_nveþ_nvee
@@ -2930,7 +2931,8 @@ strýkur=sfg3en_sfg2en
 strjúkum=sfg1fn_svg1fn
 strjúkið=sfg2fn_svg2fn
 strauk=sfg3eþ_sfg1eþ_nkeo
-straukst=sfg2fþ
+# strjúka and strjúkast
+straukst=sfg2fþ_sfm3eþ_sfm1eþ_sfm2eþ
 strukum=sfg1fþ
 strukuð=sfg2fþ
 struku=sfg3fþ

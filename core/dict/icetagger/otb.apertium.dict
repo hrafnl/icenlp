@@ -286,8 +286,10 @@ nxeþ-ö <np><top><mfn><sg><dat>
 nxeþ-s <np><al><mfn><sg><dat>
 nxfn-s <np><al><mfn><pl><nom>
 nxfo <n><mfn><pl><acc><ind>
-slg <vblex><pprs>
+slg <vbhaver><pprs>
+slg <vbser><pprs>
 slm <vblex><pprs>
+slg <vblex><pprs>
 sng <vblex><actv><inf>
 sng--þ <vblex><actv><inf>
 snm <vblex><midv><inf>
@@ -814,6 +816,7 @@ en <cnj> <cnjcoo>
 enn <cnj> <cnjcoo>
 er <cnj> <cnjsub>
 fyrst <cnj> <cnjsub>
+hafandi <vblex> <vbhaver>
 heldur <cnj> <cnjsub>
 hverskonar <adv> <adv><itg>
 hversu <adv> <adv><itg>
@@ -828,6 +831,7 @@ síðan <cnj> <cnjsub>
 svo <adv> <cnjadv>
 tilað <cnj> <cnjsub>
 uns <cnj> <cnjsub>
+verandi <vblex> <vbser>
 ýmist <cnj> <cnjsub>
 þegar <cnj> <cnjsub>
 þarsem <cnj> <cnjsub>
