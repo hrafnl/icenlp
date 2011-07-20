@@ -2291,8 +2291,8 @@ nutu=sfg3fþ
 #Subjunctive - Viðtengingarháttur
 njóti=svg3en_svg1en_svg3fn
 njótir=svg2en
-njóti=svg3eþ_svg1eþ
-njótum=sfg1fþ_svg1fþ
+njóti=svg3en_svg1en_svg3fn
+njótum=sfg1fn_svg1fn
 njótið=sfg2fþ_svg2fþ
 nyti=svg3eþ_svg1eþ
 nytir=svg2eþ
@@ -2336,7 +2336,8 @@ ráku=sfg3fþ
 #Subjunctive - Viðtengingarháttur
 reki=nheþ_svg3en_svg1en_svg3fn_nken
 rekir=svg2en
-ræki=svg3eþ_svg1eþ
+# Líka sögnin að rækja
+ræki=svg3eþ_svg1eþ_sfg1en
 rækir=svg2eþ
 rækjum=svg1fþ_nvfþ
 rækjuð=svg2fþ
