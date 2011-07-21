@@ -64,40 +64,61 @@ public class IceNLPTokenConverter
 			IceTokenTags ice = new IceTokenTags();
 			ice.lexeme = ae.getSurfaceForm();
 			
+			// If we have any inv mw mark
+			// Then we add it to the IceTokenTag
+			if(ae.isFirstInvMWMark())
+			{
+				ice.setInvMWMark(ae.getPossibleLexicalUnits().get(0).getInvMWMarker());
+			}
+			
 			// We first check for unknown words, then we check for spaces, then we can process normally.
 			if(ae.getPossibleLexicalUnits().get(0).isUnknown() && !ae.getPossibleLexicalUnits().get(0).isSpace())
 			{
+				//System.out.println("Unknown:" + ice.lexeme);
+				
 				// We might have an unknown word
 				handleUnknown(ice, counter);
 			}
 			// lt-proc treats ()' as spaces, but IceNLP does not
 			else if(ae.getPossibleLexicalUnits().get(0).isSpace())
 			{
+				//System.out.println("Space:" + ice.lexeme);
+				
 				// "Space" characters are not tags, we add them to the next tag.
 				preSpace = ice.lexeme;
 				continue;
 			}
 			else if(ae.isMWE())
 			{
+				//System.out.println("MWE:" + ice.lexeme);
+				
 				// Multi word expressions are handled in a standard way.
 				standardConvert(ice, ae);
 			}
 			else if(ae.isAnyLuPreposition())
 			{
+				//System.out.println("Prep:" + ice.lexeme);
+				
 				handlePreposition(ice, ae);
 			}
 			else if(ae.isAnyLuAVerb())
 			{
+				//System.out.println("Verb:" + ice.lexeme);
+				
 				// If we have a verb in any of the lu's
 				handleVerb(ice, ae);
 			}
 			else if(ae.isSeperator())
 			{
+				//System.out.println("Seperator:" + ice.lexeme);
+				
 				// Seperators like ,.; etc
 				handleSeperators(ice, ae);
 			}
 			else
 			{
+				//System.out.println("Normal:" + ice.lexeme);
+				
 				// Normal processing
 				handleNormal(ice, ae);
 			}

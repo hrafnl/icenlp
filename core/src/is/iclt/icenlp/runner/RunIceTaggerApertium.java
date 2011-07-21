@@ -265,6 +265,7 @@ public class RunIceTaggerApertium extends RunIceTagger
 			
 			newWord = new Word(t.lexeme, lemma, t.getFirstTagStr(), t.mweCode, t.tokenCode, t.linkedToPreviousWord, unknown);
 			newWord.preSpace = t.preSpace;
+			newWord.invMWMark = t.getInvMWMark();
 			
 			wordList.add(newWord);
 		}
@@ -293,12 +294,26 @@ public class RunIceTaggerApertium extends RunIceTagger
 					}
 					else
 					{
-						outFile.write("^" + word.getLexeme() + "/" + word.getLemma() + word.getTag() + "$");
+						outFile.write("^" + word.getLexeme() + "/" + word.getLemma() + word.getTag());
+						
+						if(word.invMWMark != null)
+						{
+							outFile.write("#"+word.invMWMark);
+						}
+						
+						outFile.write("$");
 					}
 				}
 				else
 				{
-					outFile.write("^" + word.getLemma() + word.getTag() + "$");
+					outFile.write("^" + word.getLemma() + word.getTag());
+					
+					if(word.invMWMark != null)
+					{
+						outFile.write("#"+word.invMWMark);
+					}
+					
+					outFile.write("$");
 				}
 				
 				outFile.newLine();
@@ -318,12 +333,26 @@ public class RunIceTaggerApertium extends RunIceTagger
 					}
 					else
 					{
-						output = output + "^" + word.getLexeme() + "/" + word.getLemma() + word.getTag() + "$";
+						output = output + "^" + word.getLexeme() + "/" + word.getLemma() + word.getTag();
+						
+						if(word.invMWMark != null)
+						{
+							output = output + "#"+word.invMWMark;
+						}
+						
+						output = output + "$";
 					}
 				}
 				else
 				{
-					output = output + "^" + word.getLemma() + word.getTag() + "$";
+					output = output + "^" + word.getLemma() + word.getTag();
+					
+					if(word.invMWMark != null)
+					{
+						output = output + "#"+word.invMWMark;
+					}
+					
+					output = output + "$";
 				}
 			}
 		}

@@ -62,18 +62,18 @@ public class LtProcParser
 						String[] splitSymbols = symbols.split("#");
 						
 						symbols = splitSymbols[0];
-						lemma = lemma + splitSymbols[1];
+						
+						lexicalUnit.add(new LexicalUnit(lemma, symbols, splitSymbols[1]));
 					}
-					
 					// Symbols do not contain a +, we can process normally
-					if(!symbols.contains("+"))
+					else if(!symbols.contains("+"))
 					{
 						lexicalUnit.add(new LexicalUnit(lemma, symbols));
 					}
 					else
 					{
 						// If there is a plus sign in the symbol +
-						// Then it is a "Joined Lexical unit
+						// Then it is a "Joined Lexical unit"
 						// We split it from the symbol and add it to a new
 						// lexical unit
 						String[] splitSymbols = symbols.split("\\+");

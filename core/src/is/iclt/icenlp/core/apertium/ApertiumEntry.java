@@ -44,6 +44,11 @@ public class ApertiumEntry
 		return false;
 	}
 	
+	public boolean isFirstInvMWMark()
+	{
+		return possibleLexicalUnits.get(0).hasInvMWMarker();
+	}
+	
 	// Returns true for <cm> and <sent>
 	public boolean isSeperator()
 	{
@@ -59,9 +64,16 @@ public class ApertiumEntry
 	// Returns true if the trimmed surface form has a space in it
 	public boolean isMWE()
 	{
-		String trimSurfaceForm = surfaceForm.trim();
+		for(LexicalUnit lu: possibleLexicalUnits)
+		{
+			// If any lu is not a MWE, then the entry can not be a mwe
+			if(!lu.isMWE())
+			{
+				return false;
+			}
+		}
 		
-		return trimSurfaceForm.contains(" ") && trimSurfaceForm.length() > 1;
+		return true;
 	}
 
 	public boolean isAnyLuPreposition()

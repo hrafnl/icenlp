@@ -3,8 +3,9 @@ package is.iclt.icenlp.core.apertium;
 // Stores one lexical unit
 public class LexicalUnit
 {
-	private String lemma;
-	private String symbols;
+	private String lemma = null;
+	private String symbols = null;
+	private String invMWMarker = null;
 	private boolean unknown;
 	private boolean space;
 	private boolean ignore;
@@ -31,6 +32,14 @@ public class LexicalUnit
 		this(lemma, symbols, unknown);
 		
 		this.space = space;
+	}
+	
+	// Constructor for the invariable part of multiword marker
+	public LexicalUnit(String lemma, String symbols, String invMWMarker)
+	{
+		this(lemma, symbols, false, false);
+		
+		this.invMWMarker = invMWMarker;
 	}
 	
 	public String getLemma()
@@ -61,6 +70,21 @@ public class LexicalUnit
 	public void setLinkedToPreviousWord(boolean linkedToPreviousWord)
 	{
 		this.linkedToPreviousWord = linkedToPreviousWord;
+	}
+	
+	public void setInvMWMarker(String invMWMarker)
+	{
+		this.invMWMarker = invMWMarker;
+	}
+	
+	public String getInvMWMarker()
+	{
+		return invMWMarker;
+	}
+	
+	public boolean hasInvMWMarker()
+	{
+		return invMWMarker != null;
 	}
 	
 	public boolean isUnknown()
@@ -96,6 +120,11 @@ public class LexicalUnit
 	public boolean isPreposition()
 	{
 		return symbols.equals("<pr>");
+	}
+	
+	public boolean isMWE()
+	{
+		return lemma.trim().contains(" ") && lemma.length() > 1;
 	}
 	
 	public boolean isProperNoun()

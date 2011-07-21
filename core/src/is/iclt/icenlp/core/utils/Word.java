@@ -26,6 +26,7 @@ public class Word
     public boolean linkedToPreviousWord;
     public String posSpace;
     public String preSpace;
+    public String invMWMark = null;
     
     // Constructor for the class.
     public Word(String lexeme, String tag, MWECode mweCode, TokenCode tokenCode, boolean linkedToPreviousWord){
