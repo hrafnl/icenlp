@@ -286,6 +286,10 @@ nxeþ-ö <np><top><mfn><sg><dat>
 nxeþ-s <np><al><mfn><sg><dat>
 nxfn-s <np><al><mfn><pl><nom>
 nxfo <n><mfn><pl><acc><ind>
+# Organisations are recognized with regular expressions in Apertium.
+# We map them to a tag that is not part of the IceTagger tagset (o = organisation)
+nken-o <np><org><mf><sp>
+
 slm <vblex><pprs>
 slg <vblex><actv><pprs>
 slg <vblex><pprs>
