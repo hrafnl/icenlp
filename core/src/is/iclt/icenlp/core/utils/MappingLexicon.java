@@ -635,7 +635,7 @@ public class MappingLexicon {
 		
 		// We have one lexeme exception rule
 		if(hasExceptionRulesForLexeme(fixedWord))
-		{
+		{	
 			List<Pair<String, String>> ex = getExceptionRulesForLexeme(fixedWord);
 			
 			String correct = ex.get(0).one;

@@ -146,7 +146,7 @@ public class IceNLPTokenConverter
 				if(lu.isProperNoun())
 				{
 					// If it is a <np><org>, we change the org to a <np><al>
-					if(lu.getSymbols().contains("<org>"))
+					if(lu.getSymbols().contains("<org>") && !lu.getSymbols().contains("<mf><sp>"))
 					{
 						String symbols = lu.getSymbols();
 						
@@ -313,13 +313,6 @@ public class IceNLPTokenConverter
 	{
 		// Get the tags from the dict, not using otb
 		String baseTag = dictLookup(ice.lexeme, false);
-		
-		// Used to handle invariable multiword markers, since you search by the lemma in them
-		// Not by the lexeme.
-		if(baseTag == null && ice.lexeme.contains(" "))
-		{
-			baseTag = dictLookup(ae.getPossibleLexicalUnits().get(0).getLemma(), false);
-		}
 		
 		// We find that verb in the base dictionary
 		if(baseTag != null)

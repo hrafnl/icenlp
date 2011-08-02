@@ -273,6 +273,7 @@ public class IceTagger implements IIceTagger {
 					
 					newWord = new Word(t.lexeme, lemma, t.getFirstTagStr(), t.mweCode, t.tokenCode, t.linkedToPreviousWord, unknown);
 					newWord.preSpace = t.preSpace;
+					newWord.invMWMark = t.getInvMWMark();
 					
 					returnlist.add(newWord);
 				}

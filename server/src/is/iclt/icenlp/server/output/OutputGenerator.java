@@ -352,7 +352,15 @@ public class OutputGenerator {
 				
 				normal = normal.replace("[LEXEME]", word.getLexeme());
 				normal = normal.replace("[LEMMA]", word.getLemma());
-				normal = normal.replace("[TAG]", word.getTag());
+				
+				if(word.invMWMark == null)
+				{
+					normal = normal.replace("[TAG]", word.getTag());
+				}
+				else
+				{
+					normal = normal.replace("[TAG]", word.getTag() + "#" + word.invMWMark);
+				}
 				
 				builder.append(normal);
 			}
