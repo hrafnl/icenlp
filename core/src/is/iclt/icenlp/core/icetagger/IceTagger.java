@@ -537,6 +537,7 @@ public class IceTagger
             for (int i=0; i<=myTokens.size()-1; i++)
             {
                 IceTokenTags tok = (IceTokenTags)myTokens.get(i);
+                
                 tok.removeAllButFirstTag();
             }
         }

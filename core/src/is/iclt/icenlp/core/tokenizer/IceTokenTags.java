@@ -1166,7 +1166,9 @@ public boolean personNumberMatch(IceTokenTags tok)
 		{
             IceTag tag = (IceTag)tags.get( j );
             if (tag.isProperNoun())
-                tag.setOtherName();
+            {
+            	tag.setOtherName();
+            }
         }
     }
 

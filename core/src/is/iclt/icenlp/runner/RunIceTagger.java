@@ -293,6 +293,7 @@ public class RunIceTagger
         lemmatizeStr =   parameters.getProperty( "LEMMATIZE");
         fullOutputStr = parameters.getProperty( "FULL_OUTPUT" );
         externalAnalysis = parameters.getProperty( "EXTERNAL_ANALYSIS" );
+        namedEntityRecognition = parameters.getProperty( "NAMED_ENTITY_RECOGNITION" ).equals("yes");
 		String fullDisambiguationStr = parameters.getProperty( "FULL_DISAMBIGUATION", "yes" );
 		String baseTaggingStr = parameters.getProperty( "BASE_TAGGING", "no" );
 		String strictTokenizationStr = parameters.getProperty( "STRICT", "yes" );
