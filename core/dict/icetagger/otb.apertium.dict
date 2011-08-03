@@ -300,7 +300,7 @@ ssg <vblex><actv><supn>
 ssm <vblex><midv><supn>
 sbg2en <vblex><actv><imp><p2><sg>
 sbg2fn <vblex><actv><imp><p2><pl>
-sbm2en <vblex><actv><imp><p2><sg>
+sbm2en <vblex><midv><imp><p2><sg>
 sfg1en <vblex><actv><pri><p1><sg>
 sfg2en <vblex><actv><pri><p2><sg>
 sfg3en <vblex><actv><pri><p3><sg>

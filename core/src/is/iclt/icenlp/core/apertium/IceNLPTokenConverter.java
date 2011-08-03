@@ -146,6 +146,7 @@ public class IceNLPTokenConverter
 				if(lu.isProperNoun())
 				{
 					// If it is a <np><org>, we change the org to a <np><al>
+					// We do not do this with <mf><sp>, there is a special rule for that in another place.
 					if(lu.getSymbols().contains("<org>") && !lu.getSymbols().contains("<mf><sp>"))
 					{
 						String symbols = lu.getSymbols();
@@ -155,7 +156,7 @@ public class IceNLPTokenConverter
 						continue;
 					}
 					
-					// If it is a <np><cog>, we change the cog to a <np><al>
+					// If it is a <np><cog>, we change the cog to a <al>
 					if(lu.getSymbols().contains("<cog>"))
 					{
 						String symbols = lu.getSymbols();
@@ -415,7 +416,7 @@ public class IceNLPTokenConverter
 		// If we still have no tags, then the word is in none of our dictionaries and
 		// we need to blindly convert it (which might fail)
 		for(LexicalUnit lu: ae.getPossibleLexicalUnits())
-		{	
+		{
 			if(lu.isIgnore())
 			{
 				continue;
