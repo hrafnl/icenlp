@@ -115,6 +115,12 @@ public class IceTaggerFacade
         if(preLoadlemmald)
             Lemmald.getInstance();
     }
+    
+    
+    public void setNamedEntityRecognition(boolean flag)
+    {
+    	this.tagger.setNamedEntityRecognition(flag);
+    }
 
    public void dateHandling( boolean doSpecialDateHandling )
    {

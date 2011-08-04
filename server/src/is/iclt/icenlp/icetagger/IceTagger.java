@@ -127,6 +127,10 @@ public class IceTagger implements IIceTagger {
 			// TODO This should be handed as an option in the config file!
 			iceTaggerFacade.dateHandling(true); // Do special date handling
 			
+			// Set Name Entity Recognition
+			boolean ner = this.configuration.getValue("named_entity_recognition").equals("true");
+			iceTaggerFacade.setNamedEntityRecognition(ner);
+			
 			// TriTagger
 			// Let's check for the TriTagger
 			if (this.configuration.containsKey("tritagger")) {
