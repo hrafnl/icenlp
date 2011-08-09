@@ -60,6 +60,8 @@ public class IceNLPTokenConverter
 		
 		for(ApertiumEntry ae: entries)
 		{
+			ArrayList<LexicalUnit> possibleLu = ae.getPossibleLexicalUnits();
+			
 			// Add the lexeme
 			IceTokenTags ice = new IceTokenTags();
 			ice.lexeme = ae.getSurfaceForm();
@@ -68,57 +70,43 @@ public class IceNLPTokenConverter
 			// Then we add it to the IceTokenTag
 			if(ae.isFirstInvMWMark())
 			{
-				ice.setInvMWMark(ae.getPossibleLexicalUnits().get(0).getInvMWMarker());
+				ice.setInvMWMark(possibleLu.get(0).getInvMWMarker());
 			}
 			
 			// We first check for unknown words, then we check for spaces, then we can process normally.
-			if(ae.getPossibleLexicalUnits().get(0).isUnknown() && !ae.getPossibleLexicalUnits().get(0).isSpace())
+			if(possibleLu.get(0).isUnknown() && !possibleLu.get(0).isSpace())
 			{
-				//System.out.println("Unknown:" + ice.lexeme);
-				
 				// We might have an unknown word
 				handleUnknown(ice, counter);
 			}
 			// lt-proc treats ()' as spaces, but IceNLP does not
-			else if(ae.getPossibleLexicalUnits().get(0).isSpace())
+			else if(possibleLu.get(0).isSpace())
 			{
-				//System.out.println("Space:" + ice.lexeme);
-				
 				// "Space" characters are not tags, we add them to the next tag.
 				preSpace = ice.lexeme;
 				continue;
 			}
 			else if(ae.isMWE())
 			{
-				//System.out.println("MWE:" + ice.lexeme);
-				
 				// Multi word expressions are handled in a standard way.
 				standardConvert(ice, ae);
 			}
 			else if(ae.isAnyLuPreposition())
 			{
-				//System.out.println("Prep:" + ice.lexeme);
-				
 				handlePreposition(ice, ae);
 			}
 			else if(ae.isAnyLuAVerb())
 			{
-				//System.out.println("Verb:" + ice.lexeme);
-				
 				// If we have a verb in any of the lu's
 				handleVerb(ice, ae);
 			}
 			else if(ae.isSeperator())
 			{
-				//System.out.println("Seperator:" + ice.lexeme);
-				
 				// Seperators like ,.; etc
 				handleSeperators(ice, ae);
 			}
 			else
 			{
-				//System.out.println("Normal:" + ice.lexeme);
-				
 				// Normal processing
 				handleNormal(ice, ae);
 			}
@@ -141,7 +129,9 @@ public class IceNLPTokenConverter
 	{
 		for(ApertiumEntry ae: entries)
 		{
-			for(LexicalUnit lu: ae.getPossibleLexicalUnits())
+			ArrayList<LexicalUnit> possibleLu = ae.getPossibleLexicalUnits();
+			
+			for(LexicalUnit lu: possibleLu)
 			{
 				if(lu.isProperNoun())
 				{
@@ -165,6 +155,8 @@ public class IceNLPTokenConverter
 						
 						continue;
 					}
+					
+					continue;
 				}
 				
 				if(lu.isDet())
@@ -185,6 +177,8 @@ public class IceNLPTokenConverter
 						
 						continue;
 					}
+					
+					continue;
 				}
 				
 				// #TODO Temporary solution, until apertium is updated
@@ -215,9 +209,11 @@ public class IceNLPTokenConverter
 	// Processes the apertium entries based on the tag and adds them in the correct order to the IceTokenTag
 	private void processMapping(String tag, String cleanTag, IceTokenTags ice, ApertiumEntry ae)
 	{
+		ArrayList<LexicalUnit> possibleLu = ae.getPossibleLexicalUnits();
+		
 		// Look at each apertium entries tag to see if it matches with the tag
 		// Insert that tag first into tag list
-		for(LexicalUnit lu: ae.getPossibleLexicalUnits())
+		for(LexicalUnit lu: possibleLu)
 		{
 			if(lu.isIgnore())
 			{
@@ -267,9 +263,9 @@ public class IceNLPTokenConverter
 					break;
 				}
 			}
-			// We found the correct lu
 			else if(invTag != null && invTag.equals(cleanTag))
 			{
+				// We found the correct lu
 				ice.addTagWithLemma(tag, lu.getLemma());
 				
 				if(lu.isLinkedToPreviousWord())
@@ -415,7 +411,9 @@ public class IceNLPTokenConverter
 	{
 		// If we still have no tags, then the word is in none of our dictionaries and
 		// we need to blindly convert it (which might fail)
-		for(LexicalUnit lu: ae.getPossibleLexicalUnits())
+		ArrayList<LexicalUnit> possibleLu = ae.getPossibleLexicalUnits();
+		
+		for(LexicalUnit lu: possibleLu)
 		{
 			if(lu.isIgnore())
 			{

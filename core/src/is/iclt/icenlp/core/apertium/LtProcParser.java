@@ -40,8 +40,7 @@ public class LtProcParser
 			else if(slashSplit.length == 1 && !slashSplit[0].contains("<"))
 			{
 				// Mark it as a space lexical unit
-				LexicalUnit lu = new LexicalUnit(slashSplit[0], slashSplit[0], true, true);
-				lexicalUnit.add(lu);
+				lexicalUnit.add(new LexicalUnit(sf, sf, true, true));
 			}
 			else
 			{

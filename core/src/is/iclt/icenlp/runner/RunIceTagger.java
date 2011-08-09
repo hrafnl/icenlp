@@ -21,9 +21,6 @@
  */
 package is.iclt.icenlp.runner;
 
-import is.iclt.icenlp.core.apertium.ApertiumEntry;
-import is.iclt.icenlp.core.apertium.LexicalUnit;
-import is.iclt.icenlp.core.apertium.LtProcParser;
 import is.iclt.icenlp.core.icetagger.IceTagger;
 import is.iclt.icenlp.core.icetagger.IceTaggerOutput;
 import is.iclt.icenlp.core.icetagger.IceTaggerLexicons;
