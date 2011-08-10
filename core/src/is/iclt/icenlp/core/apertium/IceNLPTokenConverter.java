@@ -375,18 +375,28 @@ public class IceNLPTokenConverter
 				}
 				else
 				{
+					boolean tagFound = false;
+					
 					// Then we need to search for the lemma within apertium entry list.
-					//
-					// There might be tags from the base dict that are lost here because they
-					// are not defined in the is.dix
 					for(LexicalUnit lu: ae.getPossibleLexicalUnits())
 					{
 						String invTag = mapping.getInvertedTagMap(lu.getSymbols(), lu.getLemma());
 						
+						// Found the tag
 						if(tag.equals(invTag))
 						{
 							ice.addTagWithLemma(tag, lu.getLemma());
+							
+							tagFound = true;
+							break;
 						}
+					}
+					
+					// We did not find the tag anywhere
+					if(!tagFound)
+					{
+						// Then we add it in the "naive" way with the lexeme as the lemma
+						ice.addTagWithLemma(tag, ice.lexeme);
 					}
 				}
 			}
