@@ -322,19 +322,52 @@ public class TokenTags extends Token
         String tagStr = "";
         int i=0;
         Iterator iterator = tags.iterator();
-        while (iterator.hasNext()) {
+        
+        while (iterator.hasNext())
+        {
             Tag element = (Tag)iterator.next();
-                if (i==0)
-                    tagStr = element.toString();
-                else
-                {
-                    tagStr = tagStr + sep + element.toString();
-                }
-                i++;
+            
+            if (i==0)
+            {
+                tagStr = element.toString();
+            }
+            else
+            {
+                tagStr = tagStr + sep + element.toString();
+            }
+            
+            i++;
         }
+        
         return tagStr;
     }
 
+    public String allLexicalUnits()
+    {
+        String tagStr = null;
+        int i=0;
+        Iterator iterator = tags.iterator();
+        
+        tagStr = lexeme + ":";
+        
+        while (iterator.hasNext())
+        {
+            Tag element = (Tag)iterator.next();
+            
+            if (i==0)
+            {
+                tagStr = tagStr + element.getLemma() + "(" + element.toString() + ")";
+            }
+            else
+            {
+                tagStr = tagStr + "_" + element.getLemma() + "(" + element.toString() + ")";
+            }
+            
+            i++;
+        }
+        
+        return tagStr;
+    }
 
     public String toString()
     {

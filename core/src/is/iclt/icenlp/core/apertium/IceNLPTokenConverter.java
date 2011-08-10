@@ -368,7 +368,27 @@ public class IceNLPTokenConverter
 			
 			for(String tag: baseTagSplit)
 			{
-				ice.addTagWithLemma(tag, ice.lexeme);
+				// We have a preposition, they use the lexeme as a lemma
+				if(tag.equals("aþm") || tag.equals("aþe") || tag.equals("ao") || tag.equals("aþ") || tag.equals("ae"))
+				{
+					ice.addTagWithLemma(tag, ice.lexeme);					
+				}
+				else
+				{
+					// Then we need to search for the lemma within apertium entry list.
+					//
+					// There might be tags from the base dict that are lost here because they
+					// are not defined in the is.dix
+					for(LexicalUnit lu: ae.getPossibleLexicalUnits())
+					{
+						String invTag = mapping.getInvertedTagMap(lu.getSymbols(), lu.getLemma());
+						
+						if(tag.equals(invTag))
+						{
+							ice.addTagWithLemma(tag, lu.getLemma());
+						}
+					}
+				}
 			}
 		}
 		else
