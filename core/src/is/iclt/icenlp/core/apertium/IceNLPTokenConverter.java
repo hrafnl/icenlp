@@ -19,7 +19,6 @@ public class IceNLPTokenConverter
 	private Lexicon baseDict;
 	private Lexicon otbDict;
 	
-	private boolean linkedToPreviousWord = false;
 	private String preSpace = null;
 	
 	public IceNLPTokenConverter(ArrayList<ApertiumEntry> entries, MappingLexicon mapping, IceTaggerLexicons iceLex) throws IOException
@@ -377,8 +376,10 @@ public class IceNLPTokenConverter
 				{
 					boolean tagFound = false;
 					
+					ArrayList<LexicalUnit> possibleLu = ae.getPossibleLexicalUnits();
+					
 					// Then we need to search for the lemma within apertium entry list.
-					for(LexicalUnit lu: ae.getPossibleLexicalUnits())
+					for(LexicalUnit lu: possibleLu)
 					{
 						String invTag = mapping.getInvertedTagMap(lu.getSymbols(), lu.getLemma());
 						

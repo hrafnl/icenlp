@@ -23,13 +23,11 @@ public class LemmaGuesser
 	private String lexeme;
 	private ArrayList<ApertiumEntry> entries;
 	private String firstTag;
-	private MappingLexicon mappingLexicon;
 
 	public LemmaGuesser(String lexeme, ArrayList<ApertiumEntry> entries, String tags, MappingLexicon mappingLexicon)
 	{
 		this.lexeme = lexeme;
 		this.entries = entries;
-		this.mappingLexicon = mappingLexicon;
 		
 		this.firstTag = getFirstTag(mappingLexicon.lookupTagmap(tags, true));
 	}
