@@ -341,7 +341,7 @@ RULE currToken.lexeme.equals("á") &&
 	(prevToken != null && prevToken.isInterrogativePronoun() && 
 	(prevToken.lexeme.equalsIgnoreCase("hver") || prevToken.lexeme.equalsIgnoreCase("hvað"))) ||
 // Ég á
-	(prevprevToken == null && prevToken != null && prevToken.isPersonalPronoun()) ||
+	(prevprevToken == null && prevToken != null && prevToken.isPersonalPronoun() && currToken.isVerb()) ||
 // Ég/Maður á (ekki) að
 	(prevToken != null && (prevToken.isOnlyWordClass(PERSPRONOUN) || prevToken.isOnlyWordClass(NOUN) || prevToken.isProperNoun()) &&
 	prevToken.personNumberMatch(currToken) && prevToken.isCase(NOMINATIVE) &&

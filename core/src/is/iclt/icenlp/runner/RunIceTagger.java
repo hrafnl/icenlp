@@ -225,15 +225,16 @@ public class RunIceTagger
 			System.out.println( "Parameter: " + "FULL_OUTPUT" + " is missing" );
 			error = true;
 		}
-		if( error ) {
-            System.err.println("Exiting!");
-			System.exit( 0 );
-        }
+		
 		if( !externalAnalysis.matches("icenlp|apertium") )
 		{
 			System.out.println( "Parameter: " + "EXTERNAL_ANALYSIS" + " needs to be either icenlp or apertium" );
 			error = true;
 		}
+		if( error ) {
+            System.err.println("Exiting!");
+			System.exit( 0 );
+        }
 	}
 
 	private void getFormat()
@@ -287,10 +288,10 @@ public class RunIceTagger
 		tokenDictPath = parameters.getProperty( "TOKEN_DICT" );
 		tagFrequencyFile = parameters.getProperty( "TAG_FREQUENCY_FILE");
         tagMapFile =   parameters.getProperty( "TAG_MAP_DICT");
-        lemmatizeStr =   parameters.getProperty( "LEMMATIZE");
+        lemmatizeStr =   parameters.getProperty( "LEMMATIZE","no");
         fullOutputStr = parameters.getProperty( "FULL_OUTPUT" );
-        externalAnalysis = parameters.getProperty( "EXTERNAL_ANALYSIS" );
-        namedEntityRecognition = parameters.getProperty( "NAMED_ENTITY_RECOGNITION" ).equals("yes");
+        externalAnalysis = parameters.getProperty( "EXTERNAL_ANALYSIS", "icenlp" );
+        namedEntityRecognition = parameters.getProperty( "NAMED_ENTITY_RECOGNITION", "no" ).equals("yes");
 		String fullDisambiguationStr = parameters.getProperty( "FULL_DISAMBIGUATION", "yes" );
 		String baseTaggingStr = parameters.getProperty( "BASE_TAGGING", "no" );
 		String strictTokenizationStr = parameters.getProperty( "STRICT", "yes" );

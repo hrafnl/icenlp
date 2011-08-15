@@ -643,7 +643,7 @@ public class IceTagger
 			checkAssignment();
             if( startWithHmmModel && triTagger != null ) 
             {
-                tagWithTriTagger();
+            	tagWithTriTagger();
             }
             
             disambiguate();
