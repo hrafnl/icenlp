@@ -111,7 +111,7 @@ public class ClientThread implements Runnable {
 					{
 						if(this.configuration.containsKey("ExternalMorpho") && this.configuration.getValue("ExternalMorpho").equals("apertium"))
 						{
-							taggedString = this.outputGenerator.generateExternalOutput(strFromClient);
+							taggedString = this.outputGenerator.generateExternalOutput(strFromClient) + "\n";
 						}
 						else
 						{
