@@ -24,12 +24,19 @@ public class IceParser implements IIceParser{
     
     private String mark_obj_left = "<@←OBJ>";
     private String mark_obj_right = "<@OBJ→>";
+    private String parsedString;
+	private boolean value_IceParserOutput = false;
+
     
     public synchronized static IceParser instance(){
         if(instance_ == null)
             instance_ = new IceParser();
         return instance_;
     }
+    
+    public String getParsedString() {
+		return parsedString;
+	}
     
     protected IceParser(){
         String value_mark_subject_left = Configuration.getInstance().getValue("mark_subject_left");
@@ -51,6 +58,10 @@ public class IceParser implements IIceParser{
         	this.mark_obj_left = value_mark_obj_left;	
         }
         
+        if (Configuration.getInstance().getValue("IceParserOutput").toLowerCase().equals("true")) {
+			value_IceParserOutput = true;
+		} 
+                
         System.out.println("[i] IceParser instance created.");
         parser = new IceParserFacade();
     }
@@ -74,14 +85,41 @@ public class IceParser implements IIceParser{
 			{
 				int index = strParse.indexOf(w.getLexeme(), lastIndex);
 				lastIndex = index;
-				strParse = strParse.substring(0, index + w.getLexeme().length())+ "_"+ i+ " "+ strParse.substring(index + w.getLexeme().length() + 1);
+				
+				
+				// if IceParserOutput is set to true in the config
+				// then we do not number the words (word_3)
+				if (value_IceParserOutput == true) {
+					strParse = strParse.substring(0, index + w.getLexeme().length())+ " "+ strParse.substring(index + w.getLexeme().length() + 1);
+				}
+				else {
+					strParse = strParse.substring(0, index + w.getLexeme().length())+ "_"+ i+ " "+ strParse.substring(index + w.getLexeme().length() + 1);
+				}
 				i = i + 1;
+			}
+			
+			// checks the config to see if the user wants IceParserOutput
+			// and sets the parsed string into an accessable variable
+			if (value_IceParserOutput == true) {
+				// reset the parsedString before appending to it
+				parsedString = "";
+
+
+				// append strParse one line at a time into parsedString
+				// and add \n after each line
+				// add another \n after a line of dots
+				for (String tmpString : strParse.split("\n")) {
+					parsedString += tmpString + "\n";
+				}
+				parsedString.replaceAll(". .", ". .\n");
+
+				return null;
 			}
 
 			// Let's add the subj to correct words.
 			for (String parseLine : strParse.split("\n")) 
 			{
-				//System.out.println("parser line: " + parseLine);
+				// System.out.println("parser line: " + parseLine);
 				if (parseLine.contains("{*SUBJ")) 
 				{
 					char arrow = parseLine.charAt(6);

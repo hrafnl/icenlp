@@ -19,7 +19,7 @@ public class Runner {
         // Set the host and port to default value.
     	String host = "localhost";
         String port = "1234";
-        
+
         // Go through the program arguments.
         if (args.length > 0) {
             for (String arg : args) {

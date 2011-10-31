@@ -184,8 +184,9 @@ public class OutputGenerator {
 			{
 				this.iceTagger.lemmatize(true);
 			}
-
-			if (this.outputFormat.contains("[FUNC]"))
+			
+			
+			if (this.outputFormat.contains("[FUNC]")||this.configuration.getValue("IceParserOutput").toLowerCase().equals("true"))
 				this.iceParser = IceParser.instance();
 			
 		} catch (Exception e) {
@@ -205,8 +206,9 @@ public class OutputGenerator {
 			return "";
 		}
 
-		if (this.iceParser != null)
+		if (this.iceParser != null) {
 			this.iceParser.parse(wordList);
+		}	
 
 		// Apply mapping rules to the word list.
 		if (this.mapperLexicon != null)
@@ -214,6 +216,15 @@ public class OutputGenerator {
 
 		// Create output string that will be sent to the client.
 		StringBuilder builder = new StringBuilder();
+		
+		
+		// If IceParserOutput is set to true in the config then
+		// we will only show that output and stop.
+		// otherwise we will go on to show the tagged output
+		if (this.configuration.getValue("IceParserOutput").toLowerCase().equals("true")) {	
+			builder.append(this.iceParser.getParsedString());
+			return builder.toString();
+		}
 
 		// If we have not set any tagging output
 		if (this.outputFormat == null) {
@@ -332,6 +343,7 @@ public class OutputGenerator {
 
 		for (Word word : wordList)
 		{
+
 			if(word.preSpace != null)
 			{
 				builder.append(word.preSpace);

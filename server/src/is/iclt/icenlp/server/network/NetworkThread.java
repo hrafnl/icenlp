@@ -41,6 +41,7 @@ public class NetworkThread implements Runnable {
             if (Configuration.getInstance().containsKey("backlogSize"))
 				backlogSize = Configuration.getInstance().getValue("backlogSize");
 
+
 			InetSocketAddress address = new InetSocketAddress(host, Integer.parseInt(port));
 			this.serverSocket = new ServerSocket(Integer.parseInt(port), Integer.parseInt(backlogSize), address.getAddress());
 

@@ -43,7 +43,6 @@ public class Runner {
 			printHelp();
 			return;
 		}
-
 		final NetworkThread nt;
 		Thread thread;
 
