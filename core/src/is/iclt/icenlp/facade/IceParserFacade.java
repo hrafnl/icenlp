@@ -96,18 +96,43 @@ public class IceParserFacade
 		outFormatter = new OutputFormatter();
     }
 
-
+// try to avoid referring to this function, the one below is preferred
 	public String parse( String text, boolean include_func, boolean one_phrase_per_line ) throws IOException
 	{
 		if (one_phrase_per_line)
+		{
             return parse( text, OutputFormatter.OutputType.phrase_per_line, include_func, false, false, false);
+        }
         else
+        {
             return parse( text, OutputFormatter.OutputType.plain, include_func, false, false, false);
+		}
+	}
+
+
+// this is the new preferred version of the function above
+	public String parse( String text, boolean include_func, String outputType ) throws IOException
+	{
+		if (outputType.equals("one_phrase_per_line"))
+		{
+            return parse( text, OutputFormatter.OutputType.phrase_per_line, include_func, false, false, false);
+        }
+        else if (outputType.equals("xml"))
+        {
+			return parse( text, OutputFormatter.OutputType.xml, include_func, false, false, false);
+		}
+        else if (outputType.equals("tcf"))
+        {
+			return parse( text, OutputFormatter.OutputType.tcf, include_func, false, false, false);
+		}
+		else
+        {
+            return parse( text, OutputFormatter.OutputType.plain, include_func, false, false, false);
+		}
 	}
 
 	public String parse( String text, OutputFormatter.OutputType outType, boolean include_func, boolean agreement, boolean markGrammarError, boolean mergeLabels) throws IOException
 	{
-		
 		// --------------------------------
         //print( "tagEncdr" );
 		StringReader sr = new StringReader( text );

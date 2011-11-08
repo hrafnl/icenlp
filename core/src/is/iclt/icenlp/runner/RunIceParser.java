@@ -23,7 +23,6 @@ package is.iclt.icenlp.runner;
 
 import is.iclt.icenlp.facade.IceParserFacade;
 import is.iclt.icenlp.core.utils.FileEncoding;
-//import is.iclt.icenlp.core.utils.FileEncoding;
 import is.iclt.icenlp.core.iceparser.*;
 
 import java.io.*;

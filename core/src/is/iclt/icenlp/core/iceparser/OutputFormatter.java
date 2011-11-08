@@ -26,12 +26,14 @@ package is.iclt.icenlp.core.iceparser;
 import java.io.*;
 import java.util.*;
 import java.util.regex.*;
+import java.lang.String;
+
 
 enum OutputFormatter_Type { FUNC, PHRASE, WORDS, WORD, TAG, ROOT, SENTENCE }
 
 public class OutputFormatter
 {
-    public enum OutputType {plain, phrase_per_line, json, xml}
+    public enum OutputType {plain, phrase_per_line, json, xml, tcf}
 	private OutputFormatter_Part root;
 
 	private boolean mergeTags = false;
@@ -40,7 +42,12 @@ public class OutputFormatter
     private boolean firstLine=true;
 	private StringReader r;
 	private StringWriter w;
-
+	private String tcfConstituents = "";
+	private String tcfText = "";
+	private String tokens = "";
+	private String posTags = "";
+	private int tokenID = 0;
+	private int constituentID = 0;
     
 	public void setMergeTags(boolean newVal)
 	{
@@ -171,7 +178,6 @@ public class OutputFormatter
             str = "\t}\n}"+"\n";
 		else if(outType == OutputType.xml)
             str = "</ParsedText>"+"\n";
-
         return str;
     }
 
@@ -188,6 +194,10 @@ public class OutputFormatter
             if (firstLine)
                 print("<ParsedText>"+"\n");
 			writeXml(root);
+		}
+		else if(outType == OutputType.tcf)
+		{
+			writeTcf(root);
 		}
 		else if(outType == OutputType.plain)
 		{
@@ -473,6 +483,7 @@ public class OutputFormatter
 	{
 		printXmltree(root.children, "\t");
 	}
+	
 	private void printXmltree(ArrayList<OutputFormatter_Part> list, String indent)
 	{
 		for (OutputFormatter_Part var : list) 
@@ -501,6 +512,166 @@ public class OutputFormatter
 			}
 		}
 	}
+	
+//
+//TCF
+//	
+	private void writeTcf(OutputFormatter_Part root)
+	{
+		
+// start going through the input and store into variables
+		printTCFtree(root.children, "    ","");
+
+// start printing out the results
+
+// basic info
+		print("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n\n");
+// ???
+		print("<D-Spin xmlns=\"http://www.dspin.de/data\" version=\"0.4\">\n\n");
+// meta data
+		print(" <MetaData xmlns=\"http://www.dspin.de/data/metadata\">\n");
+		print("   <source>RU, Reykjavik University</source>\n");
+ 		print(" </MetaData>\n\n");
+// text corpus, divited into text, tokens(words) and tags.
+		print(" <TextCorpus xmlns=\"http://www.dspin.de/data/textcorpus\" lang=\"is\">\n");
+		print("  <text>"+tcfText+"</text>\n\n");
+
+//<token ID="t1">Þetta</token>		
+		print("  <tokens>\n");
+		print(tokens);
+		print("  </tokens>\n\n");
+
+//   <tag tokenIDs="t1">NP</tag>
+		print("  <POStags tagset=\"ifd\">\n");
+		print(posTags);
+		print("  </POStags>\n\n");
+		
+		print("  <parsing tagset=\"ifd\">\n");
+		print("   <parse>\n");
+		print(tcfConstituents);
+		print("   </parse>\n");
+		print("  </parsing>\n\n");
+		
+//	<dependency func="COMP" depIDs="t3" govIDs="t1"/>
+/*	we do not do this
+		print("  <depparsing>\n");
+		print("   <parse>\n");
+		print(dependency);
+		print("   </parse>\n");
+		print("  </depparsing>\n\n");
+*/
+		
+// finishing
+		print(" </TextCorpus>\n");
+		print("</D-Spin>");
+
+
+	}
+	
+
+
+// we are printing the items while climbing down the tree to the leaves,
+// but a better version of this would be the other way around
+// to avoid having to check if the next child includes a PHRASE on it's list if we are currently in a PHRASE
+	private void printTCFtree(ArrayList<OutputFormatter_Part> list, String indent, String phrase)
+	{
+		for (OutputFormatter_Part var : list) 
+		{	
+			//replace xml reserved sybmols
+			String data = var.data;
+			data = data.replace("&", "&amp;");
+			data = data.replace("<", "&lt;");
+			data = data.replace(">", "&gt;");
+
+			// we do not print TAG, WORDS
+			// if we encounter FUNC we start making that list
+			// if we see PHRASE we print out
+			// if we see WORD we print out
+			if(var.OutputFormatter_Type == OutputFormatter_Type.TAG)
+			{
+				posTags += "   <tag TokenIDs=\"t"+tokenID+"\">" + data + "</tags>\n";
+			}
+			else if(var.OutputFormatter_Type == OutputFormatter_Type.WORDS)
+			{
+				printTCFtree(var.children, indent, phrase);
+			}
+			else if(var.OutputFormatter_Type == OutputFormatter_Type.SENTENCE)
+			{
+				constituentID++;
+				tcfConstituents += (indent+"<constituent ID=\"c"+constituentID+"\" cat=\""+var.OutputFormatter_Type+"\">\n");
+				printTCFtree(var.children, indent+" ", phrase);
+				tcfConstituents += (indent+"</constituent>\n");
+			}
+			else if(var.OutputFormatter_Type == OutputFormatter_Type.WORD)
+			{
+				constituentID++;
+				tokenID++;
+				
+				tokens += "   <token ID=\"t"+tokenID+"\">"+data+"</token>\n";
+				
+				// getting the Text
+				tcfText += (data+" ");
+				
+				// getting constituent
+				//<constituent ID="c2" cat="NP" tokenIDs="t2"/>
+				if (data.equals("."))
+				{
+					tcfConstituents += (indent+"<constituent ID=\"c"+constituentID+"\" cat=\".\" tokenIDs=\"t"+tokenID+"\"/>\n");
+				}
+				else if (data.equals(","))
+				{
+					tcfConstituents += (indent+"<constituent ID=\"c"+constituentID+"\" cat=\",\" tokenIDs=\"t"+tokenID+"\"/>\n");
+				}
+				else
+				{
+					tcfConstituents += (indent+"<constituent ID=\"c"+constituentID+"\" cat=\""+phrase+"\" tokenIDs=\"t"+tokenID+"\"/>\n");
+//	debug, enable to see what word it is	tcfConstituents += (indent+"<constituent ID=\"c3\" cat=\""+phrase+"\" tokenIDs=\"t"+tokenID+"("+data+")\"/>\n");
+				}
+				// go to the tags
+				printTCFtree(var.children, "", "");
+			}
+			else if(var.OutputFormatter_Type == OutputFormatter_Type.PHRASE)
+			{
+				// if the child contains a phrase we will print out "constituent" data
+				// if the child does not contain a phrase we only move the child without printing the "constituent"
+				if (isChildHasPHRASE(var.children))
+				{
+					constituentID++;
+					tcfConstituents += (indent+"<constituent ID=\"c"+constituentID+"\" cat=\""+data.substring(1)+"\">\n");
+					printTCFtree(var.children, indent+" ", data.substring(1));
+					tcfConstituents += (indent+"</constituent>\n");
+				}
+				else
+				{
+					printTCFtree(var.children, indent, data.substring(1));
+				}
+			}
+			else if(var.OutputFormatter_Type == OutputFormatter_Type.FUNC)
+			{
+				printTCFtree(var.children, indent, phrase);
+			}
+		}
+	}
+
+// if we find a phrase in the OutputFormatter_Part list then we return true
+// otherwise we do nothing
+// usage: if we find a phrase and want to see if we should print it out (only if it contains a phrase in it's child's list)
+// PHRASE → [PHRASE], WORD, WORD
+	private boolean isChildHasPHRASE(ArrayList<OutputFormatter_Part> list)
+	{
+//		print ("- ");
+		for (OutputFormatter_Part var : list) 
+		{
+//			print (var.OutputFormatter_Type.toString() + " ");
+			if (var.OutputFormatter_Type == OutputFormatter_Type.PHRASE) {
+				return true;
+			}
+		}
+//		print ("-\n");
+		return false;
+	}
+
+
 
 //
 //Json

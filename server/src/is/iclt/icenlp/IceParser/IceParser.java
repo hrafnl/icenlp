@@ -25,7 +25,7 @@ public class IceParser implements IIceParser{
     private String mark_obj_left = "<@←OBJ>";
     private String mark_obj_right = "<@OBJ→>";
     private String parsedString;
-	private boolean value_IceParserOutput = false;
+	private String value_IceParserOutput = "";
 
     
     public synchronized static IceParser instance(){
@@ -57,9 +57,12 @@ public class IceParser implements IIceParser{
         if(value_mark_subject_right != null){
         	this.mark_obj_left = value_mark_obj_left;	
         }
-        
-        if (Configuration.getInstance().getValue("IceParserOutput").toLowerCase().equals("true")) {
-			value_IceParserOutput = true;
+
+        if (Configuration.getInstance().getValue("IceParserOutput").toLowerCase().equals("tcf")) {
+			value_IceParserOutput = "tcf";
+		} 
+        else if (Configuration.getInstance().getValue("IceParserOutput").toLowerCase().equals("xml")) {
+			value_IceParserOutput = "xml";
 		} 
                 
         System.out.println("[i] IceParser instance created.");
@@ -68,7 +71,7 @@ public class IceParser implements IIceParser{
 
     public String parse(String text) {
         try {
-            return parser.parse(text, include_functions, phrase_per_line);
+            return parser.parse(text, include_functions, "one_phrase_per_line");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -78,7 +81,7 @@ public class IceParser implements IIceParser{
 	public String parse(List<Word> words) {
 		String taggedString = this.getTagStr(words);
 		try {
-			String strParse = this.parser.parse(taggedString, include_functions, phrase_per_line);
+            String strParse = this.parser.parse(taggedString, include_functions, value_IceParserOutput);
 			int i = 0;
 			int lastIndex = 0;
 			for (Word w : words)
@@ -86,13 +89,14 @@ public class IceParser implements IIceParser{
 				int index = strParse.indexOf(w.getLexeme(), lastIndex);
 				lastIndex = index;
 				
-				
 				// if IceParserOutput is set to true in the config
 				// then we do not number the words (word_3)
-				if (value_IceParserOutput == true) {
+				if (value_IceParserOutput.equals("tcf")||value_IceParserOutput.equals("xml"))
+				{
 					strParse = strParse.substring(0, index + w.getLexeme().length())+ " "+ strParse.substring(index + w.getLexeme().length() + 1);
 				}
-				else {
+				else
+				{
 					strParse = strParse.substring(0, index + w.getLexeme().length())+ "_"+ i+ " "+ strParse.substring(index + w.getLexeme().length() + 1);
 				}
 				i = i + 1;
@@ -100,7 +104,8 @@ public class IceParser implements IIceParser{
 			
 			// checks the config to see if the user wants IceParserOutput
 			// and sets the parsed string into an accessable variable
-			if (value_IceParserOutput == true) {
+			if (value_IceParserOutput.equals("tcf")||value_IceParserOutput.equals("xml"))
+			{
 				// reset the parsedString before appending to it
 				parsedString = "";
 
@@ -108,7 +113,8 @@ public class IceParser implements IIceParser{
 				// append strParse one line at a time into parsedString
 				// and add \n after each line
 				// add another \n after a line of dots
-				for (String tmpString : strParse.split("\n")) {
+				for (String tmpString : strParse.split("\n"))
+				{
 					parsedString += tmpString + "\n";
 				}
 				parsedString.replaceAll(". .", ". .\n");

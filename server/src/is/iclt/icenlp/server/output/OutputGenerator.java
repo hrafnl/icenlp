@@ -186,7 +186,7 @@ public class OutputGenerator {
 			}
 			
 			
-			if (this.outputFormat.contains("[FUNC]")||this.configuration.getValue("IceParserOutput").toLowerCase().equals("true"))
+			if (this.outputFormat.contains("[FUNC]")||this.configuration.getValue("IceParserOutput").toLowerCase().equals("tcf")||this.configuration.getValue("IceParserOutput").toLowerCase().equals("xml"))
 				this.iceParser = IceParser.instance();
 			
 		} catch (Exception e) {
@@ -221,7 +221,8 @@ public class OutputGenerator {
 		// If IceParserOutput is set to true in the config then
 		// we will only show that output and stop.
 		// otherwise we will go on to show the tagged output
-		if (this.configuration.getValue("IceParserOutput").toLowerCase().equals("true")) {	
+		if (this.configuration.getValue("IceParserOutput").toLowerCase().equals("tcf")
+			||this.configuration.getValue("IceParserOutput").toLowerCase().equals("xml")) {	
 			builder.append(this.iceParser.getParsedString());
 			return builder.toString();
 		}
