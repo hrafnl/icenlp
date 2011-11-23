@@ -48,7 +48,7 @@ public class OutputFormatter
 	private String posTags = "";
 	private int tokenID = 0;
 	private int constituentID = 0;
-    
+
 	public void setMergeTags(boolean newVal)
 	{
 		mergeTags = newVal;
@@ -113,6 +113,7 @@ public class OutputFormatter
            // Return the result of the StringWriter;
 
            firstLine = false;
+           
            return w.toString();
     }
 
@@ -182,7 +183,7 @@ public class OutputFormatter
     }
 
 	private void write(OutputFormatter_Part root)
-	{
+	{       System.out.println("gDB> outType = "+outType);
 		if(outType == OutputType.json)
 		{
             if (firstLine)
@@ -191,8 +192,8 @@ public class OutputFormatter
 		}
 		else if(outType == OutputType.xml)
 		{
-            if (firstLine)
-                print("<ParsedText>"+"\n");
+//            if (firstLine)
+//                System.out.print("<ParsedText>\n");
 			writeXml(root);
 		}
 		else if(outType == OutputType.tcf)
@@ -402,7 +403,7 @@ public class OutputFormatter
 //Plaintext one phrase per line
 //
 	private void writePlainPerLine(OutputFormatter_Part root)
-	{
+	{System.out.println("gDB>> writePlainPerLine");
 		plainPerLineTree(root.children, 0);
 	}
 
@@ -444,11 +445,11 @@ public class OutputFormatter
 			}
 		}
 	}
-//
+// GÖL
 //Plaintext
 //
 	private void writePlaintext(OutputFormatter_Part root)
-	{
+	{System.out.println("gDB>> writePlaintext");
 		plaintextTree(root.children);
 	}
 	private void plaintextTree(ArrayList<OutputFormatter_Part> list)
@@ -500,13 +501,13 @@ public class OutputFormatter
 			}
 			else if(var.OutputFormatter_Type == OutputFormatter_Type.SENTENCE || var.OutputFormatter_Type == OutputFormatter_Type.WORDS)
 			{
-				print(indent+"<"+var.OutputFormatter_Type+">"+"\n");
+				/*System.out.*/print(indent+"<"+var.OutputFormatter_Type+">"+"\n");
 				printXmltree(var.children, indent+"\t");
 				print(indent+"</"+var.OutputFormatter_Type+">"+"\n");
 			}
 			else
 			{
-				print(indent+"<"+var.OutputFormatter_Type+"> "+""+data+""+"\n");
+				/*System.out.*/print(indent+"<"+var.OutputFormatter_Type+"> "+""+data+""+"\n");
 				printXmltree(var.children, indent+"\t");
 				print(indent+"</"+var.OutputFormatter_Type+">"+"\n");
 			}
@@ -525,16 +526,16 @@ public class OutputFormatter
 // start printing out the results
 
 // basic info
-		print("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n\n");
+		print("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
 // ???
-		print("<D-Spin xmlns=\"http://www.dspin.de/data\" version=\"0.4\">\n\n");
+		print("<D-Spin xmlns=\"http://www.dspin.de/data\" version=\"0.4\">\n");
 // meta data
 		print(" <MetaData xmlns=\"http://www.dspin.de/data/metadata\">\n");
 		print("   <source>RU, Reykjavik University</source>\n");
- 		print(" </MetaData>\n\n");
+ 		print(" </MetaData>\n");
 // text corpus, divited into text, tokens(words) and tags.
 		print(" <TextCorpus xmlns=\"http://www.dspin.de/data/textcorpus\" lang=\"is\">\n");
-		print("  <text>"+tcfText+"</text>\n\n");
+		print("  <text>"+tcfText.substring(0,tcfText.length()-1)+"</text>\n\n");
 
 //<token ID="t1">Þetta</token>		
 		print("  <tokens>\n");
@@ -565,7 +566,12 @@ public class OutputFormatter
 		print(" </TextCorpus>\n");
 		print("</D-Spin>");
 
-
+		tcfText = "";
+		tokens = "";
+		posTags = "";
+		tcfConstituents = "";
+		tokenID = 0;
+		constituentID = 0;
 	}
 	
 
@@ -589,7 +595,7 @@ public class OutputFormatter
 			// if we see WORD we print out
 			if(var.OutputFormatter_Type == OutputFormatter_Type.TAG)
 			{
-				posTags += "   <tag TokenIDs=\"t"+tokenID+"\">" + data + "</tags>\n";
+				posTags += "   <tag tokenIDs=\"t"+tokenID+"\">" + data + "</tag>\n";
 			}
 			else if(var.OutputFormatter_Type == OutputFormatter_Type.WORDS)
 			{

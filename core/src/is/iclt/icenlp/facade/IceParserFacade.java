@@ -64,7 +64,7 @@ public class IceParserFacade
 
     public IceParserFacade()
 	{
-        StringReader sr = new StringReader("test");
+        StringReader sr = new StringReader("");
 		tagEncdr = new TagEncoder(sr);
         preprocess_scn = new Preprocess(sr);
 		frw_scn = new Phrase_FOREIGN(sr);
@@ -109,25 +109,38 @@ public class IceParserFacade
 		}
 	}
 
-
+// GöL
 // this is the new preferred version of the function above
-	public String parse( String text, boolean include_func, String outputType ) throws IOException
+// for the server
+	public String parse( String text, boolean include_func, String outputType, boolean error, boolean merge) throws IOException
 	{
+
 		if (outputType.equals("one_phrase_per_line"))
 		{
-            return parse( text, OutputFormatter.OutputType.phrase_per_line, include_func, false, false, false);
+            return parse( text, OutputFormatter.OutputType.phrase_per_line, include_func, false, error, merge);
         }
         else if (outputType.equals("xml"))
         {
-			return parse( text, OutputFormatter.OutputType.xml, include_func, false, false, false);
+			return parse( text, OutputFormatter.OutputType.xml, include_func, false, error, merge);
 		}
         else if (outputType.equals("tcf"))
         {
-			return parse( text, OutputFormatter.OutputType.tcf, include_func, false, false, false);
+			return parse( text, OutputFormatter.OutputType.tcf, include_func, false, error, merge);
 		}
-		else
+		// if we have alt then we are in an alternating state (it is hinted by [xml], [tcf], [txt] or [t1l] at the front of the input string)
+        else if (outputType.equals("alt"))
         {
-            return parse( text, OutputFormatter.OutputType.plain, include_func, false, false, false);
+			return parse( text, OutputFormatter.OutputType.xml, include_func, false, error, merge);
+		}
+        else if (outputType.equals("txt"))
+        {
+			return parse( text, OutputFormatter.OutputType.phrase_per_line, include_func, false, error, merge);
+		}
+		else if (outputType.equals("t1l")) {
+            return parse( text, OutputFormatter.OutputType.plain, include_func, false, error /* mark error */, merge /* merge */);
+		}
+		else {
+            return parse( text, OutputFormatter.OutputType.plain, include_func, false, error, merge);
 		}
 	}
 
@@ -378,7 +391,7 @@ public class IceParserFacade
 		//print( "Clean3" );
         sr = new StringReader( sw.toString() );
         sw = new StringWriter( );
-
+        
         cl2_scn.yyclose();
         cl2_scn.yyreset(sr);
         cl2_scn.parse(sw);
@@ -409,7 +422,6 @@ public class IceParserFacade
         // Run the Output formatter?
         if (mergeLabels || (! (outType == OutputFormatter.OutputType.plain || outType == OutputFormatter.OutputType.phrase_per_line)))
         {
-
             String result = outFormatter.parse(sw.toString(), outType, mergeLabels);
             return result;
         }
@@ -421,26 +433,4 @@ public class IceParserFacade
     {
         return outFormatter.finish();
     }
-	/*public static void main( String[] args )
-	{
-		System.out.println( "Testing parser" );
-		long start = System.currentTimeMillis();
-
-		IceParserFacade pfac = new IceParserFacade();
-		try
-		{
-			String parsed = pfac.parse( "Stóru lkfnvf strákarnir nkfng leika sfg3fn sér fpkfþ við aþ sætu lheþsf stúlkurnar nvfng í aþ rauðu lhfþvf pilsunum nhfþg . .", true, true );
-
-			System.out.println( parsed );
-		}
-		catch( IOException e )
-		{
-			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-		}
-		long end = System.currentTimeMillis();
-
-		long duration = (end-start);
-		System.out.println( "Time (msec):"+duration );
-
-	}*/
 }
