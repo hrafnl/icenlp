@@ -21,7 +21,7 @@ public class OutputGenerator {
 	// Private member variables.
 	private Configuration configuration;
 	private MappingLexicon mapperLexicon = null;
-	private String outputFormat = null;
+	private String TaggingOutputFormat = null;
 	private String unknownOutputFormat = null;
 	private String spaceOutputFormat = null;
 	private boolean lemmatize = false;
@@ -113,15 +113,15 @@ public class OutputGenerator {
 		}
 
 		// Check for the tagging output
-		if (this.configuration.containsKey("Outputformat")) {
-			this.outputFormat = this.configuration.getValue("Outputformat");
+		if (this.configuration.containsKey("TaggingOutputFormat")) {
+			this.TaggingOutputFormat = this.configuration.getValue("TaggingOutputFormat");
 			
-			if(this.outputFormat.contains("[LEMMA]") && externalMorpho.equals("icenlp"))
+			if(this.TaggingOutputFormat.contains("[LEMMA]") && externalMorpho.equals("icenlp"))
 			{
 				this.lemmatize = true;
 			}
 
-			System.out.println("[i] Output format: " + this.outputFormat + '.');
+			System.out.println("[i] Tagging output format: " + this.TaggingOutputFormat + '.');
 		}
 		
 		if(this.configuration.containsKey("UnknownOutputformat"))
@@ -186,7 +186,7 @@ public class OutputGenerator {
 			}
 			
 			
-			if (this.outputFormat.contains("[FUNC]")||this.configuration.getValue("IceParserOutput").toLowerCase().equals("tcf")||this.configuration.getValue("IceParserOutput").toLowerCase().equals("xml"))
+			if (this.TaggingOutputFormat.contains("[FUNC]")||this.configuration.getValue("IceParserOutput").toLowerCase().equals("tcf")||this.configuration.getValue("IceParserOutput").toLowerCase().equals("alt")||this.configuration.getValue("IceParserOutput").toLowerCase().equals("xml"))
 				this.iceParser = IceParser.instance();
 			
 		} catch (Exception e) {
@@ -217,18 +217,21 @@ public class OutputGenerator {
 		// Create output string that will be sent to the client.
 		StringBuilder builder = new StringBuilder();
 		
-		
+		// GöL
 		// If IceParserOutput is set to true in the config then
 		// we will only show that output and stop.
 		// otherwise we will go on to show the tagged output
 		if (this.configuration.getValue("IceParserOutput").toLowerCase().equals("tcf")
-			||this.configuration.getValue("IceParserOutput").toLowerCase().equals("xml")) {	
+			||this.configuration.getValue("IceParserOutput").toLowerCase().equals("xml")
+			||this.configuration.getValue("IceParserOutput").toLowerCase().equals("txt")
+			||this.configuration.getValue("IceParserOutput").toLowerCase().equals("alt")) {	
 			builder.append(this.iceParser.getParsedString());
 			return builder.toString();
 		}
 
+
 		// If we have not set any tagging output
-		if (this.outputFormat == null) {
+		if (this.TaggingOutputFormat == null) {
 			for (Word word : wordList) {
 				if (word.linkedToPreviousWord)
 					builder.append(punctuationSeparator + word.getLexeme()
@@ -246,7 +249,7 @@ public class OutputGenerator {
 			for (Word word : wordList) {
 
 				String part = null;
-				part = this.outputFormat.replace("[LEXEME]", word.getLexeme());
+				part = this.TaggingOutputFormat.replace("[LEXEME]", word.getLexeme());
 				part = part.replace("[TAG]", word.getTag());
 				if (this.iceParser != null) {
 					if (word.parseString == null)
@@ -269,8 +272,8 @@ public class OutputGenerator {
 						if (this.configuration.debugMode()) 
 							System.out.println("[debug] word " + word.getLemma() + " not found in bidix");
 
-						part = this.outputFormat.replace("[LEXEME]", word.getLexeme());
-						// COMMENT: ekki stjarna, heldur @
+						part = this.TaggingOutputFormat.replace("[LEXEME]", word.getLexeme());
+						// COMMENT: not a star but an @ sign
 						part = part.replace("[LEMMA]", "*" + word.getLexeme());
 						part = part.replace("[TAG]", "");
 						if (word.parseString != null)
@@ -361,7 +364,7 @@ public class OutputGenerator {
 			}
 			else
 			{
-				String normal = this.outputFormat;
+				String normal = this.TaggingOutputFormat;
 				
 				normal = normal.replace("[LEXEME]", word.getLexeme());
 				normal = normal.replace("[LEMMA]", word.getLemma());

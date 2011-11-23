@@ -52,6 +52,9 @@ public class Configuration {
 
 		String strLine = null;
 		try {
+		// only done once to have this config variable alive in the begining
+		Configuration.getInstance().addConfigEntry("IceParserOutputTMP", "phrase_per_line");	
+			
 			int lineNumber = 1;
 			while ((strLine = br.readLine()) != null) {
 				if (!strLine.startsWith("#") && !strLine.startsWith("//")

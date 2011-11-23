@@ -104,6 +104,13 @@ public class ClientThread implements Runnable {
 					if (this.debugMode) {
 						System.out.println("[debug] String from client: " + strFromClient);
 					}
+
+					strFromClient = removeAltBrackets(strFromClient);
+					
+					if (this.debugMode) {
+						System.out.println("[debug] Cropped string: " + strFromClient);
+					}
+					
 					// Let's check out the output that the clients will be
 					// receiving and let's create a replay for the client.
 					String taggedString = null;
@@ -116,6 +123,7 @@ public class ClientThread implements Runnable {
 						}
 						else
 						{
+							
 							// wrap to function.
 							java.lang.StringBuilder b = new StringBuilder();
 							
@@ -148,7 +156,7 @@ public class ClientThread implements Runnable {
 						break;
 					}
 				}
-                
+
 				else {
 				    if(this.debugMode){
                         System.out.println("[debug] invalid initial packet from client.");
@@ -196,7 +204,7 @@ public class ClientThread implements Runnable {
 		if (this.debugMode)
 			System.out.println("[debug] data sent to client.");
 	}
-    
+
     private Packet readFromClient() {
 		byte[] data = new byte[512];
 		Packet packet = null;
@@ -210,5 +218,112 @@ public class ClientThread implements Runnable {
 		}
 
 		return packet;
+	}
+
+	// if we find [ xml ] or [ tcf ] we set the configs according to the string
+	private String removeAltBrackets(String strFromClient)
+	{
+        // GöL
+        // resetting temp-config-variables
+		Configuration.getInstance().addConfigEntry("IceParserOutputError","false");
+		Configuration.getInstance().addConfigEntry("IceParserOutputMerge","false");
+
+		// if we have anything else than alt, we just return the string back
+		if (!Configuration.getInstance().getValue("IceParserOutput").equals("alt"))
+		{
+			return strFromClient;
+		}
+
+        // if the first char isn't [ then we will return the text unaltered straight away
+       if (strFromClient.charAt(0) != '[')
+        {
+            return strFromClient;
+        }
+
+
+
+
+
+		// GÖL
+		// if we have alt, then we have to stripp off the first brackets
+		// the method is described below:
+		// 1. locate first [
+		// 2. check if we find 'tcf', 'xml' or 'txt'
+		// 3. locate the next ]
+		// 4. if we find [ next then go to 1., if we do not find [ we go to 5.
+		// 5. build the string until we are at the end of
+		String newString = "";
+		boolean stopper = false;
+		for(int counter = 0 ; counter < strFromClient.length() ; counter++)
+		{
+			// stops if we have closed [ ] and the next word is not [
+			if (stopper && (strFromClient.charAt(counter) != '['))
+			{
+				return strFromClient.substring(counter);
+			}
+
+			if (strFromClient.charAt(counter) == ']')
+			{
+				stopper = true;
+			}
+			// if we have alt currently in IceParserOutput, then we set what is inside
+			// the brackets inside a temp version of IceParserOutput in the config
+			else if (strFromClient.charAt(counter) == '[')
+			{
+				if ((strFromClient.charAt(counter+1) == 't') &&
+					(strFromClient.charAt(counter+2) == 'c') &&
+					(strFromClient.charAt(counter+3) == 'f') &&
+					(strFromClient.charAt(counter+4) == ']'))
+				{
+					counter += 3;
+					Configuration.getInstance().addConfigEntry("IceParserOutputTMP","tcf");
+				}
+				else if ((strFromClient.charAt(counter+1) == 'x') &&
+					(strFromClient.charAt(counter+2) == 'm') &&
+					(strFromClient.charAt(counter+3) == 'l') &&
+					(strFromClient.charAt(counter+4) == ']'))
+				{
+					counter += 3;
+					Configuration.getInstance().addConfigEntry("IceParserOutputTMP","xml");
+				}
+				else if ((strFromClient.charAt(counter+1) == 't') &&
+					(strFromClient.charAt(counter+2) == 'x') &&
+					(strFromClient.charAt(counter+3) == 't') &&
+					(strFromClient.charAt(counter+4) == ']'))
+				{
+					counter += 3;
+					Configuration.getInstance().addConfigEntry("IceParserOutputTMP","txt");
+				}
+				else if ((strFromClient.charAt(counter+1) == 't') &&
+					(strFromClient.charAt(counter+2) == '1') &&
+					(strFromClient.charAt(counter+3) == 'l') &&
+					(strFromClient.charAt(counter+4) == ']'))
+				{
+					counter += 3;
+					Configuration.getInstance().addConfigEntry("IceParserOutputTMP","t1l");
+				}
+				else if ((strFromClient.charAt(counter+1) == 'e') &&
+					(strFromClient.charAt(counter+2) == 'r') &&
+					(strFromClient.charAt(counter+3) == 'r') &&
+					(strFromClient.charAt(counter+4) == 'o') &&
+					(strFromClient.charAt(counter+5) == 'r') &&
+					(strFromClient.charAt(counter+6) == ']'))
+				{
+					counter += 6;
+					Configuration.getInstance().addConfigEntry("IceParserOutputError","true");
+				}
+				else if ((strFromClient.charAt(counter+1) == 'm') &&
+					(strFromClient.charAt(counter+2) == 'e') &&
+					(strFromClient.charAt(counter+3) == 'r') &&
+					(strFromClient.charAt(counter+4) == 'g') &&
+					(strFromClient.charAt(counter+5) == 'e') &&
+					(strFromClient.charAt(counter+6) == ']'))
+				{
+					counter += 6;
+					Configuration.getInstance().addConfigEntry("IceParserOutputMerge","true");
+				}
+			}
+		}
+	return newString;
 	}
 }

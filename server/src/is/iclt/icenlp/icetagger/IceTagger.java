@@ -158,7 +158,7 @@ public class IceTagger implements IIceTagger {
 					// facade.useTriTagger(true); // equivalent to
 					// facade.setModelType(IceTagger.HmmModelType.startend)
 					// This makes TriTagger only do final disambiguation
-					iceTaggerFacade.setModelType(is.iclt.icenlp.core.icetagger.IceTagger.HmmModelType.end);
+					iceTaggerFacade.setModelType(is.iclt.icenlp.core.icetagger.IceTagger.HmmModelType.startend);
 					System.out.println("[i] Tritagger is ready.");
 				}
 			}
