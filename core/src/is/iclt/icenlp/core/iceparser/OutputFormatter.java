@@ -46,8 +46,10 @@ public class OutputFormatter
 	private String tcfText = "";
 	private String tokens = "";
 	private String posTags = "";
+    private String tcfErrors = "";
 	private int tokenID = 0;
 	private int constituentID = 0;
+    private int errorID = 0;
 
 	public void setMergeTags(boolean newVal)
 	{
@@ -561,7 +563,13 @@ public class OutputFormatter
 		print("   </parse>\n");
 		print("  </depparsing>\n\n");
 */
-		
+        if (!tcfErrors.equals(""))
+        {
+            print("  <errors>\n");
+            print(tcfErrors);
+            print("  </errors>\n\n");
+        }
+
 // finishing
 		print(" </TextCorpus>\n");
 		print("</D-Spin>");
@@ -570,8 +578,10 @@ public class OutputFormatter
 		tokens = "";
 		posTags = "";
 		tcfConstituents = "";
+        tcfErrors = "";
 		tokenID = 0;
 		constituentID = 0;
+        errorID = 0;
 	}
 	
 
@@ -604,6 +614,7 @@ public class OutputFormatter
 			else if(var.OutputFormatter_Type == OutputFormatter_Type.SENTENCE)
 			{
 				constituentID++;
+
 				tcfConstituents += (indent+"<constituent ID=\"c"+constituentID+"\" cat=\""+var.OutputFormatter_Type+"\">\n");
 				printTCFtree(var.children, indent+" ", phrase);
 				tcfConstituents += (indent+"</constituent>\n");
@@ -633,11 +644,37 @@ public class OutputFormatter
 					tcfConstituents += (indent+"<constituent ID=\"c"+constituentID+"\" cat=\""+phrase+"\" tokenIDs=\"t"+tokenID+"\"/>\n");
 //	debug, enable to see what word it is	tcfConstituents += (indent+"<constituent ID=\"c3\" cat=\""+phrase+"\" tokenIDs=\"t"+tokenID+"("+data+")\"/>\n");
 				}
+
+
+                // print out the erros, if we find ? sign at the end of a tag
+ //               if (var.OutputFormatter_Type.toString().charAt(data.length()-1) == '?')
+                if (phrase.equals("NP?"))
+                {
+                    errorID++;
+                    String errorType = "highlight";
+                    //  <e ID="e1" const="c5" type="highlight" />
+                    tcfErrors += "   <e ID=\"e"+errorID+"\" const=\"c"+constituentID+"\" type=\""+errorType+"\" />\n";
+                }
+
+
+
 				// go to the tags
 				printTCFtree(var.children, "", "");
 			}
 			else if(var.OutputFormatter_Type == OutputFormatter_Type.PHRASE)
 			{
+
+ //             if (var.OutputFormatter_Type.toString().charAt(data.length()-1) == '?')
+                if (phrase.equals("NP?"))
+                {
+                    errorID++;
+                    String errorType = "highlight";
+                    tcfErrors += "   <e ID=\"e"+errorID+"\" const=\"c"+constituentID+"\" type=\""+errorType+"\" />\n";
+                }
+
+
+
+
 				// if the child contains a phrase we will print out "constituent" data
 				// if the child does not contain a phrase we only move the child without printing the "constituent"
 				if (isChildHasPHRASE(var.children))

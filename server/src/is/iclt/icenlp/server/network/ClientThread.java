@@ -105,8 +105,15 @@ public class ClientThread implements Runnable {
 						System.out.println("[debug] String from client: " + strFromClient);
 					}
 
-					strFromClient = removeAltBrackets(strFromClient);
-					
+                    if (!strFromClient.equals(""))
+                    {
+					    strFromClient = removeAltBrackets(strFromClient);
+                    }
+                    else
+                    {
+                        System.out.println("gDB>> empty line!");
+                    }
+
 					if (this.debugMode) {
 						System.out.println("[debug] Cropped string: " + strFromClient);
 					}
