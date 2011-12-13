@@ -185,7 +185,7 @@ public class OutputFormatter
     }
 
 	private void write(OutputFormatter_Part root)
-	{       System.out.println("gDB> outType = "+outType);
+	{ //      System.out.println("gDB> outType = "+outType);
 		if(outType == OutputType.json)
 		{
             if (firstLine)
@@ -401,83 +401,84 @@ public class OutputFormatter
 //					encoders				//
 
 
-//
-//Plaintext one phrase per line
-//
-	private void writePlainPerLine(OutputFormatter_Part root)
-	{System.out.println("gDB>> writePlainPerLine");
-		plainPerLineTree(root.children, 0);
-	}
 
 
-	private void plainPerLineTree(ArrayList<OutputFormatter_Part> list, int depth)
-	{
-		for(OutputFormatter_Part child : list)
-		{
-			if(child.OutputFormatter_Type == OutputFormatter_Type.WORD || child.OutputFormatter_Type == OutputFormatter_Type.TAG || child.OutputFormatter_Type == OutputFormatter_Type.FUNC || child.OutputFormatter_Type == OutputFormatter_Type.PHRASE)
-			{
-				if(child.OutputFormatter_Type == OutputFormatter_Type.TAG && depth == 3)
-					print(child.data);
-				else
-					print(child.data+" ");				
-			}
+    //
+    //Plaintext one phrase per line
+    //
+    private void writePlainPerLine(OutputFormatter_Part root)
+    {
+        plainPerLineTree(root.children, 0);
+    }
+    private void plainPerLineTree(ArrayList<OutputFormatter_Part> list, int depth)
+    {
+        for(OutputFormatter_Part child : list)
+        {
+            if(child.OutputFormatter_Type == OutputFormatter_Type.WORD || child.OutputFormatter_Type == OutputFormatter_Type.TAG || child.OutputFormatter_Type == OutputFormatter_Type.FUNC || child.OutputFormatter_Type == OutputFormatter_Type.PHRASE)
+            {
+                if(child.OutputFormatter_Type == OutputFormatter_Type.TAG && depth == 3)
+                    print(child.data);
+                else
+                    print(child.data+" ");
+            }
 
-			plainPerLineTree(child.children, depth+1);
+        plainPerLineTree(child.children, depth+1);
 
-			if(child.OutputFormatter_Type == OutputFormatter_Type.FUNC || child.OutputFormatter_Type == OutputFormatter_Type.PHRASE)
-			{
-				String closetag = child.data.substring(1, child.data.length());
-				if(child.OutputFormatter_Type == OutputFormatter_Type.FUNC)
-					closetag+="}";
-				else
-					closetag+="]";
-				if(depth > 1)
-					print(closetag+" ");
-				else
-					print(closetag);
-			}
-			if(child.OutputFormatter_Type != OutputFormatter_Type.WORDS)
-			{
-				if(child.OutputFormatter_Type == OutputFormatter_Type.TAG && depth < 4)
-				{
-					print("\n");
-				}
-				else if(depth < 2 && child.OutputFormatter_Type != OutputFormatter_Type.TAG)
-					print("\n");
-			}
-		}
-	}
-// GÖL
-//Plaintext
-//
-	private void writePlaintext(OutputFormatter_Part root)
-	{System.out.println("gDB>> writePlaintext");
-		plaintextTree(root.children);
-	}
-	private void plaintextTree(ArrayList<OutputFormatter_Part> list)
-	{
-		for(OutputFormatter_Part child : list)
-		{
-			if(child.OutputFormatter_Type == OutputFormatter_Type.WORD || child.OutputFormatter_Type == OutputFormatter_Type.TAG || child.OutputFormatter_Type == OutputFormatter_Type.FUNC || child.OutputFormatter_Type == OutputFormatter_Type.PHRASE)
-			{
-				print(child.data+" ");
-			}
-			plaintextTree(child.children);
-			if(child.OutputFormatter_Type == OutputFormatter_Type.FUNC || child.OutputFormatter_Type == OutputFormatter_Type.PHRASE)
-			{
-				String closetag = child.data.substring(1, child.data.length());
-				if(child.OutputFormatter_Type == OutputFormatter_Type.FUNC)
-					closetag+="}";
-				else
-					closetag+="]";
-			
-				print(closetag+" ");
-			}
+        if(child.OutputFormatter_Type == OutputFormatter_Type.FUNC || child.OutputFormatter_Type == OutputFormatter_Type.PHRASE)
+        {
+            String closetag = child.data.substring(1, child.data.length());
+            if(child.OutputFormatter_Type == OutputFormatter_Type.FUNC)
+                closetag+="}";
+            else
+                closetag+="]";
+            if(depth > 1)
+                print(closetag+" ");
+            else
+                print(closetag);
+            }
+            if(child.OutputFormatter_Type != OutputFormatter_Type.WORDS)
+            {
+                if(child.OutputFormatter_Type == OutputFormatter_Type.TAG && depth < 4)
+                {
+                    print("\n");
+                }
+                else if(depth < 2 && child.OutputFormatter_Type != OutputFormatter_Type.TAG)
+                    print("\n");
+            }
+        }
+    }
 
-			if(child.OutputFormatter_Type == OutputFormatter_Type.SENTENCE)
-				print("\n");
-		}
-	}
+
+    //
+    //Plaintext
+    //
+    private void writePlaintext(OutputFormatter_Part root)
+    {
+        plaintextTree(root.children);
+    }
+    private void plaintextTree(ArrayList<OutputFormatter_Part> list)
+    {
+        for(OutputFormatter_Part child : list)
+        {
+            if(child.OutputFormatter_Type == OutputFormatter_Type.WORD || child.OutputFormatter_Type == OutputFormatter_Type.TAG || child.OutputFormatter_Type == OutputFormatter_Type.FUNC || child.OutputFormatter_Type == OutputFormatter_Type.PHRASE)
+            {
+                print(child.data+" ");
+            }
+            plaintextTree(child.children);
+            if(child.OutputFormatter_Type == OutputFormatter_Type.FUNC || child.OutputFormatter_Type == OutputFormatter_Type.PHRASE)
+            {
+                String closetag = child.data.substring(1, child.data.length());
+                if(child.OutputFormatter_Type == OutputFormatter_Type.FUNC)
+                closetag+="}";
+                else
+                closetag+="]";
+                print(closetag+" ");
+            }
+
+            if(child.OutputFormatter_Type == OutputFormatter_Type.SENTENCE)
+                print("\n");
+        }
+    }
 
 //
 //XML
@@ -556,7 +557,7 @@ public class OutputFormatter
 		print("  </parsing>\n\n");
 		
 //	<dependency func="COMP" depIDs="t3" govIDs="t1"/>
-/*	we do not do this
+/*	we do not have depparsing in the current state of iceNLP
 		print("  <depparsing>\n");
 		print("   <parse>\n");
 		print(dependency);
@@ -598,6 +599,9 @@ public class OutputFormatter
 			data = data.replace("&", "&amp;");
 			data = data.replace("<", "&lt;");
 			data = data.replace(">", "&gt;");
+
+
+            System.out.println("gDB>"+indent+var.OutputFormatter_Type+" data="+data+" phrase="+phrase);
 
 			// we do not print TAG, WORDS
 			// if we encounter FUNC we start making that list
@@ -642,38 +646,36 @@ public class OutputFormatter
 				else
 				{
 					tcfConstituents += (indent+"<constituent ID=\"c"+constituentID+"\" cat=\""+phrase+"\" tokenIDs=\"t"+tokenID+"\"/>\n");
-//	debug, enable to see what word it is	tcfConstituents += (indent+"<constituent ID=\"c3\" cat=\""+phrase+"\" tokenIDs=\"t"+tokenID+"("+data+")\"/>\n");
 				}
 
-
-                // print out the erros, if we find ? sign at the end of a tag
- //               if (var.OutputFormatter_Type.toString().charAt(data.length()-1) == '?')
-                if (phrase.equals("NP?"))
+                // print out the erros, if we find ? sign within a tag
+                // the error detected here are words
+                // that is : phrase="NP?" var.OutputFormatter_Type="WORD" data="möguleiki"
+                if (phrase.matches("[\\w]+[\\w\\W]+\\?.*"))
                 {
                     errorID++;
-                    String errorType = "highlight";
+                    String errorType = "underline";
                     //  <e ID="e1" const="c5" type="highlight" />
                     tcfErrors += "   <e ID=\"e"+errorID+"\" const=\"c"+constituentID+"\" type=\""+errorType+"\" />\n";
                 }
-
-
 
 				// go to the tags
 				printTCFtree(var.children, "", "");
 			}
 			else if(var.OutputFormatter_Type == OutputFormatter_Type.PHRASE)
 			{
-
- //             if (var.OutputFormatter_Type.toString().charAt(data.length()-1) == '?')
-                if (phrase.equals("NP?"))
+  //            System.out.println("gDB> data=("+data+") phrase=("+phrase+")");
+                // print out the erros, if we find ? sign within a tag
+                // the errors detected here is:
+                //when a <constituent ID="c2" cat="NP" tokenIDs="t2"/> that is phrase="" or phrase="PP" var.OutputFormatter_Type="PHRASE" data="[NP?"
+                // and avoid detecting :
+                // gDB> (phrase=(NP?) var.OutputFormatter_Type=(PHRASE) data=([AP)
+                if (data.matches("\\[?[\\w]+\\?.*"))
                 {
                     errorID++;
                     String errorType = "highlight";
-                    tcfErrors += "   <e ID=\"e"+errorID+"\" const=\"c"+constituentID+"\" type=\""+errorType+"\" />\n";
+                    tcfErrors += "   <e ID=\"e"+errorID+"\" const=\"c"+(constituentID+1)+"\" type=\""+errorType+"\" />\n";
                 }
-
-
-
 
 				// if the child contains a phrase we will print out "constituent" data
 				// if the child does not contain a phrase we only move the child without printing the "constituent"
@@ -689,7 +691,7 @@ public class OutputFormatter
 					printTCFtree(var.children, indent, data.substring(1));
 				}
 			}
-			else if(var.OutputFormatter_Type == OutputFormatter_Type.FUNC)
+			else if (var.OutputFormatter_Type == OutputFormatter_Type.FUNC)
 			{
 				printTCFtree(var.children, indent, phrase);
 			}
