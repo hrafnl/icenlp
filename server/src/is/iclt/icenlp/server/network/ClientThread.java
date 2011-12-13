@@ -120,22 +120,21 @@ public class ClientThread implements Runnable {
 					
 					// Let's check out the output that the clients will be
 					// receiving and let's create a replay for the client.
-					String taggedString = null;
+					String taggedString = "";
+
 					try 
 					{
 						if(this.configuration.containsKey("ExternalMorpho") && this.configuration.getValue("ExternalMorpho").equals("apertium"))
 						{
 							taggedString = this.outputGenerator.generateExternalOutput(strFromClient) + "\n";
-
 						}
 						else
 						{
-							
 							// wrap to function.
 							java.lang.StringBuilder b = new StringBuilder();
-							
+
 							String[] lines = strFromClient.split("\n");
-							
+
 							for(String s : lines)
 							{
 								String strOut = this.outputGenerator.generateOutput(s);
@@ -144,7 +143,6 @@ public class ClientThread implements Runnable {
 					
 							taggedString = b.toString();
 						}
-						
 						if (this.debugMode)
 							System.out.println("[debug] Reply string from IceNLP that will be sent to client is: " + taggedString);
 
@@ -246,9 +244,6 @@ public class ClientThread implements Runnable {
         {
             return strFromClient;
         }
-
-
-
 
 
 		// GÖL
