@@ -134,24 +134,29 @@ VerbSubjObjNom = {VPDat}{WhiteSpace}+{FuncSubjectOblique}{WhiteSpace}+{NomSubjec
 %%
 {VerbDatObjAccObj}
 	{
-	//System.err.println("obj2-1"); 
-	//System.err.println(yytext());
+////	System.err.println("obj2-1");
+////	System.err.println(yytext());
 
 			String matchedStr = yytext();
 			String newStr = matchedStr.replaceAll("\\*OBJ<","*IOBJ<");	// change to indirect object
-			
+
 			//making sure to check for the tags after the object and before the NPa because the same tags can occur elsewhere
 			int objIndex = newStr.indexOf("*IOBJ<}");
 			String afterObj = newStr.substring(objIndex, newStr.length());
 
-			int npIndex = afterObj.lastIndexOf("[NPs ");
+			int npIndex = afterObj.lastIndexOf("[NPs "); // this is a possible danger, might have to become "[NPs" without " "
 			if(npIndex == -1)
-				npIndex = afterObj.lastIndexOf("[NPa ");
-			if(npIndex != -1)
+            {
+				npIndex = afterObj.lastIndexOf("[NPa");
+//				npIndex = afterObj.lastIndexOf("[NPa ");    this has been commented out due to [NPa? existing and messing everything up
+            }
+            if(npIndex != -1)
+            {
 				npIndex += objIndex;
+            }
 
 			String middlePart = newStr.substring(newStr.indexOf("*IOBJ<}")+7, npIndex);
-	//System.err.println("\n\nMiddlePart: " + middlePart + "\n\n");
+//	System.err.println("\n\nMiddlePart: " + middlePart + "\n\n");
 			if (middlePart.contains(" PP]")) {	
 				theIndex = StringSearch.splitString(newStr," PP]", true, 4);
 			}
@@ -201,8 +206,8 @@ VerbSubjObjNom = {VPDat}{WhiteSpace}+{FuncSubjectOblique}{WhiteSpace}+{NomSubjec
 */
 		} 		
 {VerbAccObjDatObj}	{ 
-	//System.err.println("obj2-2");
-	//System.err.println(yytext());
+//	System.err.println("obj2-2");
+//	System.err.println(yytext());
 
 			// The first object is the direct object 
 			String matchedStr = yytext();
@@ -264,7 +269,7 @@ VerbSubjObjNom = {VPDat}{WhiteSpace}+{FuncSubjectOblique}{WhiteSpace}+{NomSubjec
 		} 		
 
 {ComplObj}	{ 
-	//System.err.println("obj2-3");
+//	System.err.println("obj2-3");
 			/* Find where the Complement function ended and insert the OBJ label */
 			theIndex = StringSearch.splitString(yytext(),"*COMP<}", true, 7);		
 			if (theIndex == -1)
@@ -280,7 +285,7 @@ VerbSubjObjNom = {VPDat}{WhiteSpace}+{FuncSubjectOblique}{WhiteSpace}+{NomSubjec
 		}
 
 {ComplCompl}	{ 
-	//System.err.println("obj2-4");
+//	System.err.println("obj2-4");
 			/* Find where the Complement function ended and insert the COMP label */
 			theIndex = StringSearch.splitString(yytext(),"*COMP<}", true, 7);		
 			if (theIndex == -1)
@@ -296,7 +301,7 @@ VerbSubjObjNom = {VPDat}{WhiteSpace}+{FuncSubjectOblique}{WhiteSpace}+{NomSubjec
 		}
 		
 {SubjVerbObjNom}  { 
-	//System.err.println("obj2-5");
+//	System.err.println("obj2-5");
 			theIndex = StringSearch.splitString(yytext(),"VP]", false, 3);		
 			if(theIndex == -1)
 			{
@@ -308,7 +313,7 @@ VerbSubjObjNom = {VPDat}{WhiteSpace}+{FuncSubjectOblique}{WhiteSpace}+{NomSubjec
 			}
 		  } 
 {VerbSubjObjNom}  { 
-	//System.err.println("obj2-6");
+//	System.err.println("obj2-6");
 			theIndex = StringSearch.splitString(yytext(),"*SUBJ<}", true, 7);		
 			if (theIndex == -1)
 				theIndex = StringSearch.splitString(yytext(),"*SUBJ}", true, 6);	
@@ -323,7 +328,7 @@ VerbSubjObjNom = {VPDat}{WhiteSpace}+{FuncSubjectOblique}{WhiteSpace}+{NomSubjec
 		  } 
 
 {PPVPInfObj}	{ 
-	//System.err.println("obj2-7");
+//	System.err.println("obj2-7");
 			/* Find where the PP phrase ended and insert the OBJ label */
 			theIndex = StringSearch.splitString(yytext(),"PP]", false, 3);		
 			if(theIndex == -1)
@@ -340,13 +345,11 @@ VerbSubjObjNom = {VPDat}{WhiteSpace}+{FuncSubjectOblique}{WhiteSpace}+{NomSubjec
 
 {NPPhrases}	{out.write(yytext());}	/* Don't touch NPs phrases */
 {Complement1}	{out.write(Comp0Open+yytext()+Comp0Close);
-	//System.err.println("1111 " + yytext());
 		} 
 {Complement2}	{out.write(Comp0Open+yytext()+Comp0Close);
-	//System.err.println("2222 " + yytext());
 		} 
 
-"\n"		{ //System.err.print("Reading line: " + Integer.toString(yyline+1) + "\r"); 
+"\n"		{ System.err.print("Reading line: " + Integer.toString(yyline+1) + "\r");
 		out.write("\n"); }
 .		{ out.write(yytext());}
 
