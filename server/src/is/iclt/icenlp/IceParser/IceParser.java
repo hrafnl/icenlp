@@ -103,7 +103,7 @@ public class IceParser implements IIceParser{
                 if (Configuration.getInstance().getValue("IceParserOutputError").equals("true")){error = true;};
                 if (Configuration.getInstance().getValue("IceParserOutputMerge").equals("true")){merge = true;};
 			}
-
+System.out.println("gDB>>taggedString=("+taggedString+")");
 				String strParse = this.parser.parse(taggedString, include_functions, value_IceParserOutput, error, merge);
 //System.out.println("gDB>>strParse:"+strParse);
 /*			if (!(value_IceParserOutput.equals("xml")||value_IceParserOutput.equals("tcf")))
@@ -223,7 +223,9 @@ public class IceParser implements IIceParser{
 		StringBuilder strBuilder = new StringBuilder();
 		
 		for(Word w : wordList)
+        {
 			strBuilder.append(w.getLexeme() + " " + w.getTag() + " ");
-		return strBuilder.toString();
+        }
+        return strBuilder.toString();
 	}
 }

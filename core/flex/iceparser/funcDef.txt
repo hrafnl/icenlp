@@ -2,8 +2,8 @@ OpenQual = "{*QUAL"
 CloseQual= "*QUAL}"
 
 /* If a question mark appears at then end of a subject label then there is possible an error in the subject */
-OpenSubj = "{*SUBJ"[<>]?\??
-CloseSubj = "*SUBJ"[<>]?\??"}"
+OpenSubj = "{*SUBJ"[<>]?\??{Word}
+CloseSubj = "*SUBJ"[<>]?\??{Word}"}"
 
 OpenObj = "{*OBJ"(AP|NOM)?[<>]
 CloseObj = "*OBJ"(AP|NOM)?[<>]"}"
@@ -11,8 +11,8 @@ CloseObj = "*OBJ"(AP|NOM)?[<>]"}"
 OpenObjI = "{*IOBJ"[<>]
 CloseObjI = "*IOBJ"[<>]"}"
 
-OpenComp = "{*COMP"[<>]? 
-CloseComp = "*COMP"[<>]?"}"
+OpenComp = "{*COMP"[<>]?\??{Word}
+CloseComp = "*COMP"[<>]?\??{Word}"}"
 
 OpenTemp = "{*TIMEX"
 CloseTemp = "*TIMEX}"

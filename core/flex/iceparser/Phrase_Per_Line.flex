@@ -63,7 +63,7 @@ import java.io.*;
 WordChar = [^\r\n\t\f\[\]\{\} ]
 
 Word = {WordChar}+
-Label = FRWs?|AdvP|APs?|NP[s\?]?|VP[bgips]?|PP|S?CP|InjP|MWE_(AdvP|AP|CP|PP)
+Label = FRWs?|AdvP|APs?|NP[s\?]?([a-z]+\+?)*|VP[bgips]?|PP|S?CP|InjP|MWE_(AdvP|AP|CP|PP)
 Func = (("*"SUBJ|"*"I?OBJ(AP|NOM)?|"*"COMP)(<|>)?\??)|"*"QUAL | "*"TIMEX\??
 
 //nýtt
@@ -74,7 +74,7 @@ Symbol = \[{WhiteSpace}*{encodeOpen}\[{encodeClose}  | \]{WhiteSpace}*{encodeOpe
 
 %%
 
-<YYINITIAL> 
+<YYINITIAL>
 {
 	//nýtt
 
@@ -83,11 +83,11 @@ Symbol = \[{WhiteSpace}*{encodeOpen}\[{encodeClose}  | \]{WhiteSpace}*{encodeOpe
 		out.write(yytext()); out.write("\n");
 	}
 	// //
-	
-	"["{Label}" " 	
-	{ 
+
+	"["{Label}" "
+	{
 		/* System.err.println("InitLabel open " + yytext()); */
-		count++; str.append(yytext()); 
+		count++; str.append(yytext());
 		yybegin(PHRASE);
 	}
 	"{"{Func}" " 	

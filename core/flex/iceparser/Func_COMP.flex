@@ -23,6 +23,7 @@
 /* This transducer marks potential complements */
 package is.iclt.icenlp.core.iceparser;
 import java.io.*;
+import is.iclt.icenlp.core.utils.ErrorDetector;
 %%
 
 %public
@@ -51,7 +52,15 @@ import java.io.*;
       	while (!zzAtEOF) 
       	    yylex();
   }
-  
+    // order 1 = s1 {comp s2 comp}
+	// order 2 = {comp s1 comp} s2
+	public String AgreementCheck(String s1, String s2, String open, String close, int order)
+	{
+		return ErrorDetector.CompAgreementCheck(s1, s2, open, close, order);
+	}
+
+
+
   
 %}
 
@@ -122,6 +131,7 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 	//System.err.println(yytext());
 
 
+
 				theIndex = yytext().indexOf("VPb]")+4;
 
 				String afterVPb = yytext().substring(theIndex, yytext().length());
@@ -151,7 +161,9 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 				}
 				else
 				{
-					out.write(firstPart + Comp1Open + secondPart + Comp1Close);
+	System.out.println("gDB>> Func_COMP(SubjVerbAdvPCompl)="+firstPart + Comp1Open + secondPart + Comp1Close);
+					out.write(AgreementCheck(firstPart,secondPart,Comp1Open,Comp1Close,1));
+//					out.write(firstPart + Comp1Open + secondPart + Comp1Close);
 				}
 
 
@@ -171,6 +183,7 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 */
 			} 
 {SubjVerbMWEAdvPCompl}  {
+
 				/* Find where the second adverb phrase ended and insert the COMP label */
 				theIndex = StringSearch.splitString(yytext()," AdvP]", true, 6);	
 	//System.err.println("comp-2");	
@@ -180,11 +193,13 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 				}
 				else
 				{
+	System.out.println("gDB>> Func_COMP(SubjVerbMWEAdvPCompl)="+StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 					out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 				}
 			} 
 
-{SubjVerbNPCompl}	{ 
+{SubjVerbNPCompl}	{
+
 				/* Find where the NP phrase ended after the verb phrase and insert the COMP label */
 				theIndex = StringSearch.splitString2(yytext(),"VPb]","NP]");	
 	//System.err.println("comp-3");	
@@ -194,11 +209,13 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 				}
 				else
 				{
+	System.out.println("gDB>> Func_COMP(SubjVerbNPCompl)="+StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 					out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 				}
 			} 			
 
-{SubjVerbCPCompl}	{ 
+{SubjVerbCPCompl}	{
+
 				/* Find where the CP phrase ended and insert the COMP label */
 				theIndex = StringSearch.splitString(yytext(),"CP]", true, 3);	
 	//System.err.println("comp-4");	
@@ -208,10 +225,12 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 				}
 				else
 				{
+	System.out.println("gDB>> Func_COMP(SubjVerbCPCompl)="+StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 					out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 				}
 			}			
-{SubjVerbCompl}	{ 
+{SubjVerbCompl}	{
+
 			/* Find where the Verb phrase ended and insert the COMP label */
 			theIndex = StringSearch.splitString(yytext(),"VPb]", false, 4);	
 	//System.err.println("comp-5");
@@ -222,7 +241,10 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 			}
 			else
 			{
-				out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
+				System.out.println("gDB>> Func_COMP(SubjVerbCompl)="+StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
+
+				out.write(AgreementCheck(StringSearch.firstString,StringSearch.nextString,Comp1Open,Comp1Close,1));
+//				out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 			}
 		} 
 /*
@@ -237,7 +259,7 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 			out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 		} 
 */		
-{SubjCompl}	{ 
+{SubjCompl}	{
 			/* Find where the func subject phrase ended and insert the COMP label */
 			theIndex = StringSearch.splitString(yytext(),"*SUBJ}", false, 6);
 	//System.err.println("comp-6");
@@ -253,10 +275,13 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 			}
 			else
 			{
-				out.write(StringSearch.firstString+Comp0Open+StringSearch.nextString+Comp0Close);
+	System.out.println("gDB>> Func_COMP(SubjCompl)="+StringSearch.firstString+Comp0Open+StringSearch.nextString+Comp0Close);
+
+				out.write(AgreementCheck(StringSearch.firstString,StringSearch.nextString,Comp0Open,Comp0Close,99));
+//				out.write(StringSearch.firstString+Comp0Open+StringSearch.nextString+Comp0Close);
 			}
 		} 
-{SubjPPCompl}	{ 
+{SubjPPCompl}	{
 			/* Find where the Preposition phrase ended and insert the COMP label */
 			theIndex = StringSearch.splitString(yytext(),"PP]", false, 3);	
 	//System.err.println("comp-7");	
@@ -266,11 +291,12 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 			}
 			else
 			{
+	System.out.println("gDB>> Func_COMP(SubjPPCompl)="+StringSearch.firstString+Comp0Open+StringSearch.nextString+Comp0Close);
 				out.write(StringSearch.firstString+Comp0Open+StringSearch.nextString+Comp0Close);
 			}
 		} 		
 		
-{VerbSubjCompl}	{ 
+{VerbSubjCompl}	{
 			/* Find where the Subj function ended and insert the COMP label */
 			theIndex = StringSearch.splitString(yytext(),"*SUBJ<}", false, 7);
 	//System.err.println("comp-8");		
@@ -280,10 +306,12 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 			}
 			else
 			{
-				out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
+	System.out.println("gDB>> Func_COMP(VerbSubjCompl)="+StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
+	//			out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
+				out.write(AgreementCheck(StringSearch.firstString,StringSearch.nextString,Comp1Open,Comp1Close,1));
 			}
 		} 
-{VerbCompl}	{ 
+{VerbCompl}	{
 			/* Find where the Verb phrase ended and insert the COMP label */
 			theIndex = StringSearch.splitString(yytext(),"VPb]", false, 4);	
 	//System.err.println("comp-9");	
@@ -297,10 +325,11 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 			}
 			else
 			{
+	System.out.println("gDB>> Func_COMP(VerbCompl)="+StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 				out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 			}
 		} 
-{ComplVerb}	{ 
+{ComplVerb}	{
 			/* Find where the Verb phrase started and insert the COMP label */
 			theIndex = StringSearch.splitString(yytext(),"[VPb", false, -1);
 	//System.err.println("comp-10");	
@@ -311,13 +340,13 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 			}
 			else
 			{
+	System.out.println("gDB>> Func_COMP(ComplVerb)="+Comp2Open+StringSearch.firstString+Comp2Close+StringSearch.nextString);
 				out.write(Comp2Open+StringSearch.firstString+Comp2Close+StringSearch.nextString);
 	//System.err.println("First : \n" + StringSearch.firstString);
 	//System.err.println("Second : \n" + StringSearch.nextString);
 			}
 		} 
-{VerbAdvPCompl}	{ 
-
+{VerbAdvPCompl}	{
 			/* Find where the Adverbial phrase ended and insert the COMP label */
 			theIndex = StringSearch.splitString(yytext(),"AdvP]", true, 5);/////////////////var upprunalega false/*/-/-/-/-/-/-/-/-///
 	//System.err.println("comp-11");
@@ -328,13 +357,14 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 			}
 			else
 			{
+	System.out.println("gDB>> Func_COMP(VerbAdvPCompl)="+StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 				out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 	//System.err.println("First : \n" + StringSearch.firstString);
 	//System.err.println("Second : \n" + StringSearch.nextString);
 			}
 		} 
 		
-{VerbPPCompl}	{ 
+{VerbPPCompl}	{
 			/* Find where the Preposition phrase ended and insert the COMP label */
 			theIndex = StringSearch.splitString(yytext(),"PP]", false, 3);	
 	//System.err.println("comp-12");	
@@ -344,6 +374,7 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 			}
 			else
 			{
+	System.out.println("gDB>> Func_COMP(VerbPPCompl)="+StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 				out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 			}
 		} 

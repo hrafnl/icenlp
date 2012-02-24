@@ -110,7 +110,7 @@ public boolean agreement(String tag1, String tag2)
 	String pn2 = getPersonNumber(tag2);
 	String case1 = getCase(tag1);
 	// Only consider nominative case of subjects
-	if (pn1 == null || pn2 == null || case1 == null || !case1.equals("n"))
+	if ((pn1 == null) || (pn2 == null) || (case1 == null) || !case1.equals("n"))
 		return true;
 	else
 	{
@@ -148,9 +148,9 @@ SubjectVP = {FuncSubject}{WhiteSpace}+{OpenVP}" "~{CloseVP}
 			  String tagSubject = getSubjectTag(theSubject);
 			  // returns the tag for the verb, [VP stökk sfg1eþ VP]
 			  String tagVerb = getTag(theVP, 2);
-			  //System.out.println(theSubject + " : " + tagSubject + " -- " + theVP + " : " + tagVerb);
+			  System.out.println("gDB>str>"+theSubject + " : " + tagSubject + " -- " + theVP + " : " + tagVerb);
 			  if (tagSubject != null && tagVerb != null && !agreement(tagSubject,tagVerb))
-				System.out.println(str);
+				System.out.println("gDB>str>"+str);
 } 
 
 //{VPSubject}		{ String str = yytext();	

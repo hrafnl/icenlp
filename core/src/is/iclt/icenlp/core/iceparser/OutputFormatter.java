@@ -534,7 +534,7 @@ public class OutputFormatter
 		print("<D-Spin xmlns=\"http://www.dspin.de/data\" version=\"0.4\">\n");
 // meta data
 		print(" <MetaData xmlns=\"http://www.dspin.de/data/metadata\">\n");
-		print("   <source>RU, Reykjavik University</source>\n");
+		print("  <source>RU, Reykjavik University</source>\n");
  		print(" </MetaData>\n");
 // text corpus, divited into text, tokens(words) and tags.
 		print(" <TextCorpus xmlns=\"http://www.dspin.de/data/textcorpus\" lang=\"is\">\n");
@@ -600,9 +600,6 @@ public class OutputFormatter
 			data = data.replace("<", "&lt;");
 			data = data.replace(">", "&gt;");
 
-
-            System.out.println("gDB>"+indent+var.OutputFormatter_Type+" data="+data+" phrase="+phrase);
-
 			// we do not print TAG, WORDS
 			// if we encounter FUNC we start making that list
 			// if we see PHRASE we print out
@@ -623,11 +620,32 @@ public class OutputFormatter
 				printTCFtree(var.children, indent+" ", phrase);
 				tcfConstituents += (indent+"</constituent>\n");
 			}
+			else if (var.OutputFormatter_Type == OutputFormatter_Type.FUNC)
+			{
+				constituentID++;
+
+				tcfConstituents += (indent+"<constituent ID=\"c"+constituentID+"\" cat=\""+data+"\">\n");
+				printTCFtree(var.children, indent+" ", phrase);
+				tcfConstituents += (indent+"</constituent>\n");
+
+
+				// if we find something like : {*SUBJ>?p+n
+				// we should write an error with p and n
+				// any thing with a question mark will be grabbed as an error
+				if (data.matches(".*\\?.*"))
+                {
+                    errorID++;
+                    String errorType = "underline";
+                    errorType = extractError(data);
+                    tcfErrors += "   <e ID=\"e"+errorID+"\" const=\"c"+constituentID+"\" type=\""+errorType+"\" />\n";
+                }
+			}
 			else if(var.OutputFormatter_Type == OutputFormatter_Type.WORD)
 			{
 				constituentID++;
 				tokenID++;
-				
+
+
 				tokens += "   <token ID=\"t"+tokenID+"\">"+data+"</token>\n";
 				
 				// getting the Text
@@ -655,6 +673,8 @@ public class OutputFormatter
                 {
                     errorID++;
                     String errorType = "underline";
+                    errorType = extractError(phrase);
+					//System.out.println("gDB>>phrase=("+phrase+") var.OutputFormatter_Type=("+var.OutputFormatter_Type+") data=("+data+")");
                     //  <e ID="e1" const="c5" type="highlight" />
                     tcfErrors += "   <e ID=\"e"+errorID+"\" const=\"c"+constituentID+"\" type=\""+errorType+"\" />\n";
                 }
@@ -673,7 +693,9 @@ public class OutputFormatter
                 if (data.matches("\\[?[\\w]+\\?.*"))
                 {
                     errorID++;
-                    String errorType = "highlight";
+                    String errorType = extractError(data);
+					//System.out.println("gDB>>phrase=("+phrase+") var.OutputFormatter_Type=("+var.OutputFormatter_Type+") data=("+data+")");
+
                     tcfErrors += "   <e ID=\"e"+errorID+"\" const=\"c"+(constituentID+1)+"\" type=\""+errorType+"\" />\n";
                 }
 
@@ -697,6 +719,57 @@ public class OutputFormatter
 			}
 		}
 	}
+
+    // G : returns the errors... that is :takes everything from the ? to the end of the string.
+    private String extractError(String in)
+    {
+       // System.out.println("gDB>>"+in+" index="+in.length()+" > length="+(in.indexOf("?")+1));
+        if (in.indexOf('?')+1 < in.length())
+		{/*       int pointToTmp = 0;  this is if we want to divide ?ca+g+n into 3 different errors
+			for (int pointTo = in.indexOf('?'); pointTo > 0;)
+			{
+			System.out.println("3.");
+				pointToTmp = in.indexOf('+',pointTo);
+				System.out.println("gDB>>pointTo=("+pointToTmp+")");
+
+				if (pointToTmp >= 0)
+				{
+					System.out.println("\t-("+in.substring(pointTo,pointToTmp)+")\n");
+				}
+				else
+				{
+					System.out.println("\t-("+in.substring(pointTo)+")\n");
+					pointToTmp = -1;
+				}
+
+				pointTo = pointToTmp+1;
+			}
+*/
+			return in.substring(in.indexOf('?')+1);
+		}
+			else
+		{
+            return "highlight";
+		}
+    }
+    // G : extracts
+/*    private String extractError(String in)
+    {
+        String out = "";
+
+        // starts from the last char in the "in" string and adds to the "out" string every letter other than + sign
+        // untill it reaches the ? sign that indicates this phrase has an error
+        for (int i = in.length()-1 ; in.charAt(i) != '?' ; i-- )
+        { //  System.out.println("gDB>>"+i+"\t("+in.charAt(i)+")");
+            if (in.charAt(i) != '+')
+            {
+                out = in.charAt(i)+out;
+            }
+        }
+
+        return out;
+    }
+  */
 
 // if we find a phrase in the OutputFormatter_Part list then we return true
 // otherwise we do nothing

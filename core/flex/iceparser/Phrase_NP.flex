@@ -60,6 +60,7 @@ package is.iclt.icenlp.core.iceparser;
 import java.io.*;
 import java.util.*;
 import is.iclt.icenlp.core.utils.IceParserUtils;
+import is.iclt.icenlp.core.utils.ErrorDetector;
 %%
 
 %public
@@ -70,13 +71,11 @@ import is.iclt.icenlp.core.utils.IceParserUtils;
 %unicode
 
 %{
+	String PhraseType = "NP";
 	String NPOpen=" [NP ";
 	String NPClose=" NP] ";
 	String ErrNPOpen=" [NP? ";
 	String ErrNPClose=" NP?] ";
-	
-	static String encO =  IceParserUtils.encodeOpen;
-	static String encC =  IceParserUtils.encodeClose;
 
 	boolean agreement = false;  // -a parameter attribute	;
 	boolean markGrammarError = false;
@@ -105,99 +104,9 @@ import is.iclt.icenlp.core.utils.IceParserUtils;
 
 	private String FinalCheck(String originalStr)
 	{
-	//System.out.println(originalStr);
-
-		if(!agreement && !markGrammarError)//do nothing
-		{
-			return NPOpen + originalStr + NPClose;
-		}
-		String tokenlessStr = RemoveTokens(originalStr);
-
-	//System.out.println("tokenelss: " + tokenlessStr);
-		
-		boolean allTheSame = CheckGenNumCase(tokenlessStr);
-
-		if(allTheSame)
-		{
-			return NPOpen + originalStr + NPClose;
-		}
-		else
-		{
-			if(markGrammarError)
-				return ErrNPOpen + originalStr + ErrNPClose;
-
-			return originalStr;
-		}
+		return ErrorDetector.ErrorCheck(originalStr, agreement, markGrammarError, PhraseType);
 	}
-	public static String RemoveTokens(String str)
-	{
-		str = IceParserUtils.RemoveFromSymbolToWhitespace("[", str);
-		str = new StringBuffer(str).reverse().toString();
-		str = IceParserUtils.RemoveFromSymbolToWhitespace("]", str);
-		str = new StringBuffer(str).reverse().toString();
-		str = IceParserUtils.RemoveSpacesAndWords(str);
-			
-		return str;
-	}
-	public static int GetModifier(String letter)
-	{
-		if(letter.equals("n") || letter.equals("l") || letter.equals("g") )
-			return 0;
-		if(letter.equals("f") || letter.equals("t"))
-			return 1;
 
-		return -1;
-	}
-	public static Boolean CheckGenNumCase(String str)
-	{
-		boolean allTheSame = true;
-		String [] tags = null;
-		tags = str.split(" ");
-
-		for(int i=0; i<tags.length; i++)
-		{
-			for(int x=i+1; x<tags.length; x++)
-			{
-				int mod1, mod2;
-				String tagI = tags[i].substring(encO.length(), tags[i].length()-encC.length());
-				String tagX = tags[x].substring(encO.length(), tags[x].length()-encC.length());
-				
-				mod1 = GetModifier(tagI.substring(0,1));
-				mod2 = GetModifier(tagX.substring(0,1));
-
-			//System.out.println("Mod1 : "+mod1+"\nMod2 : "+mod2);
-
-				if(mod1 == -1 || mod2 == -1) continue;
-
-				//ef t þá verður 2 sæti að vera f
-			
-				if(tagI.length() < 4+mod1 || tagX.length() < 4+mod2)
-				{
-					continue;
-				}
-
-
-				String gen1,num1,case1, gen2,num2,case2;
-
-				gen1 = tagI.substring(1+mod1, 2+mod1);
-				num1 = tagI.substring(2+mod1, 3+mod1);
-				case1 = tagI.substring(3+mod1, 4+mod1);
-			
-				gen2 = tagX.substring(1+mod2, 2+mod2);
-				num2 = tagX.substring(2+mod2, 3+mod2);
-				case2 = tagX.substring(3+mod2, 4+mod2);
-				
-			//System.out.println("gnc1 : "+gen1+" - "+num1+" - "+case1);				
-			//System.out.println("gnc2 : "+gen2+" - "+num2+" - "+case2);
-
-				if( !gen1.equals(gen2) || !num1.equals(num2) || !case1.equals(case2))
-				{	
-					allTheSame = false;
-				}
-			}
-		}
-		return allTheSame;
-	}
 %}
 
 %eof{
@@ -257,7 +166,7 @@ NounPhrase = {Hvad} | {HvadaNP} | {ReflNP} | {ArticleNP} | {DemonNP} | {IndefNP}
 
 {NounPhrase}
 {
-	String str = yytext();		
+	String str = yytext();
 	out.write(FinalCheck(str));
 }
 

@@ -221,6 +221,12 @@ public class IceTaggerFacade
                 if( tokenizer.tokens.size() <= 0 )
                     continue;
 
+				/*ArrayList<Token> tokens;
+				tokens = tokenizer.tokens;
+				for (Token toki : tokens) {
+					System.out.println("gDB>>tokens=("+toki+")");
+				} */
+
                 tokenizer.splitAbbreviations();
                 tagger.tagTokens( tokenizer.tokens );
 

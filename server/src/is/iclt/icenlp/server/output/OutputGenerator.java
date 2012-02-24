@@ -208,15 +208,15 @@ public class OutputGenerator {
 
 		if (this.iceParser != null) {
 			this.iceParser.parse(wordList);
-		}	
-
+		}
 		// Apply mapping rules to the word list.
 		if (this.mapperLexicon != null)
 			this.mapperLexicon.processWordList(wordList);
 
+
 		// Create output string that will be sent to the client.
 		StringBuilder builder = new StringBuilder();
-		
+
 		// GöL
 		// If IceParserOutput is set to true in the config then
 		// we will only show that output and stop.
@@ -228,6 +228,7 @@ public class OutputGenerator {
 			builder.append(this.iceParser.getParsedString());
 			return builder.toString();
 		}
+
 
 
 		// If we have not set any tagging output
@@ -243,7 +244,6 @@ public class OutputGenerator {
 
 			}
 		}
-
 		// We have some tagging output set.
 		else {
 			for (Word word : wordList) {
@@ -347,7 +347,6 @@ public class OutputGenerator {
 
 		for (Word word : wordList)
 		{
-
 			if(word.preSpace != null)
 			{
 				builder.append(word.preSpace);

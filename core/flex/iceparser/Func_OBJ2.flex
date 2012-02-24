@@ -139,16 +139,15 @@ VerbSubjObjNom = {VPDat}{WhiteSpace}+{FuncSubjectOblique}{WhiteSpace}+{NomSubjec
 
 			String matchedStr = yytext();
 			String newStr = matchedStr.replaceAll("\\*OBJ<","*IOBJ<");	// change to indirect object
-
-			//making sure to check for the tags after the object and before the NPa because the same tags can occur elsewhere
+   			//making sure to check for the tags after the object and before the NPa because the same tags can occur elsewhere
 			int objIndex = newStr.indexOf("*IOBJ<}");
 			String afterObj = newStr.substring(objIndex, newStr.length());
 
-			int npIndex = afterObj.lastIndexOf("[NPs "); // this is a possible danger, might have to become "[NPs" without " "
+			int npIndex = afterObj.lastIndexOf("[NPs"); // this is a possible danger, might have to become "[NPs" without " "
 			if(npIndex == -1)
             {
 				npIndex = afterObj.lastIndexOf("[NPa");
-//				npIndex = afterObj.lastIndexOf("[NPa ");    this has been commented out due to [NPa? existing and messing everything up
+//				npIndex = afterObj.lastIndexOf("[NPa ");    this has been commented out due to [NPa? existing and messing everything up with that whitespace
             }
             if(npIndex != -1)
             {
@@ -156,7 +155,7 @@ VerbSubjObjNom = {VPDat}{WhiteSpace}+{FuncSubjectOblique}{WhiteSpace}+{NomSubjec
             }
 
 			String middlePart = newStr.substring(newStr.indexOf("*IOBJ<}")+7, npIndex);
-//	System.err.println("\n\nMiddlePart: " + middlePart + "\n\n");
+//	System.err.println("\n\nMiddlePart: \"" + middlePart + "\"\n\n");
 			if (middlePart.contains(" PP]")) {	
 				theIndex = StringSearch.splitString(newStr," PP]", true, 4);
 			}
@@ -173,6 +172,7 @@ VerbSubjObjNom = {VPDat}{WhiteSpace}+{FuncSubjectOblique}{WhiteSpace}+{NomSubjec
 			}
 			else
 			{
+					System.out.println("gDB>>VerbDatObjAccObj("+StringSearch.firstString+Obj1Open+StringSearch.nextString+Obj1Close+")");
 				out.write(StringSearch.firstString+Obj1Open+StringSearch.nextString+Obj1Close);
 			}
 
@@ -223,16 +223,16 @@ VerbSubjObjNom = {VPDat}{WhiteSpace}+{FuncSubjectOblique}{WhiteSpace}+{NomSubjec
 				first = matchedStr.substring(0, vpIndex + ppIndex);		
 				second = matchedStr.substring(vpIndex + ppIndex, matchedStr.length());
 			}
-			else if (middlePart.contains("AdvP]")) {	
+			else if (middlePart.contains("AdvP]")) {
 				int advpIndex = middlePart.indexOf("AdvP]") + 5;
 				first = matchedStr.substring(0, vpIndex + advpIndex);
-				second = matchedStr.substring(vpIndex + advpIndex, matchedStr.length());	
+				second = matchedStr.substring(vpIndex + advpIndex, matchedStr.length());
 			}
 			else {
-				// Find where the FuncObject phrase ended and insert the IOBJ label 
+				// Find where the FuncObject phrase ended and insert the IOBJ label
 				int objIndex = middlePart.indexOf("*OBJ<}") + 6;
 				first = matchedStr.substring(0, vpIndex + objIndex);
-				second = matchedStr.substring(vpIndex + objIndex, matchedStr.length());	
+				second = matchedStr.substring(vpIndex + objIndex, matchedStr.length());
 			}
 			if(theIndex == -1)
 			{
@@ -240,22 +240,24 @@ VerbSubjObjNom = {VPDat}{WhiteSpace}+{FuncSubjectOblique}{WhiteSpace}+{NomSubjec
 			}
 			else
 			{
+					System.out.println("gDB>>VerbAccObjDatObj("+first+IObjOpen+second+IObjClose+")");
+
 				out.write(first+IObjOpen+second+IObjClose);
 			}
 
 /*
-			// The first object is the direct object 
+			// The first object is the direct object
 			String matchedStr = yytext();
-			
-			if (matchedStr.contains("PP]")) {	
-				theIndex = StringSearch.splitString(matchedStr,"PP]", true, 3);		
+
+			if (matchedStr.contains("PP]")) {
+				theIndex = StringSearch.splitString(matchedStr,"PP]", true, 3);
 			}
-			else if (matchedStr.contains("AdvP]")) {	
-				theIndex = StringSearch.splitString(matchedStr,"AdvP]", true, 5);		
+			else if (matchedStr.contains("AdvP]")) {
+				theIndex = StringSearch.splitString(matchedStr,"AdvP]", true, 5);
 			}
 			else {
-				// Find where the FuncObject phrase ended and insert the IOBJ label 
-				theIndex = StringSearch.splitString(matchedStr,"*OBJ<}", false, 6);		
+				// Find where the FuncObject phrase ended and insert the IOBJ label
+				theIndex = StringSearch.splitString(matchedStr,"*OBJ<}", false, 6);
 			}
 			if(theIndex == -1)
 			{
@@ -266,88 +268,95 @@ VerbSubjObjNom = {VPDat}{WhiteSpace}+{FuncSubjectOblique}{WhiteSpace}+{NomSubjec
 				out.write(StringSearch.firstString+IObjOpen+StringSearch.nextString+IObjClose);
 			}
 */
-		} 		
+		}
 
-{ComplObj}	{ 
+{ComplObj}	{
 //	System.err.println("obj2-3");
 			/* Find where the Complement function ended and insert the OBJ label */
-			theIndex = StringSearch.splitString(yytext(),"*COMP<}", true, 7);		
+			theIndex = StringSearch.splitString(yytext(),"*COMP<}", true, 7);
 			if (theIndex == -1)
-				theIndex = StringSearch.splitString(yytext(),"*COMP}", true, 6);			
+				theIndex = StringSearch.splitString(yytext(),"*COMP}", true, 6);
 			if(theIndex == -1)
 			{
 				out.write(yytext());
 			}
 			else
 			{
+					System.out.println("gDB>>ComplObj("+StringSearch.firstString+Obj1Open+StringSearch.nextString+Obj1Close+")");
 				out.write(StringSearch.firstString+Obj1Open+StringSearch.nextString+Obj1Close);
 			}
 		}
 
-{ComplCompl}	{ 
-//	System.err.println("obj2-4");
+{ComplCompl}	{
+	System.err.println("obj2-4");
 			/* Find where the Complement function ended and insert the COMP label */
-			theIndex = StringSearch.splitString(yytext(),"*COMP<}", true, 7);		
+				theIndex = StringSearch.splitString(yytext(),"*COMP<?Cg}", true, 10);
 			if (theIndex == -1)
-				theIndex = StringSearch.splitString(yytext(),"*COMP}", true, 6);			
+			theIndex = StringSearch.splitString(yytext(),"*COMP<}", true, 7);
+			if (theIndex == -1)
+				theIndex = StringSearch.splitString(yytext(),"*COMP}", true, 6);
 			if(theIndex == -1)
 			{
 				out.write(yytext());
 			}
 			else
 			{
+			System.out.println("gDB>>ComplCompl("+StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close+")");
 				out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 			}
 		}
-		
-{SubjVerbObjNom}  { 
-//	System.err.println("obj2-5");
-			theIndex = StringSearch.splitString(yytext(),"VP]", false, 3);		
-			if(theIndex == -1)
-			{
-				out.write(yytext());
-			}
-			else
-			{
-				out.write(StringSearch.firstString+ObjNomOpen+StringSearch.nextString+ObjNomClose);
-			}
-		  } 
-{VerbSubjObjNom}  { 
-//	System.err.println("obj2-6");
-			theIndex = StringSearch.splitString(yytext(),"*SUBJ<}", true, 7);		
-			if (theIndex == -1)
-				theIndex = StringSearch.splitString(yytext(),"*SUBJ}", true, 6);	
-			if(theIndex == -1)
-			{
-				out.write(yytext());
-			}
-			else
-			{
-				out.write(StringSearch.firstString+ObjNomOpen+StringSearch.nextString+ObjNomClose);
-			}
-		  } 
 
-{PPVPInfObj}	{ 
+{SubjVerbObjNom}  {
+//	System.err.println("obj2-5");
+			theIndex = StringSearch.splitString(yytext(),"VP]", false, 3);
+			if(theIndex == -1)
+			{
+				out.write(yytext());
+			}
+			else
+			{
+				System.out.println("gDB>>SubjVerbObjNom("+StringSearch.firstString+ObjNomOpen+StringSearch.nextString+ObjNomClose+")");
+				out.write(StringSearch.firstString+ObjNomOpen+StringSearch.nextString+ObjNomClose);
+			}
+		  }
+{VerbSubjObjNom}  {
+//	System.err.println("obj2-6");
+			theIndex = StringSearch.splitString(yytext(),"*SUBJ<}", true, 7);
+			if (theIndex == -1)
+				theIndex = StringSearch.splitString(yytext(),"*SUBJ}", true, 6);
+			if(theIndex == -1)
+			{
+				out.write(yytext());
+			}
+			else
+			{
+				System.out.println("gDB>>VerbSubjObjNom("+StringSearch.firstString+ObjNomOpen+StringSearch.nextString+ObjNomClose+")");
+				out.write(StringSearch.firstString+ObjNomOpen+StringSearch.nextString+ObjNomClose);
+			}
+		  }
+
+{PPVPInfObj}	{
 //	System.err.println("obj2-7");
 			/* Find where the PP phrase ended and insert the OBJ label */
-			theIndex = StringSearch.splitString(yytext(),"PP]", false, 3);		
+			theIndex = StringSearch.splitString(yytext(),"PP]", false, 3);
 			if(theIndex == -1)
 			{
 				out.write(yytext());
 			}
 			else
 			{
+					System.out.println("gDB>>PPVPInfObj("+StringSearch.firstString+Obj1Open+StringSearch.nextString+Obj1Close+")");
 				out.write(StringSearch.firstString+Obj1Open+StringSearch.nextString+Obj1Close);
 			}
-		} 
+		}
 
 {Function}	{out.write(yytext());}	/* Don't touch the phrases that have already been function marked */
 
 {NPPhrases}	{out.write(yytext());}	/* Don't touch NPs phrases */
 {Complement1}	{out.write(Comp0Open+yytext()+Comp0Close);
-		} 
+		}
 {Complement2}	{out.write(Comp0Open+yytext()+Comp0Close);
-		} 
+		}
 
 "\n"		{ System.err.print("Reading line: " + Integer.toString(yyline+1) + "\r");
 		out.write("\n"); }

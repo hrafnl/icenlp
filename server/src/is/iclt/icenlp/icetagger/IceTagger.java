@@ -125,7 +125,9 @@ public class IceTagger implements IIceTagger {
 			iceTaggerFacade = new IceTaggerFacade(this.iceLexicons, this.tokLexicon);
 			
 			// TODO This should be handed as an option in the config file!
-			iceTaggerFacade.dateHandling(true); // Do special date handling
+			// The next line was used when IceNLP did tokenization for Apertium-IceNLP.  In the newest version,
+			// Apertium does tokenization instead.  We do thus not need this.   26.01.2012
+			//iceTaggerFacade.dateHandling(true); // Do special date handling
 			
 			// Set Name Entity Recognition
 			boolean ner = this.configuration.getValue("named_entity_recognition").equals("true");
@@ -182,6 +184,8 @@ public class IceTagger implements IIceTagger {
 			for (Sentence s : sentences.getSentences()) {
 				for (Object token : s.getTokens()) {
 					IceTokenTags t = ((IceTokenTags) token);
+						//System.out.println("gDB>>token=("+token+")");
+
 
 					Word word;
 					if (this.lemmatize) {
@@ -196,6 +200,7 @@ public class IceTagger implements IIceTagger {
 					} 
 					else{
 						word = new Word(t.lexeme, t.getFirstTagStr(), t.mweCode, t.tokenCode, t.linkedToPreviousWord);
+						//System.out.println("gDB>>lexeme=("+t.lexeme+")");
 						
 						if (t.preSpace != null){
 							word.preSpace = t.preSpace;

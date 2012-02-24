@@ -24,6 +24,7 @@ package is.iclt.icenlp.core.tokenizer;
 import is.iclt.icenlp.core.tokenizer.Token.TokenCode;
 import is.iclt.icenlp.core.utils.Lexicon;
 
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ public class Tokenizer
 	public static final int typeTokenTags = 1;
 	public static final int typeIceTokenTags = 2;
 	public static final int typeHmmTokenTags = 3;
-    public static String datePatternStr = "[0-9][0-9]?\\.? ?(janúar|febrúar|mars|apríl|maí|júní|júlí|ágúst|september|október|nóvember|desember)";
+    public static String datePatternStr = "[0-3]?[0-9]\\.? ?(janúar|febrúar|mars|apríl|maí|júní|júlí|ágúst|september|október|nóvember|desember)";
 
 	private Lexicon lex;			// a lexicon
 	private Token currToken;

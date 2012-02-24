@@ -78,7 +78,7 @@ PP = {OpenPP}~{ClosePP}
 
 {Subject}	{ 
 			out.write(Func0Open+yytext()+Func0Close);
-		} 
+		}
 		
 "\n"		{ //System.err.print("Reading line: " + Integer.toString(yyline+1) + "\r"); 
 		out.write("\n"); }

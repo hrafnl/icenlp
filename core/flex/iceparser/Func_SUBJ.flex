@@ -30,6 +30,7 @@
 package is.iclt.icenlp.core.iceparser;
 import java.io.*;
 import is.iclt.icenlp.core.utils.IceParserUtils;
+import is.iclt.icenlp.core.utils.ErrorDetector;
 %%
 
 %public
@@ -78,142 +79,10 @@ import is.iclt.icenlp.core.utils.IceParserUtils;
 
 	public String AgreementCheck(String s1, String s2, String s3, String s4, int order)
 	{
-		//order of the input is not always the same and the output shouldnt be either.
-		String trueOut = createOutputString(s1,s2,s3,s4, order, true);
-		String falseOut = createOutputString(s1,s2,s3,s4, order, false);
-
-		if(!agreement)
-		{
-			return trueOut;
-		}
-
-		String tokenAndWordLess = RemoveTokens(falseOut);
-
-		boolean allAgree = checkAgreement(tokenAndWordLess);
-
-		if(allAgree)
-		{	
-			return trueOut;
-		}
-
-		return falseOut;
+		return ErrorDetector.AgreementCheck(s1,s2,s3,s4,order,agreement,markGrammarError);
 	}
 
-	//inserts a questio mark to identify as a possible error
-	public String getErrTag(String str)
-	{
-		StringBuffer stb = new StringBuffer(str);
 
-		if( str.substring(1,2).equals("{") )
-			return stb.insert(str.length()-1, "?").toString();
-
-		return stb.insert(str.length()-2, "?").toString();
-		
-	}
-	public String createOutputString(String s1, String s2, String s3, String s4, int order, boolean tag)
-	{
-		if(tag)
-			return s1+s2+s3+s4;
-		if(markGrammarError)
-		{
-			switch(order)
-			{
-				case 1:
-					return getErrTag(s1)+s2+getErrTag(s3)+s4;			
-				case 2:
-					return  s1+getErrTag(s2)+s3+getErrTag(s4);
-			}
-		}
-		else
-		{
-			switch(order)
-			{
-				case 1:
-					return s2+s4;			
-				case 2:
-					return  s1+s3;
-			}
-		}
-		
-		return "[ERR "+s1+s2+s3+s4+" ERR]";
-	}
-	public static String RemoveTokens(String str)
-	{
-		str = IceParserUtils.RemoveFromSymbolToWhitespace("[", str);
-		str = IceParserUtils.RemoveFromSymbolToWhitespace("{", str);
-		str = new StringBuffer(str).reverse().toString();
-		str = IceParserUtils.RemoveFromSymbolToWhitespace("]", str);
-		str = IceParserUtils.RemoveFromSymbolToWhitespace("}", str);
-		str = new StringBuffer(str).reverse().toString();
-		str = IceParserUtils.RemoveSpacesAndWords(str);
-			
-		return str;
-	}
-	public boolean checkAgreement(String str)
-	{
-		boolean allTheSame = true;
-		String [] tags = null;
-		tags = str.split(" ");
-
-		for(int i=0; i<tags.length; i++)
-		{
-			for(int x=i+1; x<tags.length; x++)
-			{
-				int mod1, mod2;
-
-				String tagI = tags[i].substring(encO.length(), tags[i].length()-encC.length());
-				String tagX = tags[x].substring(encO.length(), tags[x].length()-encC.length());
-
-				mod1 = GetModifier(tagI.substring(0,1));
-				mod2 = GetModifier(tagX.substring(0,1));
-
-				if(tagI.equals("ssg") || tagI.equals("sng") || tagX.equals("ssg") || tagX.equals("sng") )
-				{
-					allTheSame = false;
-					continue;
-				}
-				if( mod1 == -1 || mod2 == -1) continue;
-				if(tagI.length() < 3+mod1 || tagX.length() < 3+mod2) continue;
-
-				String pers1, pers2, nr1, nr2;
-			
-				pers1 = tagI.substring(1 + mod1,2 + mod1);
-				nr1 = tagI.substring(2 + mod1,3 + mod1);
-
-				pers2 = tagX.substring(1 + mod2,2 + mod2);
-				nr2 = tagX.substring(2 + mod2,3 + mod2);
-			
-				pers1 = IfGenderReturnPers(pers1);
-				pers2 = IfGenderReturnPers(pers2);
-
-				//System.err.println("pers1: " + pers1 + "\n" + "pers2: " + pers2 + "\n" + "nr1: " + nr1 + "\n" + "nr2: " + nr2);
-				if( !pers1.equals(pers2) || !nr1.equals(nr2))
-				{
-					allTheSame = false;
-				}
-			}
-		}
-
-		return allTheSame;
-	}
-	public static int GetModifier(String letter)
-	{
-		if( letter.equals("n")  )
-			return 0;
-		if( letter.equals("f")  )
-			return 1;
-		if( letter.equals("s")  )
-			return 2;
-
-		return -1;
-	}
-	public String IfGenderReturnPers(String pers)
-	{
-		if(pers.equals("h") || pers.equals("k") || pers.equals("v"))
-			return "3";
-		
-		return pers;
-	}
 	  
 %}
 
@@ -267,7 +136,7 @@ SubjectRel = {NomSubject}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{RelCP}
 
 %%
 
-{SubjectVerb}	
+{SubjectVerb}
 { 
 //System.err.println("subj-1");
 	String str = yytext();
@@ -290,7 +159,12 @@ SubjectRel = {NomSubject}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{RelCP}
 	}
 	else
 	{
-		out.write(AgreementCheck(Func1Open,StringSearch.firstString,Func1Close,StringSearch.nextString,1));
+
+		System.out.println("gDB>>SubjectVerb("+Func1Open+StringSearch.firstString+Func1Close+StringSearch.nextString+")");
+
+	//	out.write(AgreementCheck(Func1Open,StringSearch.firstString,Func1Close,StringSearch.nextString,1));
+		out.write(ErrorDetector.agreementCheckNumberAndPerson(StringSearch.firstString,StringSearch.nextString,Func1Open,Func1Close,0));
+// vantar agreementCheckGenderPerson   fpkeo = 3 pers
 	}
 } 
 //{SubjectAPVerb}	{ 
@@ -323,6 +197,7 @@ SubjectRel = {NomSubject}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{RelCP}
 	}
 	else
 	{
+		System.out.println("gDB>>SubjectVerbMissing("+Func0Open+StringSearch.firstString+Func0Close+StringSearch.nextString+")");
 		out.write(AgreementCheck(Func0Open,StringSearch.firstString,Func0Close,StringSearch.nextString,1));
 	}
 } 
@@ -350,7 +225,9 @@ SubjectRel = {NomSubject}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{RelCP}
 	}
 	else
 	{
-		out.write(AgreementCheck(StringSearch.firstString,Func2Open,StringSearch.nextString,Func2Close,2));
+		System.out.println("gDB>>VerbSubject("+StringSearch.firstString+Func2Open+StringSearch.nextString+Func2Close+")");
+//		out.write(AgreementCheck(StringSearch.firstString,Func2Open,StringSearch.nextString,Func2Close,2));
+		out.write(ErrorDetector.agreementCheckNumberAndPerson(StringSearch.firstString,StringSearch.nextString,Func2Open,Func2Close,1));
 	}
 
 
@@ -399,6 +276,7 @@ SubjectRel = {NomSubject}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{RelCP}
 	}
 	else
 	{
+		System.out.println("gDB>>VerbAdvPSubject("+StringSearch.firstString+Func2Open+StringSearch.nextString+Func2Close+")");
 		out.write(AgreementCheck(StringSearch.firstString,Func2Open,StringSearch.nextString,Func2Close,2));
 	}
 }
@@ -429,6 +307,7 @@ SubjectRel = {NomSubject}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{RelCP}
 	}
 	else
 	{
+		System.out.println("gDB>>SubjectRel("+Func1Open+StringSearch.firstString+Func1Close+StringSearch.nextString+")");
 		out.write(AgreementCheck(Func1Open,StringSearch.firstString,Func1Close,StringSearch.nextString,1));
 	}
 }
