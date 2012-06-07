@@ -214,6 +214,7 @@ public class IceDisambiguator {
               nextnextToken = (IceTokenTags)tokens.get(i+2);
 
             if (currToken.tokenCode == Token.TokenCode.tcSemicolon ||
+                currToken.tokenCode == Token.TokenCode.tcColon ||
                     (currToken.tokenCode == Token.TokenCode.tcComma && // make an enumeration stay together
                         !(prevToken.isAdjective() && nextToken.isAdjective()) && !(prevToken.isNoun() && nextToken.isNoun())) ||
                     currToken.tokenCode == Token.TokenCode.tcHyphen

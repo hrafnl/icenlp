@@ -480,6 +480,10 @@ public class IceMorphy {
                 tok.addTag(IceTag.tagAdjectiveNeuterPluralStrongAccusative);
         }
 
+        else if( tok.isAdjectiveStrong() && tok.isAdjectiveSuper())
+            // Like "fæstir".  Make sure that ending analysis will not be carried out
+            found = true;
+
         return found;
 	}
 
@@ -558,7 +562,7 @@ public class IceMorphy {
 				found = true;
 			}
 			else
-			if( tok.lexeme.endsWith( "i" ) && (tok.isCase( IceTag.cNominative ) || tok.isCase( IceTag.cAccusative )) )
+			if( tok.lexeme.endsWith( "i" ) && (tok.isCase( IceTag.cNominative ) || tok.isCase( IceTag.cAccusative )))
 			{
 				tok.addAllTags( IceTag.tagNounNeuter );
 				found = true;
