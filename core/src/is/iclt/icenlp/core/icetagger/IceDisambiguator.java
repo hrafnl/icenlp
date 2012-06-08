@@ -389,7 +389,8 @@ private void checkFirstToken(int from, int to)
      for (int i=from; i<=to && i<=from+2; i++)
      {
        tok = (IceTokenTags)tokens.get(i);
-       if ((tok.isOnlyWordClass(IceTag.WordClass.wcNoun) || tok.isOnlyWordClass(IceTag.WordClass.wcProperNoun) || tok.isOnlyWordClass(IceTag.WordClass.wcAdj)) &&
+       if (    !tok.isSVOObject() &&
+               (tok.isOnlyWordClass(IceTag.WordClass.wcNoun) || tok.isOnlyWordClass(IceTag.WordClass.wcProperNoun) || tok.isOnlyWordClass(IceTag.WordClass.wcAdj)) &&
                tok.isCase(IceTag.cNominative) &&
                !((IceTag)tok.getFirstTag()).isCase(IceTag.cNominative))
        {

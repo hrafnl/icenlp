@@ -628,6 +628,18 @@ public class IceTokenTags extends TokenTags
         return false;
     }
 
+    // Aukafall
+    public boolean isObliqueCase()
+    {
+        Iterator iterator = tags.iterator();
+        while (iterator.hasNext()) {
+           IceTag tag = (IceTag)iterator.next();
+           if (tag.isCase(IceTag.cAccusative) || tag.isCase(IceTag.cDative) || tag.isCase(IceTag.cGenitive))
+               return true;
+        }
+        return false;
+    }
+
 
     public boolean isNumber(char cCode)
     {

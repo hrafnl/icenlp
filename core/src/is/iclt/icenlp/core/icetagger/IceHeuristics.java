@@ -1350,6 +1350,7 @@ public class IceHeuristics
 				if( logger != null )
 					logger.log( "SVO Verb Object: Case match: " + verb.lexeme + " " + obj.lexeme + " , tag was: " + tmpTags );
 			}
+
 		}
         else if( obj.isSVOObject() && !verb.isVerbMiddleForm() )    // Assume not nominative case for object
 		{
