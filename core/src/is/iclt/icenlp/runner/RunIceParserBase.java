@@ -121,7 +121,7 @@ public class RunIceParserBase
 		System.out.println("***************************************************");
 		System.out.println("*  IceParser - An incremental finite-state parser *");
 		System.out.println("*  Version 1.1                                    *");
-		System.out.println("*  Copyright (C) 2006-2010, Hrafn Loftsson        *");
+		System.out.println("*  Copyright (C) 2006-2012, Hrafn Loftsson        *");
 		System.out.println("***************************************************");
 	}
 }

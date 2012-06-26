@@ -161,7 +161,7 @@ public class RunTokenizer {
     System.out.println("************************************************");
     System.out.println("*  Tokenization and sentence segmentation      *");
     System.out.println("*  Version 1.2                                 *");
-    System.out.println("*  Copyright (C) 2004-2009, Hrafn Loftsson     *" );
+    System.out.println("*  Copyright (C) 2004-2012, Hrafn Loftsson     *");
     System.out.println("************************************************");
 }
 

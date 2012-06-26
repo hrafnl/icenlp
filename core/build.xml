@@ -96,8 +96,8 @@
 			</fileset>
             <fileset dir="./">
 		<include name="dict/icetagger/*.dict" />
-		<!-- The following line is needed for not distributing otbBin.dict -->
-                <exclude name="dict/icetagger/otbBin.dict" />
+		<!-- The following line is needed for not copying  otbBin.dict into the jar file-->
+                <exclude name="dict/icetagger/otbBin*.dict" />
 		<include name="dict/tokenizer/*" />
                 <include name="dict/tritagger/*.dict" />
             	<include name="dict/formald/segment.srx" />
@@ -105,7 +105,8 @@
             	<!-- Lemmald /-->
             	<include name="dict/lemmald/postfixRules.txt" />
             	<include name="dict/lemmald/rule_database_utf8.dat" />
-            	<include name="dict/lemmald/settings.txt" />    
+            	<include name="dict/lemmald/settings.txt" />   
+		<!-- HMM /--> 
                 <include name="ngrams/models/otb.*" />
             </fileset>
 	        <manifest>
@@ -126,14 +127,16 @@
 		
 		<copy todir="${dist}/${package}/dict">
 			<fileset dir="dict"> 
-				<exclude name="**/otbBin.dict"/>
+				<exclude name="**/otbBin*.dict"/>
 			</fileset>
 		</copy>
 		<copy todir="${dist}/${package}/lib">
 			<fileset dir="lib" />
 		</copy>		
 		<copy todir="${dist}/${package}/ngrams">
-			<fileset dir="ngrams" />
+			<fileset dir="ngrams">
+				<exclude name="**/models/otbBin*.lex"/>
+			</fileset>
 		</copy>
 
 

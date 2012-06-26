@@ -297,7 +297,7 @@ public class RunIceMorphy {
         System.out.println("****************************************************************");
         System.out.println("*  IceMorphy - A morphological analyzer                        *");
         System.out.println("*  Version 1.1                                                 *");
-        System.out.println("*  Copyright (C) 2005-2010, Hrafn Loftsson                     *");
+        System.out.println("*  Copyright (C) 2005-2012, Hrafn Loftsson                     *");
         //System.out.println("*                                                              *");
         //System.out.println("* The dictionaries used by IceMorphy are derived from the      *");
         //System.out.println("* Icelandic Frequency Dictionary (IFD) corpus, and from        *");

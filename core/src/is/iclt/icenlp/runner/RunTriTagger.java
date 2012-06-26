@@ -27,7 +27,6 @@ import is.iclt.icenlp.core.tokenizer.*;
 import is.iclt.icenlp.core.utils.Idioms;
 import is.iclt.icenlp.core.utils.FileEncoding;
 import is.iclt.icenlp.core.utils.Lexicon;
-//import is.iclt.icenlp.core.utils.FileEncoding;
 import is.iclt.icenlp.core.tritagger.*;
 import is.iclt.icenlp.core.icetagger.IceTaggerResources;
 
@@ -48,6 +47,7 @@ public class RunTriTagger {
     private Tokenizer tokenizer;
     private String inputFile, model;
     private static String outputFile;
+    private String fileList=null;
     private String backupDictPath=null, idiomsDictPath=null, tokenDictPath=null;
     private String ngramStr, lineFormatStr, outputFormatStr, sentenceStartStr, strictTokenizationStr, iceMorphyStr ;
     private String morphoDictPath=null, morphoDictBasePath=null, prefixesDictPath=null;
@@ -74,9 +74,9 @@ public class RunTriTagger {
     {
         boolean error=false;
 
-        if (inputFile == null)
+        if (inputFile == null && fileList == null)
         { System.out.println("Parameter: " + "INPUT_FILE" + " is missing"); error = true; }
-        if (outputFile == null)
+        if (outputFile == null && fileList == null)
         { System.out.println("Parameter: " + "OUTPUT_FILE" + " is missing"); error = true; }
         /*if (model == null)
         { System.out.println("Parameter: " + "MODEL" + " is missing"); error = true; }*/
@@ -150,6 +150,7 @@ public class RunTriTagger {
 	    parameters.load(in);
         inputFile = parameters.getProperty("INPUT_FILE");
         outputFile = parameters.getProperty("OUTPUT_FILE");
+        fileList  = parameters.getProperty("FILE_LIST");
         model = parameters.getProperty("MODEL");
         ngramStr = parameters.getProperty("NGRAM");
         sentenceStartStr = parameters.getProperty("SENTENCE_START");
@@ -233,6 +234,8 @@ public class RunTriTagger {
             inputFile = args[i+1];
           else if (args[i].equals("-o"))
             outputFile = args[i+1];
+          else if( args[i].equals( "-f" ) )
+              fileList = args[i + 1];
           else if (args[i].equals("-m"))
             model = args[i+1];
           else if (args[i].equals("-n"))
@@ -282,7 +285,6 @@ private void setDefaults ()
         sentenceStartStr = "upper";
         caseSensitiveStr = "no";
         ngramStr = "3";
-        tokenDictPath="../../dict/tokenizer/lexicon.txt";
         strictTokenizationStr = "no";
         iceMorphyStr = "no";
 }
@@ -335,13 +337,40 @@ private void printInfoAfterTagging(int sentenceCount)
         System.out.flush();
 }
 
+    // Reads a list of files and tags each file separately
+    protected void tagAllFiles()  throws IOException
+    {
+        BufferedWriter output;
+        BufferedReader input = FileEncoding.getReader(fileList);
+        String taggedOutputFile;
+        // Read first line
+        String currFile = input.readLine();
+        while (currFile != null) {
+            segmentizer = new Segmentizer( currFile, lineFormat, tokLex );
+            taggedOutputFile = currFile+".out";
+            output = FileEncoding.getWriter(taggedOutputFile);
+
+            System.out.println();
+            System.out.println("Tagging file: " + currFile + "; output: " + taggedOutputFile);
+
+            initStatistics();
+
+            tagText(output);
+
+            currFile = input.readLine();
+        }
+        input.close();
+    }
+
     private void tagText(BufferedWriter outFile)
     throws IOException
     {
          String sentence;
          int count = 0;
          String strCount = Integer.toString(count);
-         //System.out.print("Tagging sentence nr 1: " + "\r");
+         if (!standardInputOutput)
+            System.out.print( "Tagging sentence nr 1: " + "\r" );
+
          while (segmentizer.hasMoreSentences())
          {
            count++;
@@ -381,7 +410,7 @@ private void printHeader()
     System.out.println("************************************************");
     System.out.println("*  TriTagger - A HMM tagger (bi- or trigrams)  *");
     System.out.println("*  Version 1.1                                 *");
-    System.out.println("*  Copyright (C) 2005-2009, Hrafn Loftsson     *" );
+    System.out.println("*  Copyright (C) 2005-2012, Hrafn Loftsson     *");
     System.out.println("************************************************");
 }
 
@@ -396,6 +425,8 @@ private void printInfoBeforeTagging()
         System.out.println( "Sentences start with a lower case letter" );
     if( caseSensitive)
         System.out.println( "Case sensitive at start of sentences" );
+    if (fileList != null)
+        System.out.println("Tagging files from filelist " + fileList);
 
 }
 
@@ -439,6 +470,7 @@ private void getTriTaggerLexicons() throws IOException
                     isPrefixes,
                     null);
     }
+
 
 
 private void createAllObjects(int sentenceStart) throws IOException
@@ -495,6 +527,12 @@ private void createAllObjects(int sentenceStart) throws IOException
     tagger = new TriTagger(sentenceStart, caseSensitive, ngram, triLex.ngrams, triLex.freqLexicon, myBackupLexicon, myPhrases, myMorpho);
 }
 
+private void initStatistics() {
+    numUnknowns = 0;
+    numTokens = 0;
+    tagger.initStatistics();
+}
+
 private void processParam(String args[]) throws IOException
 {
         String paramFile;
@@ -509,7 +547,7 @@ private void processParam(String args[]) throws IOException
 				setDefaults();
 				getParameters( args );
                 // If neither reading input from a file nor a filelist then read from standard input
-                if (inputFile == null) {
+                if (inputFile == null && fileList == null) {
                     standardInputOutput = true;
                     if (!changedDefaultInputFormat)
                         lineFormat = Segmentizer.sentencePerLine;   // Assume one sentence per line
@@ -517,6 +555,23 @@ private void processParam(String args[]) throws IOException
                         outputFormat = Segmentizer.sentencePerLine;
                 }
         }
+}
+
+protected void performTagging() throws IOException
+{
+    if(standardInputOutput)
+    {
+        BufferedWriter out = FileEncoding.getWriter(System.out);
+        tagText(out);
+    }
+    else if (fileList == null)
+    {
+        BufferedWriter out = FileEncoding.getWriter(outputFile);
+        tagText(out);
+    }
+    else
+        tagAllFiles();
+    //logger.close();
 }
 
 private Date initialize(String args[]) throws IOException
@@ -549,6 +604,8 @@ protected void finish(Date before)
     Date after = new Date();
     double elapsed = (after.getTime () - before.getTime ());
     int msec = (int)(elapsed/1000);
+    if (fileList != null)
+        System.out.println();
 
     if (!standardInputOutput) {
         System.out.println("Finished at: " + dateFormatter.format(before));
@@ -564,13 +621,9 @@ protected void finish(Date before)
 
         triOutput = new TriTaggerOutput(outputFormat);
 
-        BufferedWriter out;
-        if (runner.standardInputOutput)
-            out = FileEncoding.getWriter(System.out);
-        else
-            out = FileEncoding.getWriter(outputFile);
+        // Perform the tagging
+        runner.performTagging();
 
-        runner.tagText(out);
         runner.finish(before);
     }
 

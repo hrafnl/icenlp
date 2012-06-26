@@ -473,7 +473,6 @@ public class RunIceTagger
         // Read first line
 		String currFile = input.readLine();
         while (currFile != null) {
-           //segmentizer = new Segmentizer( currFile, lineFormat, tokenDictPath );
            segmentizer = new Segmentizer( currFile, lineFormat, tokLex );
            taggedOutputFile = currFile+".out";
            output = FileEncoding.getWriter(taggedOutputFile);
@@ -547,7 +546,7 @@ public class RunIceTagger
 		System.out.println("****************************************************************");
 		System.out.println("* IceTagger - A linguistic rule-based tagger                   *");
         System.out.println("*  Version 1.3                                                 *");
-        System.out.println("*  Copyright (C) 2005-2010, Hrafn Loftsson                     *");
+        System.out.println("*  Copyright (C) 2005-2012, Hrafn Loftsson                     *");
         //System.out.println("*                                                              *");
         //System.out.println("* The dictionaries used by IceTagger are derived from the      *");
         //System.out.println("* Icelandic Frequency Dictionary (IFD) corpus, and from        *");
@@ -592,7 +591,7 @@ public class RunIceTagger
         if( fullDisambiguation )
            System.out.println( "Performing full disambiguation" );
         else
-           System.out.println( "Not using full disambiguation" );
+           System.out.println( "Not performing full disambiguation" );
         //if( !modelStr.equals( "" ) && fullDisambiguation ) {
         if( !(modelType == IceTagger.HmmModelType.none) && fullDisambiguation ) {
               if (modelType == IceTagger.HmmModelType.startend)

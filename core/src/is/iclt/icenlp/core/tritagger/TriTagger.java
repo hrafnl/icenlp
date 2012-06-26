@@ -94,6 +94,13 @@ public class TriTagger {
         getAllTagsForUnknowns();
     }
 
+    public void initStatistics()
+    {
+        numAmbiguousTokens = 0;
+        totalTags = 0;
+        totalTagsAmbiguous = 0;
+    }
+
     // Gets the tags for unknowns that were encountered during suffix trie construction
     private void getAllTagsForUnknowns()
     {

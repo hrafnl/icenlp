@@ -38,7 +38,7 @@ public class IceMorphyLexicons {
     public String dictPathTagger = "dict/icetagger/";
     public static String dictionary = "otb.dict";
     //public static String dictionary = "otbBin.dict";
-    public static String dictionaryBase = "baseDict.dict";
+     public static String dictionaryBase = "baseDict.dict";
     // IceMorphy variables
     public static String endingsDictionary = "otb.endings.dict";
     public static String endingsProperDictionary = "otb.endingsProper.dict";
