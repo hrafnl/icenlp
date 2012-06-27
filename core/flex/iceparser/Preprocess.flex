@@ -55,7 +55,15 @@ import java.io.*;
 	if (lastIndex > 0) {
 		Character chr = txt.charAt(lastIndex);
 		if (Character.isLetter(chr))	// Then this letter is a part of a real tag and we may need a space after it 
-			changedStr =  txt + " ";
+		{
+				changedStr =  txt + " ";
+		}
+		// detects ^tag$ at the end of txt
+		// If the string ends with $ and the last whitespace is before the last ^ then this is a tag and we need to add whitespace after the $ to avoid problems
+		else if ((chr == '$') && (txt.lastIndexOf(' ') < txt.lastIndexOf('^')))
+		{
+				changedStr =  txt + " ";
+		}
 	}
 
 // new, phrase_mwe problem.

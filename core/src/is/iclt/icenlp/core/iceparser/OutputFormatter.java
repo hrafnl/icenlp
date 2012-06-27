@@ -103,8 +103,7 @@ public class OutputFormatter
 					setPlain(true);
 					break;
 			}*/
-			if(mergeTags)
-				setMergeTags(true);
+			setMergeTags(mergeTags);
 
 		   root = read();
 
@@ -115,7 +114,6 @@ public class OutputFormatter
            // Return the result of the StringWriter;
 
            firstLine = false;
-           
            return w.toString();
     }
 
@@ -217,7 +215,6 @@ public class OutputFormatter
 		String str;
 		OutputFormatter_Part root = new OutputFormatter_Part(OutputFormatter_Type.ROOT);
 
-	
 		char[] arr = new char[8*1024];
 		StringBuffer buf = new StringBuffer();
 		int numChars;
@@ -226,7 +223,7 @@ public class OutputFormatter
 			buf.append(arr, 0, numChars);
 		}
 		str = buf.toString();	
-
+//System.out.println("\ngDB>> str=["+str+"]");
 		String [] sentences = null;
 		sentences = str.split("\n");
 
@@ -236,12 +233,12 @@ public class OutputFormatter
 			sentence.children = treeMaker(stre, sentence.children);		
 			root.children.add(sentence);
 		}
-		
 		return root;
 	}
 	//creates a tree from the input text
 	private static ArrayList<OutputFormatter_Part> treeMaker(String str, ArrayList<OutputFormatter_Part> list)
 	{
+//System.out.println("gDB>> treeMaker  str=["+str+"]");
 		int funcIndex, phraseIndex;
 		str = str.trim();
 		while(str.length() > 0)
@@ -251,7 +248,10 @@ public class OutputFormatter
 			phraseIndex = str.indexOf("[");
 
 			//patterns matching all possible function or phrase tags
-			Pattern pPhrase = Pattern.compile("FRWs?|AdvP|APs?|NP[s\\?]?|VP[bgips]?|PP|S?CP|InjP|MWE_(AdvP|AP|CP|PP)");
+//			Pattern pPhrase = Pattern.compile("FRWs?|AdvP|APs?|NP[s\\?]?|VP[bgips]?|PP|S?CP|InjP|MWE_(AdvP|AP|CP|PP)");
+			//watch out for NP?Nca
+			// VPb?Vn
+			Pattern pPhrase = Pattern.compile("FRWs?|AdvP|APs?|NP[sd]?(\\?[A-Z][a-z]+)?|VP[bgips]?(\\?[A-Z][a-z]+)?|PP|S?CP|InjP|MWE_(AdvP|AP|CP|PP)");
 			Pattern pFunc = Pattern.compile("((\\*SUBJ|\\*I?OBJ(AP|NOM)?|\\*COMP)(<|>)?)|\\*QUAL|\\*TIMEX\\??");
 
 			Matcher mPhrase;
@@ -610,33 +610,38 @@ public class OutputFormatter
 			}
 			else if(var.OutputFormatter_Type == OutputFormatter_Type.WORDS)
 			{
+//				System.out.println("WORDS-start"+data);
 				printTCFtree(var.children, indent, phrase);
+//				System.out.println("WORDS-end");
 			}
 			else if(var.OutputFormatter_Type == OutputFormatter_Type.SENTENCE)
 			{
+//				System.out.println("SENTENCE-start");
 				constituentID++;
 
 				tcfConstituents += (indent+"<constituent ID=\"c"+constituentID+"\" cat=\""+var.OutputFormatter_Type+"\">\n");
 				printTCFtree(var.children, indent+" ", phrase);
 				tcfConstituents += (indent+"</constituent>\n");
+//				System.out.println("SENTENCE-end");
 			}
 			else if (var.OutputFormatter_Type == OutputFormatter_Type.FUNC)
 			{
+//				System.out.println("FUNC-start"+data);
 				constituentID++;
 
 				tcfConstituents += (indent+"<constituent ID=\"c"+constituentID+"\" cat=\""+data+"\">\n");
 				printTCFtree(var.children, indent+" ", phrase);
 				tcfConstituents += (indent+"</constituent>\n");
 
+//				System.out.println("FUNC-end");
 
-				// if we find something like : {*SUBJ>?p+n
+				// if we find something like : {*SUBJ>?Npn or [NP?Nn
 				// we should write an error with p and n
 				// any thing with a question mark will be grabbed as an error
-				if (data.matches(".*\\?.*"))
+				if (data.matches("[\\[\\{].*\\?.*"))
                 {
-                    errorID++;
-                    String errorType = "underline";
-                    errorType = extractError(data);
+                  errorID++;
+                    String errorType = extractError(data);
                     tcfErrors += "   <e ID=\"e"+errorID+"\" const=\"c"+constituentID+"\" type=\""+errorType+"\" />\n";
                 }
 			}
@@ -669,7 +674,7 @@ public class OutputFormatter
                 // print out the erros, if we find ? sign within a tag
                 // the error detected here are words
                 // that is : phrase="NP?" var.OutputFormatter_Type="WORD" data="möguleiki"
-                if (phrase.matches("[\\w]+[\\w\\W]+\\?.*"))
+                if (phrase.matches("[\\[\\{][\\w]+[\\w\\W]+\\?.*"))
                 {
                     errorID++;
                     String errorType = "underline";
@@ -692,30 +697,42 @@ public class OutputFormatter
                 // gDB> (phrase=(NP?) var.OutputFormatter_Type=(PHRASE) data=([AP)
                 if (data.matches("\\[?[\\w]+\\?.*"))
                 {
-                    errorID++;
                     String errorType = extractError(data);
-					//System.out.println("gDB>>phrase=("+phrase+") var.OutputFormatter_Type=("+var.OutputFormatter_Type+") data=("+data+")");
+//		System.out.println("gDB>>phrase=("+phrase+") var.OutputFormatter_Type=("+var.OutputFormatter_Type+") data=("+data+")");
 
-                    tcfErrors += "   <e ID=\"e"+errorID+"\" const=\"c"+(constituentID+1)+"\" type=\""+errorType+"\" />\n";
+
+					int n = numberOfWORDinWORDS(var.children);
+
+					for (int i = 0; i < n; i++) {
+						errorID++;
+                    	tcfErrors += "   <e ID=\"e"+errorID+"\" const=\"c"+(constituentID+1+i)+"\" type=\""+errorType+"\" />\n";
+					}
+
                 }
 
 				// if the child contains a phrase we will print out "constituent" data
 				// if the child does not contain a phrase we only move the child without printing the "constituent"
 				if (isChildHasPHRASE(var.children))
 				{
+//				System.out.println("children-start");
 					constituentID++;
 					tcfConstituents += (indent+"<constituent ID=\"c"+constituentID+"\" cat=\""+data.substring(1)+"\">\n");
 					printTCFtree(var.children, indent+" ", data.substring(1));
 					tcfConstituents += (indent+"</constituent>\n");
+//				System.out.println("children-end");
 				}
 				else
 				{
+//              System.out.println("notChildren-start");
 					printTCFtree(var.children, indent, data.substring(1));
+//              System.out.println("notChildren-end");
 				}
 			}
 			else if (var.OutputFormatter_Type == OutputFormatter_Type.FUNC)
 			{
+//				System.out.println("FUNC-start");
 				printTCFtree(var.children, indent, phrase);
+//				System.out.println("FUNC-end");
 			}
 		}
 	}
@@ -780,7 +797,7 @@ public class OutputFormatter
 //		print ("- ");
 		for (OutputFormatter_Part var : list) 
 		{
-//			print (var.OutputFormatter_Type.toString() + " ");
+//			System.out.println (var.OutputFormatter_Type.toString() + " ");
 			if (var.OutputFormatter_Type == OutputFormatter_Type.PHRASE) {
 				return true;
 			}
@@ -789,6 +806,31 @@ public class OutputFormatter
 		return false;
 	}
 
+	private int numberOfWORDinWORDS(ArrayList<OutputFormatter_Part> list)
+	{
+		int n = 0;
+		for (OutputFormatter_Part var : list)
+		{
+//			System.out.println (var.OutputFormatter_Type.toString() + " ");
+			if (var.OutputFormatter_Type == OutputFormatter_Type.WORDS) {
+				n = numberOfWORDS(var.children);
+			}
+		}
+		return n;
+	}
+
+	private int numberOfWORDS(ArrayList<OutputFormatter_Part> list)
+	{
+		int n = 0;
+		for (OutputFormatter_Part var : list)
+		{
+//			System.out.println (var.OutputFormatter_Type.toString() + " ");
+			if (var.OutputFormatter_Type == OutputFormatter_Type.WORD) {
+				n++;
+			}
+		}
+		return n;
+	}
 
 
 //

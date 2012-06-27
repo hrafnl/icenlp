@@ -42,6 +42,7 @@ import is.iclt.icenlp.core.utils.ErrorDetector;
   String Comp2Close=" *COMP>} ";
   
   int theIndex=0;
+  boolean agreement = false;  // -a parameter
   
   //java.io.Writer out = new BufferedWriter(new OutputStreamWriter(System.out, "UTF-8"));
   java.io.Writer out = new BufferedWriter(new OutputStreamWriter(System.out));
@@ -56,11 +57,35 @@ import is.iclt.icenlp.core.utils.ErrorDetector;
 	// order 2 = {comp s1 comp} s2
 	public String AgreementCheck(String s1, String s2, String open, String close, int order)
 	{
-		return ErrorDetector.CompAgreementCheck(s1, s2, open, close, order);
+		if (agreement)
+		{
+			return ErrorDetector.CompAgreementCheck(s1, s2, open, close, order);
+		}
+		else
+		{
+			if (order == 1)
+			{
+				return s1+open+s2+close;
+            }
+			else
+			{
+				return  open+s1+close+s2;
+			}
+		}
 	}
 
-
-
+	public void set_doAgreementCheck(boolean option)
+	{
+		agreement = option;
+	}
+	public void set_markGrammarError(boolean markGrammarError)
+	{
+		// If we want grammatical errors to be shown then make sure that the agreement flag is true as well
+        if (markGrammarError)
+		{
+        	agreement = true;
+		}
+	}
   
 %}
 
@@ -92,7 +117,8 @@ PP = {OpenPP}~{ClosePP}
 CP = {OpenCP}~{CloseCP}
 
 VPPastSeq = {VPPast}({WhiteSpace}+{ConjPhraseOrComma}{WhiteSpace}+{VPPast})*
-Complement = {APNom} | {APsNom} | {NPNom} | {NPsNom} | {VPPastSeq} 
+Complement = {APNom} | {APsNom} | {NPNom} | {NPsNom} | {VPPastSeq}
+//Complement = {APNom} | {APsNom} | {NPNom} | {VPPastSeq}
 
 SubjectVerbBe = {FuncSubject}{WhiteSpace}+{VPBe}{WhiteSpace}+
 
@@ -161,7 +187,7 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 				}
 				else
 				{
-	System.out.println("gDB>> Func_COMP(SubjVerbAdvPCompl)="+firstPart + Comp1Open + secondPart + Comp1Close);
+//	System.out.println("gDB>> Func_COMP(SubjVerbAdvPCompl)="+firstPart + Comp1Open + secondPart + Comp1Close);
 					out.write(AgreementCheck(firstPart,secondPart,Comp1Open,Comp1Close,1));
 //					out.write(firstPart + Comp1Open + secondPart + Comp1Close);
 				}
@@ -193,7 +219,7 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 				}
 				else
 				{
-	System.out.println("gDB>> Func_COMP(SubjVerbMWEAdvPCompl)="+StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
+//	System.out.println("gDB>> Func_COMP(SubjVerbMWEAdvPCompl)="+StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 					out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 				}
 			} 
@@ -209,7 +235,7 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 				}
 				else
 				{
-	System.out.println("gDB>> Func_COMP(SubjVerbNPCompl)="+StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
+//	System.out.println("gDB>> Func_COMP(SubjVerbNPCompl)="+StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 					out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 				}
 			} 			
@@ -225,7 +251,7 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 				}
 				else
 				{
-	System.out.println("gDB>> Func_COMP(SubjVerbCPCompl)="+StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
+//	System.out.println("gDB>> Func_COMP(SubjVerbCPCompl)="+StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 					out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 				}
 			}			
@@ -241,7 +267,7 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 			}
 			else
 			{
-				System.out.println("gDB>> Func_COMP(SubjVerbCompl)="+StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
+	//			System.out.println("gDB>> Func_COMP(SubjVerbCompl)="+StringSearch.firstString+")("+Comp1Open+")("+StringSearch.nextString+")("+Comp1Close);
 
 				out.write(AgreementCheck(StringSearch.firstString,StringSearch.nextString,Comp1Open,Comp1Close,1));
 //				out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
@@ -275,7 +301,7 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 			}
 			else
 			{
-	System.out.println("gDB>> Func_COMP(SubjCompl)="+StringSearch.firstString+Comp0Open+StringSearch.nextString+Comp0Close);
+//	System.out.println("gDB>> Func_COMP(SubjCompl)="+StringSearch.firstString+Comp0Open+StringSearch.nextString+Comp0Close);
 
 				out.write(AgreementCheck(StringSearch.firstString,StringSearch.nextString,Comp0Open,Comp0Close,99));
 //				out.write(StringSearch.firstString+Comp0Open+StringSearch.nextString+Comp0Close);
@@ -291,7 +317,7 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 			}
 			else
 			{
-	System.out.println("gDB>> Func_COMP(SubjPPCompl)="+StringSearch.firstString+Comp0Open+StringSearch.nextString+Comp0Close);
+//	System.out.println("gDB>> Func_COMP(SubjPPCompl)="+StringSearch.firstString+Comp0Open+StringSearch.nextString+Comp0Close);
 				out.write(StringSearch.firstString+Comp0Open+StringSearch.nextString+Comp0Close);
 			}
 		} 		
@@ -306,7 +332,7 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 			}
 			else
 			{
-	System.out.println("gDB>> Func_COMP(VerbSubjCompl)="+StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
+//	System.out.println("gDB>> Func_COMP(VerbSubjCompl)="+StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 	//			out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 				out.write(AgreementCheck(StringSearch.firstString,StringSearch.nextString,Comp1Open,Comp1Close,1));
 			}
@@ -325,7 +351,7 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 			}
 			else
 			{
-	System.out.println("gDB>> Func_COMP(VerbCompl)="+StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
+//	System.out.println("gDB>> Func_COMP(VerbCompl)="+StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 				out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 			}
 		} 
@@ -340,7 +366,7 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 			}
 			else
 			{
-	System.out.println("gDB>> Func_COMP(ComplVerb)="+Comp2Open+StringSearch.firstString+Comp2Close+StringSearch.nextString);
+//	System.out.println("gDB>> Func_COMP(ComplVerb)="+Comp2Open+StringSearch.firstString+Comp2Close+StringSearch.nextString);
 				out.write(Comp2Open+StringSearch.firstString+Comp2Close+StringSearch.nextString);
 	//System.err.println("First : \n" + StringSearch.firstString);
 	//System.err.println("Second : \n" + StringSearch.nextString);
@@ -357,7 +383,7 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 			}
 			else
 			{
-	System.out.println("gDB>> Func_COMP(VerbAdvPCompl)="+StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
+//	System.out.println("gDB>> Func_COMP(VerbAdvPCompl)="+StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 				out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 	//System.err.println("First : \n" + StringSearch.firstString);
 	//System.err.println("Second : \n" + StringSearch.nextString);
@@ -374,7 +400,7 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 			}
 			else
 			{
-	System.out.println("gDB>> Func_COMP(VerbPPCompl)="+StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
+//	System.out.println("gDB>> Func_COMP(VerbPPCompl)="+StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 				out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 			}
 		} 

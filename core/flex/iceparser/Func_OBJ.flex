@@ -23,6 +23,7 @@
 /* This transducer marks potential objects */
 package is.iclt.icenlp.core.iceparser;
 import java.io.*;
+import is.iclt.icenlp.core.utils.ErrorDetector;
 %%
 
 %public
@@ -36,9 +37,10 @@ import java.io.*;
   String Obj1Open=" {*OBJ< ";
   String Obj1Close=" *OBJ<} ";
   String Obj2Open=" {*OBJ> ";
-  String Obj2Close=" *OBJ>} ";  
+  String Obj2Close=" *OBJ>} ";
   
   int theIndex=0;
+	boolean errorCheck = false;
   //java.io.Writer out = new BufferedWriter(new OutputStreamWriter(System.out, "UTF-8"));
   java.io.Writer out = new BufferedWriter(new OutputStreamWriter(System.out));
       
@@ -50,8 +52,15 @@ import java.io.*;
       	    yylex();
         }
   }
-  
-    
+
+	public void set_markGrammarError(boolean option)
+	{
+		errorCheck = option;
+	}
+
+
+
+
 %}
 
 %eof{
@@ -72,8 +81,17 @@ VPSupine = {OpenVPs}~{CloseVPs}
 VP = {OpenVP}" "~{CloseVP}
 AP = {OpenAP}[adg]~{CloseAP}
 APs = {APsAcc}|{APsDat}|{APsGen}
-NP = {OpenNP}[adg]~{CloseNP}
-NPs = {NPsAcc}|{NPsDat}|{NPsGen}
+
+NP = {OpenNP}[adg]~{CloseNP}//  (same as the line below)//CloseNP = "NP"\??{Word}"
+//NP = {OpenNP}(a|d|g)~"NP"\??{Word}"]"
+//NP = {OpenNP}[adg]~"NP"\??{Word}"]"
+//NP = "[NP"\??{Word}?[adg]~"NP"\??{Word}?"]"  // For some reason, we cannot use {OpenNP}[adg]~{CloseNP} because then we are not able to compile this file with JFlex!
+
+//NPs = {NPsAcc}|{NPsDat}|{NPsGen}//  (same as the line below)
+//NPs = {OpenNPs}{WhiteSpace}+{OpenNP}(a|d|g)~{CloseNPs}
+NPs = {StartNPs}(a|d|g)~{CloseNPs}
+
+
 AdvP = {OpenAdvP}~{CloseAdvP}
 //AdvPs = (({AdvP}|{MWE}){WhiteSpace}+)+
 AdvPs = (({AdvP}|{MWE_AdvP}){WhiteSpace}+)+
@@ -112,7 +130,16 @@ VerbSupineObj = {VPSupine}{WhiteSpace}+{Object}
 				out.write(yytext());
 			else
 			{
-				out.write(StringSearch.firstString+Obj1Open+StringSearch.nextString+Obj1Close);
+//				System.out.println("gDB>> SubjVerbObj(["+StringSearch.firstString+"]["+StringSearch.nextString+"]["+Obj1Open+"]["+Obj1Close+"])");
+//				out.write(StringSearch.firstString+Obj1Open+StringSearch.nextString+Obj1Close);
+				if (errorCheck)
+				{
+					out.write(ErrorDetector.agreementCheckSubjVerbObj(StringSearch.firstString,StringSearch.nextString,Obj1Open,Obj1Close,1));
+				}
+				else
+				{
+					out.write(StringSearch.firstString + Obj1Open + StringSearch.nextString + Obj1Close);
+				}
 			}
 		} 		
 	
@@ -190,7 +217,8 @@ VerbSupineObj = {VPSupine}{WhiteSpace}+{Object}
 			if(theIndex == -1)
 				out.write(yytext());
 			else
-				out.write(Obj2Open+StringSearch.firstString+Obj2Close+StringSearch.nextString);
+				out.write(ErrorDetector.objVerbSubj(StringSearch.firstString,StringSearch.nextString,Obj2Open,Obj2Close));
+//				out.write(Obj2Open+StringSearch.firstString+Obj2Close+StringSearch.nextString);
 		} 
 
 {VerbObj}	{ 
@@ -283,18 +311,18 @@ VerbSupineObj = {VPSupine}{WhiteSpace}+{Object}
 				out.write(StringSearch.firstString+Obj1Open+StringSearch.nextString+Obj1Close);
 */
 		} 
-{VerbSupineObj}	{ 
+{VerbSupineObj}	{
 //	System.err.println("obj-13");
 //	System.err.println(yytext());
 			/* Find where the Verb Supine phrase ended and insert the OBJ label */
-			theIndex = StringSearch.splitString(yytext(),"VPs]", false, 4);		
+			theIndex = StringSearch.splitString(yytext(),"VPs]", false, 4);
 			if(theIndex == -1)
 				out.write(yytext());
 			else
 				out.write(StringSearch.firstString+Obj1Open+StringSearch.nextString+Obj1Close);
-		} 
-		
+		}
 
 "\n"		{ System.err.print("Reading line: " + Integer.toString(yyline+1) + "\r");
 			out.write("\n"); }
 .		{ out.write(yytext());}
+

@@ -47,7 +47,8 @@ VerbInfinitiveTag = {encodeOpen}sn[mg]{encodeClose}{WhiteSpace}+
 
 // The next definition causes problems because x can be a word!
 //NounTag = {encodeOpen}n{Gender}{Number}{Case}{ArticleChar}?{encodeClose}{WhiteSpace}+ | x
-NounTag = {encodeOpen}n{Gender}{Number}{Case}{ArticleChar}?{encodeClose}{WhiteSpace}+ 
+NounTag = {encodeOpen}n{Gender}{Number}{Case}{ArticleChar}?{encodeClose}{WhiteSpace}+
+
 ProperNounTag = {encodeOpen}n{Gender}{Number}{Case}("-"|{ArticleChar}){ProperName}{encodeClose}{WhiteSpace}+
 NumeralTag = {encodeOpen}t([aop]|f{Gender}{Number}{Case}){encodeClose}{WhiteSpace}+
 PersPronounTag = {encodeOpen}fp({Gender}|{Person}){Number}{Case}{encodeClose}{WhiteSpace}+
@@ -62,8 +63,13 @@ CloseAPs = "APs]"
 //OpenNP = "[NP"\??
 //CloseNP = NP\??]
 // If a question mark appears in the NP label then the corresponding NP has a potential error
-OpenNP = "[NP"\??([a-z]+\+?)*
-CloseNP = NP\??([a-z]+\+?)*]
+//OpenNP = "[NP"\??([a-z]+\+?)*
+//CloseNP = "NP"\??([a-z]+\+?)*"]"
+OpenNP = "[NP"{Error}?
+CloseNP = "NP]"
+//ErrorCodes = [VNASC]("g"|"n"|"ca"|"p"|"s")
+ErrorCodes = [VNASC][gnps]|"ca" // takes less ram than line the above and hence doesn't crash flex
+Error = \?{ErrorCodes}+
 
 OpenNPs = "[NPs"
 CloseNPs = "NPs]"
@@ -75,8 +81,12 @@ OpenSCP = "[SCP"
 CloseSCP = "SCP]"
 
 
-OpenVP = "[VP"
-CloseVP = "VP]"
+//OpenVP = "[VP"
+//CloseVP = "VP]"
+eVP = "VP"b?{Error}?
+OpenVP = "["{eVP}
+CloseVP = "V".{1,2}"]"   // VP = {OpenVP}" "~{CloseVP} is in Func_OBJ.flex so we have to assume there is some V and ] in the end "VPb?Vn]" otherwise jflex might run out of memory
+
 OpenVPb = "[VPb"	/* Verb BE phrase    */
 CloseVPb = "VPb]"	
 OpenVPi = "[VPi"	/* Verb Infinitive phrase */
@@ -120,16 +130,28 @@ APAcc = {OpenAP}a~{CloseAP}
 APDat = {OpenAP}d~{CloseAP}
 APGen = {OpenAP}g~{CloseAP}
 
-NPsNom = {OpenNPs}{WhiteSpace}+{OpenNP}n~{CloseNPs}
-NPsAcc = {OpenNPs}{WhiteSpace}+{OpenNP}a~{CloseNPs}
-NPsDat = {OpenNPs}{WhiteSpace}+{OpenNP}d~{CloseNPs}
-NPsGen = {OpenNPs}{WhiteSpace}+{OpenNP}g~{CloseNPs}
 
-APsNom = {OpenAPs}{WhiteSpace}+{OpenAP}n~{CloseAPs}
-APsAcc = {OpenNPs}{WhiteSpace}+{OpenAP}a~{CloseAPs}
-APsDat = {OpenNPs}{WhiteSpace}+{OpenAP}d~{CloseAPs}
-APsGen = {OpenNPs}{WhiteSpace}+{OpenAP}g~{CloseAPs}
+//NPsNom = {OpenNPs}{WhiteSpace}+{OpenNP}n~{CloseNPs}
+//NPsAcc = {OpenNPs}{WhiteSpace}+{OpenNP}a~{CloseNPs}
+//NPsDat = {OpenNPs}{WhiteSpace}+{OpenNP}d~{CloseNPs}
+//NPsGen = {OpenNPs}{WhiteSpace}+{OpenNP}g~{CloseNPs}
 
+StartNPs = {OpenNPs}{WhiteSpace}+{OpenNP}
+NPsNom = {StartNPs}n~{CloseNPs}
+NPsAcc = {StartNPs}a~{CloseNPs}
+NPsDat = {StartNPs}d~{CloseNPs}
+NPsGen = {StartNPs}g~{CloseNPs}
+
+//APsNom = {OpenAPs}{WhiteSpace}+{OpenAP}n~{CloseAPs}
+//APsAcc = {OpenAPs}{WhiteSpace}+{OpenAP}a~{CloseAPs}
+//APsDat = {OpenAPs}{WhiteSpace}+{OpenAP}d~{CloseAPs}
+//APsGen = {OpenAPs}{WhiteSpace}+{OpenAP}g~{CloseAPs}
+
+StartAPs = {OpenAPs}{WhiteSpace}+{OpenAP}
+APsNom = {StartAPs}n~{CloseAPs}
+APsAcc = {StartAPs}a~{CloseAPs}
+APsDat = {StartAPs}d~{CloseAPs}
+APsGen = {StartAPs}g~{CloseAPs}
 
 NPNum = {OpenNP} ~{encodeOpen}t(a|p){encodeClose}{WhiteSpace}+{CloseNP}
 

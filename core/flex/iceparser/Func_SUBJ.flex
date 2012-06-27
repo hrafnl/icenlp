@@ -68,8 +68,8 @@ import is.iclt.icenlp.core.utils.ErrorDetector;
 		// If we want grammatical errors to be shown then make sure that the agreement flag is true as well
                 if (markGrammarError)
                         agreement = true;
-
 	}
+
 	public void parse(java.io.Writer _out) throws java.io.IOException
 	{
 	  	out = _out;
@@ -136,10 +136,12 @@ SubjectRel = {NomSubject}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{RelCP}
 
 %%
 
+
 {SubjectVerb}
 { 
 //System.err.println("subj-1");
 	String str = yytext();
+//				System.out.println("gDB>> Func_SUBJ[SubjectVerb]=("+str+")");
 	if (str.contains("[PP"))	/* We don't want the preposition phrase to be included */
 		theIndex = StringSearch.splitString(str, "[PP", true, -1);
 	//else if (str.contains("{*QUAL")) {	/* Make sure the qualifier is a part of the subject */
@@ -160,11 +162,19 @@ SubjectRel = {NomSubject}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{RelCP}
 	else
 	{
 
-		System.out.println("gDB>>SubjectVerb("+Func1Open+StringSearch.firstString+Func1Close+StringSearch.nextString+")");
+//		System.out.println("gDB>>SubjectVerb("+Func1Open+StringSearch.firstString+Func1Close+StringSearch.nextString+")");
 
 	//	out.write(AgreementCheck(Func1Open,StringSearch.firstString,Func1Close,StringSearch.nextString,1));
-		out.write(ErrorDetector.agreementCheckNumberAndPerson(StringSearch.firstString,StringSearch.nextString,Func1Open,Func1Close,0));
+		if (agreement)
+		{
+			out.write(ErrorDetector.agreementSubjectVerbCheckNumberAndPerson(StringSearch.firstString,StringSearch.nextString,Func1Open,Func1Close,0));
+		}
+		else
+		{
+			out.write(Func1Open + StringSearch.firstString + Func1Close + StringSearch.nextString);
+		}
 // vantar agreementCheckGenderPerson   fpkeo = 3 pers
+
 	}
 } 
 //{SubjectAPVerb}	{ 
@@ -197,7 +207,7 @@ SubjectRel = {NomSubject}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{RelCP}
 	}
 	else
 	{
-		System.out.println("gDB>>SubjectVerbMissing("+Func0Open+StringSearch.firstString+Func0Close+StringSearch.nextString+")");
+//		System.out.println("gDB>>SubjectVerbMissing("+Func0Open+StringSearch.firstString+Func0Close+StringSearch.nextString+")");
 		out.write(AgreementCheck(Func0Open,StringSearch.firstString,Func0Close,StringSearch.nextString,1));
 	}
 } 
@@ -225,10 +235,18 @@ SubjectRel = {NomSubject}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{RelCP}
 	}
 	else
 	{
-		System.out.println("gDB>>VerbSubject("+StringSearch.firstString+Func2Open+StringSearch.nextString+Func2Close+")");
+//		System.out.println("gDB>>VerbSubject("+StringSearch.firstString+Func2Open+StringSearch.nextString+Func2Close+")");
 //		out.write(AgreementCheck(StringSearch.firstString,Func2Open,StringSearch.nextString,Func2Close,2));
-		out.write(ErrorDetector.agreementCheckNumberAndPerson(StringSearch.firstString,StringSearch.nextString,Func2Open,Func2Close,1));
-	}
+		if (agreement)
+		{
+			out.write(ErrorDetector.agreementSubjectVerbCheckNumberAndPerson(StringSearch.firstString,StringSearch.nextString,Func2Open,Func2Close,1));
+		}
+		else
+		{
+			out.write(StringSearch.firstString + Func1Open + StringSearch.nextString + Func1Close);
+		}
+
+}
 
 
 
@@ -276,7 +294,7 @@ SubjectRel = {NomSubject}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{RelCP}
 	}
 	else
 	{
-		System.out.println("gDB>>VerbAdvPSubject("+StringSearch.firstString+Func2Open+StringSearch.nextString+Func2Close+")");
+//		System.out.println("gDB>>VerbAdvPSubject("+StringSearch.firstString+Func2Open+StringSearch.nextString+Func2Close+")");
 		out.write(AgreementCheck(StringSearch.firstString,Func2Open,StringSearch.nextString,Func2Close,2));
 	}
 }
@@ -307,12 +325,12 @@ SubjectRel = {NomSubject}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{RelCP}
 	}
 	else
 	{
-		System.out.println("gDB>>SubjectRel("+Func1Open+StringSearch.firstString+Func1Close+StringSearch.nextString+")");
+//		System.out.println("gDB>>SubjectRel("+Func1Open+StringSearch.firstString+Func1Close+StringSearch.nextString+")");
 		out.write(AgreementCheck(Func1Open,StringSearch.firstString,Func1Close,StringSearch.nextString,1));
 	}
 }
 "\n"
-{ 
+{
 	//System.err.print("Reading line: " + Integer.toString(yyline+1) + "\r"); 
 	out.write("\n"); 
 }

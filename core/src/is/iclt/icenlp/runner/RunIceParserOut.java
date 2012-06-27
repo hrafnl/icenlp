@@ -89,14 +89,13 @@ public class RunIceParserOut extends RunIceParserBase
 	}
     
     private void parse() throws IOException
-    {	
+    {
 		if(inputFile == null || outputFile == null || outputPath == null)
 		{
 			showParametersExit();
 		}
 		StringReader sr;
-		String str;			
-
+		String str;
 		printHeader(); 
 		
 		System.out.println( "Input file: " + inputFile );
@@ -162,14 +161,14 @@ public class RunIceParserOut extends RunIceParserBase
 
 		Phrase_NP np = new Phrase_NP(sr);
 
-		if(agreement)
-		{
-			np.set_doAgreementCheck(true);	
-		}
-		if(markGrammarError)
-		{
-			np.set_markGrammarError(true); 
-		}
+		//if(agreement)
+		//{
+			np.set_doAgreementCheck(agreement);
+		//}
+		//if(markGrammarError)
+		//{
+			np.set_markGrammarError(markGrammarError);
+		//}
 		readwrite(np, outputPath+"/"+"phrase_APs.out", outputPath+"/"+"phrase_NP.out");
 		
 		// phrase_NP2															-- phrase_NP2
@@ -318,12 +317,12 @@ public class RunIceParserOut extends RunIceParserBase
 
 		long start = System.currentTimeMillis();
 
-        runner.parse();
+       runner.parse();
 
         long end = System.currentTimeMillis();
 		
 		System.out.println("Time in msec " + (end-start));
-    }
+    } 
 }
 
 

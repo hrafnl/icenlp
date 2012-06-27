@@ -22,7 +22,6 @@
 package is.iclt.icenlp.facade;
 
 import is.iclt.icenlp.core.iceparser.*;
-
 import java.io.*;
 
 /**
@@ -57,6 +56,7 @@ public class IceParserFacade
     private Func_OBJ3 f_obj3_scn;
     private Func_SUBJ2 f_subj2_scn;
     private Clean2 cl2_scn;
+    private Clean3 cl3_scn;
     private Phrase_Per_Line ppl_scn;
 	private TagDecoder tagDecdr;
 	private OutputFormatter outFormatter;
@@ -91,6 +91,7 @@ public class IceParserFacade
         f_obj3_scn = new Func_OBJ3(sr);
         f_subj2_scn = new Func_SUBJ2(sr);
         cl2_scn = new Clean2(sr);
+        cl3_scn = new Clean3(sr);
         ppl_scn = new Phrase_Per_Line(sr);
 		tagDecdr = new TagDecoder(sr);
 		outFormatter = new OutputFormatter();
@@ -155,6 +156,7 @@ public class IceParserFacade
 		tagEncdr.yyreset(sr);
 		tagEncdr.parse(sw);		
 
+//System.out.println("tagEncdr=(" + sw.toString()+")");
 		// --------------------------------
         //print( "preprocess" );
         sr = new StringReader( sw.toString() );
@@ -165,6 +167,7 @@ public class IceParserFacade
         preprocess_scn.yyreset(sr);
         preprocess_scn.parse(sw);
 
+//System.out.println("preprocess=(" + sw.toString()+")");
 		// --------------------------------
 		//print( "Phrase_FOREIGN" );
 
@@ -175,6 +178,7 @@ public class IceParserFacade
 		frw_scn.yyreset(sr);
 		frw_scn.parse(sw);
 
+//System.out.println("Phrase_FOREIGN=(" + sw.toString()+")");
 		// --------------------------------
 		//print( "Phrase_MWE" );
 
@@ -185,6 +189,7 @@ public class IceParserFacade
         mwe_scn.yyreset(sr);
         mwe_scn.parse(sw);
 
+//System.out.println("Phrase_MWEP=(" + sw.toString()+")");
         // --------------------------------
 		//print( "Phrase_MWEP1" );
 		sr = new StringReader( sw.toString() );
@@ -194,6 +199,7 @@ public class IceParserFacade
         mwep1_scn.yyreset(sr);
         mwep1_scn.parse(sw);
 
+//System.out.println("Phrase_MWEP1=(" + sw.toString()+")");
         // --------------------------------
 		//print( "Phrase_MWEP2" );
 		sr = new StringReader( sw.toString() );
@@ -203,6 +209,7 @@ public class IceParserFacade
         mwep2_scn.yyreset(sr);
         mwep2_scn.parse(sw);
 
+//System.out.println("Phrase_MWEP2=(" + sw.toString()+")");
         // --------------------------------
 		//print( "Phrase_AdvP" );
 		sr = new StringReader( sw.toString() );
@@ -212,6 +219,7 @@ public class IceParserFacade
         advp_scn.yyreset(sr);
         advp_scn.parse(sw);
 
+//System.out.println("Phrase_AdvP=(" + sw.toString()+")");
         // --------------------------------
 		//print( "Phrase_AP" );
 		sr = new StringReader( sw.toString() );
@@ -221,6 +229,7 @@ public class IceParserFacade
         ap_scn.yyreset(sr);
         ap_scn.parse(sw);
 
+//System.out.println("Phrase_AP=(" + sw.toString()+")");
         // --------------------------------
 		//print( "Case_AP" );
 		sr = new StringReader( sw.toString() );
@@ -230,6 +239,7 @@ public class IceParserFacade
         cap_scn.yyreset(sr);
         cap_scn.parse(sw);
 
+//System.out.println("Case_AP=(" + sw.toString()+")");
         // --------------------------------
 		//print( "Phrase_APs" );
 		sr = new StringReader( sw.toString() );
@@ -239,6 +249,7 @@ public class IceParserFacade
         aps_scn.yyreset(sr);
         aps_scn.parse(sw);
 
+//System.out.println("Phrase_APs=(" + sw.toString()+")");
         // --------------------------------
 		//print( "Phrase_NP" );
 		sr = new StringReader( sw.toString() );
@@ -250,7 +261,9 @@ public class IceParserFacade
         np_scn.yyclose();
         np_scn.yyreset(sr);
         np_scn.parse(sw);
-		
+//System.out.println("Phrase_NP=(" + sw.toString()+")");
+
+
 		if(agreement && !markGrammarError)
 		{
 			// --------------------------------
@@ -261,6 +274,7 @@ public class IceParserFacade
 			np2_scn.yyclose();
 			np2_scn.yyreset(sr);
 			np2_scn.parse(sw);
+//System.out.println("phrase_NP2=(" + sw.toString()+")");
 		}
 
         // --------------------------------
@@ -271,6 +285,7 @@ public class IceParserFacade
         vp_scn.yyclose();
         vp_scn.yyreset(sr);
         vp_scn.parse(sw);
+//System.out.println("Phrase_VP=(" + sw.toString()+")");
 
         // --------------------------------
 		//print( "Case_NP" );
@@ -280,6 +295,7 @@ public class IceParserFacade
         cnp_scn.yyclose();
         cnp_scn.yyreset(sr);
         cnp_scn.parse(sw);
+//System.out.println("Case_NP=(" + sw.toString()+")");
 
         // --------------------------------
 		//print( "Phrase_NPs" );
@@ -290,6 +306,7 @@ public class IceParserFacade
         nps_scn.yyreset(sr);
         nps_scn.parse(sw);
 
+//System.out.println("Phrase_NPs=(" + sw.toString()+")");
         // --------------------------------
 		//print( "Phrase_PP" );
 		sr = new StringReader( sw.toString() );
@@ -299,6 +316,7 @@ public class IceParserFacade
         pp_scn.yyreset(sr);
         pp_scn.parse(sw);
 
+//System.out.println("Phrase_PP=(" + sw.toString()+")");
         // --------------------------------
 		//print( "Clean1" );
 		sr = new StringReader( sw.toString() );
@@ -308,6 +326,7 @@ public class IceParserFacade
         cl1_scn.yyreset(sr);
         cl1_scn.parse(sw);
 
+//System.out.println("Clean1=(" + sw.toString()+")");
         //print( "1:"+sw.toString() );
 
 		if( include_func )
@@ -329,6 +348,7 @@ public class IceParserFacade
             f_qual_scn.yyreset(sr);
             f_qual_scn.parse(sw);
 
+//System.out.println("Func_QUAL=(" + sw.toString()+")");
             // --------------------------------
 			//print( "Func_SUBJ" );
 			sr = new StringReader( sw.toString() );
@@ -341,24 +361,31 @@ public class IceParserFacade
             f_subj_scn.yyreset(sr);
             f_subj_scn.parse(sw);
 
+//System.out.println("Func_SUBJ=(" + sw.toString()+")");
             // --------------------------------
 			//print( "Func_COMP" );
 			sr = new StringReader( sw.toString() );
 			sw = new StringWriter( );
 
+			f_comp_scn.set_doAgreementCheck(agreement);
+        	f_comp_scn.set_markGrammarError(markGrammarError);
+
             f_comp_scn.yyclose();
             f_comp_scn.yyreset(sr);
             f_comp_scn.parse(sw);
 
+//System.out.println("Func_COMP=(" + sw.toString()+")");
             // --------------------------------
 			//print( "Func_OBJ" );
 			sr = new StringReader( sw.toString() );
 			sw = new StringWriter( );
 
+       		f_obj_scn.set_markGrammarError(markGrammarError);
             f_obj_scn.yyclose();
             f_obj_scn.yyreset(sr);
             f_obj_scn.parse(sw);
 
+//System.out.println("Func_OBJ=(" + sw.toString()+")");
             // --------------------------------
 			//print( "Func_OBJ2" );
 			sr = new StringReader( sw.toString() );
@@ -368,6 +395,7 @@ public class IceParserFacade
             f_obj2_scn.yyreset(sr);
             f_obj2_scn.parse(sw);
 
+//System.out.println("Func_OBJ2=(" + sw.toString()+")");
             // --------------------------------
 			//print( "Func_OBJ3" );
 			sr = new StringReader( sw.toString() );
@@ -377,6 +405,7 @@ public class IceParserFacade
             f_obj3_scn.yyreset(sr);
             f_obj3_scn.parse(sw);
 
+//System.out.println("Func_OBJ3=(" + sw.toString()+")");
             // --------------------------------
 			//print( "Func_SUBJ2" );
 			sr = new StringReader( sw.toString() );
@@ -387,6 +416,7 @@ public class IceParserFacade
             f_subj2_scn.parse(sw);
 		}
 
+//System.out.println("Func_SUBJ2=(" + sw.toString()+")");
 		// --------------------------------
 		//print( "Clean3" );
         sr = new StringReader( sw.toString() );
@@ -395,6 +425,22 @@ public class IceParserFacade
         cl2_scn.yyclose();
         cl2_scn.yyreset(sr);
         cl2_scn.parse(sw);
+
+//System.out.println("Clean3=(" + sw.toString()+")");
+
+		// --------------------------------
+		if (markGrammarError)
+		{
+			sr = new StringReader( sw.toString() );
+			sw = new StringWriter( );
+
+			cl3_scn.set_doAgreementCheck(agreement);
+			cl3_scn.set_markGrammarError(markGrammarError);
+			cl3_scn.yyclose();
+			cl3_scn.yyreset(sr);
+			cl3_scn.parse(sw);
+		}
+
 
         //if labels are merged then phrase per line is done in the outputFormatter
 		//if( one_phrase_per_line && !mergeLabels)
@@ -419,9 +465,12 @@ public class IceParserFacade
 		tagDecdr.yyreset(sr);
 		tagDecdr.parse(sw);
 
+
+//System.out.println("outType=(" + outType+")");
         // Run the Output formatter?
         if (mergeLabels || (! (outType == OutputFormatter.OutputType.plain || outType == OutputFormatter.OutputType.phrase_per_line)))
         {
+
             String result = outFormatter.parse(sw.toString(), outType, mergeLabels);
             return result;
         }

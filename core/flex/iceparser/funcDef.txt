@@ -2,8 +2,8 @@ OpenQual = "{*QUAL"
 CloseQual= "*QUAL}"
 
 /* If a question mark appears at then end of a subject label then there is possible an error in the subject */
-OpenSubj = "{*SUBJ"[<>]?\??{Word}
-CloseSubj = "*SUBJ"[<>]?\??{Word}"}"
+OpenSubj = "{*SUBJ"[<>]?{Error}?
+CloseSubj = "*SUBJ"[<>]?{Error}?"}"
 
 OpenObj = "{*OBJ"(AP|NOM)?[<>]
 CloseObj = "*OBJ"(AP|NOM)?[<>]"}"
@@ -11,8 +11,8 @@ CloseObj = "*OBJ"(AP|NOM)?[<>]"}"
 OpenObjI = "{*IOBJ"[<>]
 CloseObjI = "*IOBJ"[<>]"}"
 
-OpenComp = "{*COMP"[<>]?\??{Word}
-CloseComp = "*COMP"[<>]?\??{Word}"}"
+OpenComp = "{*COMP"[<>]?{Error}?
+CloseComp = "*COMP"[<>]?{Error}?"}"
 
 OpenTemp = "{*TIMEX"
 CloseTemp = "*TIMEX}"
@@ -27,6 +27,10 @@ FuncTemp = {OpenTemp}~{CloseTemp}
 Function = {FuncQualifier} | {FuncSubject} | {FuncObject} | {FuncObjectI} | {FuncComplement} | {FuncTemp}
 
 /* A nominative subjec is either one nominative NP or a sequence of nominative NPs */
-NomSubject = {NPNom} | {NPsNom}
-AccSubject = {NPAcc} | {NPsAcc}
-DatSubject = {NPDat} | {NPsDat}
+/* NomSubject = {NPNom} | {NPsNom}         */
+/* AccSubject = {NPAcc} | {NPsAcc}          */
+/* DatSubject = {NPDat} | {NPsDat}          */
+
+NomSubject = ("[NP"\??n~"NP"\??"]") | {NPsNom}
+AccSubject = ("[NP"\??a~"NP"\??"]") | {NPsAcc}
+DatSubject = ("[NP"\??d~"NP"\??"]") | {NPsDat}

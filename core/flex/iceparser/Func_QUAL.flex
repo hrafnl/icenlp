@@ -42,8 +42,8 @@ import java.io.*;
   public void parse(java.io.Writer _out) throws java.io.IOException
   {
       	out = _out;
-      	while (!zzAtEOF) 
-      	    yylex();
+      	while (!zzAtEOF){
+      	    yylex();  }
   }
   
 %}
@@ -69,11 +69,19 @@ VP = {OpenVP}~{CloseVP} | {OpenVPs}~{CloseVPs} | {OpenVPi}~{CloseVPi}
 PPSkip = ({GenPP}|{VP}{WhiteSpace}+)({NPGen}|{NPsGen}) 
 NPGenSeq = {OpenNPs}{WhiteSpace}+{OpenNP}g~{CloseNPs}
 NPQual = {NPGen}({WhiteSpace}+{NPGen})* | {NPGenSeq}
-
+//Fiskinn = "[NPa"({WhiteSpace}+{Word}{WhiteSpace}+{NounTag}{WhiteSpace}+)*~"NP]"
 
 %%
 {PPSkip}	{out.write(yytext()); }
-{NPQual}	{ out.write(OpenQual+yytext()+CloseQual);}
-"\n"		{ //System.err.print("Reading line: " + Integer.toString(yyline+1) + "\r"); 
-		out.write("\n"); }
-.		{ out.write(yytext());}
+{NPQual} { out.write(OpenQual+yytext()+CloseQual);}
+//{Fiskinn} { out.write(OpenQual+yytext()+CloseQual);System.out.println("gDB>> FuncQUAL[Fiskinn]=("+yytext()+")");}
+"\n"
+{
+		//System.err.print("Reading line: " + Integer.toString(yyline+1) + "\r");
+		out.write("\n");
+}
+.
+{
+		out.write(yytext());
+//	System.out.println("gDB>> FuncQUAL=("+yytext()+")");
+}

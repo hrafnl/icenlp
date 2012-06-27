@@ -167,10 +167,16 @@ NounPhrase = {Hvad} | {HvadaNP} | {ReflNP} | {ArticleNP} | {DemonNP} | {IndefNP}
 {NounPhrase}
 {
 	String str = yytext();
+//	System.out.println("gDB>> NounPhrase=("+str+")");
 	out.write(FinalCheck(str));
 }
 
 
+{NounTag}
+{
+	String str = yytext();
+//	System.out.println("gDB>> NounTag=("+str+")");
+}
 
 "\n"		{ //System.err.print("Reading line: " + Integer.toString(yyline+1) + "\r"); 
 		out.write("\n"); }

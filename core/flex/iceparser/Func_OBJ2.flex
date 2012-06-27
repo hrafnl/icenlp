@@ -42,7 +42,7 @@ import java.io.*;
   String Obj1Open=" {*OBJ< ";
   String Obj1Close=" *OBJ<} ";
   String Obj2Open=" {*OBJ> ";
-  String Obj2Close=" *OBJ>} ";  
+  String Obj2Close=" *OBJ>} ";
   String IObjOpen=" {*IOBJ< ";
   String IObjClose=" *IOBJ<} ";
   
@@ -95,8 +95,8 @@ NPOblique = {NPAcc}|{NPDat}|{NPGen}
 NPsOblique = {NPsAcc}|{NPsDat}|{NPsGen}
 
 // Verbs that demand oblique case subjects
-VPDat = {OpenVP}{WhiteSpace}+{VerbDat}~{CloseVP} 
-VPAcc = {OpenVP}{WhiteSpace}+{VerbAcc}~{CloseVP} 
+VPDat = {OpenVP}{WhiteSpace}+{VerbDat}~{CloseVP}
+VPAcc = {OpenVP}{WhiteSpace}+{VerbAcc}~{CloseVP}
 
 Object = ({NPOblique}|{NPsOblique})({WhiteSpace}+{FuncQualifier})?
 NPDObj = "{*OBJ<"{WhiteSpace}+{DatObj}{WhiteSpace}+"*OBJ<}"
@@ -129,7 +129,9 @@ PPVPInfObj = {VPInf}{WhiteSpace}*{ClosePP}{WhiteSpace}+{Object}
 // A nominative object which follows a verb which demands an oblique case subject
 FuncSubjectOblique = {OpenSubj}{WhiteSpace}+({NPOblique}|{NPsOblique})~{CloseSubj}
 SubjVerbObjNom = {FuncSubjectOblique}{WhiteSpace}+{VPDat}{WhiteSpace}+{NomSubject}
-VerbSubjObjNom = {VPDat}{WhiteSpace}+{FuncSubjectOblique}{WhiteSpace}+{NomSubject}
+//VerbSubjObjNom = {VPDat}{WhiteSpace}+{FuncSubjectOblique}{WhiteSpace}+{NomSubject} // VPDat is a problem
+//VerbSubjObjNom = {OpenVP}{WhiteSpace}+{VerbDat}{CloseVP}{WhiteSpace}+{FuncSubjectOblique}{WhiteSpace}+{NomSubject} // VPDat is a problem
+VerbSubjObjNom = "[VP"{WhiteSpace}+{VerbDat}~"VP]"{WhiteSpace}+{FuncSubjectOblique}{WhiteSpace}+{NomSubject} // VPDat is a problem
 
 %%
 {VerbDatObjAccObj}
@@ -172,7 +174,7 @@ VerbSubjObjNom = {VPDat}{WhiteSpace}+{FuncSubjectOblique}{WhiteSpace}+{NomSubjec
 			}
 			else
 			{
-					System.out.println("gDB>>VerbDatObjAccObj("+StringSearch.firstString+Obj1Open+StringSearch.nextString+Obj1Close+")");
+//					System.out.println("gDB>>VerbDatObjAccObj("+StringSearch.firstString+Obj1Open+StringSearch.nextString+Obj1Close+")");
 				out.write(StringSearch.firstString+Obj1Open+StringSearch.nextString+Obj1Close);
 			}
 
@@ -240,7 +242,7 @@ VerbSubjObjNom = {VPDat}{WhiteSpace}+{FuncSubjectOblique}{WhiteSpace}+{NomSubjec
 			}
 			else
 			{
-					System.out.println("gDB>>VerbAccObjDatObj("+first+IObjOpen+second+IObjClose+")");
+	//				System.out.println("gDB>>VerbAccObjDatObj("+first+IObjOpen+second+IObjClose+")");
 
 				out.write(first+IObjOpen+second+IObjClose);
 			}
@@ -282,7 +284,7 @@ VerbSubjObjNom = {VPDat}{WhiteSpace}+{FuncSubjectOblique}{WhiteSpace}+{NomSubjec
 			}
 			else
 			{
-					System.out.println("gDB>>ComplObj("+StringSearch.firstString+Obj1Open+StringSearch.nextString+Obj1Close+")");
+//					System.out.println("gDB>>ComplObj("+StringSearch.firstString+Obj1Open+StringSearch.nextString+Obj1Close+")");
 				out.write(StringSearch.firstString+Obj1Open+StringSearch.nextString+Obj1Close);
 			}
 		}
@@ -292,7 +294,7 @@ VerbSubjObjNom = {VPDat}{WhiteSpace}+{FuncSubjectOblique}{WhiteSpace}+{NomSubjec
 			/* Find where the Complement function ended and insert the COMP label */
 				theIndex = StringSearch.splitString(yytext(),"*COMP<?Cg}", true, 10);
 			if (theIndex == -1)
-			theIndex = StringSearch.splitString(yytext(),"*COMP<}", true, 7);
+				theIndex = StringSearch.splitString(yytext(),"*COMP<}", true, 7);
 			if (theIndex == -1)
 				theIndex = StringSearch.splitString(yytext(),"*COMP}", true, 6);
 			if(theIndex == -1)
@@ -301,12 +303,11 @@ VerbSubjObjNom = {VPDat}{WhiteSpace}+{FuncSubjectOblique}{WhiteSpace}+{NomSubjec
 			}
 			else
 			{
-			System.out.println("gDB>>ComplCompl("+StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close+")");
+//			System.out.println("gDB>>ComplCompl("+StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close+")");
 				out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 			}
 		}
-
-{SubjVerbObjNom}  {
+/*{SubjVerbObjNom}  {
 //	System.err.println("obj2-5");
 			theIndex = StringSearch.splitString(yytext(),"VP]", false, 3);
 			if(theIndex == -1)
@@ -319,6 +320,7 @@ VerbSubjObjNom = {VPDat}{WhiteSpace}+{FuncSubjectOblique}{WhiteSpace}+{NomSubjec
 				out.write(StringSearch.firstString+ObjNomOpen+StringSearch.nextString+ObjNomClose);
 			}
 		  }
+*/
 {VerbSubjObjNom}  {
 //	System.err.println("obj2-6");
 			theIndex = StringSearch.splitString(yytext(),"*SUBJ<}", true, 7);
@@ -330,7 +332,7 @@ VerbSubjObjNom = {VPDat}{WhiteSpace}+{FuncSubjectOblique}{WhiteSpace}+{NomSubjec
 			}
 			else
 			{
-				System.out.println("gDB>>VerbSubjObjNom("+StringSearch.firstString+ObjNomOpen+StringSearch.nextString+ObjNomClose+")");
+//				System.out.println("gDB>>VerbSubjObjNom("+StringSearch.firstString+ObjNomOpen+StringSearch.nextString+ObjNomClose+")");
 				out.write(StringSearch.firstString+ObjNomOpen+StringSearch.nextString+ObjNomClose);
 			}
 		  }
@@ -345,7 +347,7 @@ VerbSubjObjNom = {VPDat}{WhiteSpace}+{FuncSubjectOblique}{WhiteSpace}+{NomSubjec
 			}
 			else
 			{
-					System.out.println("gDB>>PPVPInfObj("+StringSearch.firstString+Obj1Open+StringSearch.nextString+Obj1Close+")");
+//					System.out.println("gDB>>PPVPInfObj("+StringSearch.firstString+Obj1Open+StringSearch.nextString+Obj1Close+")");
 				out.write(StringSearch.firstString+Obj1Open+StringSearch.nextString+Obj1Close);
 			}
 		}
@@ -353,12 +355,16 @@ VerbSubjObjNom = {VPDat}{WhiteSpace}+{FuncSubjectOblique}{WhiteSpace}+{NomSubjec
 {Function}	{out.write(yytext());}	/* Don't touch the phrases that have already been function marked */
 
 {NPPhrases}	{out.write(yytext());}	/* Don't touch NPs phrases */
-{Complement1}	{out.write(Comp0Open+yytext()+Comp0Close);
+{Complement1}	{
+//		System.out.println("gDB>>Complement1("+"["+Comp0Open+"]["+yytext()+"]["+Comp0Close+"]"+")");
+
+		out.write(Comp0Open+yytext()+Comp0Close);
 		}
-{Complement2}	{out.write(Comp0Open+yytext()+Comp0Close);
+{Complement2}	{
+//		System.out.println("gDB>>Complement2("+"["+Comp0Open+"]["+yytext()+"]["+Comp0Close+"]"+")");
+out.write(Comp0Open+yytext()+Comp0Close);
 		}
 
 "\n"		{ System.err.print("Reading line: " + Integer.toString(yyline+1) + "\r");
 		out.write("\n"); }
 .		{ out.write(yytext());}
-
