@@ -229,10 +229,8 @@ public class TriTagger {
             if (Character.isUpperCase(tok.lexeme.charAt(0)))
                 setTags(tok, myTagsUpper);
             else
-            {
-                setTags(tok, myTagsLower); // Assign all possible lower case tags found during suffix trie construcion
-                //System.out.println("Found no suffix for unknown word: " + tok.lexeme);
-            }
+                setTags(tok, myTagsLower); // Assign all possible lower case tags found during suffix trie construction
+            //System.out.println("Found no suffix for unknown word: " + tok.lexeme);
         }
     }
 
@@ -274,6 +272,11 @@ public class TriTagger {
                  numAmbiguousTokens++;    // Increase the number of ambiguous tokens
                  totalTagsAmbiguous += numberOfTags;
              }
+         }
+         // The tag of a punctuation character is the character itself
+         else if( tok.isPunctuation() ) {
+            tok.setUnknown(false);
+            tok.setTag( tok.lexeme );
          }
          // else the word is unknown to the tagger.  Use suffix info or IceMorphy
          else {
