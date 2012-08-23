@@ -36,8 +36,8 @@ public class Token {
                 tcSlash,  tcBackSlash, tcUrl, tcLess, tcGreater, tcSingleQuote, tcMultiWord,
                 tcLArrow, tcRArrow, tcPlus, tcStar, tcDollar, tcAnd, tcNumberSign, tcEqualSign,
                 tcPlusMinus, tcUnderscore, tcArrow, tcLCurlyBracket, tcRCurlyBracket, tcPound,
-                tcHat, tcWebAddress
-                //tcBackQuote, tcTwoSingleQuotes, tcTwoBackQuotes
+                tcHat, tcWebAddress, tcBackQuote
+                //, tcTwoSingleQuotes, tcTwoBackQuotes
                 }
     
     public enum MWECode {begins, ends, none}
@@ -92,6 +92,7 @@ public class Token {
         case tcCurrency:
         case tcSlash:
         case tcBackSlash:
+        case tcBackQuote:
         case tcDownQuote:
         case tcUpQuote:
         case tcDoubleQuote:

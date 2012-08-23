@@ -814,9 +814,9 @@ public class Tokenizer
 								    setToken( ch, Token.TokenCode.tcSingleQuote );
                         }
 						break;
-                    /*
+
                     case '`':
-                        if( index == sentence.length() - 1 || strictTokenization)
+                        /*if( index == sentence.length() - 1 || strictTokenization)
                             setToken( ch, Token.TokenCode.tcBackQuote );
                         // HL: 28.11.2009, because of the Tiger corpus
 					    else if (sentence.charAt(index+1)== '`') {
@@ -824,10 +824,10 @@ public class Tokenizer
 		                    currToken.tokenCode = Token.TokenCode.tcTwoBackQuotes;
                             index++;
                         }
-                        else
+                        else*/
 					        setToken( ch, Token.TokenCode.tcBackQuote );
                         break;
-                    */
+
 					case'(':
 						setToken( ch, Token.TokenCode.tcLParen );
 						break;

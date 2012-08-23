@@ -230,7 +230,7 @@ public class TriTagger {
                 setTags(tok, myTagsUpper);
             else
                 setTags(tok, myTagsLower); // Assign all possible lower case tags found during suffix trie construction
-            //System.out.println("Found no suffix for unknown word: " + tok.lexeme);
+            System.out.println("Found no suffix for unknown word: " + tok.lexeme);
         }
     }
 
