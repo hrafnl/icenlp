@@ -64,7 +64,8 @@ WordChar = [^\r\n\t\f\[\]\{\} ]
 
 Word = {WordChar}+
 Label = FRWs?|AdvP|APs?|NP[s\?]?([a-z]+\+?)*|VP[bgips]?|PP|S?CP|InjP|MWE_(AdvP|AP|CP|PP)
-Func = (("*"SUBJ|"*"I?OBJ(AP|NOM)?|"*"COMP)(<|>)?\??)|"*"QUAL | "*"TIMEX\??
+LabelError = {Label}{Error}?
+Func = (("*"SUBJ|"*"I?OBJ(AP|NOM)?|"*"COMP)(<|>)?{Error}?)|"*"QUAL{Error}? | "*"TIMEX{Error}?
 
 //nýtt
 Symbol = \[{WhiteSpace}*{encodeOpen}\[{encodeClose}  | \]{WhiteSpace}*{encodeOpen}\]{encodeClose} | \{{WhiteSpace}*{encodeOpen}\{{encodeClose} | \}{WhiteSpace}*{encodeOpen}\}{encodeClose}
@@ -84,7 +85,7 @@ Symbol = \[{WhiteSpace}*{encodeOpen}\[{encodeClose}  | \]{WhiteSpace}*{encodeOpe
 	}
 	// //
 
-	"["{Label}" "
+	"["{LabelError}" "
 	{
 		/* System.err.println("InitLabel open " + yytext()); */
 		count++; str.append(yytext());
@@ -111,7 +112,7 @@ Symbol = \[{WhiteSpace}*{encodeOpen}\[{encodeClose}  | \]{WhiteSpace}*{encodeOpe
 
 <PHRASE> 
 {
-	" "{Label}"]"	
+	" "{LabelError}"]"
 	{ 
 		count--; 
 		/* System.err.println("PhraseLabel close " + yytext()); */
@@ -125,7 +126,7 @@ Symbol = \[{WhiteSpace}*{encodeOpen}\[{encodeClose}  | \]{WhiteSpace}*{encodeOpe
 			yybegin(YYINITIAL);
 		}
 	}
-	"["{Label}" " 	
+	"["{LabelError}" "
 	{ 
 		/* System.err.println("PhraseLabel open " + yytext()); */
 		count++; 

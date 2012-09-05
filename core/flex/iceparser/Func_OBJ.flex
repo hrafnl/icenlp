@@ -130,7 +130,6 @@ VerbSupineObj = {VPSupine}{WhiteSpace}+{Object}
 				out.write(yytext());
 			else
 			{
-//				System.out.println("gDB>> SubjVerbObj(["+StringSearch.firstString+"]["+StringSearch.nextString+"]["+Obj1Open+"]["+Obj1Close+"])");
 //				out.write(StringSearch.firstString+Obj1Open+StringSearch.nextString+Obj1Close);
 				if (errorCheck)
 				{

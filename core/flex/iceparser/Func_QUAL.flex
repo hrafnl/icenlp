@@ -83,5 +83,4 @@ NPQual = {NPGen}({WhiteSpace}+{NPGen})* | {NPGenSeq}
 .
 {
 		out.write(yytext());
-//	System.out.println("gDB>> FuncQUAL=("+yytext()+")");
 }

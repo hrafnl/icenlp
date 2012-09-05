@@ -141,18 +141,9 @@ SubjectRel = {NomSubject}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{RelCP}
 { 
 //System.err.println("subj-1");
 	String str = yytext();
-//				System.out.println("gDB>> Func_SUBJ[SubjectVerb]=("+str+")");
 	if (str.contains("[PP"))	/* We don't want the preposition phrase to be included */
 		theIndex = StringSearch.splitString(str, "[PP", true, -1);
-	//else if (str.contains("{*QUAL")) {	/* Make sure the qualifier is a part of the subject */
-	//	StringSearch.splitString(str,"[VP", true, -1);		
-	//}
-	//else {
-	//	/* Find where the NPs/NP ended and insert the SUBJ label */
-	//	theIndex = StringSearch.splitString(str,"NPs]", true, 4);
-	//	if (theIndex == -1)
-	//		StringSearch.splitString(str,"NP]", true, 3);
-	//}
+
 	else
 		theIndex = StringSearch.splitString(str,"[VP", true, -1);		
 	if(theIndex == -1)
@@ -161,9 +152,6 @@ SubjectRel = {NomSubject}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{RelCP}
 	}
 	else
 	{
-
-//		System.out.println("gDB>>SubjectVerb("+Func1Open+StringSearch.firstString+Func1Close+StringSearch.nextString+")");
-
 	//	out.write(AgreementCheck(Func1Open,StringSearch.firstString,Func1Close,StringSearch.nextString,1));
 		if (agreement)
 		{
@@ -173,18 +161,16 @@ SubjectRel = {NomSubject}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{RelCP}
 		{
 			out.write(Func1Open + StringSearch.firstString + Func1Close + StringSearch.nextString);
 		}
-// vantar agreementCheckGenderPerson   fpkeo = 3 pers
-
+// missing agreementCheckGenderPerson   fpkeo = 3 pers
 	}
-} 
+}
+
+
 //{SubjectAPVerb}	{ 
 //			/* Find where the AP ended and insert the SUBJ label */
 //			StringSearch.splitString(yytext(),"AP]", true, 3);
 //			out.write(Func1Open+StringSearch.firstString+Func1Close+StringSearch.nextString);
 //		} 
-
-
-
 
 
 
@@ -207,7 +193,6 @@ SubjectRel = {NomSubject}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{RelCP}
 	}
 	else
 	{
-//		System.out.println("gDB>>SubjectVerbMissing("+Func0Open+StringSearch.firstString+Func0Close+StringSearch.nextString+")");
 		out.write(AgreementCheck(Func0Open,StringSearch.firstString,Func0Close,StringSearch.nextString,1));
 	}
 } 
@@ -217,8 +202,9 @@ SubjectRel = {NomSubject}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{RelCP}
 //System.err.println("subj-3");
 	String str = yytext();
 	if (str.contains(" PP]"))
-		StringSearch.splitString(str, " PP]", true, 4);
-
+	{
+			StringSearch.splitString(str, " PP]", true, 4);
+	}
 	else 
 	{
 		// Find where the VP ended and insert the SUBJ label 
@@ -235,8 +221,6 @@ SubjectRel = {NomSubject}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{RelCP}
 	}
 	else
 	{
-//		System.out.println("gDB>>VerbSubject("+StringSearch.firstString+Func2Open+StringSearch.nextString+Func2Close+")");
-//		out.write(AgreementCheck(StringSearch.firstString,Func2Open,StringSearch.nextString,Func2Close,2));
 		if (agreement)
 		{
 			out.write(ErrorDetector.agreementSubjectVerbCheckNumberAndPerson(StringSearch.firstString,StringSearch.nextString,Func2Open,Func2Close,1));
@@ -245,35 +229,7 @@ SubjectRel = {NomSubject}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{RelCP}
 		{
 			out.write(StringSearch.firstString + Func1Open + StringSearch.nextString + Func1Close);
 		}
-
-}
-
-
-
-/*
-	String str = yytext();
-	if (str.contains("PP]"))
-		StringSearch.splitString(str, "PP]", true, 3);
-
-	else 
-	{
-		// Find where the VP ended and insert the SUBJ label 
-		if (str.contains("VPb]"))
-			theIndex = StringSearch.splitString(str,"VPb]", true, 4);	
-		else if (str.contains("VPs]"))
-			theIndex = StringSearch.splitString(str,"VPs]", true, 4);
-		else
-			theIndex = StringSearch.splitString(str,"VP]", true, 3);		
 	}
-	if(theIndex == -1)
-	{
-		out.write(yytext());
-	}
-	else
-	{
-		out.write(AgreementCheck(StringSearch.firstString,Func2Open,StringSearch.nextString,Func2Close,2));
-	}
-*/
 }
 		
 {VerbAdvPSubject}	
@@ -294,7 +250,6 @@ SubjectRel = {NomSubject}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{RelCP}
 	}
 	else
 	{
-//		System.out.println("gDB>>VerbAdvPSubject("+StringSearch.firstString+Func2Open+StringSearch.nextString+Func2Close+")");
 		out.write(AgreementCheck(StringSearch.firstString,Func2Open,StringSearch.nextString,Func2Close,2));
 	}
 }
@@ -325,7 +280,6 @@ SubjectRel = {NomSubject}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{RelCP}
 	}
 	else
 	{
-//		System.out.println("gDB>>SubjectRel("+Func1Open+StringSearch.firstString+Func1Close+StringSearch.nextString+")");
 		out.write(AgreementCheck(Func1Open,StringSearch.firstString,Func1Close,StringSearch.nextString,1));
 	}
 }

@@ -26,3 +26,5 @@
 ./flexit.sh Phrase_FOREIGN
 ./flexit.sh TagDecoder
 ./flexit.sh TagEncoder
+./flexit.sh Correction
+./flexit.sh ErrDetect

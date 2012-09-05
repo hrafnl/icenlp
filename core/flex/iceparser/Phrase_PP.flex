@@ -69,8 +69,8 @@ import java.io.*;
 
 Vegna = {WhiteSpace}*vegna{WhiteSpace}+
 
-//NounPhrase = {OpenNP}" "~{CloseNP} | {OpenNP}n~{CloseNP} | {OpenNP}a~{CloseNP} | {OpenNP}d~{CloseNP} | {OpenNP}g~{CloseNP} //avoid "NP?"
-NounPhrase = {OpenNP}~{CloseNP} 
+NounPhrase = {OpenNP}" "~{CloseNP} | {OpenNP}n~{CloseNP} | {OpenNP}a~{CloseNP} | {OpenNP}d~{CloseNP} | {OpenNP}g~{CloseNP} //avoid "NP?"
+//NounPhrase = {OpenNP}~{CloseNP} this allows for too many states, which will run jFlex out of memory
 NPs = {OpenNPs}~{CloseNPs}
 AdverbPrepPhrase = {MWE_PP}
 

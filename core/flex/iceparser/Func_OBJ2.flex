@@ -29,6 +29,8 @@
 
 package is.iclt.icenlp.core.iceparser;
 import java.io.*;
+
+import is.iclt.icenlp.core.utils.ErrorDetector;
 %%
 
 %public
@@ -56,16 +58,40 @@ import java.io.*;
   String ObjNomClose=" *OBJNOM<} ";
   
   int theIndex = 0;
+  boolean markGrammarError = false;  // -a parameter
   
   //java.io.Writer out = new BufferedWriter(new OutputStreamWriter(System.out, "UTF-8"));
   java.io.Writer out = new BufferedWriter(new OutputStreamWriter(System.out));
       
-  public void parse(java.io.Writer _out) throws java.io.IOException
-  {
-      	out = _out;
-      	while (!zzAtEOF) 
-      	    yylex();
-  }
+	public void parse(java.io.Writer _out) throws java.io.IOException
+	{
+		out = _out;
+		while (!zzAtEOF)
+		yylex();
+	}
+		      // put the < next to the {*COMP
+	private String SubjCompMismatch (String s1, String s2, String open, String close, int order)
+	{
+		if (markGrammarError)
+		{
+			return ErrorDetector.CompAgreementCheck(s1, s2, open, close, order);
+		}
+		else if (order == 1)
+		{
+			return s1+open+s2+close;
+		}
+		// if order is 2 then make it {comp s1 comp} s2
+		else
+		{
+			return open+s1+close+s2;
+		}
+	}
+
+	public void set_markGrammarError(boolean error)
+	{
+		// If we want grammatical errors to be shown then make sure that the agreement flag is true as well
+       	markGrammarError = error;
+	}
   
 
 %}
@@ -115,6 +141,10 @@ NPPhrases = {OpenNP}~{CloseNP} | {OpenNPs}~{CloseNPs}
 
 Complement1 = {APsNom}
 Complement2 = {APNom} | {VPPast}
+
+Subj = {OpenSubj}~{CloseSubj}
+SubjVerbComp = {Subj}{WhiteSpace}+{VP}{WhiteSpace}+{APNom}
+SubjVerbAdvPComp = {Subj}{WhiteSpace}+{VP}{WhiteSpace}+{AdvP}{WhiteSpace}+{APNom}
 
 // Complement of a complement: "Hún var orðin húsfrú"
 
@@ -174,7 +204,6 @@ VerbSubjObjNom = "[VP"{WhiteSpace}+{VerbDat}~"VP]"{WhiteSpace}+{FuncSubjectObliq
 			}
 			else
 			{
-//					System.out.println("gDB>>VerbDatObjAccObj("+StringSearch.firstString+Obj1Open+StringSearch.nextString+Obj1Close+")");
 				out.write(StringSearch.firstString+Obj1Open+StringSearch.nextString+Obj1Close);
 			}
 
@@ -242,8 +271,6 @@ VerbSubjObjNom = "[VP"{WhiteSpace}+{VerbDat}~"VP]"{WhiteSpace}+{FuncSubjectObliq
 			}
 			else
 			{
-	//				System.out.println("gDB>>VerbAccObjDatObj("+first+IObjOpen+second+IObjClose+")");
-
 				out.write(first+IObjOpen+second+IObjClose);
 			}
 
@@ -284,13 +311,12 @@ VerbSubjObjNom = "[VP"{WhiteSpace}+{VerbDat}~"VP]"{WhiteSpace}+{FuncSubjectObliq
 			}
 			else
 			{
-//					System.out.println("gDB>>ComplObj("+StringSearch.firstString+Obj1Open+StringSearch.nextString+Obj1Close+")");
 				out.write(StringSearch.firstString+Obj1Open+StringSearch.nextString+Obj1Close);
 			}
 		}
 
 {ComplCompl}	{
-	System.err.println("obj2-4");
+//	System.err.println("obj2-4");
 			/* Find where the Complement function ended and insert the COMP label */
 				theIndex = StringSearch.splitString(yytext(),"*COMP<?Cg}", true, 10);
 			if (theIndex == -1)
@@ -303,7 +329,7 @@ VerbSubjObjNom = "[VP"{WhiteSpace}+{VerbDat}~"VP]"{WhiteSpace}+{FuncSubjectObliq
 			}
 			else
 			{
-//			System.out.println("gDB>>ComplCompl("+StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close+")");
+			System.out.println("ComplCompl firstString="+StringSearch.firstString+" nextString="+StringSearch.nextString);
 				out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 			}
 		}
@@ -332,7 +358,6 @@ VerbSubjObjNom = "[VP"{WhiteSpace}+{VerbDat}~"VP]"{WhiteSpace}+{FuncSubjectObliq
 			}
 			else
 			{
-//				System.out.println("gDB>>VerbSubjObjNom("+StringSearch.firstString+ObjNomOpen+StringSearch.nextString+ObjNomClose+")");
 				out.write(StringSearch.firstString+ObjNomOpen+StringSearch.nextString+ObjNomClose);
 			}
 		  }
@@ -347,7 +372,6 @@ VerbSubjObjNom = "[VP"{WhiteSpace}+{VerbDat}~"VP]"{WhiteSpace}+{FuncSubjectObliq
 			}
 			else
 			{
-//					System.out.println("gDB>>PPVPInfObj("+StringSearch.firstString+Obj1Open+StringSearch.nextString+Obj1Close+")");
 				out.write(StringSearch.firstString+Obj1Open+StringSearch.nextString+Obj1Close);
 			}
 		}
@@ -356,13 +380,38 @@ VerbSubjObjNom = "[VP"{WhiteSpace}+{VerbDat}~"VP]"{WhiteSpace}+{FuncSubjectObliq
 
 {NPPhrases}	{out.write(yytext());}	/* Don't touch NPs phrases */
 {Complement1}	{
-//		System.out.println("gDB>>Complement1("+"["+Comp0Open+"]["+yytext()+"]["+Comp0Close+"]"+")");
-
 		out.write(Comp0Open+yytext()+Comp0Close);
 		}
 {Complement2}	{
-//		System.out.println("gDB>>Complement2("+"["+Comp0Open+"]["+yytext()+"]["+Comp0Close+"]"+")");
-out.write(Comp0Open+yytext()+Comp0Close);
+		out.write(Comp0Open+yytext()+Comp0Close);
+		}
+{SubjVerbComp} {
+
+			System.out.println("SubjVerbComp");
+			/* Find where the VPb phrase ended and insert the COMP label */
+			theIndex = StringSearch.splitString(yytext(),"VPb]", false, 4);
+			if(theIndex == -1)
+			{
+				out.write(yytext());
+			}
+			else
+			{
+					out.write(SubjCompMismatch(StringSearch.firstString,StringSearch.nextString,Comp1Open,Comp1Close,1));
+			}
+		}
+{SubjVerbAdvPComp} {
+			System.out.println("SubjVerbAdvPComp");
+			/* Find where the AdvP phrase ended and insert the COMP label */
+	//		theIndex = StringSearch.splitString(yytext(),"AdvP]", false, 5);
+			theIndex = StringSearch.splitString(yytext(),"[AP", false, -3);
+			if(theIndex == -1)
+			{
+				out.write(yytext());
+			}
+			else
+			{
+				out.write(SubjCompMismatch(StringSearch.firstString,StringSearch.nextString,Comp1Open,Comp1Close,1));
+			}
 		}
 
 "\n"		{ System.err.print("Reading line: " + Integer.toString(yyline+1) + "\r");

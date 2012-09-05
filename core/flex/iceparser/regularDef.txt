@@ -67,8 +67,7 @@ CloseAPs = "APs]"
 //CloseNP = "NP"\??([a-z]+\+?)*"]"
 OpenNP = "[NP"{Error}?
 CloseNP = "NP]"
-//ErrorCodes = [VNASC]("g"|"n"|"ca"|"p"|"s")
-ErrorCodes = [VNASC][gnps]|"ca" // takes less ram than line the above and hence doesn't crash flex
+ErrorCodes = [VNASCX][gnpsx]|"ca"
 Error = \?{ErrorCodes}+
 
 OpenNPs = "[NPs"

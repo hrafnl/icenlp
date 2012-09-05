@@ -67,7 +67,7 @@ twin = {oneWord}{WhiteSpace}+{oneWord}
 
 
 %%
-//{comment}	{ System.out.println("skldfja"); out.write(yytext()); }
+//{comment}	{ out.write(yytext()); }
 {twin}		{
 				String originalStr = yytext();
 				String str = originalStr.trim();

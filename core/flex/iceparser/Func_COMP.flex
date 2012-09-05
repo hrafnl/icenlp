@@ -40,6 +40,8 @@ import is.iclt.icenlp.core.utils.ErrorDetector;
   String Comp1Close=" *COMP<} ";
   String Comp2Open=" {*COMP> ";
   String Comp2Close=" *COMP>} ";
+  String SubjOpen=" {*SUBJ> ";
+  String SubjClose=" *SUBJ>} ";
   
   int theIndex=0;
   boolean agreement = false;  // -a parameter
@@ -53,6 +55,9 @@ import is.iclt.icenlp.core.utils.ErrorDetector;
       	while (!zzAtEOF) 
       	    yylex();
   }
+
+
+
     // order 1 = s1 {comp s2 comp}
 	// order 2 = {comp s1 comp} s2
 	public String AgreementCheck(String s1, String s2, String open, String close, int order)
@@ -81,10 +86,7 @@ import is.iclt.icenlp.core.utils.ErrorDetector;
 	public void set_markGrammarError(boolean markGrammarError)
 	{
 		// If we want grammatical errors to be shown then make sure that the agreement flag is true as well
-        if (markGrammarError)
-		{
-        	agreement = true;
-		}
+        agreement = markGrammarError;
 	}
   
 %}
@@ -147,6 +149,10 @@ ComplVerb = {Complement}{WhiteSpace}+{VPBe}
 VerbAdvPCompl = {VPBe}{WhiteSpace}+{AdvPs}{Complement}
 VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 
+// GÖL
+// [NPa unginn ^nkeog$  NP] [VPb  er ^sfg3en$  VPb] [AdvP some ^tag$ AdvP] [APn  gul ^lvensf$ AP]
+NounVerbComp = {NP}{WhiteSpace}+{VPBe}{WhiteSpace}+({AdvP}{WhiteSpace}+)?{Complement}
+
 
 %%
 
@@ -187,7 +193,6 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 				}
 				else
 				{
-//	System.out.println("gDB>> Func_COMP(SubjVerbAdvPCompl)="+firstPart + Comp1Open + secondPart + Comp1Close);
 					out.write(AgreementCheck(firstPart,secondPart,Comp1Open,Comp1Close,1));
 //					out.write(firstPart + Comp1Open + secondPart + Comp1Close);
 				}
@@ -219,7 +224,6 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 				}
 				else
 				{
-//	System.out.println("gDB>> Func_COMP(SubjVerbMWEAdvPCompl)="+StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 					out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 				}
 			} 
@@ -235,7 +239,6 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 				}
 				else
 				{
-//	System.out.println("gDB>> Func_COMP(SubjVerbNPCompl)="+StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 					out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 				}
 			} 			
@@ -251,7 +254,6 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 				}
 				else
 				{
-//	System.out.println("gDB>> Func_COMP(SubjVerbCPCompl)="+StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 					out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 				}
 			}			
@@ -267,8 +269,6 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 			}
 			else
 			{
-	//			System.out.println("gDB>> Func_COMP(SubjVerbCompl)="+StringSearch.firstString+")("+Comp1Open+")("+StringSearch.nextString+")("+Comp1Close);
-
 				out.write(AgreementCheck(StringSearch.firstString,StringSearch.nextString,Comp1Open,Comp1Close,1));
 //				out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 			}
@@ -303,7 +303,7 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 			{
 //	System.out.println("gDB>> Func_COMP(SubjCompl)="+StringSearch.firstString+Comp0Open+StringSearch.nextString+Comp0Close);
 
-				out.write(AgreementCheck(StringSearch.firstString,StringSearch.nextString,Comp0Open,Comp0Close,99));
+				out.write(AgreementCheck(StringSearch.firstString,StringSearch.nextString,Comp0Open,Comp0Close,1));
 //				out.write(StringSearch.firstString+Comp0Open+StringSearch.nextString+Comp0Close);
 			}
 		} 
@@ -332,7 +332,6 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 			}
 			else
 			{
-//	System.out.println("gDB>> Func_COMP(VerbSubjCompl)="+StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 	//			out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 				out.write(AgreementCheck(StringSearch.firstString,StringSearch.nextString,Comp1Open,Comp1Close,1));
 			}
@@ -351,7 +350,6 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 			}
 			else
 			{
-//	System.out.println("gDB>> Func_COMP(VerbCompl)="+StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 				out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 			}
 		} 
@@ -366,7 +364,6 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 			}
 			else
 			{
-//	System.out.println("gDB>> Func_COMP(ComplVerb)="+Comp2Open+StringSearch.firstString+Comp2Close+StringSearch.nextString);
 				out.write(Comp2Open+StringSearch.firstString+Comp2Close+StringSearch.nextString);
 	//System.err.println("First : \n" + StringSearch.firstString);
 	//System.err.println("Second : \n" + StringSearch.nextString);
@@ -383,7 +380,6 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 			}
 			else
 			{
-//	System.out.println("gDB>> Func_COMP(VerbAdvPCompl)="+StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 				out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 	//System.err.println("First : \n" + StringSearch.firstString);
 	//System.err.println("Second : \n" + StringSearch.nextString);
@@ -400,15 +396,30 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 			}
 			else
 			{
-//	System.out.println("gDB>> Func_COMP(VerbPPCompl)="+StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 				out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 			}
-		} 
-		
+		}
+
+// GÖL
+// this grabs and inserts
+{NounVerbComp} {
+			/* Find where the Preposition phrase ended and insert the COMP label */
+			theIndex = StringSearch.splitString(yytext(),"NP]", false, 3);
+
+			if(theIndex == -1)
+			{
+				out.write(yytext());
+			}
+			else
+			{
+				out.write(SubjOpen+StringSearch.firstString+SubjClose+StringSearch.nextString);
+			}
+		}
+
 "\n"		{ //System.err.print("Reading line: " + Integer.toString(yyline+1) + "\r"); 
 			out.write("\n");
  		}
-.		{ out.write(yytext());		
+.		{ out.write(yytext());
 		}
 
 
