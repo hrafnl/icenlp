@@ -1,10 +1,8 @@
 package is.iclt.icenlp.core.utils;
 
-
-import is.iclt.icenlp.core.icetagger.IceTaggerOutput;
-import is.iclt.icenlp.core.utils.Lexicon;
 import is.iclt.icenlp.core.lemmald.Lemmald;
 import is.iclt.icenlp.core.lemmald.LemmaResult;
+
 
 /**
  * Created by IntelliJ IDEA.
@@ -21,22 +19,16 @@ public class ErrorDetector {
 	static String SqlPass;
 	static String SqlUrl;
 
-	public static String setSQL(boolean enableSQL, String url, String user, String pass) {
+	public static void setSQL(boolean enableSQL, String url, String user, String pass) {
 		SqlEnabled = enableSQL;
 		SqlUser = user;
 		SqlPass = pass;
 		SqlUrl = url;
-		return "lol";
 	}
-
-
-
-
 
 	// for Phrase_NP
 	static String encO =  IceParserUtils.encodeOpen;
 	static String encC =  IceParserUtils.encodeClose;
-
 
 	// for Phrase_NP
 	private static int GetModifierNLG(String letter)
@@ -53,9 +45,8 @@ public class ErrorDetector {
 	// returns an error string like : ?g+ca
 	private static String CheckGenNumCase(String str)
 	{
-//		System.out.println("CheckGenNumCase  str="+str);
 
-        String errors = "";
+		StringBuffer error = new StringBuffer();
 		boolean allTheSame = true;
 		String [] tags = str.split(" ");
 
@@ -98,26 +89,26 @@ public class ErrorDetector {
 
 			if( !gen1.equals(gen2) || !num1.equals(num2) || !case1.equals(case2))
 			{
-				errors = "?";
+				error.append('?');
 				// if there has been something written to error we need to add "+" between error tags
-				if (!gen1.equals(gen2))
+				if (!gen1.equals(gen2)&&(!gen1.equals("x"))&&(!gen2.equals("x")))
 				{
-					errors += "Ng";
+					error.append("Ng");
 				};
             	if (!num1.equals(num2)) {
-					errors += "Nn";
+					error.append("Nn");
 				};
                	if (!case1.equals(case2)) {
-					errors += "Nca";
+					error.append("Nca");
 				};
 			}
 		}
 
-		return errors;
+		return error.toString();
 	}
 
 
-	// for Phrase_NP
+	// from Phrase_NP.flex {NounPhrase}
 	public static String ErrorCheck(String originalStr, boolean agreement, boolean markGrammarError, String PhraseType)
 	{
 		if(!agreement && !markGrammarError)
@@ -133,13 +124,6 @@ public class ErrorDetector {
 		}
 		return originalStr;
 	}
-
-
-
-
-
-
-
 
 
 	// for Phrase_NP and Func_SUBJ
@@ -158,14 +142,12 @@ public class ErrorDetector {
 
 
 
-
-
-
 	// for Func_SUBJ
+	// checks agreement within a subject
 	public static String checkAgreement(String str)
 	{
-		String error = "";
-//		System.out.println("gDB>> checkAgreement="+str);
+		StringBuffer error = new StringBuffer();
+
 		boolean allTheSame = true;
 		String [] tags = str.split(" ");
 
@@ -175,8 +157,6 @@ public class ErrorDetector {
 		for(int i=0; x<forLoopStop; i++)
 		{
 			x++;
-//			System.out.print("gDB>> ["+(i)+"]"+tags[(i)]);
-//			System.out.print("="+tags[x]+"["+(x)+"]\n");
 			int mod1, mod2;
 
 			String tagI = tags[i].substring(encO.length(), tags[i].length()-encC.length());
@@ -187,11 +167,7 @@ public class ErrorDetector {
 
 			if (tagI.equals("ssg") || tagI.equals("sng") || tagX.equals("ssg") || tagX.equals("sng") )
 			{
-				if (!error.equals(""))
-				{
-					error += "+";
-				}
-				error += "Ss";
+				error.append("Ss");
 				continue;
 			}
 
@@ -217,25 +193,17 @@ public class ErrorDetector {
 			pers2 = IfGenderReturnPers(pers2);
 //	System.err.println("pers1: " + pers1 + "\n" + "pers2: " + pers2 + "\n" + "nr1: " + nr1 + "\n" + "nr2: " + nr2);
 			// if there is an error we add a letter [p], but if we already have an error we first add a + [p+n]
-			if( !pers1.equals(pers2)&&!error.endsWith("Sp") )
+			if( !pers1.equals(pers2)&&!error.toString().endsWith("Sp") )
 			{
-				if (!error.equals(""))
-				{
-					error += "+";
-				}
-				error += "Sp";
+				error.append("Sp");
 			}
 			// if we have already found problem with number we do not report it again
 			if ( !nr1.equals(nr2)/*&&!error.endsWith("Sn")*/)
 			{
-				if (!error.equals(""))
-				{
-					error += "+";
-				}
-				error += "Sn";
+				error.append("Sn");
 			}
 		}
-		return error;
+		return error.toString();
 	}
 
 	// for Func_SUBJ
@@ -266,10 +234,9 @@ public class ErrorDetector {
 		return pers;
 	}
 
-
+	// from Func_SUBJ.flex {SubjectVerbMissing}, {VerbAdvPSubject}, {SubjectRel}
 	public static String AgreementCheck(String s1, String s2, String s3, String s4, int order, boolean agreement, boolean markGrammarError)
 	{
-//		System.out.println("gDB>> s1=("+s1+") s2=("+s2+") s3=("+s3+") s4=("+s4+")");
 		//order of the input is not always the same and the output shouldnt be either.
 		String trueOut = createOutputString(s1,s2,s3,s4, order, true, markGrammarError, "");
 		if(!agreement)
@@ -286,24 +253,26 @@ public class ErrorDetector {
 			return trueOut;
 		}
 
-//String falseOut = createOutputString(s1,s2,s3,s4, order, false, markGrammarError, error);
-//		System.out.println("gDB>>falseOut="+falseOut);
-//		return falseOut;
 		return createOutputString(s1,s2,s3,s4, order, false, markGrammarError, error);
 	}
 
 	public static String createOutputString(String s1, String s2, String s3, String s4, int order, boolean tag, boolean markGrammarError, String error)
 	{
+
+		StringBuffer out = new StringBuffer();
+
 		if(tag)
-			return s1+s2+s3+s4;
+		{
+			return out.append(s1).append(s2).append(s3).append(s4).toString();
+		}
 		if(markGrammarError)
 		{
 			switch(order)
 			{
 				case 1:
-					return getErrTag(s1, error)+s2+getErrTag(s3, error)+s4;
+					return out.append(getErrTag(s1, error)).append(s2).append(getErrTag(s3, error)).append(s4).toString();
 				case 2:
-					return  s1+getErrTag(s2, error)+s3+getErrTag(s4, error);
+					return out.append(s1).append(getErrTag(s2, error)).append(s3).append(getErrTag(s4, error)).toString();
 			}
 		}
 		else
@@ -311,25 +280,24 @@ public class ErrorDetector {
 			switch(order)
 			{
 				case 1:
-					return s2+s4;
+					return out.append(s2).append(s4).toString();
 				case 2:
-					return  s1+s3;
+					return  out.append(s1).append(s3).toString();
 			}
 		}
 
-		return "[ERR "+s1+s2+s3+s4+" ERR]";
+		return out.append("[ERR ").append(s1).append(s2).append(s3).append(s4).append(" ERR]").toString();
 	}
 
-		//inserts a questio mark to identify as a possible error
+	//inserts a question mark to identify as a possible error
 	public static String getErrTag(String str, String error)
 	{
-		StringBuffer stb = new StringBuffer(str);
+		StringBuffer stb = new StringBuffer();
 
 		if( str.substring(1,2).equals("{") )
 			return stb.insert(str.length()-1, "?"+error).toString();
 
 		return stb.insert(str.length()-2, "?"+error).toString();
-
 	}
 
 
@@ -380,20 +348,20 @@ public class ErrorDetector {
 
 	public static boolean isGenderMismatch(char c1, char c2)
 	{
-//		System.out.println("gDB >> isGenderMismatch c1=("+c1+") c2="+c2);
-
 		// return false if the gender matches
 		if (c1 == c2)
 		{
 			return false;
 		}
-		// return false if the gender is a (1. or 2.) person
-		else if ((c1 == '1')||(c1 == '2')||(c2 == '1')||(c2 == '2'))
+		// return false if the gender is a (1. or 2.) person or unidentified
+		else if ((c1 == '1')||(c1 == '2')||(c1 == 'x')||(c2 == '1')||(c2 == '2')||(c2 == 'x'))
 		{
 			return false;
 		}
-
-		return true;
+		else
+		{
+			return true;
+		}
 	}
 
 
@@ -444,6 +412,11 @@ public class ErrorDetector {
 	{
 //		System.out.println("gDB >> isNumberMismatch n1=("+n1+") n2=("+n2+")");
 		if (n1 == n2)
+		{
+			return false;
+		}
+		// if we don't know one of the numbers we cannot tell if there is a mismatch or not
+		else if ((n1 == 'x')||(n2 == 'x'))
 		{
 			return false;
 		}
@@ -519,6 +492,13 @@ public class ErrorDetector {
 		// returns true if there is a mismatch between the first tag that has a person and the incoming person
 	public static boolean isPersonMismatch(String[] input, char person)
 	{
+//		System.out.println("isPersonMishmatch input=("+input+") person=("+person+")");
+		// if the person of the target is unknown we cannot tell if there is a mismatch or not
+		if (person == 'x')
+		{
+			return false;
+		}
+
 		for (String a : input)
 		{
 			// when reaching the rest (null values) then stop the loop
@@ -616,6 +596,7 @@ public class ErrorDetector {
 	// then it is turned into a string array where each item is [lkensf][nkeng][sfg3en][aa][lkensf]
 	public static String[] toTagList(String input)
 	{
+
 		String[] output;
 		int x = 0;
 
@@ -689,31 +670,30 @@ public class ErrorDetector {
 		}
 	}
 
-	// for Func_COMP
+	// from Func_COMP.flex {SubjVerbAdvPCompl}, {SubjVerbCompl}, {SubjCompl} and {VerbSubjCompl}
+	// from Func_OBJ2.flex {SubjVerbComp}, {SubjVerbAdvPComp}
 	public static String CompAgreementCheck(String s1, String s2, String open, String close, int order)
 	{
-
-		if ((order == 1) && (s2.contains("[NP")))
+		StringBuffer out0 = new StringBuffer();
+		// check if the compliment contains a noun, if so then we dont look for an error
+		// Vigdís var forseti
+		if ((order == 1) && (s2.contains(" ^n")))
 		{
-//			System.out.println("s2=("+s2+") found [NP");
-			return s1+open+s2+close;
+
+			return out0.append(s1).append(open).append(s2).append(close).toString();
 		}
-		else if ((order != 1) && (s1.contains("NP]")))
+		else if ((order != 1) && (s1.contains(" ^n")))
 		{
-//			System.out.println("s1=("+s1+") found [NP");
-			return s2+open+s1+close;
+			return out0.append(open).append(s1).append(close).append(s2).toString();
 		}
 
-		String error = "";
 
-//	    System.out.println("gDB>> s1:("+s1+")");
-//	    System.out.println("gDB>> s2:["+s2+"]");
+		StringBuffer error = new StringBuffer();
 
-		String phrase = "VPb";
-		if (order == 99) // if the incoming sentences do not have VPb
+		String phrase = "";
+		if (s1.contains("VPb") || s2.contains("VPb")) // if the incoming sentences do not have VPb
 		{
-			phrase = "";
-			order = 1;
+			phrase = "VPb";
 		}
 
 		// get s1 without the VPb
@@ -728,48 +708,45 @@ public class ErrorDetector {
 		String[] s1Tags = toTagList(RemoveTokens(s1tmp));
 		String[] s2Tags = toTagList(RemoveTokens(s2));
 
-		System.out.println("gDB >> s1Gender="+findGender(s1Tags));
-		System.out.println("gDB >> s2Gender="+findGender(s2Tags));
-
 		if (isGenderMismatch(findGender(s2Tags),findGender(s1Tags)))
 		{
-			error += "Cg";
+			error.append("Cg");
 		}
 		if (isNumberMismatch(findNumber(s2Tags),findNumber(s1Tags)))
 		{
-			error += "Cn";
+			error.append("Cn");
 		}
 
 		if (error.length() > 0)
 		{
-			error = "?" + error;
+			error.insert(0,'?');
 		}
 
     // order 1 = s1 {comp s2 comp}
 		open = open.substring(0,open.length()-1)+error+" ";
 		close = close.substring(0,close.indexOf('}'))+error+"} ";
 
+		StringBuffer out = new StringBuffer();
 		if (order == 1)
 		{
-			return s1+open+s2+close;
+			out.append(s1).append(open).append(s2).append(close);
 		}
 	// order 2 = {comp s1 comp} s2
 		else
 		{
-			return open+s1+close+s2;
+			out.append(open).append(s1).append(close).append(s2);
 		}
+		return out.toString();
 	}
 
 	// looks at s1 and s2 and turns an error if their numbers doesn't match
 	// if order is 1, then the s2 will get open and close around it, otherwise it will be s1
-	// made for Func_SUBJ
+	// from Func_SUBJ.flex {VerbSubject}, {SubjectVerb}
 	public static String agreementSubjectVerbCheckNumberAndPerson(String s1, String s2, String open, String close, int order)
 	{
-//		System.out.println("gDB>> agreementSubjectVerbCheckNumberAndPerson s1=("+s1+") s2=("+s2+")");
-
 		String[] s1Tags = toTagList(RemoveTokens(s1));
 		String[] s2Tags = toTagList(RemoveTokens(s2));
-		String error = "";
+		StringBuffer error = new StringBuffer();
 
 		String VPTags[];
 		VPTags = new String[1];
@@ -777,81 +754,74 @@ public class ErrorDetector {
 
 		 /* detect mismatch between VPb and the subject and object */
 
-		VPTemp = findPhrase(s1,"VP");
+		if (s1.contains("[VP")) {
+			VPTemp = findPhrase(s1,"VP");
+		}
 		// if we find VP tag in s1 we check if the gender matches s2
 		// if we don't find it in s1 we check s2 and check for gender match there
 		if (!VPTemp.equals(""))
 		{
-			                    toTagList(VPTemp);
-			                    findNumber(toTagList(VPTemp));
-			                    findNumber(s1Tags);
-			                    isNumberMismatch(findNumber(s1Tags),findNumber(toTagList(VPTemp)));
-
-			if (isNumberMismatch(findNumber(s1Tags),findNumber(toTagList(VPTemp))))
+			// if we have multiple cases of NP then it is marked with NPs. If we find that we know the verb is
+			// most likely plural. "Hann og hún eru góð"
+			if (s2.contains("[NPs"))
 			{
-//				System.out.println("gDB>> VPTemp=("+VPTemp+") s1Tags=("+s1Tags+")");
-				error += "Vn";
+ 				if (isNumberMismatch('f',findNumber(toTagList(VPTemp))))
+				{
+					error.append("Vn");
+				}
 			}
+			else if (isNumberMismatch(findNumber(s1Tags),findNumber(toTagList(VPTemp))))
+			{
+				error.append("Vn");
+			}
+
 			if (isPersonMismatch(s1Tags,findPerson(toTagList(VPTemp))))
 			{
-				error += "Vp";
+				error.append("Vp");
 			}
-			s1 = errorMarkPhrase(s1, "VP", error);
+			s1 = errorMarkPhrase(s1, "VP", error.toString());
 		}
 		else
 		{
 			VPTemp = findPhrase(s2,"VP");
-	/*		if (isNumberMismatch(s1Tags,findNumber(toTagList(VPTemp))))
-			{
 
-			}
-	*/		if (isNumberMismatch(findNumber(s1Tags),findNumber(s2Tags)))
+			// if we have multiple cases of NP then it is marked with NPs. If we find that we know the verb is
+			// most likely plural. "Hann og hún eru góð"
+			if (s1.contains("[NPs"))
 			{
-//				System.out.println("gDB>> VPTemp=("+VPTemp+") s1Tags=("+s1Tags+")");
-				error += "Vn";
+				if (isNumberMismatch('f',findNumber(s2Tags))) {
+					error.append("Vn");
+				}
+			}
+			else if (isNumberMismatch(findNumber(s1Tags),findNumber(s2Tags)))
+			{
+				error.append("Vn");
 			}
 			if (isPersonMismatch(s1Tags,findPerson(s2Tags)))
 			{
-				error += "Vp";
+				error.append("Vp");
 			}
-
-			s2 = errorMarkPhrase(s2, "VP", error);
-
-
+			s2 = errorMarkPhrase(s2, "VP", error.toString());
 		}
 
-
-
-	//	open = open.substring(0,open.length()-1)+error+" ";
-	//	close = close.substring(0,close.indexOf('}'))+error+"} ";
-//		System.out.println("gDB>> s2 before=("+s2+")");
-		// if s2 has the VP we insert the error there, otherwise check if s1 has VP and put it in there
-/*		if (s2.contains("[VP"))
-		{
-			s2 = s2.substring(0,s2.indexOf("[VP")+3)+error+s2.substring(s2.indexOf("[VP")+3);
-		}
-		else if (s1.contains("[VP"))
-		{
-			s1 = s1.substring(0,s1.indexOf("[VP")+3)+error+s2.substring(s1.indexOf("[VP")+3);
-		}
-*/
-//		System.out.println("gDB>> s2 after=("+s2+")");
-		// insert the error into the VP
-//		s2 = s2.substring()
+		StringBuffer out = new StringBuffer();
 
 		if (order == 1)
 		{
-			return s1+open+s2+close;
+			out.append(s1).append(open).append(s2).append(close);
 		}
 		else
 		{
-			return open+s1+close+s2;
+			System.out.println("gDB>> open="+open+" s1="+s1+" close="+close+" s2="+s2);
+			out.append(open).append(s1).append(close).append(s2);
 		}
+			return out.toString();
 	}
 
 	// adds error to the phrase in s1 and returns the results
 	private static String errorMarkPhrase (String s1, String phrase, String error)
 	{
+		// make sure the phrase can be found by the function
 		if (s1.indexOf("["+phrase) == -1)
 		{
 			return s1;
@@ -862,12 +832,10 @@ public class ErrorDetector {
 		}
 
 		// mark the first NP
-
-		String out = "";
 		int phraseStartExtend = 0;
 		int phraseEndExtend = 0;
-		int startOfPhrase = s1.indexOf(phrase)+phrase.length();
-		int endOfPhrase = s1.lastIndexOf(phrase)+phrase.length();
+		int startOfPhrase = s1.indexOf("["+phrase)+phrase.length()+1;
+		int endOfPhrase = s1.indexOf(phrase,startOfPhrase)-phrase.length()+1;
 		int endOfS1 = s1.length();
 
 		// increase the length of startOfPhrase if the error/phrase is not exact and some letters are missing
@@ -900,14 +868,14 @@ public class ErrorDetector {
 		}
 		endOfPhrase += phraseEndExtend;
 
-//		out = s1.substring(0,startOfPhrase); // start the string with everything in front of the phrase
-		out = s1.substring(0,startOfPhrase); // start the string with everything in front of the phrase
-		out += "?"+error;	// insert the error after the first NP
-		out += s1.substring(startOfPhrase,endOfPhrase); //everything inside NP
-		out += "?"+error;	// insert the error after the second NP
-		out += s1.substring(endOfPhrase,endOfS1); // append the rest
+		StringBuffer out = new StringBuffer();
+		out.append(s1.substring(0,startOfPhrase)) // start the string with everything in front of the phrase
+				.append('?').append(error) // insert the error after the first NP
+				.append(s1.substring(startOfPhrase,endOfPhrase)) //everything inside NP
+				.append('?').append(error) // insert the error after the second NP
+				.append(s1.substring(endOfPhrase,endOfS1)); // append the rest
 
-		return out;
+		return out.toString();
 	}
 
 	private static String stripOffWhitespaces (String in)
@@ -939,9 +907,9 @@ public class ErrorDetector {
 		return in.substring(start,end);
 	}
 
+	// from Func_OBJ.flex {SubjVerbObj},
 	public static String agreementCheckSubjVerbObj(String s1, String s2, String open, String close, int order)
 	{
-
 		if (SqlEnabled) {
 			String s1in = s1.substring(s1.indexOf("[VP")+3,s1.indexOf("VP]")); // gets the verb and tag from s1
 			String word = s1in.substring(0,s1in.indexOf('^')); // gets the verb s1
@@ -949,17 +917,11 @@ public class ErrorDetector {
 
 			String tag = s1in.substring(s1in.indexOf('^')+1,s1in.indexOf('$')); // gets the tag from s1
 
-	//		String s2in = toTagList(s2)[0]; // get tag of the noun followed by the verb
-
 			char s2case = findCase(toTagList(s2)); // get the tag of the nounphrase in s2
 
-
-
 			String lemma = lemmado(word,tag);
-//			System.out.print("lemmado lemma=("+lemma+")");
 
 			String possibleTags[] = SqlLookup.sqlWordLookup(lemma,SqlUrl,SqlUser,SqlPass);
-
 
 			// if the case of the object is the same as any possible tag for the verb, then do nothing, if there is a mismatch the nounphrase will be error marked
 			if (possibleTags[1].equals(Character.toString(s2case))||
@@ -968,32 +930,27 @@ public class ErrorDetector {
 			// if we cannot find the word in the sqlWordLoopup then we do nothing
 				(possibleTags[1].equals("") && possibleTags[2].equals("") && possibleTags[3].equals("") && possibleTags[4].equals("")))
 			{
-	//			System.out.print("MATCH! possibleTags.length="+possibleTags.length);
 				// do nothing
 			}
 			else
 			{
-				System.out.println("MISMATCH! possibleTag:");
-				System.out.println(s2case+"-"+possibleTags[1]);
-				System.out.println(s2case+"-"+possibleTags[2]);
-				System.out.println(s2case+"-"+possibleTags[3]);
-				System.out.println(s2case+"-"+possibleTags[4]);
-
-				//mark the nounphrase with an error
+				// case not found in database, mark the nounphrase with an error
 				s2 = errorMarkPhrase(s2,"NP","Aca");
 			}
 
-//		System.out.println("gDB>>MATCH possibleTag:"+possibleTags+" s2in:"+s2case);
-		// bera saman s2in og possibleTags[]
+		// there is missing something to do if there is any different order
+		// then we need to compare s2in and possibleTags[]
+		// currently is only in one place in Func_OBJ.flex
 
 		}
-		return s1+open+s2+close;
+
+		StringBuffer out = new StringBuffer();
+		out.append(s1).append(open).append(s2).append(close);
+		return out.toString();
 	}
 
 	private static String lemmado(String wordform, String tag)
 	{
-//		System.out.println("gDB>> lemmaldo Wordform=("+wordform+") tag=("+tag+")");
-
 		Lemmald myLemmald=null;
 		myLemmald = Lemmald.getInstance();
 
@@ -1005,18 +962,10 @@ public class ErrorDetector {
 		 return "";
 	}
 
-	private static String lammatizeWord(String wordform, String tag)
-	{
-		//return IceTaggerOutput.lemmatizeWord(wordform,tag);
-		return "";
-	}
-
 
 	// when we try to
 	public static String objVerbSubj (String s1, String s2, String open, String close)
 	{
-		String out = "s1=("+s1+") s2=("+s2+")";
-
 		String noun[] = toTagList(s1);
 		String verb[] = toTagList(findPhrase(s2,"VP"));
 
@@ -1025,8 +974,8 @@ public class ErrorDetector {
 			s2 = errorMarkPhrase(s2,"VP","Vn");
 		}
 
-		out = open+s1+close+s2;
-
-		return out;
+		StringBuffer out = new StringBuffer();
+		out.append(open).append(s1).append(close).append(s2);
+		return out.toString();
 	}
 }

@@ -29,28 +29,28 @@ public class SqlLookup
 		String user = user_in;
 		String password = password_in;
 
-		try {
-
+		try
+		{
+//Class.forName("com.mysql.jdbc.Driver").newInstance();
 			con = DriverManager.getConnection(url_in, user_in, password_in);
-			System.out.println("connected url="+url_in+" user="+user_in);
+			if(!con.isClosed())
+			{
+//      			System.out.println("Successfully connected to MySQL server using TCP/IP...");
+			}
 			st = con.createStatement();
-			System.out.println("createStatement()");
 
 			st.executeUpdate("USE testdb;");
-			System.out.println("use testdb");
 			st.executeUpdate("SET NAMES 'utf8';");
-			System.out.println("set names utf8");
 
 			rs = st.executeQuery("select * from wordlist where word like '"+underscoredLookUpWord+"'");
 			possibleTags = writeResultSet(rs,lookUpWord);
-			System.out.println("executeQuery");
 
 			st.close();
-
-
 		}
+		// catch (Exception ex)
 		catch (SQLException ex)
 		{
+			System.err.println("Exception: " + ex.getMessage());
 		  //  Logger lgr = Logger.getLogger(Version.class.getName());
 		  //  lgr.log(Level.SEVERE, ex.getMessage(), ex);
 
@@ -78,7 +78,6 @@ public class SqlLookup
 				//    lgr.log(Level.WARNING, ex.getMessage(), ex);
 			}
        	}
-		    System.out.println("return possibleTags;");
 
 		return possibleTags;
 	}

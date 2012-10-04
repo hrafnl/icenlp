@@ -40,7 +40,7 @@ import java.io.*;
 
 %{
   
-  static final int labelLength = 3;
+  static final int labelLength = 3;   // "[NP "
   //boolean isHeadNP = true;
   
   String nomStr = "n";
@@ -81,12 +81,15 @@ import java.io.*;
          // Get all the individual lexemes as strings
         strs = p.split(txt);
         int len = strs.length;
-        if (len >= 4) {
+        if (len >= 4)
+		{
         	tag = strs[len-2];	/* strs[len-1] = "NP]" */
 	 	
-		if(!tag.contains("]"))
-			tag = tag.substring(1, tag.length()-1);
-	
+			if(!tag.contains("]"))
+			{
+				tag = tag.substring(1, tag.length()-1);     // tag is e.g. "^nken$", will become "nken"
+            }
+
         	if (tag.equals("AP]"))	/* t.d. [NP þeirri faveþ [APd gömlu lveþvf AP] NP] */
         	{
         	   int APstart = txt.indexOf("[AP");
@@ -101,16 +104,16 @@ import java.io.*;
   		   //return (new Character(casChar).toString());
         	}
         	else if (tag.equals("ta") || tag.equals("tp"))		/* t.d. [NP árið nheog 1955 ta NP] */
-		{
-		    tag = strs[len-4];
-		    tag = tag.substring(1, tag.length()-1);
+			{
+		    	tag = strs[len-4];
+		    	tag = tag.substring(1, tag.length()-1);
 		    /* System.err.println("Found the tag: " + tag); */
 		    //isHeadNP = true;  
-		    return analyseTag(tag);
-		    
+		    	return analyseTag(tag);
         	}
+
         	else if (tag.length() >= 1) {
-        	    //isHeadNP = true;	
+        	    //isHeadNP = true;
         	    return analyseTag(tag);
         		
         	}
@@ -155,7 +158,8 @@ NP = {OpenNP}" "~{CloseNP}
 			int len;
 			
 			matchedStr = yytext();
-			len = matchedStr.length();
+			len = matchedStr.length(); // matchedStr starts with "[NP " or e.g. "[NP?Ng " in case of error
+
 			caseStr = analyse(matchedStr);
 			if (caseStr.equals(""))
 			  out.write(matchedStr);

@@ -31,6 +31,6 @@ Function = {FuncQualifier} | {FuncSubject} | {FuncObject} | {FuncObjectI} | {Fun
 /* AccSubject = {NPAcc} | {NPsAcc}          */
 /* DatSubject = {NPDat} | {NPsDat}          */
 
-NomSubject = ("[NP"\??n~"NP"\??"]") | {NPsNom}
-AccSubject = ("[NP"\??a~"NP"\??"]") | {NPsAcc}
-DatSubject = ("[NP"\??d~"NP"\??"]") | {NPsDat}
+NomSubject = ("[NPn"{Error}?~"NP"{Error}?"]") | {NPsNom}
+AccSubject = ("[NPa"{Error}?~"NP"{Error}?"]") | {NPsAcc}
+DatSubject = ("[NPd"{Error}?~"NP"{Error}?"]") | {NPsDat}

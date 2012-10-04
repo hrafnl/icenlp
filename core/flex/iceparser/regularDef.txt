@@ -66,8 +66,11 @@ CloseAPs = "APs]"
 //OpenNP = "[NP"\??([a-z]+\+?)*
 //CloseNP = "NP"\??([a-z]+\+?)*"]"
 OpenNP = "[NP"{Error}?
-CloseNP = "NP]"
-ErrorCodes = [VNASCX][gnpsx]|"ca"
+CloseNP = "NP"{Error}?"]"
+//CloseNP = "NP]"
+
+ErrorCodes = Ng|Nn|Nca|Np|Vn|Vp|Sn|Ss|Sp|Aca|Cg|Cn|Xx|Gh
+//ErrorCodes = [VNASCXG]([gnpsxh]|"ca")
 Error = \?{ErrorCodes}+
 
 OpenNPs = "[NPs"

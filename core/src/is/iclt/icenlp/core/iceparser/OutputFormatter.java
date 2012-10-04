@@ -56,16 +56,6 @@ public class OutputFormatter
 		mergeTags = newVal;
 	}
 
-// yyreset yyclose and parse are here to match the transducers.
-	/*public void yyreset(java.io.StringReader in)
-	{
-		this.r = in;
-	}*/
-	/*public void yyclose()  throws java.io.IOException
-	{	
-		if(r!=null)
-			r.close();
-	}*/
 	public void parse(java.io.StringWriter _out) throws java.io.IOException
 	{
 		w = _out;
@@ -78,43 +68,25 @@ public class OutputFormatter
 		write(root);
 	}
 
-    //public void parse(java.io.StringReader in, java.io.StringWriter _out, OutputType outType, boolean mergeTags) throws java.io.IOException
     public String parse(String str, OutputType outType, boolean mergeTags) throws java.io.IOException
     {
             this.r = new StringReader( str );
 			this.w = new StringWriter( );
 
             this.outType = outType;
-            /*switch (outType)
-			{
-			  case plain:
-					setPlain(true);
-					break;
-			  case phrase_per_line:
-					setPlainPerLine(true);
-					break;
-			  case json:
-					setJson(true);
-					break;
-			  case xml:
-					setXml(true);
-					break;
-			  default:
-					setPlain(true);
-					break;
-			}*/
+
 			setMergeTags(mergeTags);
 
-		   root = read();
+			root = read();
 
-		   if(mergeTags)
-			  root = mergeFuncPhrase(root, null);
+			if(mergeTags)
+			root = mergeFuncPhrase(root, null);
 
-		   write(root);
-           // Return the result of the StringWriter;
+			write(root);
+			// Return the result of the StringWriter;
 
-           firstLine = false;
-           return w.toString();
+			firstLine = false;
+			return w.toString();
     }
 
 	public OutputFormatter()
@@ -183,7 +155,7 @@ public class OutputFormatter
     }
 
 	private void write(OutputFormatter_Part root)
-	{ //      System.out.println("gDB> outType = "+outType);
+	{
 		if(outType == OutputType.json)
 		{
             if (firstLine)
@@ -192,8 +164,6 @@ public class OutputFormatter
 		}
 		else if(outType == OutputType.xml)
 		{
-//            if (firstLine)
-//                System.out.print("<ParsedText>\n");
 			writeXml(root);
 		}
 		else if(outType == OutputType.tcf)
@@ -222,8 +192,8 @@ public class OutputFormatter
 		{
 			buf.append(arr, 0, numChars);
 		}
-		str = buf.toString();	
-//System.out.println("\ngDB>> str=["+str+"]");
+		str = buf.toString();
+
 		String [] sentences = null;
 		sentences = str.split("\n");
 
@@ -238,7 +208,7 @@ public class OutputFormatter
 	//creates a tree from the input text
 	private static ArrayList<OutputFormatter_Part> treeMaker(String str, ArrayList<OutputFormatter_Part> list)
 	{
-//System.out.println("gDB>> treeMaker  str=["+str+"]");
+//		System.out.println("treeMarker str=("+str+")");
 		int funcIndex, phraseIndex;
 		str = str.trim();
 		while(str.length() > 0)
@@ -504,13 +474,13 @@ public class OutputFormatter
 			}
 			else if(var.OutputFormatter_Type == OutputFormatter_Type.SENTENCE || var.OutputFormatter_Type == OutputFormatter_Type.WORDS)
 			{
-				/*System.out.*/print(indent+"<"+var.OutputFormatter_Type+">"+"\n");
+				print(indent+"<"+var.OutputFormatter_Type+">"+"\n");
 				printXmltree(var.children, indent+"\t");
 				print(indent+"</"+var.OutputFormatter_Type+">"+"\n");
 			}
 			else
 			{
-				/*System.out.*/print(indent+"<"+var.OutputFormatter_Type+"> "+""+data+""+"\n");
+				print(indent+"<"+var.OutputFormatter_Type+"> "+""+data+""+"\n");
 				printXmltree(var.children, indent+"\t");
 				print(indent+"</"+var.OutputFormatter_Type+">"+"\n");
 			}
@@ -610,25 +580,22 @@ public class OutputFormatter
 			}
 			else if(var.OutputFormatter_Type == OutputFormatter_Type.WORDS)
 			{
-//				System.out.println("WORDS-start"+data);
 				printTCFtree(var.children, indent, phrase);
-//				System.out.println("WORDS-end");
 			}
 			else if(var.OutputFormatter_Type == OutputFormatter_Type.SENTENCE)
 			{
-//				System.out.println("SENTENCE-start");
 				constituentID++;
 
 				tcfConstituents += (indent+"<constituent ID=\"c"+constituentID+"\" cat=\""+var.OutputFormatter_Type+"\">\n");
 				printTCFtree(var.children, indent+" ", phrase);
 				tcfConstituents += (indent+"</constituent>\n");
-//				System.out.println("SENTENCE-end");
 			}
 			else if (var.OutputFormatter_Type == OutputFormatter_Type.FUNC)
 			{
-//				System.out.println("FUNC-start"+data);
 				constituentID++;
 
+
+				// remove the error code after and including the ? with the replaceAll
 				tcfConstituents += (indent+"<constituent ID=\"c"+constituentID+"\" cat=\""+data+"\">\n");
 				printTCFtree(var.children, indent+" ", phrase);
 				tcfConstituents += (indent+"</constituent>\n");
@@ -650,7 +617,25 @@ public class OutputFormatter
 				constituentID++;
 				tokenID++;
 
+				// print out the erros, if we find ? sign within a tag
+                // the error detected here are words
+                // that is : phrase="NP?" var.OutputFormatter_Type="WORD" data="möguleiki"
+                // If we see an error we remove it before it is put into the constituent brackets
+				if (phrase.matches("[\\[\\{]?[\\w]+[\\w\\W]+\\?.*"))
+                {
+                    errorID++;
+                    String errorType = "underline";
+                    errorType = extractError(phrase);
+                    //  <e ID="e1" const="c5" type="highlight" />
+                    tcfErrors += "   <e ID=\"e"+errorID+"\" const=\"c"+(constituentID+0)+"\" type=\""+errorType+"\" />\n";
+                }
 
+/*				if (aspell(data))
+				{
+                    errorID++;
+                    tcfErrors += "   <e ID=\"e"+errorID+"\" const=\"c"+(constituentID+0)+"\" type=\"Xx\" />\n";
+				}
+*/
 				tokens += "   <token ID=\"t"+tokenID+"\">"+data+"</token>\n";
 				
 				// getting the Text
@@ -668,100 +653,102 @@ public class OutputFormatter
 				}
 				else
 				{
-					tcfConstituents += (indent+"<constituent ID=\"c"+constituentID+"\" cat=\""+phrase+"\" tokenIDs=\"t"+tokenID+"\"/>\n");
+
+					// remove the error code after and including the ? with the replaceAll
+					tcfConstituents += (indent+"<constituent ID=\"c"+constituentID+"\" cat=\""+phrase.replaceAll("(.*)\\?.*","$1")+"\" tokenIDs=\"t"+tokenID+"\"/>\n");
 				}
 
-                // print out the erros, if we find ? sign within a tag
-                // the error detected here are words
-                // that is : phrase="NP?" var.OutputFormatter_Type="WORD" data="möguleiki"
-                if (phrase.matches("[\\[\\{][\\w]+[\\w\\W]+\\?.*"))
-                {
-                    errorID++;
-                    String errorType = "underline";
-                    errorType = extractError(phrase);
-					//System.out.println("gDB>>phrase=("+phrase+") var.OutputFormatter_Type=("+var.OutputFormatter_Type+") data=("+data+")");
-                    //  <e ID="e1" const="c5" type="highlight" />
-                    tcfErrors += "   <e ID=\"e"+errorID+"\" const=\"c"+constituentID+"\" type=\""+errorType+"\" />\n";
-                }
 
 				// go to the tags
 				printTCFtree(var.children, "", "");
 			}
 			else if(var.OutputFormatter_Type == OutputFormatter_Type.PHRASE)
 			{
-  //            System.out.println("gDB> data=("+data+") phrase=("+phrase+")");
-                // print out the erros, if we find ? sign within a tag
-                // the errors detected here is:
-                //when a <constituent ID="c2" cat="NP" tokenIDs="t2"/> that is phrase="" or phrase="PP" var.OutputFormatter_Type="PHRASE" data="[NP?"
-                // and avoid detecting :
-                // gDB> (phrase=(NP?) var.OutputFormatter_Type=(PHRASE) data=([AP)
-                if (data.matches("\\[?[\\w]+\\?.*"))
-                {
-                    String errorType = extractError(data);
-//		System.out.println("gDB>>phrase=("+phrase+") var.OutputFormatter_Type=("+var.OutputFormatter_Type+") data=("+data+")");
-
-
-					int n = numberOfWORDinWORDS(var.children);
-
-					for (int i = 0; i < n; i++) {
-						errorID++;
-                    	tcfErrors += "   <e ID=\"e"+errorID+"\" const=\"c"+(constituentID+1+i)+"\" type=\""+errorType+"\" />\n";
-					}
-
-                }
-
 				// if the child contains a phrase we will print out "constituent" data
 				// if the child does not contain a phrase we only move the child without printing the "constituent"
 				if (isChildHasPHRASE(var.children))
 				{
-//				System.out.println("children-start");
 					constituentID++;
-					tcfConstituents += (indent+"<constituent ID=\"c"+constituentID+"\" cat=\""+data.substring(1)+"\">\n");
+
+					// print out the erros, if we find ? sign within a tag
+					// the errors detected here is:
+					//when a <constituent ID="c2" cat="NP" tokenIDs="t2"/> that is phrase="" or phrase="PP" var.OutputFormatter_Type="PHRASE" data="[NP?"
+					// and avoid detecting :
+					// gDB> (phrase=(NP?) var.OutputFormatter_Type=(PHRASE) data=([AP)
+					if (data.matches("\\[?[\\w]+\\?.*"))
+					{
+						String errorType = extractError(data);
+
+						int n = numberOfWORDinWORDS(var.children);
+
+						for (int i = 0; i < n; i++) {
+							errorID++;
+							tcfErrors += "   <e ID=\"e"+errorID+"\" const=\"c"+(constituentID+0+i)+"\" type=\""+errorType+"\" />\n";
+						}
+					}
+
+					// removing the [ in front of [NP and then the error coming after the question mark [NP?NcaNg, which will let the phrase (NP) remain
+					tcfConstituents += (indent+"<constituent ID=\"c"+constituentID+"\" cat=\""+data.replaceAll("\\[(.*)\\?.*","$1")+"\">\n");
 					printTCFtree(var.children, indent+" ", data.substring(1));
 					tcfConstituents += (indent+"</constituent>\n");
-//				System.out.println("children-end");
-				}
+					}
 				else
 				{
-//              System.out.println("notChildren-start");
 					printTCFtree(var.children, indent, data.substring(1));
-//              System.out.println("notChildren-end");
 				}
 			}
 			else if (var.OutputFormatter_Type == OutputFormatter_Type.FUNC)
 			{
-//				System.out.println("FUNC-start");
 				printTCFtree(var.children, indent, phrase);
-//				System.out.println("FUNC-end");
 			}
 		}
 	}
+/*
+	// input : string with words
+	// output : true if input has incorrectly spelled word
+	// output : false if input is a correctly spelled word
+	private boolean aspell(String in)
+	{
 
-    // G : returns the errors... that is :takes everything from the ? to the end of the string.
+		String bashResults = "";
+		try {
+			String[] exec = { "/bin/sh","-c", "echo \""+in+"\" | aspell --dont-suggest -a -l is"};
+			Process proc=Runtime.getRuntime().exec(exec);
+			proc.waitFor();
+			BufferedReader read = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+			String line = null;
+			while(read.ready())
+			{
+				while ((line = read.readLine()) != null){
+					bashResults += line+"\n";
+				}
+			}
+			System.out.println(bashResults);
+		}
+		catch(IOException e)
+		{
+			System.out.println("gDB>>e=("+e.getMessage()+")");
+		}
+		catch (InterruptedException e)
+		{
+			System.out.println("gDB>>e="+e.getMessage()+")");
+		}
+
+		if (bashResults.contains("\n?") || bashResults.contains("\n#") || bashResults.contains("\n&") || bashResults.contains("\n-"))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+ */
+    // GöL : returns the errors... that is :takes everything from the ? to the end of the string.
     private String extractError(String in)
     {
-       // System.out.println("gDB>>"+in+" index="+in.length()+" > length="+(in.indexOf("?")+1));
         if (in.indexOf('?')+1 < in.length())
-		{/*       int pointToTmp = 0;  this is if we want to divide ?ca+g+n into 3 different errors
-			for (int pointTo = in.indexOf('?'); pointTo > 0;)
-			{
-			System.out.println("3.");
-				pointToTmp = in.indexOf('+',pointTo);
-				System.out.println("gDB>>pointTo=("+pointToTmp+")");
-
-				if (pointToTmp >= 0)
-				{
-					System.out.println("\t-("+in.substring(pointTo,pointToTmp)+")\n");
-				}
-				else
-				{
-					System.out.println("\t-("+in.substring(pointTo)+")\n");
-					pointToTmp = -1;
-				}
-
-				pointTo = pointToTmp+1;
-			}
-*/
+		{
 			return in.substring(in.indexOf('?')+1);
 		}
 			else
@@ -769,24 +756,6 @@ public class OutputFormatter
             return "highlight";
 		}
     }
-    // G : extracts
-/*    private String extractError(String in)
-    {
-        String out = "";
-
-        // starts from the last char in the "in" string and adds to the "out" string every letter other than + sign
-        // untill it reaches the ? sign that indicates this phrase has an error
-        for (int i = in.length()-1 ; in.charAt(i) != '?' ; i-- )
-        { //  System.out.println("gDB>>"+i+"\t("+in.charAt(i)+")");
-            if (in.charAt(i) != '+')
-            {
-                out = in.charAt(i)+out;
-            }
-        }
-
-        return out;
-    }
-  */
 
 // if we find a phrase in the OutputFormatter_Part list then we return true
 // otherwise we do nothing
@@ -797,7 +766,6 @@ public class OutputFormatter
 //		print ("- ");
 		for (OutputFormatter_Part var : list) 
 		{
-//			System.out.println (var.OutputFormatter_Type.toString() + " ");
 			if (var.OutputFormatter_Type == OutputFormatter_Type.PHRASE) {
 				return true;
 			}
@@ -811,7 +779,6 @@ public class OutputFormatter
 		int n = 0;
 		for (OutputFormatter_Part var : list)
 		{
-//			System.out.println (var.OutputFormatter_Type.toString() + " ");
 			if (var.OutputFormatter_Type == OutputFormatter_Type.WORDS) {
 				n = numberOfWORDS(var.children);
 			}
@@ -824,7 +791,6 @@ public class OutputFormatter
 		int n = 0;
 		for (OutputFormatter_Part var : list)
 		{
-//			System.out.println (var.OutputFormatter_Type.toString() + " ");
 			if (var.OutputFormatter_Type == OutputFormatter_Type.WORD) {
 				n++;
 			}

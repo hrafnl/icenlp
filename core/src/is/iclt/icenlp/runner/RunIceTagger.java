@@ -36,6 +36,7 @@ import is.iclt.icenlp.core.icemorphy.IceMorphy;
 import is.iclt.icenlp.core.tritagger.TriTagger;
 import is.iclt.icenlp.core.tritagger.TriTaggerLexicons;
 import is.iclt.icenlp.core.tritagger.TriTaggerResources;
+import is.iclt.icenlp.core.utils.TCFformatter;
 
 import java.text.SimpleDateFormat;
 import java.text.DecimalFormat;
@@ -76,6 +77,7 @@ public class RunIceTagger
     private int sentenceStart;   // Sentences start with upper case or lower case letters?
     protected IceTagger tagger;
 	private Segmentizer segmentizer;
+	private Segmentizer segmentizer2;
 	protected Tokenizer tokenizer;
 	protected IceLog logger = null;               // Log object
 	protected int numUnknowns = 0;              // Number of unknowns
@@ -489,6 +491,7 @@ public class RunIceTagger
         input.close();
     }
 
+
     protected void tagText(BufferedWriter outFile)
 			throws IOException
 	{
@@ -497,8 +500,12 @@ public class RunIceTagger
 		String strCount = Integer.toString( count );
         if (!standardInputOutput)
             System.out.print( "Tagging sentence nr 1: " + "\r" );
+
+
+
 		while( segmentizer.hasMoreSentences() )
 		{
+
 			count++;
 			strCount = Integer.toString( count );
 			// Step 1: Get next sentence
@@ -518,7 +525,7 @@ public class RunIceTagger
                     tokenizer.tokenizeSplit( sentence );    // Only split on whitespace
                 else
                     tokenizer.tokenize( sentence );     // Perform more intelligent tokenization
-                
+
                 if( tokenizer.tokens.size() > 0 )
 				{
 					tokenizer.splitAbbreviations();
@@ -531,7 +538,7 @@ public class RunIceTagger
 				}
 			}
 		}
-		
+
         outFile.flush();
 		outFile.close();
 
@@ -679,6 +686,7 @@ public class RunIceTagger
 	        // Reading from standard input?
 	        else if (standardInputOutput) {
 	             BufferedReader in = FileEncoding.getReader(System.in);
+
 	             segmentizer = new Segmentizer(in, lineFormat, tokLex);
 	             //segmentizer = new Segmentizer(in, lineFormat, tokenDictPath);
 	        }
@@ -735,7 +743,7 @@ public class RunIceTagger
 
     protected void performTagging() throws IOException
     {
-        if(standardInputOutput) 
+        if(standardInputOutput)
         {
             BufferedWriter out = FileEncoding.getWriter(System.out);
             
