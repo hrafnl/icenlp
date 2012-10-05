@@ -101,6 +101,7 @@ public class ErrorDetector {
                	if (!case1.equals(case2)) {
 					error.append("Nca");
 				};
+                error.append('?');
 			}
 		}
 
@@ -120,7 +121,8 @@ public class ErrorDetector {
 			String tokenlessStr = RemoveTokens(originalStr);
 			String errors = CheckGenNumCase(tokenlessStr);//create the error string which is going to be something like ge+n+ca
 
-			return " [" + PhraseType + errors + " " + originalStr + " " + PhraseType + errors + "] ";
+			//HL: return " [" + PhraseType + errors + " " + originalStr + " " + PhraseType + errors + "] ";
+            return " [" + PhraseType + errors + " " + originalStr + " " + PhraseType + "] ";
 		}
 		return originalStr;
 	}
@@ -270,9 +272,11 @@ public class ErrorDetector {
 			switch(order)
 			{
 				case 1:
-					return out.append(getErrTag(s1, error)).append(s2).append(getErrTag(s3, error)).append(s4).toString();
+					return out.append(getErrTag(s1, error)).append(s2).append(s3).append(s4).toString();
+                    //return out.append(getErrTag(s1, error)).append(s2).append(getErrTag(s3, error)).append(s4).toString();
 				case 2:
-					return out.append(s1).append(getErrTag(s2, error)).append(s3).append(getErrTag(s4, error)).toString();
+					return out.append(s1).append(getErrTag(s2, error)).append(s3).append(s4).toString();
+                    //return out.append(s1).append(getErrTag(s2, error)).append(s3).append(getErrTag(s4, error)).toString();
 			}
 		}
 		else
@@ -720,11 +724,12 @@ public class ErrorDetector {
 		if (error.length() > 0)
 		{
 			error.insert(0,'?');
+            error.append('?');
 		}
 
     // order 1 = s1 {comp s2 comp}
 		open = open.substring(0,open.length()-1)+error+" ";
-		close = close.substring(0,close.indexOf('}'))+error+"} ";
+		// HL: close = close.substring(0,close.indexOf('}'))+error+"} ";
 
 		StringBuffer out = new StringBuffer();
 		if (order == 1)
@@ -812,7 +817,7 @@ public class ErrorDetector {
 		}
 		else
 		{
-			System.out.println("gDB>> open="+open+" s1="+s1+" close="+close+" s2="+s2);
+			//System.out.println("gDB>> open="+open+" s1="+s1+" close="+close+" s2="+s2);
 			out.append(open).append(s1).append(close).append(s2);
 		}
 			return out.toString();
@@ -870,9 +875,9 @@ public class ErrorDetector {
 
 		StringBuffer out = new StringBuffer();
 		out.append(s1.substring(0,startOfPhrase)) // start the string with everything in front of the phrase
-				.append('?').append(error) // insert the error after the first NP
+				.append('?').append(error).append('?') // insert the error after the first NP
 				.append(s1.substring(startOfPhrase,endOfPhrase)) //everything inside NP
-				.append('?').append(error) // insert the error after the second NP
+				//HL: .append('?').append(error) // insert the error after the second NP
 				.append(s1.substring(endOfPhrase,endOfS1)); // append the rest
 
 		return out.toString();

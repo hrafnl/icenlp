@@ -70,12 +70,18 @@ public class RunIceParserBase
 				outputSetCount++;
 				canChooseOne();
 			}
-			if( args[i].equals( "-xml" ) )
-			{
-				outputType= OutputFormatter.OutputType.xml;;
-				outputSetCount++;
-				canChooseOne();
-			}
+            if( args[i].equals( "-xml" ) )
+            {
+                outputType= OutputFormatter.OutputType.xml;;
+                outputSetCount++;
+                canChooseOne();
+            }
+            if( args[i].equals( "-tcf" ) )
+            {
+                outputType= OutputFormatter.OutputType.tcf;;
+                outputSetCount++;
+                canChooseOne();
+            }
 			if( args[i].equals( "-l" ) )
 			{
 				outputType= OutputFormatter.OutputType.phrase_per_line;;

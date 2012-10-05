@@ -67,8 +67,16 @@ StartAP = {OpenAP}{PhraseCase}
 
 ^" "{1,3} 	{;}
 {WhiteSpace}+	{ out.write(" ");}
-{StartNP}	{ out.write("[NP");}
-{StartAP}	{ out.write("[AP");}
+{StartNP}	{ 	String matchedStr = yytext();
+			out.write(matchedStr.substring(0,matchedStr.length()-1)); // The case label is dropped
+			// out.write("[NP");
+		}
+
+{StartAP}	{ 	String matchedStr = yytext();
+			out.write(matchedStr.substring(0,matchedStr.length()-1)); // The case label is dropped
+			//out.write("[AP");
+		}
+
 "\n"		{ //System.err.print("Reading line: " + Integer.toString(yyline+1) + "\r"); 
 		out.write("\n"); }
 .		{ out.write(yytext());}

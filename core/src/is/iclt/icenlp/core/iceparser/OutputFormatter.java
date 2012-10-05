@@ -50,6 +50,8 @@ public class OutputFormatter
 	private int tokenID = 0;
 	private int constituentID = 0;
     private int errorID = 0;
+    private Pattern pPhrase;
+    private Pattern pFunc;
 
 	public void setMergeTags(boolean newVal)
 	{
@@ -91,10 +93,21 @@ public class OutputFormatter
 
 	public OutputFormatter()
 	{
-	}
+        //patterns matching all possible function or phrase tags
+//			Pattern pPhrase = Pattern.compile("FRWs?|AdvP|APs?|NP[s\\?]?|VP[bgips]?|PP|S?CP|InjP|MWE_(AdvP|AP|CP|PP)");
+        //watch out for NP?Nca
+        // VPb?Vn
+        String errorCodes = "\\?([A-Z][a-z]+)+\\?";
+        pPhrase = Pattern.compile("FRWs?|AdvP|APs?|NP[sd]?(" + errorCodes + ")?|VP[bgips]?(" + errorCodes + ")?|PP|S?CP|InjP|MWE_(AdvP|AP|CP|PP)");
+        //Pattern pFunc = Pattern.compile("((\\*SUBJ|\\*I?OBJ(AP|NOM)?|\\*COMP)(<|>)?)|\\*QUAL|\\*TIMEX\\??");
+        pFunc = Pattern.compile("(((\\*SUBJ|\\*I?OBJ(AP|NOM)?|\\*COMP)(<|>)?)|\\*QUAL|\\*TIMEX)(" + errorCodes + ")?");
+
+        //System.out.println("pPhrase: " + pPhrase.pattern());
+        //System.out.println("pFunc: " + pFunc.pattern());
+    }
 
 	// Puts a function tag to the next phrase tag inside of it.
-	private static OutputFormatter_Part mergeFuncPhrase(OutputFormatter_Part curr, OutputFormatter_Part parent)
+	private OutputFormatter_Part mergeFuncPhrase(OutputFormatter_Part curr, OutputFormatter_Part parent)
 	{
 		if(curr.children.size()>0)
 		{
@@ -206,9 +219,9 @@ public class OutputFormatter
 		return root;
 	}
 	//creates a tree from the input text
-	private static ArrayList<OutputFormatter_Part> treeMaker(String str, ArrayList<OutputFormatter_Part> list)
+	private ArrayList<OutputFormatter_Part> treeMaker(String str, ArrayList<OutputFormatter_Part> list)
 	{
-//		System.out.println("treeMarker str=("+str+")");
+		//System.out.println("treeMarker str=("+str+")");
 		int funcIndex, phraseIndex;
 		str = str.trim();
 		while(str.length() > 0)
@@ -217,12 +230,6 @@ public class OutputFormatter
 			funcIndex = str.indexOf("{");
 			phraseIndex = str.indexOf("[");
 
-			//patterns matching all possible function or phrase tags
-//			Pattern pPhrase = Pattern.compile("FRWs?|AdvP|APs?|NP[s\\?]?|VP[bgips]?|PP|S?CP|InjP|MWE_(AdvP|AP|CP|PP)");
-			//watch out for NP?Nca
-			// VPb?Vn
-			Pattern pPhrase = Pattern.compile("FRWs?|AdvP|APs?|NP[sd]?(\\?[A-Z][a-z]+)?|VP[bgips]?(\\?[A-Z][a-z]+)?|PP|S?CP|InjP|MWE_(AdvP|AP|CP|PP)");
-			Pattern pFunc = Pattern.compile("((\\*SUBJ|\\*I?OBJ(AP|NOM)?|\\*COMP)(<|>)?)|\\*QUAL|\\*TIMEX\\??");
 
 			Matcher mPhrase;
 			Matcher mFunc;
@@ -246,16 +253,28 @@ public class OutputFormatter
 			if(funcIndex == 0)
 			{
 				String tag = str.substring(0, str.indexOf(" "));
-				String reverseTag = " " + tag.substring(1, tag.length()) + "}";
 
-				if(str.indexOf(reverseTag) != -1)
+                int tagEnd = 0;
+                if (tag.contains("?"))
+                {
+                    tagEnd = tag.indexOf('?');
+                }
+                else
+                {
+                    tagEnd = tag.length();
+                }
+                // The closing tag does not contain the error codes!
+				String closingTag = " " + tag.substring(1, tagEnd) + "}";
+				//String closingTag = " " + tag.substring(1, tag.length()) + "}";
+
+				if(str.indexOf(closingTag) != -1)
 				{
-					int endIndex = str.indexOf(reverseTag) + reverseTag.length() -1;
+					int endIndex = str.indexOf(closingTag) + closingTag.length() -1;
 
 					String funcstr = str.substring(0, endIndex+1);
 					funcstr = funcstr.trim();
 
-					funcstr = funcstr.substring(funcstr.indexOf(" "), funcstr.lastIndexOf(reverseTag));
+					funcstr = funcstr.substring(funcstr.indexOf(" "), funcstr.lastIndexOf(closingTag));
 			
 					OutputFormatter_Part temp = new OutputFormatter_Part(tag, OutputFormatter_Type.FUNC);
 					temp.children = treeMaker(funcstr, temp.children);
@@ -273,16 +292,30 @@ public class OutputFormatter
 			else if(phraseIndex == 0)
 			{
 				String tag = str.substring(0, str.indexOf(" "));
-				String reverseTag = " " + tag.substring(1, tag.length()) + "]";
 
-				if(str.indexOf(reverseTag) != -1)
+
+                int tagEnd = 0;
+
+                if (tag.contains("?"))
+                {
+                    tagEnd = tag.indexOf('?');
+                }
+                else
+                {
+                    tagEnd = tag.length();
+                }
+
+				String closingTag = " " + tag.substring(1, tagEnd) + "]";
+				//String closingTag = " " + tag.substring(1, tag.length()) + "]";
+
+				if(str.indexOf(closingTag) != -1)
 				{
-					int endIndex = str.indexOf(reverseTag) + reverseTag.length() -1;				
+					int endIndex = str.indexOf(closingTag) + closingTag.length() -1;
 
 					String phrasestr = str.substring(0, endIndex+1);
 					phrasestr = phrasestr.trim();
 
-					phrasestr = phrasestr.substring(phrasestr.indexOf(" "), phrasestr.indexOf(reverseTag));
+					phrasestr = phrasestr.substring(phrasestr.indexOf(" "), phrasestr.indexOf(closingTag));
 					OutputFormatter_Part temp = new OutputFormatter_Part(tag, OutputFormatter_Type.PHRASE);
 					temp.children = treeMaker(phrasestr, temp.children);
 
@@ -349,7 +382,7 @@ public class OutputFormatter
 	 	return list;
 		
 	} 
-	private static OutputFormatter_Part words(String str)
+	private OutputFormatter_Part words(String str)
 	{
 		String [] temp = null;
       		temp = str.split(" ");

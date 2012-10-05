@@ -342,7 +342,7 @@ VerbSubjObjNom = "[VP"{WhiteSpace}+{VerbDat}~"VP]"{WhiteSpace}+{FuncSubjectObliq
 			}
 			else
 			{
-				System.out.println("gDB>>SubjVerbObjNom("+StringSearch.firstString+ObjNomOpen+StringSearch.nextString+ObjNomClose+")");
+				// System.out.println("gDB>>SubjVerbObjNom("+StringSearch.firstString+ObjNomOpen+StringSearch.nextString+ObjNomClose+")");
 				out.write(StringSearch.firstString+ObjNomOpen+StringSearch.nextString+ObjNomClose);
 			}
 		  }

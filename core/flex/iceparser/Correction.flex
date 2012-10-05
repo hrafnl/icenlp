@@ -144,7 +144,7 @@ import java.io.*;
 		// 1. Fix the tag of "það" by changing the fp... into fa...
 //		input = input.replaceAll("\\^fp","^fa");
 		// 2. Remove the error on the verb.
-		input = input.replaceAll("VP\\?(V[np])+","VP");
+		input = input.replaceAll("VP\\?(V[np])+\\?","VP");
 
 		return input;
 	}

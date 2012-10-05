@@ -40,7 +40,7 @@ import java.io.*;
 
 %{
   
-  static final int labelLength = 3;   // "[NP "
+  //static final int labelLength = 3;   // "[NP "
   //boolean isHeadNP = true;
   
   String nomStr = "n";
@@ -155,10 +155,11 @@ NP = {OpenNP}" "~{CloseNP}
 
 {MWE}		{ out.write(yytext());}
 {NP}		{ 	String caseStr,matchedStr,openLabelStr,closeLabelStr;
-			int len;
+			int len, labelLength;
 			
 			matchedStr = yytext();
 			len = matchedStr.length(); // matchedStr starts with "[NP " or e.g. "[NP?Ng " in case of error
+			labelLength = matchedStr.indexOf(" ");  // The label ends with a space
 
 			caseStr = analyse(matchedStr);
 			if (caseStr.equals(""))

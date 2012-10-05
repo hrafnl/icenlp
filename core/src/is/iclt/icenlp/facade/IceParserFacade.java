@@ -421,15 +421,17 @@ public class IceParserFacade
 
 		// --------------------------------
 		//print( "Clean2" );
+
         sr = new StringReader( sw.toString() );
         sw = new StringWriter( );
 
         cl2_scn.yyclose();
         cl2_scn.yyreset(sr);
         cl2_scn.parse(sw);
-
+        if (debug) System.out.println("gDB>>Clean2=(" + sw.toString()+")");
 
 		// --------------------------------
+
 		if (markGrammarError)
 		{
 			// Correction
