@@ -1544,14 +1544,14 @@ grípum=sfg1fn_svg1fn
 grípið=sfg2fn_svg2fn
 greip=sfg3eþ_sfg1eþ
 greipst=sfg2eþ
-gripum=sfg1fþ_svg1fþ
+gripum=sfg1fþ_svg1fþ_nkfþ
 gripuð=sfg2fþ_svg2fþ
 gripu=sfg3fþ_svg3fþ
 #Subjunctive - Viðtengingarháttur
 grípi=svg3en_svg1en_svg3fn
 grípir=svg2en
-gripi=svg3eþ_svg1eþ
-gripir=svg2eþ
+gripi=svg3eþ_svg1eþ_nkfo
+gripir=svg2eþ_nkfn
 #Past participle - Lýsingarháttur þátíðar
 gripinn=sþgken_nkeog_lkensf_lkeosf
 gripin=sþgven_sþghfn_lvensf_lhfnsf_lhfosf

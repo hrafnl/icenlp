@@ -319,8 +319,9 @@ public class IceTagger
 				if( ( i == 0 ) && ( sentenceStart == sentenceStartUpperCase ) )
 				{
 					dictionaryTokenLookup( currToken, true ); // First ignore case
-					if( currToken.noTags() ) // The word then could be a proper noun
-						dictionaryTokenLookup( currToken, false ); // Now don't ignore case
+					//if( currToken.noTags() ) // The word then could be a proper noun
+					dictionaryTokenLookup( currToken, false ); // Now don't ignore case
+                    //System.out.println("Looking up both upper and lower case for " + currToken.lexeme);
 				}
 				else // i > 0 || sentenceStart == sentenceStartLowerCase
 				{

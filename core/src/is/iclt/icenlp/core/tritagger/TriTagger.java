@@ -245,9 +245,10 @@ public class TriTagger {
          if ((tokIndex == 0) && (sentenceStart == sentenceStartUpperCase))
          {
              if (!caseSensitive) { // Then lookup using both lower and upper case
-                tagStr = myLexicon.lookupWord(tok.lexeme, true);       // First ignore case
-                if (tagStr == null) // The word then could be a proper noun
-                    tagStr = myLexicon.lookupWord(tok.lexeme, false); // Now don't ignore case
+                tagStr = myLexicon.lookupWordLowerUpper(tok.lexeme);
+                //tagStr = myLexicon.lookupWord(tok.lexeme, true);       // First ignore case
+                /*if (tagStr == null) // The word then could be a proper noun
+                    tagStr = myLexicon.lookupWord(tok.lexeme, false); // Now don't ignore case */
              }
              else
                  tagStr = myLexicon.lookupWord(tok.lexeme, false); // Now Don't ignore case

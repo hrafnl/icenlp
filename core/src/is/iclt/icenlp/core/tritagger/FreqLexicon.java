@@ -454,6 +454,22 @@ public class FreqLexicon {
         return tagStr;
     }
 
+    // Looks up both lower case version and upper case if the word starts with an upper case letter
+    public String lookupWordLowerUpper(String word)
+    {
+        if (Character.isUpperCase( word.charAt( 0 )))  {
+            String lowerCase = word.toLowerCase();
+            String tagLower = lookup(myWords, lowerCase);
+            String tagUpper = lookup(myWords, word);
+            if (tagLower == null)
+               return tagUpper;
+            else if (tagUpper == null)
+                return tagLower;
+            else return (tagLower + "_" + tagUpper);   // Both tagLower and tagUpper contain tags
+        }
+        else return lookup(myWords, word);
+    }
+
     public String lookupWord(String word, boolean ignoreCase) {
         String lookupWord;
 
