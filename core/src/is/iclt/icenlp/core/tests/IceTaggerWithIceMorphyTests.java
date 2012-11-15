@@ -9,6 +9,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 import is.iclt.icenlp.core.icemorphy.IceMorphy;
+import is.iclt.icenlp.core.icemorphy.IceMorphyLexicons;
+import is.iclt.icenlp.core.icemorphy.IceMorphyResources;
 import is.iclt.icenlp.core.icetagger.IceTagger;
 import is.iclt.icenlp.core.icetagger.IceTaggerLexicons;
 import is.iclt.icenlp.core.icetagger.IceTaggerOutput;
@@ -29,6 +31,7 @@ public class IceTaggerWithIceMorphyTests
 {
 	private IceTagger tagger;
 	private IceTaggerLexicons iceLex = null;
+    private IceMorphyLexicons morphyLex = null;
 	private IceMorphy morphoAnalyzer;
 	private IceLog logger;
 	private IceTaggerOutput iceOutput = null;
@@ -42,12 +45,12 @@ public class IceTaggerWithIceMorphyTests
 		
 		getIceTaggerLexicons();
 
-		morphoAnalyzer = new IceMorphy(iceLex.morphyLexicons.dict, iceLex.morphyLexicons.baseDict,
-				iceLex.morphyLexicons.endingsBase, iceLex.morphyLexicons.endings, iceLex.morphyLexicons.endingsProper,
-				iceLex.morphyLexicons.prefixes, iceLex.morphyLexicons.tagFrequency, logger);
+		morphoAnalyzer = new IceMorphy(morphyLex.baseDict, morphyLex.dict,
+                morphyLex.endingsBase, morphyLex.endings, morphyLex.endingsProper,
+                morphyLex.prefixes, morphyLex.tagFrequency, logger);
 
-		tagger = new IceTagger(IceTagger.sentenceStartUpperCase, logger, morphoAnalyzer, iceLex.morphyLexicons.baseDict,
-				iceLex.morphyLexicons.dict, iceLex.idioms, iceLex.verbPrep, iceLex.verbObj, iceLex.verbAdverb,
+		tagger = new IceTagger(IceTagger.sentenceStartUpperCase, logger, morphoAnalyzer, morphyLex.baseDict,
+                morphyLex.dict, iceLex.idioms, iceLex.verbPrep, iceLex.verbObj, iceLex.verbAdverb,
 				false, true, triTagger, modelType);
 		
 		tagger.setSameTagForAllNumbers(true);
@@ -61,31 +64,38 @@ public class IceTaggerWithIceMorphyTests
                     isVerbPrep, isVerbObj, isVerbAdverb, isIdioms, isPrefixes, isTagFrequency;
 
         IceTaggerResources iceResources = new IceTaggerResources();
+        IceMorphyResources morphyResources = new IceMorphyResources();
 
-        isDictionaryBase = iceResources.isDictionaryBase;
-        isDictionary = iceResources.isDictionary;
-        isEndingsBase = iceResources.isEndingsBase;
-        isEndings = iceResources.isEndings;
-        isEndingsProper = iceResources.isEndingsProper;
+
+        isDictionaryBase = morphyResources.isDictionaryBase;
+        isDictionary = morphyResources.isDictionary;
+        isEndingsBase = morphyResources.isEndingsBase;
+        isEndings = morphyResources.isEndings;
+        isEndingsProper = morphyResources.isEndingsProper;
+        isPrefixes = morphyResources.isPrefixes;
+        isTagFrequency = morphyResources.isTagFrequency;
+
         isVerbPrep = iceResources.isVerbPrep;
         isVerbObj = iceResources.isVerbObj;
         isVerbAdverb = iceResources.isVerbAdverb;
         isIdioms = iceResources.isIdioms;
-        isPrefixes = iceResources.isPrefixes;
-        isTagFrequency = iceResources.isTagFrequency;
+
+        morphyLex = new IceMorphyLexicons(
+                isDictionaryBase,
+                isDictionary,
+                isEndingsBase,
+                isEndings,
+                isEndingsProper,
+                isPrefixes,
+                isTagFrequency
+        );
 
         iceLex = new IceTaggerLexicons(
-                    isDictionaryBase,
-                    isDictionary,
-                    isEndingsBase,
-                    isEndings,
-                    isEndingsProper,
                     isVerbPrep,
                     isVerbObj,
                     isVerbAdverb,
-                    isIdioms,
-                    isPrefixes,
-                    isTagFrequency);
+                    isIdioms
+                    );
     }
 
 	@After

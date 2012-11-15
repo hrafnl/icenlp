@@ -23,6 +23,7 @@ package is.iclt.icenlp.runner;
 
 import is.iclt.icenlp.core.icemorphy.IceMorphy;
 import is.iclt.icenlp.core.icemorphy.IceMorphyLexicons;
+import is.iclt.icenlp.core.icemorphy.IceMorphyResources;
 import is.iclt.icenlp.core.tokenizer.*;
 import is.iclt.icenlp.core.utils.Idioms;
 import is.iclt.icenlp.core.utils.FileEncoding;
@@ -452,18 +453,18 @@ private void getTriTaggerLexicons() throws IOException
         InputStream isDictionaryBase, isDictionary, isEndingsBase, isEndings, isEndingsProper,
                     isPrefixes; //, isTagFrequency;
 
-        IceTaggerResources iceResources = new IceTaggerResources();
+        IceMorphyResources iceMorphyResources = new IceMorphyResources();
 
-        isDictionaryBase = (morphoDictBasePath == null ? iceResources.isDictionaryBase : new BufferedInputStream(new FileInputStream( morphoDictBasePath )));
-        isDictionary = (morphoDictPath == null ? iceResources.isDictionary : new BufferedInputStream(new FileInputStream( morphoDictPath )));
-        isEndingsBase = (endingsBaseDictPath == null ? iceResources.isEndingsBase : new BufferedInputStream(new FileInputStream( endingsBaseDictPath )));
-        isEndings = (endingsDictPath == null ? iceResources.isEndings : new BufferedInputStream(new FileInputStream( endingsDictPath )));
-        isEndingsProper = (endingsProperDictPath == null ? iceResources.isEndingsProper : new BufferedInputStream(new FileInputStream( endingsProperDictPath )));
-        isPrefixes = (prefixesDictPath == null ? iceResources.isPrefixes : new BufferedInputStream(new FileInputStream( prefixesDictPath )));
+        isDictionaryBase = (morphoDictBasePath == null ? iceMorphyResources.isDictionaryBase : new BufferedInputStream(new FileInputStream( morphoDictBasePath )));
+        isDictionary = (morphoDictPath == null ? iceMorphyResources.isDictionary : new BufferedInputStream(new FileInputStream( morphoDictPath )));
+        isEndingsBase = (endingsBaseDictPath == null ? iceMorphyResources.isEndingsBase : new BufferedInputStream(new FileInputStream( endingsBaseDictPath )));
+        isEndings = (endingsDictPath == null ? iceMorphyResources.isEndings : new BufferedInputStream(new FileInputStream( endingsDictPath )));
+        isEndingsProper = (endingsProperDictPath == null ? iceMorphyResources.isEndingsProper : new BufferedInputStream(new FileInputStream( endingsProperDictPath )));
+        isPrefixes = (prefixesDictPath == null ? iceMorphyResources.isPrefixes : new BufferedInputStream(new FileInputStream( prefixesDictPath )));
 
         morphLex = new IceMorphyLexicons(
-                    isDictionary,
                     isDictionaryBase,
+                    isDictionary,
                     isEndingsBase,
                     isEndings,
                     isEndingsProper,
@@ -513,8 +514,8 @@ private void createAllObjects(int sentenceStart) throws IOException
         getIceMorphyLexicons();
         //IceMorphyLexicons morphLex = new IceMorphyLexicons(morphoDictPath, morphoDictBasePath, endingsBaseDictPath, endingsDictPath, endingsProperDictPath, prefixesDictPath, null);
 
-        myMorpho =  new IceMorphy(morphLex.dict, morphLex.baseDict,
-                    morphLex.endingsBase, morphLex.endings, morphLex.endingsProper,
+        myMorpho =  new IceMorphy(morphLex.baseDict, morphLex.dict,
+                morphLex.endingsBase, morphLex.endings, morphLex.endingsProper,
                     morphLex.prefixes, null, null); // Morphological analyzer
     }
     if (!standardInputOutput) {

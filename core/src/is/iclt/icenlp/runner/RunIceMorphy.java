@@ -21,6 +21,7 @@
  */
 package is.iclt.icenlp.runner;
 
+import is.iclt.icenlp.core.icemorphy.IceMorphyResources;
 import is.iclt.icenlp.core.tokenizer.IceTokenTags;
 import is.iclt.icenlp.core.tokenizer.Tokenizer;
 import is.iclt.icenlp.core.tokenizer.TokenizerResources;
@@ -312,19 +313,19 @@ public class RunIceMorphy {
         InputStream isDictionaryBase, isDictionary, isEndingsBase, isEndings, isEndingsProper,
                     isPrefixes, isTagFrequency;
 
-        IceTaggerResources iceResources = new IceTaggerResources();
+        IceMorphyResources morphyResources = new IceMorphyResources();
 
-        isDictionaryBase = (dictionaryBase == null ? iceResources.isDictionaryBase : new BufferedInputStream(new FileInputStream( dictionaryBase )));
-        isDictionary = (dictionary == null ? iceResources.isDictionary : new BufferedInputStream(new FileInputStream( dictionary )));
-        isEndingsBase = (endingsBaseDictPath == null ? iceResources.isEndingsBase : new BufferedInputStream(new FileInputStream( endingsBaseDictPath )));
-        isEndings = (endingsDictPath == null ? iceResources.isEndings : new BufferedInputStream(new FileInputStream( endingsDictPath )));
-        isEndingsProper = (endingsProperDictPath == null ? iceResources.isEndingsProper : new BufferedInputStream(new FileInputStream( endingsProperDictPath )));
-        isPrefixes = (prefixesDictPath == null ? iceResources.isPrefixes : new BufferedInputStream(new FileInputStream( prefixesDictPath )));
-        isTagFrequency = (tagFrequencyFile == null ? iceResources.isTagFrequency : new BufferedInputStream(new FileInputStream( tagFrequencyFile )));
+        isDictionaryBase = (dictionaryBase == null ? morphyResources.isDictionaryBase : new BufferedInputStream(new FileInputStream( dictionaryBase )));
+        isDictionary = (dictionary == null ? morphyResources.isDictionary : new BufferedInputStream(new FileInputStream( dictionary )));
+        isEndingsBase = (endingsBaseDictPath == null ? morphyResources.isEndingsBase : new BufferedInputStream(new FileInputStream( endingsBaseDictPath )));
+        isEndings = (endingsDictPath == null ? morphyResources.isEndings : new BufferedInputStream(new FileInputStream( endingsDictPath )));
+        isEndingsProper = (endingsProperDictPath == null ? morphyResources.isEndingsProper : new BufferedInputStream(new FileInputStream( endingsProperDictPath )));
+        isPrefixes = (prefixesDictPath == null ? morphyResources.isPrefixes : new BufferedInputStream(new FileInputStream( prefixesDictPath )));
+        isTagFrequency = (tagFrequencyFile == null ? morphyResources.isTagFrequency : new BufferedInputStream(new FileInputStream( tagFrequencyFile )));
 
         morphLex = new IceMorphyLexicons(
-                    isDictionary,
                     isDictionaryBase,
+                    isDictionary,
                     isEndingsBase,
                     isEndings,
                     isEndingsProper,
@@ -341,8 +342,8 @@ public class RunIceMorphy {
         tokLex = new Lexicon(tokenDictIStream);
 
         getIceMorphyLexicons();
-        IceMorphy morpho =  new IceMorphy(morphLex.dict, morphLex.baseDict,
-                        morphLex.endingsBase, morphLex.endings, morphLex.endingsProper,
+        IceMorphy morpho =  new IceMorphy(morphLex.baseDict, morphLex.dict,
+                morphLex.endingsBase, morphLex.endings, morphLex.endingsProper,
                         morphLex.prefixes, morphLex.tagFrequency, log); // Morphological analyzer
 
         if (analyze) {

@@ -52,8 +52,8 @@ public class IceMorphy {
 	private static final int maxPersonNameLength = 10; // Maximum length of person names
 	private static final char[] vowels = { 'a', 'A', 'á', 'Á', 'e', 'E', 'é', 'É', 'i', 'I', 'í', 'Í',
 	                                       'o', 'O', 'ó', 'Ó', 'u', 'U', 'ú', 'Ú', 'y', 'Y', 'ý', 'Ý', 'æ', 'Æ', 'ö', 'Ö' };
-    public IceMorphy( Lexicon bigLexicon,
-                      Lexicon baseLexicon,
+    public IceMorphy( Lexicon baseLexicon,
+                      Lexicon bigLexicon,
                       Trie endingsBase,
                       Trie endingsDict,
                       Trie endingsProper,
@@ -2220,6 +2220,15 @@ public class IceMorphy {
 		return (found || verbFound);
 	}
 
+    // Interface for "outside" applications
+    public IceTokenTags morphoAnalysisLexeme(String lexeme)
+    {
+       IceTokenTags myToken = new IceTokenTags();
+       myToken.lexeme = lexeme;
+       morphoAnalysisToken(myToken, null);
+       return myToken;
+
+    }
   /*
  * Tries to assigns the appropriate tag to tokens with null tag based on the word suffix
  */

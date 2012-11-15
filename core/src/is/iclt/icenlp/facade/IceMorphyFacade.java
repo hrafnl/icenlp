@@ -38,27 +38,27 @@ public class IceMorphyFacade {
     private IceMorphy morphoAnalyzer;
     private boolean strictTokenization=true;
 
-    public IceMorphyFacade(IceMorphyLexicons iceLexicons, Lexicon tokenizerLexicon,  int lineFormat) throws IOException
+    public IceMorphyFacade(IceMorphyLexicons morphyLexicons, Lexicon tokenizerLexicon,  int lineFormat) throws IOException
         {
             segmentizer = new Segmentizer(tokenizerLexicon, lineFormat);
             this.tokenizer = new Tokenizer( Tokenizer.typeIceTokenTags,
                                             strictTokenization,
                                             tokenizerLexicon);
             //this.tokenizer.findMultiWords( false );
-            initIceMorphy(iceLexicons);
+            initIceMorphy(morphyLexicons);
 
         }
 
-     private void initIceMorphy(IceMorphyLexicons iceLexicons) {
+     private void initIceMorphy(IceMorphyLexicons morphyLexicons) {
 
         morphoAnalyzer = new IceMorphy(
-                iceLexicons.dict,
-                iceLexicons.baseDict,
-                iceLexicons.endingsBase,
-                iceLexicons.endings,
-                iceLexicons.endingsProper,
-                iceLexicons.prefixes,
-                iceLexicons.tagFrequency, null );
+                morphyLexicons.baseDict,
+                morphyLexicons.dict,
+                morphyLexicons.endingsBase,
+                morphyLexicons.endings,
+                morphyLexicons.endingsProper,
+                morphyLexicons.prefixes,
+                morphyLexicons.tagFrequency, null );
      }
 
     public Sentences analyze( String text ) throws IOException

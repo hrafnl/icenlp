@@ -22,6 +22,7 @@
 package is.iclt.icenlp.core.icetagger;
 
 import is.iclt.icenlp.core.icemorphy.IceMorphyLexicons;
+import is.iclt.icenlp.core.icemorphy.IceMorphyResources;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -34,17 +35,9 @@ import java.io.IOException;
  */
 public class IceTaggerResources {
    final String dictPathTagger = "/dict/icetagger/";
-   public InputStream isDictionaryBase,isDictionary, isEndingsBase, isEndings, isEndingsProper, isPrefixes, isTagFrequency, isIdioms,
-                        isVerbPrep,isVerbObj, isVerbAdverb, isTokenDict;
+   public InputStream isIdioms, isVerbPrep,isVerbObj, isVerbAdverb;
 
-   public IceTaggerResources() {
-            isDictionaryBase = getClass().getResourceAsStream( dictPathTagger + IceMorphyLexicons.dictionaryBase );
-            isDictionary = getClass().getResourceAsStream( dictPathTagger + IceMorphyLexicons.dictionary );
-            isEndingsBase = getClass().getResourceAsStream( dictPathTagger + IceMorphyLexicons.endingsBaseDictionary );
-            isEndings = getClass().getResourceAsStream( dictPathTagger + IceMorphyLexicons.endingsDictionary );
-            isEndingsProper = getClass().getResourceAsStream( dictPathTagger + IceMorphyLexicons.endingsProperDictionary );
-            isPrefixes = getClass().getResourceAsStream( dictPathTagger + IceMorphyLexicons.prefixesDictionary );
-            isTagFrequency = getClass().getResourceAsStream( dictPathTagger + IceMorphyLexicons.tagFrequencyFile );
+    public IceTaggerResources() {
             isIdioms = getClass().getResourceAsStream( dictPathTagger + IceTaggerLexicons.idiomsDictionary );
             isVerbPrep = getClass().getResourceAsStream( dictPathTagger + IceTaggerLexicons.verbPrepDictionary );
             isVerbObj = getClass().getResourceAsStream( dictPathTagger + IceTaggerLexicons.verbObjDictionary );

@@ -23,6 +23,8 @@ package is.iclt.icenlp.facade;
 
 import is.iclt.icenlp.core.formald.tags.TagFormat;
 import is.iclt.icenlp.core.formald.tags.TaggedText;
+import is.iclt.icenlp.core.icemorphy.IceMorphyLexicons;
+import is.iclt.icenlp.core.icemorphy.IceMorphyResources;
 import is.iclt.icenlp.core.icetagger.IceTaggerLexicons;
 import is.iclt.icenlp.core.icetagger.IceTaggerResources;
 import is.iclt.icenlp.core.lemmald.Lemmald;
@@ -55,23 +57,27 @@ public class IceNLP {
 
         Lexicon tokLexicon;
         IceTaggerLexicons iceLexicons;
+        IceMorphyLexicons morphyLexicons;
 
         try {
             if (debug) {
                 iceLexicons = new IceTaggerLexicons("../../dict/icetagger/");
+                morphyLexicons = new IceMorphyLexicons("../../dict/icetagger/");
                 tokLexicon = new Lexicon("../../dict/tokenizer/lexicon.txt");
             }
             else {
                 // Load resources
                 IceTaggerResources iceResources = new IceTaggerResources();
+                IceMorphyResources morphyResources = new IceMorphyResources();
                 TokenizerResources tokResources = new TokenizerResources();
                 iceLexicons = new IceTaggerLexicons(iceResources);
+                morphyLexicons = new IceMorphyLexicons(morphyResources);
                 tokLexicon = new Lexicon(tokResources.isLexicon);
             }
             // Initialize  (one sentence per line)
             tokenizer = new TokenizerFacade(tokLexicon, Segmentizer.sentencePerLine);
-            analyzer = new IceMorphyFacade(iceLexicons.morphyLexicons, tokLexicon, Segmentizer.sentencePerLine);
-            tagger = new IceTaggerFacade(iceLexicons, tokLexicon, Segmentizer.sentencePerLine);
+            analyzer = new IceMorphyFacade(morphyLexicons, tokLexicon, Segmentizer.sentencePerLine);
+            tagger = new IceTaggerFacade(iceLexicons, morphyLexicons, tokLexicon, Segmentizer.sentencePerLine);
         } catch ( IOException ex ){
             System.out.println("Could not load IceNLP!");
             ex.printStackTrace();

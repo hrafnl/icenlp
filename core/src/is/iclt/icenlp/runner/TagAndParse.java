@@ -21,6 +21,7 @@
  */
 package is.iclt.icenlp.runner;
 
+import is.iclt.icenlp.core.icemorphy.IceMorphyLexicons;
 import is.iclt.icenlp.facade.IceTaggerFacade;
 import is.iclt.icenlp.facade.TriTaggerFacade;
 import is.iclt.icenlp.facade.IceParserFacade;
@@ -82,8 +83,9 @@ public class TagAndParse implements ActionListener {
         Lexicon tokLexicon = new Lexicon("../../dict/tokenizer/lexicon.txt");
 
         IceTaggerLexicons iceLexicons = new IceTaggerLexicons("../../dict/icetagger/");
+        IceMorphyLexicons morphyLexicons = new IceMorphyLexicons("../../dict/icetagger/");
 
-        tagger = new IceTaggerFacade(iceLexicons, tokLexicon);
+        tagger = new IceTaggerFacade(iceLexicons, morphyLexicons, tokLexicon);
 
         // Create an instance of TriTagger
         System.out.println("Loading TriTagger ...");

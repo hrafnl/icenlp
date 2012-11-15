@@ -67,8 +67,8 @@ public class IceMorphyLexicons {
            tagFrequency = new IceFrequency(this.dictPathTagger + tagFrequencyFile);
     }
 
-     public IceMorphyLexicons(String dictWithFilePath,
-                              String dictBaseWithFilePath,
+     public IceMorphyLexicons(String dictBaseWithFilePath,
+                              String dictWithFilePath,
                               String endingsBaseFileWithPath,
                               String endingsWithFilePath,
                               String endingsProperFileWithPath,
@@ -76,10 +76,10 @@ public class IceMorphyLexicons {
                               String frequencyFileWithPath
                               ) throws IOException
     {
-           if (dictWithFilePath != null)
-                dict = new Lexicon(dictWithFilePath);
            if (dictBaseWithFilePath != null)
                 baseDict = new Lexicon(dictBaseWithFilePath);
+           if (dictWithFilePath != null)
+                dict = new Lexicon(dictWithFilePath);
            if (endingsBaseFileWithPath != null)
                 endingsBase = new Trie(endingsBaseFileWithPath, true);
            if (endingsWithFilePath != null)
@@ -92,8 +92,8 @@ public class IceMorphyLexicons {
                 tagFrequency = new IceFrequency(frequencyFileWithPath);
     }
 
-    public IceMorphyLexicons(   InputStream dictionary_in,
-                                InputStream dictionaryBase_in,
+    public IceMorphyLexicons(   InputStream dictionaryBase_in,
+                                InputStream dictionary_in,
                                 InputStream endingsBase_in,
                                 InputStream endings_in,
                                 InputStream endingsProp_in,
@@ -102,8 +102,8 @@ public class IceMorphyLexicons {
                                 )
                 throws IOException, NullPointerException  {
 
-            dict = new Lexicon( dictionary_in );
             baseDict = new Lexicon( dictionaryBase_in );
+            dict = new Lexicon( dictionary_in );
             endingsBase = new Trie( endingsBase_in, true);
             endings = new Trie( endings_in, true);
             endingsProper = new Trie( endingsProp_in, true);
@@ -111,4 +111,16 @@ public class IceMorphyLexicons {
             if (tagFrec_in != null)
                 tagFrequency = new IceFrequency( tagFrec_in );
        }
+
+
+     public IceMorphyLexicons(IceMorphyResources morphyResources) throws IOException {
+         this(   morphyResources.isDictionaryBase,
+                 morphyResources.isDictionary,
+                 morphyResources.isEndingsBase,
+                 morphyResources.isEndings,
+                 morphyResources.isEndingsProper,
+                 morphyResources.isPrefixes,
+                 morphyResources.isTagFrequency
+         );
+     }
 }

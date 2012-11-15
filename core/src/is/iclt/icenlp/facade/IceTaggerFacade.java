@@ -26,6 +26,8 @@ import is.iclt.icenlp.core.apertium.ApertiumSegmentizer;
 import is.iclt.icenlp.core.apertium.IceNLPTokenConverter;
 import is.iclt.icenlp.core.apertium.LtProcParser;
 import is.iclt.icenlp.core.icemorphy.IceMorphy;
+import is.iclt.icenlp.core.icemorphy.IceMorphyLexicons;
+import is.iclt.icenlp.core.icemorphy.IceMorphyResources;
 import is.iclt.icenlp.core.icetagger.IceTagger;
 import is.iclt.icenlp.core.icetagger.IceTaggerLexicons;
 import is.iclt.icenlp.core.icetagger.IceTaggerResources;
@@ -61,8 +63,9 @@ public class IceTaggerFacade
     private Segmentizer segmentizer;
     private Lexicon mapper;
     private IceTaggerLexicons iceLexicons;
+    private IceMorphyLexicons morphyLexicons;
 
-    public IceTaggerFacade(IceTaggerLexicons iceLexicons, Lexicon tokenizerLexicon) throws IOException
+    public IceTaggerFacade(IceTaggerLexicons iceLexicons, IceMorphyLexicons morphyLexicons, Lexicon tokenizerLexicon) throws IOException
     {
         segmentizer = new Segmentizer(tokenizerLexicon);
         this.tokenizer = new Tokenizer( Tokenizer.typeIceTokenTags,
@@ -70,47 +73,48 @@ public class IceTaggerFacade
                                         tokenizerLexicon);
         //this.tokenizer.findMultiWords( false );
 
-        initIceTagger(iceLexicons);
+        initIceTagger(iceLexicons, morphyLexicons);
         this.iceLexicons = iceLexicons;
+        this.morphyLexicons = morphyLexicons;
     }
     
-    public IceTaggerFacade(IceTaggerLexicons iceLexicons, Lexicon tokenizerLexicon, String morphyLexiconsDictFileWithLocation) throws IOException
+    /*public IceTaggerFacade(IceTaggerLexicons iceLexicons, Lexicon tokenizerLexicon, String morphyLexiconsDictFileWithLocation) throws IOException
     {
     	segmentizer = new Segmentizer(tokenizerLexicon);
         this.tokenizer = new Tokenizer( Tokenizer.typeIceTokenTags, strictTokenization, tokenizerLexicon);
         //this.tokenizer.findMultiWords( false );
         iceLexicons.morphyLexicons.dict = new Lexicon(morphyLexiconsDictFileWithLocation);
         initIceTagger(iceLexicons);
-    }
+    } */
     
  
-    public IceTaggerFacade(IceTaggerLexicons iceLexicons, Lexicon tokenizerLexicon, IceTagger.HmmModelType mType) throws IOException
+    public IceTaggerFacade(IceTaggerLexicons iceLexicons, IceMorphyLexicons morphyLexicons, Lexicon tokenizerLexicon, IceTagger.HmmModelType mType) throws IOException
     {
-        this(iceLexicons, tokenizerLexicon);
+        this(iceLexicons, morphyLexicons, tokenizerLexicon);
         initHMM(mType);
     }
 
-    public IceTaggerFacade(IceTaggerLexicons iceLexicons, Lexicon tokenizerLexicon,  int lineFormat) throws IOException
+    public IceTaggerFacade(IceTaggerLexicons iceLexicons, IceMorphyLexicons morphyLexicons, Lexicon tokenizerLexicon,  int lineFormat) throws IOException
     {
         segmentizer = new Segmentizer(tokenizerLexicon, lineFormat);
         this.tokenizer = new Tokenizer( Tokenizer.typeIceTokenTags,
                                         strictTokenization,
                                         tokenizerLexicon);
         //this.tokenizer.findMultiWords( false );
-        initIceTagger(iceLexicons);
+        initIceTagger(iceLexicons, morphyLexicons);
 
     }
 
     public IceTaggerFacade(IceTagger.HmmModelType mType) throws IOException
     {
         //this(iceLexicons, tokLexicon);
-        this(new IceTaggerLexicons(new IceTaggerResources()), new Lexicon(new TokenizerResources().isLexicon));
+        this(new IceTaggerLexicons(new IceTaggerResources()), new IceMorphyLexicons(new IceMorphyResources()), new Lexicon(new TokenizerResources().isLexicon));
         initHMM(mType);
     }
 
-    public IceTaggerFacade(IceTaggerLexicons iceLexicons, Lexicon tokenizerLexicon, Lexicon mapperLexicon, boolean preLoadlemmald) throws IOException
+    public IceTaggerFacade(IceTaggerLexicons iceLexicons, IceMorphyLexicons morphyLexicons, Lexicon tokenizerLexicon, Lexicon mapperLexicon, boolean preLoadlemmald) throws IOException
     {
-        this(iceLexicons,tokenizerLexicon);
+        this(iceLexicons, morphyLexicons,tokenizerLexicon);
         this.mapper = mapperLexicon;
         if(preLoadlemmald)
             Lemmald.getInstance();
@@ -138,19 +142,19 @@ public class IceTaggerFacade
         }
     }
 
-    private void initIceTagger(IceTaggerLexicons iceLexicons) {
+    private void initIceTagger(IceTaggerLexicons iceLexicons, IceMorphyLexicons morphyLexicons) {
 
         IceMorphy morphoAnalyzer = new IceMorphy(
-                iceLexicons.morphyLexicons.dict,
-                iceLexicons.morphyLexicons.baseDict,
-                iceLexicons.morphyLexicons.endingsBase,
-                iceLexicons.morphyLexicons.endings,
-                iceLexicons.morphyLexicons.endingsProper,
-                iceLexicons.morphyLexicons.prefixes,
-                iceLexicons.morphyLexicons.tagFrequency, null );
+                morphyLexicons.baseDict,
+                morphyLexicons.dict,
+                morphyLexicons.endingsBase,
+                morphyLexicons.endings,
+                morphyLexicons.endingsProper,
+                morphyLexicons.prefixes,
+                morphyLexicons.tagFrequency, null );
         tagger = new IceTagger(sentenceStart, null, morphoAnalyzer,
-                iceLexicons.morphyLexicons.baseDict,
-                iceLexicons.morphyLexicons.dict,
+                morphyLexicons.baseDict,
+                morphyLexicons.dict,
                 iceLexicons.idioms,
                 iceLexicons.verbPrep,
                 iceLexicons.verbObj,
@@ -260,7 +264,8 @@ public class IceTaggerFacade
 			entries = lps.parse();
 
 			// Create the appertium -> iceNLP converter
-			converter = new IceNLPTokenConverter(entries, mappingLexicon, iceLexicons);
+			//converter = new IceNLPTokenConverter(entries, mappingLexicon, iceLexicons);
+            converter = new IceNLPTokenConverter(entries, mappingLexicon, morphyLexicons);
 			tokens = converter.convert();
 
 			// Do the actual tagging

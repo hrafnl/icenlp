@@ -39,8 +39,6 @@ public class IceTaggerLexicons {
     public static String verbPrepDictionary = "otb.verbPrep.dict";
     public static String verbObjDictionary = "otb.verbObj.dict";
     public static String verbAdverbDictionary = "otb.verbAdverb.dict";
-    // IceMorphy variables
-    public IceMorphyLexicons morphyLexicons;
     public Lexicon verbPrep, verbObj, verbAdverb;
     public Idioms idioms;
 
@@ -49,65 +47,32 @@ public class IceTaggerLexicons {
            if( taggerDictPath != null && !taggerDictPath.equals( "" ) )
                this.dictPathTagger = taggerDictPath;
 
-           morphyLexicons = new IceMorphyLexicons(this.dictPathTagger);
-
            verbPrep = new Lexicon(this.dictPathTagger + verbPrepDictionary);
            verbObj =  new Lexicon(this.dictPathTagger + verbObjDictionary);
            verbAdverb =  new Lexicon(this.dictPathTagger + verbAdverbDictionary);
            idioms = new Idioms(this.dictPathTagger + idiomsDictionary);
     }
 
-    
-     public IceTaggerLexicons(String dictBaseFileWithPath,
-                              String dictFileWithPath,
-                              String endingsBaseFileWithPath,
-                              String endingsWithFilePath,
-                              String endingsProperFileWithPath,
-                              String verbPrepWithFilePath,
-                              String verbObjectWithFilePath,
-                              String verbAdverbWithFilePath,
-                              String idiomsFileWithPath,
-                              String prefixesFileWithPath,
-                              String frequencyFileWithPath
-                              ) throws IOException
+    public IceTaggerLexicons(String verbPrepWithFilePath,
+                             String verbObjectWithFilePath,
+                             String verbAdverbWithFilePath,
+                             String idiomsFileWithPath
+    ) throws IOException
     {
-           morphyLexicons = new IceMorphyLexicons(
-                              dictFileWithPath,
-                              dictBaseFileWithPath,
-                              endingsBaseFileWithPath,
-                              endingsWithFilePath,
-                              endingsProperFileWithPath,
-                              prefixesFileWithPath,
-                              frequencyFileWithPath);
            verbPrep = new Lexicon(verbPrepWithFilePath);
            verbObj =  new Lexicon(verbObjectWithFilePath);
            verbAdverb =  new Lexicon(verbAdverbWithFilePath);
            idioms = new Idioms(idiomsFileWithPath);
     }
 
-    public IceTaggerLexicons(   InputStream dictionaryBase_in,
-                                InputStream dictionary_in,
-                                InputStream endingsBase_in,
-                                InputStream endings_in,
-                                InputStream endingsProp_in,
+    public IceTaggerLexicons(
                                 InputStream verbPrep_in,
                                 InputStream verbObj_in,
                                 InputStream verbAdverb_in,
-                                InputStream idomsDict_in,
-                                InputStream prefixDict_in,
-                                InputStream tagFrec_in
+                                InputStream idomsDict_in
                                 )
                 throws IOException, NullPointerException  {
 
-            morphyLexicons = new IceMorphyLexicons(
-                                    dictionary_in,
-                                    dictionaryBase_in,
-                                    endingsBase_in,
-                                    endings_in,
-                                    endingsProp_in,
-                                    prefixDict_in,
-                                    tagFrec_in
-                                );
             verbPrep = new Lexicon( verbPrep_in );
             verbObj = new Lexicon( verbObj_in );
             verbAdverb = new Lexicon( verbAdverb_in );
@@ -115,17 +80,10 @@ public class IceTaggerLexicons {
        }
 
     public IceTaggerLexicons(IceTaggerResources iceResources) throws IOException {
-        this(iceResources.isDictionaryBase,
-             iceResources.isDictionary,
-             iceResources.isEndingsBase,
-             iceResources.isEndings,
-             iceResources.isEndingsProper,
-             iceResources.isVerbPrep,
-             iceResources.isVerbObj,
-             iceResources.isVerbAdverb,
-             iceResources.isIdioms,
-             iceResources.isPrefixes,
-             iceResources.isTagFrequency
-                );
+        this(   iceResources.isVerbPrep,
+                iceResources.isVerbObj,
+                iceResources.isVerbAdverb,
+                iceResources.isIdioms
+        );
     }
 }

@@ -21,6 +21,8 @@
  */
 package is.iclt.icenlp.runner;
 
+import is.iclt.icenlp.core.icemorphy.IceMorphyLexicons;
+import is.iclt.icenlp.core.icemorphy.IceMorphyResources;
 import is.iclt.icenlp.core.icetagger.IceTagger;
 import is.iclt.icenlp.core.icetagger.IceTaggerOutput;
 import is.iclt.icenlp.core.icetagger.IceTaggerLexicons;
@@ -85,6 +87,7 @@ public class RunIceTagger
     private SimpleDateFormat dateFormatter;
     protected IceTaggerOutput iceOutput = null;
     protected IceTaggerLexicons iceLex=null;
+    protected IceMorphyLexicons morphyLex=null;
     private TriTaggerLexicons triLex=null;
     private boolean sameTagForAllNumbers = true;
     private boolean namedEntityRecognition = false;
@@ -630,32 +633,39 @@ public class RunIceTagger
         InputStream isDictionaryBase, isDictionary, isEndingsBase, isEndings, isEndingsProper,
                     isVerbPrep, isVerbObj, isVerbAdverb, isIdioms, isPrefixes, isTagFrequency;
 
-        IceTaggerResources iceResources = new IceTaggerResources();
+        IceMorphyResources iceMorphyResources = new IceMorphyResources();
+        IceTaggerResources iceTaggerResources = new IceTaggerResources();
 
-        isDictionaryBase = (baseDictPath == null ? iceResources.isDictionaryBase : new BufferedInputStream(new FileInputStream( baseDictPath )));
-        isDictionary = (dictPath == null ? iceResources.isDictionary : new BufferedInputStream(new FileInputStream( dictPath )));
-        isEndingsBase = (endingsBasePath == null ? iceResources.isEndingsBase : new BufferedInputStream(new FileInputStream( endingsBasePath )));
-        isEndings = (endingsDictPath == null ? iceResources.isEndings : new BufferedInputStream(new FileInputStream( endingsDictPath )));
-        isEndingsProper = (endingsProperDictPath == null ? iceResources.isEndingsProper : new BufferedInputStream(new FileInputStream( endingsProperDictPath )));
-        isVerbPrep = (verbPrepDictPath == null ? iceResources.isVerbPrep : new BufferedInputStream(new FileInputStream( verbPrepDictPath )));
-        isVerbObj = (verbObjDictPath == null ? iceResources.isVerbObj : new BufferedInputStream(new FileInputStream( verbObjDictPath )));
-        isVerbAdverb = (verbAdverbDictPath == null ? iceResources.isVerbAdverb : new BufferedInputStream(new FileInputStream( verbAdverbDictPath )));
-        isIdioms = (idiomsDictPath == null ? iceResources.isIdioms : new BufferedInputStream(new FileInputStream( idiomsDictPath )));
-        isPrefixes = (prefixesDictPath == null ? iceResources.isPrefixes : new BufferedInputStream(new FileInputStream( prefixesDictPath )));
-        isTagFrequency = (tagFrequencyFile == null ? iceResources.isTagFrequency : new BufferedInputStream(new FileInputStream( tagFrequencyFile )));
+        isDictionaryBase = (baseDictPath == null ? iceMorphyResources.isDictionaryBase : new BufferedInputStream(new FileInputStream( baseDictPath )));
+        isDictionary = (dictPath == null ? iceMorphyResources.isDictionary : new BufferedInputStream(new FileInputStream( dictPath )));
+        isEndingsBase = (endingsBasePath == null ? iceMorphyResources.isEndingsBase : new BufferedInputStream(new FileInputStream( endingsBasePath )));
+        isEndings = (endingsDictPath == null ? iceMorphyResources.isEndings : new BufferedInputStream(new FileInputStream( endingsDictPath )));
+        isEndingsProper = (endingsProperDictPath == null ? iceMorphyResources.isEndingsProper : new BufferedInputStream(new FileInputStream( endingsProperDictPath )));
+        isPrefixes = (prefixesDictPath == null ? iceMorphyResources.isPrefixes : new BufferedInputStream(new FileInputStream( prefixesDictPath )));
+        isTagFrequency = (tagFrequencyFile == null ? iceMorphyResources.isTagFrequency : new BufferedInputStream(new FileInputStream( tagFrequencyFile )));
+
+
+        isVerbPrep = (verbPrepDictPath == null ? iceTaggerResources.isVerbPrep : new BufferedInputStream(new FileInputStream( verbPrepDictPath )));
+        isVerbObj = (verbObjDictPath == null ? iceTaggerResources.isVerbObj : new BufferedInputStream(new FileInputStream( verbObjDictPath )));
+        isVerbAdverb = (verbAdverbDictPath == null ? iceTaggerResources.isVerbAdverb : new BufferedInputStream(new FileInputStream( verbAdverbDictPath )));
+        isIdioms = (idiomsDictPath == null ? iceTaggerResources.isIdioms : new BufferedInputStream(new FileInputStream( idiomsDictPath )));
+
+        morphyLex = new IceMorphyLexicons(
+                isDictionaryBase,
+                isDictionary,
+                isEndingsBase,
+                isEndings,
+                isEndingsProper,
+                isPrefixes,
+                isTagFrequency
+        );
 
         iceLex = new IceTaggerLexicons(
-                    isDictionaryBase,
-                    isDictionary,
-                    isEndingsBase,
-                    isEndings,
-                    isEndingsProper,
-                    isVerbPrep,
-                    isVerbObj,
-                    isVerbAdverb,
-                    isIdioms,
-                    isPrefixes,
-                    isTagFrequency);
+                isVerbPrep,
+                isVerbObj,
+                isVerbAdverb,
+                isIdioms
+                );
     }
 
     private void getTriTaggerLexicons() throws IOException
@@ -713,18 +723,18 @@ public class RunIceTagger
         }
 
         IceMorphy morphoAnalyzer = new IceMorphy(
-                iceLex.morphyLexicons.dict,
-                iceLex.morphyLexicons.baseDict,
-                iceLex.morphyLexicons.endingsBase,
-                iceLex.morphyLexicons.endings,
-                iceLex.morphyLexicons.endingsProper,
-                iceLex.morphyLexicons.prefixes,
-                iceLex.morphyLexicons.tagFrequency,
+                morphyLex.baseDict,
+                morphyLex.dict,
+                morphyLex.endingsBase,
+                morphyLex.endings,
+                morphyLex.endingsProper,
+                morphyLex.prefixes,
+                morphyLex.tagFrequency,
                 logger);
 
        tagger = new IceTagger(sentenceStart, logger, morphoAnalyzer,
-               iceLex.morphyLexicons.baseDict,
-               iceLex.morphyLexicons.dict,
+               morphyLex.baseDict,
+               morphyLex.dict,
                iceLex.idioms,
                iceLex.verbPrep,
                iceLex.verbObj,
