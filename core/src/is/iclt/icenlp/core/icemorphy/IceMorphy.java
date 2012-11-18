@@ -2220,14 +2220,62 @@ public class IceMorphy {
 		return (found || verbFound);
 	}
 
-    // Interface for "outside" applications
-    public IceTokenTags morphoAnalysisLexeme(String lexeme)
+    // Interface for outside applications.  Made for Stagger, November 2012.
+    public ArrayList<IceTag> morphoAnalysisLexeme(String lexeme, boolean firstWord, boolean sentenceStartUpperCase, boolean cleanTags)
     {
-       IceTokenTags myToken = new IceTokenTags();
-       myToken.lexeme = lexeme;
-       morphoAnalysisToken(myToken, null);
-       return myToken;
+        IceTokenTags myToken;
+        ArrayList tags;
 
+       myToken = new IceTokenTags();
+       myToken.lexeme = lexeme;
+
+        // If we have the first token of the sentence, then it may or may not be a proper noun.  We might want to get the tags assuming both!
+       if (firstWord && Character.isUpperCase(lexeme.charAt(0))) {
+
+           if (!sentenceStartUpperCase) // Then first word which has upper case letter is guaranteed to be proper noun
+           {
+               myToken.setUnknownType(IceTokenTags.UnknownType.properNoun);
+               morphoAnalysisToken(myToken, null);
+           }
+           else // try both
+           {
+                myToken.setUnknownType(IceTokenTags.UnknownType.none);
+                morphoAnalysisToken(myToken, null);
+
+                IceTokenTags myToken2 = new IceTokenTags();
+                myToken2.lexeme = lexeme;
+                myToken2.setUnknownType(IceTokenTags.UnknownType.properNoun);
+                morphoAnalysisToken(myToken2, null);
+
+               // Add the upper case tags to the lower case tags
+               if (myToken2 != null) {
+                   tags = myToken2.getTags();
+                   for (int i=0; i<tags.size(); i++)
+                       myToken.addTag((IceTag)tags.get(i));
+               }
+           }
+        }
+
+       else if (!firstWord && Character.isUpperCase(lexeme.charAt(0)))    // Then certainly a proper noun
+       {
+            myToken.setUnknownType(IceTokenTags.UnknownType.properNoun);
+            morphoAnalysisToken(myToken, null);
+       }
+       else  // Not a proper noun
+       {
+           myToken.setUnknownType(IceTokenTags.UnknownType.none);
+           morphoAnalysisToken(myToken, null);
+       }
+
+       // If using the reduced tagset then we need to clean the tags
+       if (cleanTags) {
+            if (myToken.isProperNoun())
+                myToken.cleanProperNounTags();
+            if (myToken.isNumeral())
+                myToken.cleanOrdinalTags();
+       }
+
+       return myToken.getTags();     // Retrieve all tags found;
     }
   /*
  * Tries to assigns the appropriate tag to tokens with null tag based on the word suffix

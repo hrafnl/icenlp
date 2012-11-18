@@ -1170,8 +1170,21 @@ public boolean personNumberMatch(IceTokenTags tok)
         changeReflexivePronounTags();
     }
 
+    public void cleanOrdinalTags()
+    // Changes tags "to" and "tp" to "ta"
+    {
+        ArrayList tags = getTags();
+        for( int j = 0; j < tags.size(); j++ )
+        {
+            IceTag tag = (IceTag)tags.get( j );
+            String tagStr =  tag.getTagStr();
+            if (tagStr.equals(IceTag.tagOrdinal2) || tagStr.equals(IceTag.tagPercentage))
+                tag.setTagStr(IceTag.tagOrdinal);
+        }
+    }
+
     public void cleanProperNounTags()
-    // Removes named entity distinction from proper nouns
+
     {
         ArrayList tags = getTags();
 		for( int j = 0; j < tags.size(); j++ )

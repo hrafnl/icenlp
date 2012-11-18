@@ -130,6 +130,7 @@ public class IceTag extends Tag {
     public static final String tagVerbFirstSingular = "sfg1en";
     public static final String tagVerbFirstSingularSubjunctive = "svg1en";
     public static final String tagVerbFirstSingularPast = "sfg1eþ";
+    public static final String tagVerbMiddleFirstSingularPast = "sfm1eþ";
     public static final String tagVerbSecondSingular = "sfg2en";
     public static final String tagVerbThirdSingular = "sfg3en";
     public static final String tagVerbThirdSingularSubjunctive = "svg3en";
@@ -137,6 +138,7 @@ public class IceTag extends Tag {
     public static final String tagVerbThirdPluralSubjunctive = "svg3fn";
     public static final String tagVerbThirdPluralMiddle = "sfm3fn";
     public static final String tagVerbThirdSingularPast = "sfg3eþ";
+    public static final String tagVerbMiddleThirdSingularPast = "sfm3eþ";
     public static final String tagVerbSubjunctive = "svg**n";
     public static final String tagVerbImperative = "sbg**n";
     public static final String tagVerbMiddle = "sfm**n";
@@ -157,6 +159,9 @@ public class IceTag extends Tag {
     public static final String tagNounNeuterPluralArticle =  "nhfng_nhfog";
     public static final String tagNounMasculinePluralNominative =  "nkfn";
     public static final String tagNounMasculinePluralNominativeArticle =  "nkfng";
+    public static final String tagPronounFirstSingular = "fp1en";
+    public static final String tagPronounMasculineSingular = "fpken";
+    public static final String tagPronounFeminineSingular = "fpven";
     public static final String tagForeign =  "e";
 
     private static final String AnnotationSeparator = "; ";
