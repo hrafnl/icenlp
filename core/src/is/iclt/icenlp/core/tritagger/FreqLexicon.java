@@ -486,6 +486,18 @@ public class FreqLexicon {
         return lookup(theHash, word);
     }
 
+    public Vector<FreqLexEntry> lookupFrequencies(String word, boolean ignoreCase)
+    {
+        String lookupWord;
+
+        if (ignoreCase)
+            lookupWord = word.toLowerCase();
+        else
+            lookupWord = word;
+
+        return (Vector)myWords.get(word);
+    }
+
     public int getNumEntries()
     {
         return myWords.size();

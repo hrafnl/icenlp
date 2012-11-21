@@ -430,7 +430,7 @@ For example, the following command:
 runs the tokeniser on the input file \emph{test.txt} and writes to the output file \emph{test.out}.
 The format of the input file is one sentence per line, and the desired output format is one token per line.
 
-Furthermore, if the -i/-o parameters are not provided, the tokeniser reads from standard input and writes to standard output. In that case, inputFormat=3 and outputFormat=1. For example, the following Linux command can be used to tokenize the string ``Ég á stóran hund. Sá er a.m.k. 10 kíló.'' (and write the output to the screen): 
+Furthermore, if the -i parameter is not provided, the tokeniser reads from standard input and writes to standard output. In that case, inputFormat=3 and outputFormat=1. For example, the following Linux command can be used to tokenize the string ``Ég á stóran hund. Sá er a.m.k. 10 kíló.'' (and write the output to the screen): 
 \begin{verbatim}
  echo "Ég á stóran hund. Sá er a.m.k. 10 kíló." | ./tokenize.sh
 \end{verbatim}

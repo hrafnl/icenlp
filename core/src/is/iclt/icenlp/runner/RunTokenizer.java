@@ -66,7 +66,7 @@ public class RunTokenizer {
        System.out.println("-sa (split abbreviations; optional)");
        System.out.println("-ns (not strict tokenization; optional)");
        System.out.println( "------------------------------------------" );
-       System.out.println( "If the parameters -i/-o are not provided then");
+       System.out.println( "If the parameter -i is not provided then");
        System.out.println( "the tokenizer reads from standard input and writes to standard output");
        System.out.println( "------------------------------------------" );
        System.exit(0);
