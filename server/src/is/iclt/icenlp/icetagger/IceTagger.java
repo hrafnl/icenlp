@@ -3,6 +3,8 @@ package is.iclt.icenlp.icetagger;
 import is.iclt.icenlp.common.configuration.Configuration;
 import is.iclt.icenlp.core.apertium.ApertiumEntry;
 import is.iclt.icenlp.core.apertium.LemmaGuesser;
+import is.iclt.icenlp.core.icemorphy.IceMorphyLexicons;
+import is.iclt.icenlp.core.icemorphy.IceMorphyResources;
 import is.iclt.icenlp.core.icetagger.IceTaggerLexicons;
 import is.iclt.icenlp.core.icetagger.IceTaggerResources;
 import is.iclt.icenlp.core.tokenizer.IceTokenSentences;
@@ -40,7 +42,8 @@ public class IceTagger implements IIceTagger {
 	// instance of the configuration.
 	private Configuration configuration;
 	private IceTaggerLexicons iceLexicons = null;
-	private Lexicon tokLexicon = null;
+    private IceMorphyLexicons morphyLexicons = null;
+    private Lexicon tokLexicon = null;
 	private IceTaggerFacade iceTaggerFacade;
 	private boolean lemmatize = false;
 	private Lemmald lemmald = null;
@@ -55,42 +58,45 @@ public class IceTagger implements IIceTagger {
 			// Loading IceTagger lexicons.
 			if (!this.configuration.containsKey("icelexiconsdir")) 
 			{
-				IceTaggerResources iceResources = new IceTaggerResources();
-				if (iceResources.isDictionaryBase == null)
+                IceMorphyResources iceMorphyResources = new IceMorphyResources();
+				IceTaggerResources iceTaggerResources = new IceTaggerResources();
+
+				if (iceMorphyResources.isDictionaryBase == null)
 					throw new Exception("Could not locate base dictionary");
 				
-				if (iceResources.isDictionary == null)
+				if (iceMorphyResources.isDictionary == null)
 					throw new Exception("Could not locate otb dictionary");
 				
-				if (iceResources.isEndingsBase == null)
+				if (iceMorphyResources.isEndingsBase == null)
 					throw new Exception("Could not locate endings base dictionary");
 				
-				if (iceResources.isEndings == null)
+				if (iceMorphyResources.isEndings == null)
 					throw new Exception("Could not locate endings dictionary");
 				
-				if (iceResources.isEndingsProper == null)
+				if (iceMorphyResources.isEndingsProper == null)
 					throw new Exception("Could not locate endings proper dictionary");
 				
-				if (iceResources.isPrefixes == null)
+				if (iceMorphyResources.isPrefixes == null)
 					throw new Exception("Could not locate prefixes dictionary");
 				
-				if (iceResources.isTagFrequency == null)
+				if (iceMorphyResources.isTagFrequency == null)
 					throw new Exception("Could not locate tag frequency dictionary");
 				
-				if (iceResources.isIdioms == null)
+				if (iceTaggerResources.isIdioms == null)
 					throw new Exception("Could not locate idioms dictionary");
 				
-				if (iceResources.isVerbPrep == null)
+				if (iceTaggerResources.isVerbPrep == null)
 					throw new Exception("Could not locate verb prep dictionary");
 				
-				if (iceResources.isVerbObj == null)
+				if (iceTaggerResources.isVerbObj == null)
 					throw new Exception("Could not locate verb obj dictionary");
 				
-				if (iceResources.isVerbAdverb == null)
+				if (iceTaggerResources.isVerbAdverb == null)
 					throw new Exception("Could not locate verb adverb dictionary");
 				
 				System.out.println("[i] Reading IceTagger lexicons from IceNLP resource.");
-				iceLexicons = new IceTaggerLexicons(iceResources);
+				iceLexicons = new IceTaggerLexicons(iceTaggerResources);
+                morphyLexicons = new IceMorphyLexicons(iceMorphyResources);
 			} 
 			else 
 			{
@@ -100,6 +106,7 @@ public class IceTagger implements IIceTagger {
 					iceLexiconDirs = iceLexiconDirs + '/';
 				System.out.println("[i] Reading IceTagger lexicon from " + iceLexiconDirs + '.');
 				this.iceLexicons = new IceTaggerLexicons(iceLexiconDirs);
+                this.morphyLexicons = new IceMorphyLexicons(iceLexiconDirs);
 			}
 			
 			
@@ -122,7 +129,7 @@ public class IceTagger implements IIceTagger {
 				tokLexicon = new Lexicon(tokenLexicon);
 			}
 			
-			iceTaggerFacade = new IceTaggerFacade(this.iceLexicons, this.tokLexicon);
+			iceTaggerFacade = new IceTaggerFacade(this.iceLexicons, this.morphyLexicons, this.tokLexicon);
 			
 			// TODO This should be handed as an option in the config file!
 			// The next line was used when IceNLP did tokenization for Apertium-IceNLP.  In the newest version,
