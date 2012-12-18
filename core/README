@@ -31,6 +31,8 @@ The following steps are needed to generated these files for the first time:
 	cd doc
 	./maketex.sh
 
+	(for the flex shells, JFlex is needed; see http://jflex.de/)
+
 Then the core can be compiled with:
 ant
 -----------------------------------------
