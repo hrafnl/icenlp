@@ -3,6 +3,7 @@ package is.iclt.icenlp.server.network;
 import is.iclt.icenlp.common.network.ByteConverter;
 import is.iclt.icenlp.common.network.Packet;
 import is.iclt.icenlp.common.configuration.Configuration;
+import is.iclt.icenlp.core.utils.Pair;
 import is.iclt.icenlp.server.output.OutputGenerator;
 
 import java.io.IOException;
@@ -26,6 +27,7 @@ public class ClientThread implements Runnable {
     private boolean debugMode;
     private OutputGenerator outputGenerator;
     private Configuration configuration;
+    private String defaultFormatString = "txt";
 
 	public ClientThread(Socket socket, OutputGenerator generator)
 	{
@@ -49,6 +51,8 @@ public class ClientThread implements Runnable {
 	 * Run is called when the thread is spawned.
 	 */
 	public void run() {
+        Pair<String, String> formatAndString = new Pair<String, String>();
+
 		while (this.alive) 
 		{
 			Packet pack = this.readFromClient();
@@ -107,10 +111,12 @@ public class ClientThread implements Runnable {
 
                     if (!strFromClient.equals(""))
                     {
-					    strFromClient = removeAltBrackets(strFromClient);
+					    //strFromClient = removeAltBrackets(strFromClient);
+                        formatAndString = removeAltBrackets((strFromClient));
                     }
                     else
                     {
+                        /*TODO : Handle this special case of empty string */
                         System.out.println("gDB>> empty line!");
                     }
 
@@ -124,20 +130,25 @@ public class ClientThread implements Runnable {
 
 					try 
 					{
+                        String format = formatAndString.one;
+                        String stringToAnalyze = formatAndString.two;
+
 						if(this.configuration.containsKey("ExternalMorpho") && this.configuration.getValue("ExternalMorpho").equals("apertium"))
 						{
-							taggedString = this.outputGenerator.generateExternalOutput(strFromClient) + "\n";
+							//taggedString = this.outputGenerator.generateExternalOutput(strFromClient) + "\n";
+                            taggedString = this.outputGenerator.generateExternalOutput(stringToAnalyze) + "\n";
 						}
 						else
 						{
 							// wrap to function.
 							java.lang.StringBuilder b = new StringBuilder();
 
-							String[] lines = strFromClient.split("\n");
+							String[] lines = stringToAnalyze.split("\n");
+                            //String[] lines = strFromClient.split("\n");
 
 							for(String s : lines)
 							{
-								String strOut = this.outputGenerator.generateOutput(s);
+								String strOut = this.outputGenerator.generateOutput(format, s);
 								b.append(strOut+"\n");
 							}
 					
@@ -226,58 +237,37 @@ public class ClientThread implements Runnable {
 	}
 
 	// if we find [ xml ] or [ tcf ] we set the configs according to the string
-	private String removeAltBrackets(String strFromClient)
+	private Pair<String,String> removeAltBrackets(String strFromClient)
 	{
-        // GöL
-        // resetting temp-config-variables
-		Configuration.getInstance().addConfigEntry("IceParserOutputError","false");
-		Configuration.getInstance().addConfigEntry("IceParserOutputMerge","false");
+        /* result.one is the format string, result.two is the string to be analyzed
+            For example, strFromClient="[txt][merge]Hann er góður" =>
+            result.one = "[txt][merge]", result.two = "Hann er góður"
+        */
+        Pair result = new Pair<String, String>();
 
 		// if we have anything else than alt, we just return the string back
-		if (!Configuration.getInstance().getValue("IceParserOutput").equals("alt"))
+		if (Configuration.getInstance().getValue("IceParserOutput") == null || !Configuration.getInstance().getValue("IceParserOutput").equals("alt"))
 		{
-			return strFromClient;
+		    result.two = strFromClient;
+            return result;
 		}
 
-        // if the first char isn't [ then we will return the text unaltered straight away
+        // if the first char isn't [ then we will return the text unaltered straight away with default format string
        if (strFromClient.charAt(0) != '[')
         {
-            return strFromClient;
+            result.one = defaultFormatString;
+            result.two = strFromClient;
+            return result;
         }
 
-
 		// GÖL
-		// Split the incoming message into two, tags and the rest.
+		// Split the incoming message into two, format string and the text to be analyzed.
 		// We check out which tags are sent, and do the appropriate flagging.
 		// Then we return the rest of the message.
-		String newString = strFromClient.replaceFirst("^[\\S\\[\\]]*\\]","");
-		String tags = strFromClient.replaceFirst("^([\\S\\[\\]]*\\]).*","$1");
-
-		if (tags.contains("[tcf]")) {
-			Configuration.getInstance().addConfigEntry("IceParserOutputTMP","tcf");
-		}
-
-		if (tags.contains("[xml]")) {
-			Configuration.getInstance().addConfigEntry("IceParserOutputTMP","xml");
-		}
-
-		if (tags.contains("[txt]")) {
-			Configuration.getInstance().addConfigEntry("IceParserOutputTMP","txt");
-		}
-
-		if (tags.contains("[t1l]")) {
-			Configuration.getInstance().addConfigEntry("IceParserOutputTMP","t1l");
-		}
-
-		if (tags.contains("[error]")) {
-			Configuration.getInstance().addConfigEntry("IceParserOutputError","true");
-		}
-
-		if (tags.contains("[merge]")) {
-			Configuration.getInstance().addConfigEntry("IceParserOutputMerge","true");
-		}
-
-
-		return newString;
+		String strFromClientWithoutFormat = strFromClient.replaceFirst("^[\\S\\[\\]]*\\]","");
+		String formatString = strFromClient.replaceFirst("^([\\S\\[\\]]*\\]).*","$1");
+        result.one = formatString;
+        result.two = strFromClientWithoutFormat;
+        return result;
 	}
 }

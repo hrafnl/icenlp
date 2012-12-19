@@ -69,7 +69,7 @@ public class RunIceParser extends RunIceParserBase
 				System.out.print("Lines: " + count + "\r");
 
 			String parsed = ipf.parse(str, outputType, includeFunc, agreement, markGrammarError, mergeLabels);
-            parsed = removePhraseClosing(parsed);
+            //parsed = removePhraseClosing(parsed);
 			bw.write(parsed);
             // If mergeLabels is true then the output formatter will append a newline character
             if (!mergeLabels)
@@ -79,32 +79,6 @@ public class RunIceParser extends RunIceParserBase
 		bw.flush();
         bw.close();
     }
-
-	private String removePhraseClosing (String str) {
-		String parsedString = "";
-
-		if (outputType.equals(OutputFormatter.OutputType.plain)||outputType.equals(OutputFormatter.OutputType.phrase_per_line))
-		{
-			str = str.replaceAll("\\S+]","]");
-			str = str.replaceAll("\\S+}","}");
-		}
-
-		// GöL
-		// Adds an extra space between ". ." at the end of some sentence and the next sentence
-		// - then checks the config to see which IceParserOutput the user wants
-		// and sets the parsed string into an accessible variable
-		if (outputType.equals(OutputFormatter.OutputType.plain))
-		{
-			parsedString = str.replaceAll("\\.\\ \\.", ". .\n");
-			return parsedString;
-		}
-		else
-		{
-			// reset the parsedString before appending to it
-			parsedString = str;
-			return parsedString;
-		}
-	}
 
     public static void main(String[] args) throws IOException 
 	{

@@ -91,6 +91,31 @@ public class OutputFormatter
 			return w.toString();
     }
 
+    public String removePhraseClosing (String str, OutputType outputType) {
+		String parsedString = str;
+
+		if (outputType.equals(OutputFormatter.OutputType.plain)||outputType.equals(OutputFormatter.OutputType.phrase_per_line))
+		{
+			parsedString = parsedString.replaceAll("\\S+]","]");
+			parsedString = parsedString.replaceAll("\\S+}","}");
+		}
+
+/*		// GöL
+		// Adds an extra space between ". ." at the end of some sentence and the next sentence
+		// - then checks the config to see which IceParserOutput the user wants
+		// and sets the parsed string into an accessible variable
+		if (outputType.equals(OutputFormatter.OutputType.plain))
+		{
+			//parsedString = str.replaceAll("([\\.\\?\\!])\\ [\\.\\?\\!]\\\n?", "$1 $1\n");
+			parsedString = str.replaceAll("\\.\\ \\.", ". .\n");
+			return parsedString;
+		}
+		*/
+
+        return parsedString;
+	}
+
+
 	public OutputFormatter()
 	{
         //patterns matching all possible function or phrase tags

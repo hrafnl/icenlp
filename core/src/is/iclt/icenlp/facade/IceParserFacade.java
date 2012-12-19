@@ -123,11 +123,11 @@ public class IceParserFacade
         {
 			return parse( text, OutputFormatter.OutputType.tcf, include_func, false, error, merge);
 		}
-	    else if (outputType.equals("txt"))
+	    else if (outputType.equals("ppl"))
         {
 			return parse( text, OutputFormatter.OutputType.phrase_per_line, include_func, false, error, merge);
 		}
-		else if (outputType.equals("t1l")) {
+		else if (outputType.equals("txt")) {
             return parse( text, OutputFormatter.OutputType.plain, include_func, false, error, merge);
 		}
 		else if (outputType.equals("xml"))
@@ -488,11 +488,13 @@ public class IceParserFacade
         if (mergeLabels || (! (outType == OutputFormatter.OutputType.plain || outType == OutputFormatter.OutputType.phrase_per_line)))
         {
             String result = outFormatter.parse(sw.toString(), outType, mergeLabels);
+            result = outFormatter.removePhraseClosing(result, outType);
             return result;
         }
         else
 		{
-			return sw.toString();
+            return outFormatter.removePhraseClosing(sw.toString(), outType);
+			//return sw.toString();
 		}
 	}
 

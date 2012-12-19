@@ -116,7 +116,8 @@ public class OutputGenerator {
 		if (this.configuration.containsKey("TaggingOutputFormat")) {
 			this.TaggingOutputFormat = this.configuration.getValue("TaggingOutputFormat");
 
-			if(this.TaggingOutputFormat.contains("[LEMMA]") && externalMorpho.equals("icenlp")||this.configuration.getValue("IceParserOutput").equals("alt"))
+			if( (this.TaggingOutputFormat.contains("[LEMMA]") && externalMorpho.equals("icenlp")) ||
+                    (this.configuration.getValue("IceparserOutput") != null && this.configuration.getValue("IceParserOutput").equals("alt")))
 			{
 				this.lemmatize = true;
 			}
@@ -211,7 +212,7 @@ public class OutputGenerator {
 			}
 			
 			
-			if (this.TaggingOutputFormat.contains("[FUNC]")||this.configuration.getValue("IceParserOutput").toLowerCase().equals("tcf")||this.configuration.getValue("IceParserOutput").toLowerCase().equals("alt")||this.configuration.getValue("IceParserOutput").toLowerCase().equals("xml"))
+			if (this.TaggingOutputFormat.contains("[FUNC]") || this.configuration.getValue("IceParserOutput") != null)
 				this.iceParser = IceParser.instance();
 			
 		} catch (Exception e) {
@@ -219,7 +220,7 @@ public class OutputGenerator {
 		}
 	}
 
-	public String generateOutput(String text) {
+	public String generateOutput(String format, String text) {
 		if (text.length() == 0 || text.matches("^\\s+$"))
 			return "";
 
@@ -231,30 +232,23 @@ public class OutputGenerator {
 			return "";
 		}
 
-		if (this.iceParser != null) {
-			this.iceParser.parse(wordList);
-		}
 		// Apply mapping rules to the word list.
 		if (this.mapperLexicon != null)
 			this.mapperLexicon.processWordList(wordList);
 
-
+        if (this.iceParser != null) {
+            this.iceParser.parse(format, wordList);
+            // GöL
+            // If IceParserOutput is set to true in the config then
+            // we will only show that output and stop.
+            // otherwise we will go on to show the tagged output
+            if (this.configuration.getValue("IceParserOutput") != null)
+            {
+                return this.iceParser.getParsedString();
+            }
+        }
 		// Create output string that will be sent to the client.
 		StringBuilder builder = new StringBuilder();
-
-		// GöL
-		// If IceParserOutput is set to true in the config then
-		// we will only show that output and stop.
-		// otherwise we will go on to show the tagged output
-		if (this.configuration.getValue("IceParserOutput").toLowerCase().equals("tcf")
-			||this.configuration.getValue("IceParserOutput").toLowerCase().equals("xml")
-			||this.configuration.getValue("IceParserOutput").toLowerCase().equals("txt")
-			||this.configuration.getValue("IceParserOutput").toLowerCase().equals("alt")) {	
-			builder.append(this.iceParser.getParsedString());
-			return builder.toString();
-		}
-
-
 
 		// If we have not set any tagging output
 		if (this.TaggingOutputFormat == null) {

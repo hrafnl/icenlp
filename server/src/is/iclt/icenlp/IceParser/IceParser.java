@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.List;
 
 
-public class IceParser implements IIceParser{
+public class IceParser {
 
     // Private static variable that contains the singleton
     // instance of this class.
@@ -26,7 +26,15 @@ public class IceParser implements IIceParser{
     private String mark_obj_right = "<@OBJ→>";
     private String parsedString;
 	private String value_IceParserOutput = "";
-
+    private static final String formatTxt = "txt";
+    private static final String formatJson = "json";     
+    private static final String formatXml = "xml";
+    private static final String formatPpl = "ppl";     
+    private static final String formatTcf = "tcf";     
+    private static final String formatTag = "tag";     
+    private static final String formatMerge = "merge";     
+    private static final String formatError = "error";     
+    private static final String formatAlt = "alt";     
 
     public synchronized static IceParser instance(){
         if(instance_ == null)
@@ -59,24 +67,28 @@ public class IceParser implements IIceParser{
         	this.mark_obj_left = value_mark_obj_left;	
         }
 
-        if (Configuration.getInstance().getValue("IceParserOutput").toLowerCase().equals("tcf")) {
-			value_IceParserOutput = "tcf";
+        if (Configuration.getInstance().getValue("IceParserOutput").toLowerCase().equals(formatTcf)) {
+			value_IceParserOutput = formatTcf;
 		} 
-        else if (Configuration.getInstance().getValue("IceParserOutput").toLowerCase().equals("xml")) {
-			value_IceParserOutput = "xml";
-		} 
-        else if (Configuration.getInstance().getValue("IceParserOutput").toLowerCase().equals("alt")) {
-			if (Configuration.getInstance().getValue("IceParserOutputTMP").equals("xml")) {
-				value_IceParserOutput = "xml";
-			}
-			else if (Configuration.getInstance().getValue("IceParserOutputTMP").equals("tcf")) {
-				value_IceParserOutput = "tcf";
-			}
-			else if (Configuration.getInstance().getValue("IceParserOutputTMP").equals("txt")) {
-				value_IceParserOutput = "txt";
-			}
+        else if (Configuration.getInstance().getValue("IceParserOutput").toLowerCase().equals(formatXml)) {
+			value_IceParserOutput = formatXml;
 		}
+        else if (Configuration.getInstance().getValue("IceParserOutput").toLowerCase().equals(formatTxt)) {
+            value_IceParserOutput = formatTxt;
+        }
+        else if (Configuration.getInstance().getValue("IceParserOutput").toLowerCase().equals(formatPpl)) {
+            value_IceParserOutput = formatPpl;
+        }
+        else if (Configuration.getInstance().getValue("IceParserOutput").toLowerCase().equals(formatJson)) {
+            value_IceParserOutput = formatJson;
+        }
+        // Special case: If alternate output format and the user does not specify format string in the query
+        // then use txt format
+        else if (Configuration.getInstance().getValue("IceParserOutput").toLowerCase().equals(formatAlt)) {
+            value_IceParserOutput = formatTxt;
+        }
 
+        System.out.println("[i] IceParser output format: " + value_IceParserOutput);
         System.out.println("[i] IceParser instance created.");
         parser = new IceParserFacade();
     }
@@ -90,132 +102,38 @@ public class IceParser implements IIceParser{
         return null;
     }
 
-	public String parse(List<Word> words) {
+	public void parse(String format, List<Word> words) {
+        // format is a format string like "[txt]"
 
 		String taggedString = this.getTagStr(words);
 		
 		try {
             boolean merge = false;
             boolean error = false;
-			if (Configuration.getInstance().getValue("IceParserOutput").equals("alt"))
+			if (Configuration.getInstance().getValue("IceParserOutput").equals(formatAlt))
 			{
-				value_IceParserOutput = Configuration.getInstance().getValue("IceParserOutputTMP");
-                if (Configuration.getInstance().getValue("IceParserOutputError").equals("true")){error = true;};
-                if (Configuration.getInstance().getValue("IceParserOutputMerge").equals("true")){merge = true;};
+                String newFormat = format;
+		        if (newFormat.contains("["+formatMerge+"]")) {
+                    merge = true;
+                    newFormat = newFormat.replace("["+formatMerge+"]", "");
+                }
+                if (newFormat.contains("["+formatError+"]")) {
+                    error = true;
+                    newFormat = newFormat.replace("["+formatError+"]", "");
+                }
+                // We are only interested in the text representing the format, within the brackets, e.g. bla[txt]bla
+                value_IceParserOutput = newFormat.replaceAll(".*\\[(\\S+)\\].*","$1");
 			}
-System.out.println("gDB>>taggedString=("+taggedString+")");
-				String strParse = this.parser.parse(taggedString, include_functions, value_IceParserOutput, error, merge);
-//System.out.println("gDB>>strParse:"+strParse);
-/*			if (!(value_IceParserOutput.equals("xml")||value_IceParserOutput.equals("tcf")))
-			{
-				int i = 0;
-				int lastIndex = 0;
-				for (Word w : words)
-				{
-					int index = strParse.indexOf(w.getLexeme(), lastIndex);
-					lastIndex = index;
-//					System.out.println("gDB>>index:"+index+" >>w.getLexeme():"+w.getLexeme()+">>lastIndex:"+lastIndex);
-					// if IceParserOutput is set to true in the config
-					// then we do not number the words (emp. 'word_3')
-	//				if (value_IceParserOutput.equals("tcf")||value_IceParserOutput.equals("xml"))
-	//				{
-//		System.out.println(">"+strParse.substring(0, index + w.getLexeme().length())+ " "+ strParse.substring(index + w.getLexeme().length() + 1));
-						strParse = strParse.substring(0, index + w.getLexeme().length())+ " "+ strParse.substring(index + w.getLexeme().length() + 1);
-					}
-					else
-					{
-						strParse = strParse.substring(0, index + w.getLexeme().length())+ "_"+ i+ " "+ strParse.substring(index + w.getLexeme().length() + 1);
-					}
-					i = i + 1;
-				}
-	 		}
-*/
-			// GöL
-			// Adds an extra space between ". ." at the end of some sentence and the next sentence
-			// - then checks the config to see which IceParserOutput the user wants 
-			// and sets the parsed string into an accessable variable
-			if (value_IceParserOutput.equals("txt"))
-			{
-				parsedString = strParse.replaceAll("\\.\\ \\.", ". .\n");
-				return null;
-			}
+            System.out.println("gDB>>taggedString=("+taggedString+")");
+            System.out.println("gDB>>IceParserOutput=" + value_IceParserOutput);
+			String strParse = this.parser.parse(taggedString, include_functions, value_IceParserOutput, error, merge);
 
-			// GÖL
-			else if (value_IceParserOutput.equals("t1l")||value_IceParserOutput.equals("tcf")||value_IceParserOutput.equals("xml"))
-			{
-				// reset the parsedString before appending to it
-				parsedString = strParse;//"";
-				// append strParse one line at a time into parsedString
-				// and add \n after each line
-				// add another \n after a line of dots
-/*				for (String tmpString : strParse.split("\n"))
-				{
-					parsedString += tmpString + "\n";
-				}
-				parsedString.replaceAll(".", "[.]\n");
-*/					return null;
-			}
-	/*			// Let's add the subj to correct words.
-			for (String parseLine : strParse.split("\n")) 
-			{
-				// System.out.println("parser line: " + parseLine);
-				if (parseLine.contains("{*SUBJ")) 
-				{
-					char arrow = parseLine.charAt(6);
-					String[] parseLineTokens = parseLine.split(" ");
-					// Search for the last word in the subj, that is the one
-					// that will get the subj to its tag.
-					for (int j = parseLineTokens.length - 1; j >= 0; j--) 
-					{
-						if (parseLineTokens[j].split("_").length >= 2) {
-							String[] d = parseLineTokens[j].split("_");
-							String wordIndexStr = d[d.length - 1];
-							if (wordIndexStr.matches("[0-9]+")) {
-								int ind = Integer.parseInt(wordIndexStr);
-								if (ind > words.size())
-									continue;
-								if (arrow == '>'){
-									words.get(Integer.parseInt(d[d.length - 1])).parseString = this.mark_subject_right;
-								}
-								else{
-									words.get(Integer.parseInt(d[d.length - 1])).parseString = mark_subject_left;
-								}
-								break;
-							}
-						}
-					}
-				}
-				if (parseLine.contains("{*OBJ"))
-				{
-					char arrow = parseLine.charAt(5);
-					String[] parseLineTokens = parseLine.split(" ");
-					for (int j = parseLineTokens.length - 1; j >= 0; j--) 
-					{
-						if (parseLineTokens[j].split("_").length >= 2) {
-							String[] d = parseLineTokens[j].split("_");
-							String wordIndexStr = d[d.length - 1];
-							if (wordIndexStr.matches("[0-9]+")) {
-								int ind = Integer.parseInt(wordIndexStr);
-								if (ind > words.size())
-									continue;
-								if (arrow == '>'){
-									words.get(Integer.parseInt(d[d.length - 1])).parseString = this.mark_obj_right;
-								}
-								else{
-									words.get(Integer.parseInt(d[d.length - 1])).parseString = this.mark_obj_left;
-								}
-								break;
-							}
-						}
-					}					
-				}	
-			}
-*/		} 
+            parsedString = strParse;
+		}
 		catch (IOException e) {
 
 			e.printStackTrace();
 		}
-		return null;
 	}
 
 	private String getTagStr(List<Word> wordList)

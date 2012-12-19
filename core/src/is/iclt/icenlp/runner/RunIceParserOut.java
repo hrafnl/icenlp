@@ -75,6 +75,8 @@ public class RunIceParserOut extends RunIceParserBase
 		{
 			//buf.append(str+"\n");
             //String result = of.parse(buf.toString(), outputType, mergeTags);
+            String result = of.parse(str, outputType, mergeTags);
+            result = of.removePhraseClosing(result, outputType);
             bw.write(of.parse(str, outputType, mergeTags));
             bw.write("\n");
 		}
