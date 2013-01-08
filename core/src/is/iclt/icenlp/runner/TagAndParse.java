@@ -158,6 +158,7 @@ public class TagAndParse implements ActionListener {
                         outputType = OutputFormatter.OutputType.phrase_per_line;
                      else
                         outputType = OutputFormatter.OutputType.plain;
+
                      String parsedStr = parser.parse(taggedStr, outputType, checkIncludeFunc.isSelected(), checkFeatureAgreement.isSelected(), checkPotentialErrors.isSelected(), checkMergeLabels.isSelected());
 
                     textParsed.setText(parsedStr);

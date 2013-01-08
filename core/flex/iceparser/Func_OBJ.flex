@@ -321,7 +321,7 @@ VerbSupineObj = {VPSupine}{WhiteSpace}+{Object}
 				out.write(StringSearch.firstString+Obj1Open+StringSearch.nextString+Obj1Close);
 		}
 
-"\n"		{ System.err.print("Reading line: " + Integer.toString(yyline+1) + "\r");
-			out.write("\n"); }
+"\n"		{/* System.err.print("Reading line: " + Integer.toString(yyline+1) + "\r");
+			out.write("\n");*/ }
 .		{ out.write(yytext());}
 

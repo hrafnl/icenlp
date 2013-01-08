@@ -112,7 +112,7 @@ ComplObjDat = {AdjCompl}{WhiteSpace}+{ObjDat}
 			/* Find where the Complement function started and insert the OBJ label */
 			theIndex = StringSearch.splitString(yytext(),"{*COMP<", true, -1);		
 			if (theIndex == -1)
-				theIndex = StringSearch.splitString(yytext(),"{*COMP", true, -1);			
+				theIndex = StringSearch.splitString(yytext(),"{*COMP", true, -1);
 			if(theIndex == -1)
 			{
 				out.write(yytext());

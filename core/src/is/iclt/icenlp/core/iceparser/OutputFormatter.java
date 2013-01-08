@@ -33,7 +33,7 @@ enum OutputFormatter_Type { FUNC, PHRASE, WORDS, WORD, TAG, ROOT, SENTENCE }
 
 public class OutputFormatter
 {
-    public enum OutputType {plain, phrase_per_line, json, xml, tcf}
+    public enum OutputType {plain, phrase_per_line, json, xml, tcf, tag}
 	private OutputFormatter_Part root;
 
 	private boolean mergeTags = false;
@@ -76,6 +76,7 @@ public class OutputFormatter
 			this.w = new StringWriter( );
 
             this.outType = outType;
+
 
 			setMergeTags(mergeTags);
 
@@ -194,6 +195,8 @@ public class OutputFormatter
 
 	private void write(OutputFormatter_Part root)
 	{
+
+
 		if(outType == OutputType.json)
 		{
             if (firstLine)

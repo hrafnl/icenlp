@@ -45,7 +45,6 @@ public class ErrorDetector {
 	// returns an error string like : ?g+ca
 	private static String CheckGenNumCase(String str)
 	{
-
 		StringBuffer error = new StringBuffer();
 		boolean allTheSame = true;
 		String [] tags = str.split(" ");
@@ -89,7 +88,6 @@ public class ErrorDetector {
 
 			if( !gen1.equals(gen2) || !num1.equals(num2) || !case1.equals(case2))
 			{
-				error.append('?');
 				// if there has been something written to error we need to add "+" between error tags
 				if (!gen1.equals(gen2)&&(!gen1.equals("x"))&&(!gen2.equals("x")))
 				{
@@ -101,8 +99,13 @@ public class ErrorDetector {
                	if (!case1.equals(case2)) {
 					error.append("Nca");
 				};
-                error.append('?');
 			}
+		}
+
+		if (0 < error.length())
+		{
+			error.insert(0,'?');
+			error.append('?');
 		}
 
 		return error.toString();
@@ -138,19 +141,18 @@ public class ErrorDetector {
 		str = IceParserUtils.RemoveFromSymbolToWhitespace("}", str);
 		str = new StringBuffer(str).reverse().toString();
 		str = IceParserUtils.RemoveSpacesAndWords(str);
-
 		return str;
 	}
 
 
-
+/*
 	// for Func_SUBJ
 	// checks agreement within a subject
 	public static String checkAgreement(String str)
 	{
+		System.out.println("!!!!!!!!!!!!!!!!");
 		StringBuffer error = new StringBuffer();
 
-		boolean allTheSame = true;
 		String [] tags = str.split(" ");
 
 		// in this for-loop [x = i+1] and we stop when x reaches the last tag
@@ -200,14 +202,16 @@ public class ErrorDetector {
 				error.append("Sp");
 			}
 			// if we have already found problem with number we do not report it again
-			if ( !nr1.equals(nr2)/*&&!error.endsWith("Sn")*/)
+			if ( !nr1.equals(nr2)
+			//&&!error.endsWith("Sn")
+			)
 			{
 				error.append("Sn");
 			}
 		}
 		return error.toString();
 	}
-
+*/
 	// for Func_SUBJ
 	public static int getModifierNFS(String letter)
 	{
@@ -235,7 +239,7 @@ public class ErrorDetector {
 
 		return pers;
 	}
-
+/*
 	// from Func_SUBJ.flex {SubjectVerbMissing}, {VerbAdvPSubject}, {SubjectRel}
 	public static String AgreementCheck(String s1, String s2, String s3, String s4, int order, boolean agreement, boolean markGrammarError)
 	{
@@ -257,7 +261,7 @@ public class ErrorDetector {
 
 		return createOutputString(s1,s2,s3,s4, order, false, markGrammarError, error);
 	}
-
+*/
 	public static String createOutputString(String s1, String s2, String s3, String s4, int order, boolean tag, boolean markGrammarError, String error)
 	{
 
@@ -674,6 +678,27 @@ public class ErrorDetector {
 		}
 	}
 
+	// takes in a string array,
+	// searches for every noun and checks the gender
+	// if it finds a mismatch between the genders of the nouns it returns true
+	private static boolean multipleGendersInNouns (String[] s)
+	{
+		char lastGender=findGender(s);
+		for (String a: s)
+		{
+			if (a.charAt(0) == 'n')
+			{
+				if (a.charAt(1) == lastGender)
+				{
+					lastGender = a.charAt(1);
+				}
+				else
+					return true;
+			}
+		}
+		return false;
+	}
+
 	// from Func_COMP.flex {SubjVerbAdvPCompl}, {SubjVerbCompl}, {SubjCompl} and {VerbSubjCompl}
 	// from Func_OBJ2.flex {SubjVerbComp}, {SubjVerbAdvPComp}
 	public static String CompAgreementCheck(String s1, String s2, String open, String close, int order)
@@ -683,14 +708,12 @@ public class ErrorDetector {
 		// Vigdís var forseti
 		if ((order == 1) && (s2.contains(" ^n")))
 		{
-
 			return out0.append(s1).append(open).append(s2).append(close).toString();
 		}
 		else if ((order != 1) && (s1.contains(" ^n")))
 		{
 			return out0.append(open).append(s1).append(close).append(s2).toString();
 		}
-
 
 		StringBuffer error = new StringBuffer();
 
@@ -712,13 +735,80 @@ public class ErrorDetector {
 		String[] s1Tags = toTagList(RemoveTokens(s1tmp));
 		String[] s2Tags = toTagList(RemoveTokens(s2));
 
-		if (isGenderMismatch(findGender(s2Tags),findGender(s1Tags)))
+		int count = 0;
+		for (String s:s1Tags)
 		{
-			error.append("Cg");
+			count++;
 		}
-		if (isNumberMismatch(findNumber(s2Tags),findNumber(s1Tags)))
+		count = 0;
+		for (String s:s2Tags)
 		{
-			error.append("Cn");
+			count++;
+		}
+		// gender = h ; number = f
+		//if we find NPs it means we have something like "maðurinn og konan eru góð" or "maðurinn og drengurinn eru góðir"
+		// we check if we have NPs, and then we check if the gender matches, if it doesn't we change the gender to neutral
+		if (s1.contains("[NPs"))
+		{
+			if (multipleGendersInNouns(s1Tags))
+			{
+				// if there are multiple genders we want the word to be neutral and plural
+				if (isGenderMismatch(findGender(s2Tags),'h'))
+				{
+					error.append("Cg");
+				}
+				if (isNumberMismatch(findNumber(s2Tags),'f'))
+				{
+					error.append("Cn");
+				}
+			} else
+			{
+				// if there is only a single gender we keep the gender of it but want the word to be plural
+				if (isGenderMismatch(findGender(s2Tags),findGender(s1Tags)))
+				{
+					error.append("Cg");
+				}
+				if (isNumberMismatch(findNumber(s2Tags),'f'))
+				{
+					error.append("Cn");
+				}
+			}
+
+		} else if (s2.contains("[NPs"))
+		{
+			if (multipleGendersInNouns(s2Tags))
+			{
+				// if there are multiple genders we want the word to be neutral and plural
+				if (isGenderMismatch(findGender(s1Tags),'h'))
+				{
+					error.append("Cg");
+				}
+				if (isNumberMismatch(findNumber(s1Tags),'f'))
+				{
+					error.append("Cn");
+				}
+			} else
+			{
+				// if there is only a single gender we keep the gender of it but want the word to be plural
+				if (isGenderMismatch(findGender(s1Tags),findGender(s2Tags)))
+				{
+					error.append("Cg");
+				}
+				if (isNumberMismatch(findNumber(s1Tags),'f'))
+				{
+					error.append("Cn");
+				}
+			}
+		} else
+		{
+			if (isGenderMismatch(findGender(s2Tags),findGender(s1Tags)))
+			{
+				error.append("Cg");
+			}
+			if (isNumberMismatch(findNumber(s2Tags),findNumber(s1Tags)))
+			{
+				error.append("Cn");
+			}
 		}
 
 		if (error.length() > 0)

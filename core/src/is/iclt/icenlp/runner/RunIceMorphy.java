@@ -84,8 +84,8 @@ public class RunIceMorphy {
         while (line != null)
         {
             linesRead++;
-            if( linesRead % 100 == 0 )
-                System.out.print( "Reading line nr: " + Integer.toString(linesRead) + "\r");
+  //          if( linesRead % 100 == 0 )
+  //              System.out.print( "Reading line nr: " + Integer.toString(linesRead) + "\r");
             if (line.equals(""))
                 output.newLine();
             else
@@ -152,7 +152,7 @@ public class RunIceMorphy {
         output.flush();
         input.close();
         output.close();
-        System.out.println( "Reading line nr: " + Integer.toString(linesRead) + "\r");
+  //      System.out.println( "Reading line nr: " + Integer.toString(linesRead) + "\r");
         //System.out.println("Read " + linesRead + " lines");
     }
 
@@ -174,8 +174,8 @@ public class RunIceMorphy {
         while (line != null)
         {
             linesRead++;
-            if( linesRead % 100 == 0 )
-                System.out.print( "Reading line nr: " + Integer.toString(linesRead) + "\r");
+  //          if( linesRead % 100 == 0 )
+  //              System.out.print( "Reading line nr: " + Integer.toString(linesRead) + "\r");
             if (!line.matches("^="))
             {
 
@@ -221,7 +221,7 @@ public class RunIceMorphy {
         output.flush();
         input.close();
         output.close();
-        System.out.print( "Reading line nr: " + Integer.toString(linesRead) + "\r");
+ //       System.out.print( "Reading line nr: " + Integer.toString(linesRead) + "\r");
         //System.out.println("Read " + linesRead + " lines");
     }
 

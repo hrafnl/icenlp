@@ -41,6 +41,8 @@ import is.iclt.icenlp.core.utils.ErrorDetector;
 %unicode
 
 %{
+  String errorCode = "?Cg?";
+
   String Obj1Open=" {*OBJ< ";
   String Obj1Close=" *OBJ<} ";
   String Obj2Open=" {*OBJ> ";
@@ -66,12 +68,14 @@ import is.iclt.icenlp.core.utils.ErrorDetector;
 	public void parse(java.io.Writer _out) throws java.io.IOException
 	{
 		out = _out;
-		while (!zzAtEOF)
+		while (!zzAtEOF) {
 		yylex();
+		}
 	}
 		      // put the < next to the {*COMP
 	private String SubjCompMismatch (String s1, String s2, String open, String close, int order)
 	{
+		System.out.println("SubjCompMismatch s1="+s1+" s2="+s2);
 		if (markGrammarError)
 		{
 			return ErrorDetector.CompAgreementCheck(s1, s2, open, close, order);
@@ -166,6 +170,7 @@ VerbSubjObjNom = "[VP"{WhiteSpace}+{VerbDat}~"VP]"{WhiteSpace}+{FuncSubjectObliq
 %%
 {VerbDatObjAccObj}
 	{
+//			System.out.println("VerbDatObjAccObj");
 ////	System.err.println("obj2-1");
 ////	System.err.println(yytext());
 
@@ -179,6 +184,12 @@ VerbSubjObjNom = "[VP"{WhiteSpace}+{VerbDat}~"VP]"{WhiteSpace}+{FuncSubjectObliq
 			if(npIndex == -1)
             {
 				npIndex = afterObj.lastIndexOf("[NPa");
+				if (npIndex == -1)
+				{
+					String nphrase = afterObj.replaceAll(".*(\\[NP\\?(N[gnc]a?)*\\?a).*","$1"); // because of error codes
+					npIndex = afterObj.lastIndexOf(nphrase);
+				}
+//				npIndex = afterObj.lastIndexOf("[NPa");
 //				npIndex = afterObj.lastIndexOf("[NPa ");    this has been commented out due to [NPa? existing and messing everything up with that whitespace
             }
             if(npIndex != -1)
@@ -239,6 +250,7 @@ VerbSubjObjNom = "[VP"{WhiteSpace}+{VerbDat}~"VP]"{WhiteSpace}+{FuncSubjectObliq
 {VerbAccObjDatObj}	{ 
 //	System.err.println("obj2-2");
 //	System.err.println(yytext());
+//			System.out.println("VerbAccObjDatObj");
 
 			// The first object is the direct object 
 			String matchedStr = yytext();
@@ -300,6 +312,7 @@ VerbSubjObjNom = "[VP"{WhiteSpace}+{VerbDat}~"VP]"{WhiteSpace}+{FuncSubjectObliq
 		}
 
 {ComplObj}	{
+//			System.out.println("ComplObj");
 //	System.err.println("obj2-3");
 			/* Find where the Complement function ended and insert the OBJ label */
 			theIndex = StringSearch.splitString(yytext(),"*COMP<}", true, 7);
@@ -316,9 +329,11 @@ VerbSubjObjNom = "[VP"{WhiteSpace}+{VerbDat}~"VP]"{WhiteSpace}+{FuncSubjectObliq
 		}
 
 {ComplCompl}	{
+//			System.out.println("VerbSubjObjNom");
 //	System.err.println("obj2-4");
 			/* Find where the Complement function ended and insert the COMP label */
-				theIndex = StringSearch.splitString(yytext(),"*COMP<?Cg}", true, 10);
+		String compWithError = "*COMP<"+errorCode+"}";
+				theIndex = StringSearch.splitString(yytext(),compWithError, true, compWithError.length()); // dangerous to have it this hard coded
 			if (theIndex == -1)
 				theIndex = StringSearch.splitString(yytext(),"*COMP<}", true, 7);
 			if (theIndex == -1)
@@ -329,7 +344,6 @@ VerbSubjObjNom = "[VP"{WhiteSpace}+{VerbDat}~"VP]"{WhiteSpace}+{FuncSubjectObliq
 			}
 			else
 			{
-			System.out.println("ComplCompl firstString="+StringSearch.firstString+" nextString="+StringSearch.nextString);
 				out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 			}
 		}
@@ -348,6 +362,7 @@ VerbSubjObjNom = "[VP"{WhiteSpace}+{VerbDat}~"VP]"{WhiteSpace}+{FuncSubjectObliq
 		  }
 */
 {VerbSubjObjNom}  {
+//			System.out.println("VerbSubjObjNom");
 //	System.err.println("obj2-6");
 			theIndex = StringSearch.splitString(yytext(),"*SUBJ<}", true, 7);
 			if (theIndex == -1)
@@ -363,6 +378,7 @@ VerbSubjObjNom = "[VP"{WhiteSpace}+{VerbDat}~"VP]"{WhiteSpace}+{FuncSubjectObliq
 		  }
 
 {PPVPInfObj}	{
+//			System.out.println("PPVPInfObj");
 //	System.err.println("obj2-7");
 			/* Find where the PP phrase ended and insert the OBJ label */
 			theIndex = StringSearch.splitString(yytext(),"PP]", false, 3);
@@ -387,7 +403,7 @@ VerbSubjObjNom = "[VP"{WhiteSpace}+{VerbDat}~"VP]"{WhiteSpace}+{FuncSubjectObliq
 		}
 {SubjVerbComp} {
 
-			System.out.println("SubjVerbComp");
+//			System.out.println("SubjVerbComp");
 			/* Find where the VPb phrase ended and insert the COMP label */
 			theIndex = StringSearch.splitString(yytext(),"VPb]", false, 4);
 			if(theIndex == -1)
@@ -400,7 +416,7 @@ VerbSubjObjNom = "[VP"{WhiteSpace}+{VerbDat}~"VP]"{WhiteSpace}+{FuncSubjectObliq
 			}
 		}
 {SubjVerbAdvPComp} {
-			System.out.println("SubjVerbAdvPComp");
+//			System.out.println("SubjVerbAdvPComp");
 			/* Find where the AdvP phrase ended and insert the COMP label */
 	//		theIndex = StringSearch.splitString(yytext(),"AdvP]", false, 5);
 			theIndex = StringSearch.splitString(yytext(),"[AP", false, -3);
@@ -414,6 +430,6 @@ VerbSubjObjNom = "[VP"{WhiteSpace}+{VerbDat}~"VP]"{WhiteSpace}+{FuncSubjectObliq
 			}
 		}
 
-"\n"		{ System.err.print("Reading line: " + Integer.toString(yyline+1) + "\r");
-		out.write("\n"); }
+"\n"		{ /*System.err.print("Reading line: " + Integer.toString(yyline+1) + "\r");
+		out.write("\n");*/ }
 .		{ out.write(yytext());}

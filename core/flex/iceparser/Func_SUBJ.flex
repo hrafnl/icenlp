@@ -77,11 +77,11 @@ import is.iclt.icenlp.core.utils.ErrorDetector;
 	  	    yylex();
 	}
 
-	public String AgreementCheck(String s1, String s2, String s3, String s4, int order)
+/*	public String AgreementCheck(String s1, String s2, String s3, String s4, int order)
 	{
 		return ErrorDetector.AgreementCheck(s1,s2,s3,s4,order,agreement,markGrammarError);
 	}
-
+ */
 
 	  
 %}
@@ -138,7 +138,7 @@ SubjectRel = {NomSubject}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{RelCP}
 
 
 {SubjectVerb}
-{ 
+{
 //System.err.println("subj-1");
 	String str = yytext();
 	if (str.contains("[PP"))	/* We don't want the preposition phrase to be included */
@@ -175,7 +175,7 @@ SubjectRel = {NomSubject}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{RelCP}
 
 
 {SubjectVerbMissing}	
-{ 
+{
 //System.err.println("subj-2");
 	String str = yytext();
 	if (str.contains("[PP"))
@@ -193,12 +193,13 @@ SubjectRel = {NomSubject}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{RelCP}
 	}
 	else
 	{
-		out.write(AgreementCheck(Func0Open,StringSearch.firstString,Func0Close,StringSearch.nextString,1));
+//		out.write(AgreementCheck(Func0Open,StringSearch.firstString,Func0Close,StringSearch.nextString,1));
+		out.write(Func0Open+StringSearch.firstString+Func0Close+StringSearch.nextString);
 	}
 } 
 		
 {VerbSubject}	
-{ 
+{
 //System.err.println("subj-3");
 	String str = yytext();
 	if (str.contains(" PP]"))
@@ -227,7 +228,8 @@ SubjectRel = {NomSubject}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{RelCP}
 		}
 		else
 		{
-			out.write(StringSearch.firstString + Func1Open + StringSearch.nextString + Func1Close);
+//			out.write(StringSearch.firstString + Func1Open + StringSearch.nextString + Func1Close);
+			out.write(StringSearch.firstString + Func2Open + StringSearch.nextString + Func2Close);
 		}
 	}
 }
@@ -250,7 +252,8 @@ SubjectRel = {NomSubject}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{RelCP}
 	}
 	else
 	{
-		out.write(AgreementCheck(StringSearch.firstString,Func2Open,StringSearch.nextString,Func2Close,2));
+//		out.write(AgreementCheck(StringSearch.firstString,Func2Open,StringSearch.nextString,Func2Close,2));
+		out.write(StringSearch.firstString+Func2Open+StringSearch.nextString+Func2Close);
 	}
 }
 			
@@ -270,7 +273,7 @@ SubjectRel = {NomSubject}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{RelCP}
 //		}
 
 {SubjectRel}	
-{ 
+{
 //System.err.println("subj-5");
 	// Find where the relative phrase started and the NP ended and insert the SUBJ label 
 	theIndex = StringSearch.splitString(yytext(),"[SCP", true, -1);		
@@ -280,7 +283,8 @@ SubjectRel = {NomSubject}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{RelCP}
 	}
 	else
 	{
-		out.write(AgreementCheck(Func1Open,StringSearch.firstString,Func1Close,StringSearch.nextString,1));
+//		out.write(AgreementCheck(Func1Open,StringSearch.firstString,Func1Close,StringSearch.nextString,1));
+		out.write(Func1Open+StringSearch.firstString+Func1Close+StringSearch.nextString);
 	}
 }
 "\n"

@@ -22,6 +22,8 @@
 package is.iclt.icenlp.facade;
 
 import is.iclt.icenlp.core.iceparser.*;
+import org.apache.xml.serialize.OutputFormat;
+
 import java.io.*;
 
 /**
@@ -119,6 +121,7 @@ public class IceParserFacade
 // for the server
 	public String parse( String text, boolean include_func, String outputType, boolean error, boolean merge) throws IOException
 	{
+		System.out.println("parsing outputtype="+outputType);
         if (outputType.equals("tcf"))
         {
 			return parse( text, OutputFormatter.OutputType.tcf, include_func, false, error, merge);
@@ -138,6 +141,10 @@ public class IceParserFacade
         {
 			return parse( text, OutputFormatter.OutputType.json, include_func, false, error, merge);
 		}
+		else if (outputType.equals("tag"))
+        {
+			return text;
+		}
 		else if (outputType.equals("one_phrase_per_line"))
 		{
             return parse( text, OutputFormatter.OutputType.phrase_per_line, include_func, false, error, merge);
@@ -149,6 +156,11 @@ public class IceParserFacade
 
 	public String parse( String text, OutputFormatter.OutputType outType, boolean include_func, boolean agreement, boolean markGrammarError, boolean mergeLabels) throws IOException
 	{
+		if (outType.equals(OutputFormatter.OutputType.tag))
+        {
+			return text;
+		}
+
 		// --------------------------------
         //print( "tagEncdr" );
 		StringReader sr = new StringReader( text );
@@ -328,7 +340,7 @@ public class IceParserFacade
         cl1_scn.yyreset(sr);
         cl1_scn.parse(sw);
 
-		if (debug) System.out.println("Clean1=(" + sw.toString()+")");
+		if (debug) System.out.println("gDB>>Clean1=(" + sw.toString()+")");
         //print( "1:"+sw.toString() );
 
 		if( include_func )
@@ -418,7 +430,6 @@ public class IceParserFacade
             f_subj2_scn.parse(sw);
 			if (debug) System.out.println("gDB>>Func_SUBJ2=(" + sw.toString()+")");
 		}
-
 		// --------------------------------
 		//print( "Clean2" );
 

@@ -77,7 +77,7 @@ import is.iclt.icenlp.core.utils.ErrorDetector;
 
 		StringBuffer out = new StringBuffer();
 		out.append(input.substring(0,VPiStart));
-		out.append("[VPi?Gh").append(input.substring(VPiStart+4,input.length()-1)).append("?Gh]");
+		out.append("[VPi?Gh?").append(input.substring(VPiStart+4,input.length()-1)).append("]");
 		return out.toString();
 	}
 %}

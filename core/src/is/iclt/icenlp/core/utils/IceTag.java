@@ -1096,7 +1096,7 @@ public class IceTag extends Tag {
 
   private String annotationSuffixedArticle(boolean english)
   {
-      if (tagStr.length() >= 5 && (tagStr.charAt(4) == cArticle))
+      if ((tagStr.length() >= 5) && (tagStr.charAt(4) == cArticle))
       {
           if (english) return (AnnotationSeparator + "Suffixed article");
           else return (AnnotationSeparator + "Viðskeyttur greinir");
@@ -1287,7 +1287,7 @@ public class IceTag extends Tag {
           if (english) txt.append("Noun"); else txt.append("Nafnorð");
           txt.append(AnnotationSeparator);
           txt.append(annotationGenderNumberCase(1, english));
-          txt.append(annotationSuffixedArticle(english));
+		  txt.append(annotationSuffixedArticle(english));
       }
       return txt.toString();
   }
