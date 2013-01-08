@@ -121,7 +121,6 @@ public class IceParserFacade
 // for the server
 	public String parse( String text, boolean include_func, String outputType, boolean error, boolean merge) throws IOException
 	{
-		System.out.println("parsing outputtype="+outputType);
         if (outputType.equals("tcf"))
         {
 			return parse( text, OutputFormatter.OutputType.tcf, include_func, false, error, merge);

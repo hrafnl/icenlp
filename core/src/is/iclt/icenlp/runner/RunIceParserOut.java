@@ -60,7 +60,6 @@ public class RunIceParserOut extends RunIceParserBase
 
 	private void formatter(OutputFormatter of, String inputFileAndPath, String outputFileAndPath, OutputFormatter.OutputType outputType, boolean mergeTags) throws IOException
 	{
-		System.out.println("formatter output="+ outputType);
 		BufferedReader br;
 		BufferedWriter bw;
 
@@ -80,8 +79,6 @@ public class RunIceParserOut extends RunIceParserBase
             String result = of.parse(str, outputType, mergeTags);
             result = of.removePhraseClosing(result, outputType);
             bw.write(of.parse(str, outputType, mergeTags));
-			System.out.println("result)="+result);
-			System.out.println("of.parse(str, outputType, mergeTags)="+of.parse(str, outputType, mergeTags));
             bw.write("\n");
 		}
 
