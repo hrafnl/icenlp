@@ -31,6 +31,7 @@
 
 package is.iclt.icenlp.core.iceparser;
 import java.io.*;
+import is.iclt.icenlp.core.utils.ErrorDetector;
 %%
 
 %public
@@ -41,6 +42,9 @@ import java.io.*;
 %unicode
 
 %{
+
+  boolean markError = false;
+
   String PPOpen=" [PP ";
   String PPClose=" PP] ";
   
@@ -52,6 +56,20 @@ import java.io.*;
       	out = _out;
       	while (!zzAtEOF) 
       	    yylex();
+  }
+
+  public void set_markGrammarError(boolean option)
+  {
+        markError = option;
+  }
+
+
+  private String errorCheck(String originalStr)
+  {
+    if (markError)
+      return ErrorDetector.PPErrorCheck(originalStr, PPOpen, PPClose);
+    else
+      return PPOpen + originalStr + PPClose;
   }
   
 %}
@@ -105,10 +123,10 @@ PrepPhraseSpecial = {NPGenSpec}{Vegna}{PrepTagGen}
 %%
 
 {MWE_AdvP}|{MWE_CP}|{MWE_AP}	{ out.write(yytext());}
-{PrepPhraseSpecial}		{ out.write(PPOpen+yytext()+PPClose);} 
-{PrepPhraseAccDat}		{ out.write(PPOpen+yytext()+PPClose);}
-{PrepPhraseGen}			{ out.write(PPOpen+yytext()+PPClose);}
-{PrepPhraseMWE}			{ out.write(PPOpen+yytext()+PPClose);}
+{PrepPhraseSpecial}		{ out.write(errorCheck(yytext()));/*out.write(PPOpen+yytext()+PPClose);*/}
+{PrepPhraseAccDat}		{ out.write(errorCheck(yytext()));/*out.write(PPOpen+yytext()+PPClose);*/}
+{PrepPhraseGen}			{ out.write(errorCheck(yytext()));/*out.write(PPOpen+yytext()+PPClose);*/}
+{PrepPhraseMWE}			{ out.write(errorCheck(yytext()));/*out.write(PPOpen+yytext()+PPClose);*/}
 "\n"				{ //System.err.print("Reading line: " + Integer.toString(yyline+1) + "\r"); 
 				out.write("\n"); }
 .		{ out.write(yytext());}

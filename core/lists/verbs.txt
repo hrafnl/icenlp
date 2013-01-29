@@ -1,0 +1,2932 @@
+aðgreina	ÞF
+aðhæfa	ÞF
+aðhafast	ÞF
+aðhæfa	ÞF
+aðhyllast	ÞF
+aðla	ÞF
+aðlaga	ÞF
+aðlagast	ÞGF
+aðskilja	ÞF
+aðstoða	ÞF
+aðvara	ÞF
+afbaka	ÞF
+afbera	ÞF
+afboða	ÞF
+afbrengla	ÞF
+afeitra	ÞF
+afferma	ÞF
+afflytja	ÞF
+afgirða	ÞF
+afgreiða	ÞF
+afhausa	ÞF
+afhelga	ÞF
+afhenda	ÞF ÞGF
+afhjúpa	ÞF
+afhlaða	ÞF
+afhólfa	ÞF
+afhrópa	ÞF
+afhýða	ÞF
+afhöfða	ÞF
+afkasta	ÞGF
+afklæða	ÞF
+afklæðast	ÞGF
+afkóta	ÞF
+afkringja	ÞF
+afkristna	ÞF
+afla	ÞGF EF
+aflaga	ÞF
+aflétta	ÞGF
+aflima	ÞF
+aflita	ÞF
+aflífa	ÞF
+aflýsa	ÞGF
+aflæsa	ÞGF
+afmarka	ÞF
+afmá	ÞF
+afmeyja	ÞF
+afmóta	ÞF
+afmynda	ÞF
+afneita	ÞGF
+afnema	ÞF
+afpanta	ÞF
+afplána	ÞF
+afradda	ÞF
+afráða	ÞF ÞGF
+afreka	ÞF
+afrita	ÞF
+afrugla	ÞF
+afrækja	ÞF
+afsaka	ÞF
+afsala	ÞF
+afsanna	ÞF
+afsegja	ÞF ÞGF
+afskipa	ÞGF
+afskrá	ÞF
+afskrifa	ÞF
+afskræma	ÞF
+afstýra	ÞGF
+aftengja	ÞF
+aftra	ÞGF
+afturkalla	ÞF
+afvatna	ÞF
+afvegaleiða	ÞF
+afvenja	ÞF
+afvígja	ÞF
+afvopna	ÞF
+afþakka	ÞF
+afþjappa	ÞGF
+afþilja	ÞF
+aga	ÞF
+láta	ÞF
+aka	ÞF ÞGF
+ala	ÞF ÞGF
+aldursgreina	ÞF
+aleyða	ÞGF
+alfriða	ÞF
+alhæfa	ÞF
+ama	ÞGF
+anda	ÞGF
+andmæla	ÞGF
+angra	ÞF ÞGF
+anna	ÞGF
+annast	ÞF
+ansa	ÞGF
+apa	ÞF
+arfleiða	ÞF
+arga	ÞGF
+asna	ÞGF
+ata	ÞF
+athuga	ÞF
+atyrða	ÞF
+auðga	ÞF
+auðkenna	ÞF
+auðmýkja	ÞF
+auðsýna	ÞF ÞGF
+auðvelda	ÞF ÞGF
+auglýsa	ÞF
+auka	ÞF ÞGF
+aukast	NF
+ausa	ÞF ÞGF
+axla	ÞF
+babla	ÞF
+baða	ÞF
+baga	ÞF
+baka	ÞF ÞGF
+bakbíta	ÞF
+bakka	ÞGF
+bakkafylla	ÞF
+baknaga	ÞF
+baktala	ÞF
+baktryggja	ÞF
+bakþýða	ÞF
+bana	ÞGF
+banda	ÞF ÞGF
+banka	ÞF
+banna	ÞF ÞGF
+bannfæra	ÞF
+barmafylla	ÞF
+barna	ÞF
+batnar	NF
+bauna	ÞGF
+básúna	ÞF
+beiða	ÞF ÞGF
+beiðast	EF
+beina	ÞF ÞGF
+beinbrjóta	ÞF
+beinstilla	ÞF
+beisla	ÞF
+beita	ÞF ÞGF
+belgja	ÞF
+benda	ÞF ÞGF
+bendla	ÞF
+bera	ÞF ÞGF NF
+berast	NF
+bera	ÞF
+bergja	ÞF
+bergmála	ÞF ÞGF
+berja	ÞF
+besta	ÞF
+betrumbæta	ÞF
+beygja	ÞF ÞGF
+beygla	ÞF
+biðfæra	ÞF
+biðja	ÞF ÞGF EF
+biðjast	EF
+bifa	ÞGF
+bila	ÞF ÞGF
+binda	ÞF ÞGF
+bindast	ÞGF
+birgja	ÞF
+birta	ÞF ÞGF
+birtast	ÞGF NF
+bita	ÞF
+bíða	EF ÞF
+bíta	ÞF
+hafa	ÞF
+láta	ÞF
+bjaga	ÞF
+bjarga	ÞGF
+sjá	ÞGF
+bjóða	ÞF ÞGF
+bjóðast	NF
+blaða	ÞF
+blaka	ÞGF
+blanda	ÞF ÞGF
+blása	ÞF ÞGF
+láta	ÞF
+blekkja	ÞF
+bleikja	ÞF
+blessa	ÞF
+blessast	NF
+bletta	ÞF
+blettahreinsa	ÞF
+bleyta	ÞF
+blikka	ÞF
+blinda	ÞF
+blindfylla	ÞF
+blíðka	ÞF
+blístra	ÞF
+blotna	NF
+blóðga	ÞF
+blóðmarka	ÞF
+blóðmjólka	ÞF
+bljóðsjúga	ÞF
+blómga	ÞF
+blómstra	ÞGF
+blóta	ÞF ÞGF
+blygða	ÞF
+blæða	NF
+blöskra	NF
+boða	ÞF ÞGF
+boðsenda	ÞF ÞGF
+bola	ÞF ÞGF
+bollaleggja	ÞF
+bora	ÞGF
+borða	ÞF
+borðaleggja	ÞF
+borga	ÞF ÞGF
+botna	ÞF
+botnvelta	ÞGF
+bóka	ÞF
+bókfesta	ÞF
+bókfæra	ÞF
+bólstra	ÞF
+bólusetja	ÞF
+bóna	ÞF
+bragða	ÞF
+bragðast	NF
+brauðfæða	ÞF
+brautskrá	ÞF
+bráðvanta	ÞF
+bráka	ÞF
+brasa	ÞF
+bregða	ÞGF
+bregðast	ÞGF NF
+breiða	ÞF ÞGF
+breikka	ÞF
+brengla	ÞF ÞGF
+brenna	ÞF ÞGF NF
+brennimerkja	ÞF
+bresta	ÞF
+bretta	ÞF
+breyta	ÞGF
+brigsla	ÞGF
+brjála	ÞF ÞGF
+brjóta	ÞF
+brugga	ÞF
+brunatryggja	ÞF
+brúa	ÞF
+brúka	ÞF
+brúna	ÞF
+brydda	ÞF
+bryðja	ÞF
+brynna	ÞGF
+brytja	ÞF
+brýna	ÞF
+bræða	ÞF
+buga	ÞF ÞGF
+bulla	ÞF
+buna	ÞGF
+bursta	ÞF
+burtkalla	ÞF
+búa	ÞF ÞGF NF
+segja	ÞF
+búta	ÞF
+byggja	ÞF ÞGF
+bylgja	ÞF
+láta	ÞF
+bylta	ÞGF
+byrgja	ÞF ÞGF
+byrja	ÞF NF
+byrla	ÞGF
+býsna	NF
+býsnast	NF
+bægja	ÞGF
+bæla	ÞF
+bænheyra	ÞF
+bæsa	ÞGF ÞF
+bæta	ÞF ÞGF
+bætast	NF
+böðla	ÞGF
+böggla	ÞF ÞGF
+bölva	ÞGF
+daðra	ÞGF
+dagrétta	ÞF
+dagsetja	ÞF
+dapra	ÞF
+daprast	NF
+dauðhreinsa	ÞF
+dauðkvíða	ÞGF
+dauðleiðast	NF
+dauðrota	ÞF
+dauðsárnar	NF
+dauðskjóta	ÞF
+dauðöfunda	ÞF
+dá	ÞF
+dáleiða	ÞF
+dásama	ÞF
+deila	ÞGF ÞF
+deildaskipta	ÞGF
+dekstra	ÞF ÞGF
+demba	ÞGF
+dengja	ÞF ÞGF
+láta	ÞF
+deyða	ÞF
+deyfa	ÞF
+diffra	ÞF
+dilla	ÞGF
+dingla	ÞGF
+dirfa	ÞF
+djúpfrysta	ÞF
+djöfla	ÞF ÞGF
+draga	ÞF NF
+drasla	ÞGF
+dreifa	ÞGF ÞF
+dreifplanta	ÞGF
+dreifsá	ÞF ÞGF
+drekka	ÞF ÞGF
+drekkhlaða	ÞF
+drekkja	ÞGF
+drepa	ÞF ÞGF
+drepleiðast	NF
+drepöfunda	ÞF
+dreyma	ÞF
+dreypa	ÞGF
+drita	ÞGF
+drífa	ÞF
+drulla	ÞF
+drusla	ÞGF
+drýgja	ÞF
+drösla	ÞGF
+dubba	ÞF
+duga	ÞGF NF
+dulbúa	ÞF
+dulrita	ÞF
+dusta	ÞF ÞGF
+dúa	ÞGF
+dúða	ÞF
+dúka	ÞF
+dúkleggja	ÞF
+dúndra	ÞGF
+dvelja	ÞF
+dylja	ÞF
+dyljast	EF NF
+ganga	EF
+dysja	ÞF
+dytta	ÞGF
+dýfa	ÞGF
+dýpka	ÞF
+dýrka	ÞF
+dæla	ÞGF
+dæma	ÞF ÞGF
+efa	ÞF
+efla	ÞF
+efna	ÞF
+efnagreina	ÞF
+efnisflokka	ÞF
+eftirláta	ÞGF
+eggja	ÞF EF
+egna	ÞF
+eiðfesta	ÞF
+eiga	ÞF ÞGF
+láta	ÞF
+eigna	ÞGF
+eignast	ÞF
+eignfæra	ÞF
+eima	ÞF
+einangra	ÞF
+einbeita	ÞGF
+einfalda	ÞF
+einhenda	ÞGF
+einhljóða	ÞF
+einkenna	ÞF
+einoka	ÞF
+einræða	ÞF
+einskorða	ÞF
+eira	ÞGF
+eitra	ÞF
+elda	ÞF ÞGF
+elska	ÞF
+elta	ÞF
+enda	ÞF
+endast	ÞGF NF
+endastinga	ÞGF
+endurborga	ÞF ÞGF
+endurbyggja	ÞF
+endurbæta	ÞF
+endurflytja	ÞF ÞGF
+endurgera	ÞF
+endurgjalda	ÞF ÞGF
+endurgreiða	ÞF ÞGF
+endurhanna	ÞF
+endurheimta	ÞF
+endurhressa	ÞF
+endurkasta	ÞGF
+endurkaupa	ÞF
+endurkjósa	ÞF
+endurkrefja	ÞF
+endurlána	ÞF ÞGF
+endurleigja	ÞF ÞGF
+endurlesa	ÞF ÞGF
+endurlifa	ÞF
+endurlífga	ÞF
+endurmeta	ÞF
+endurmóta	ÞF
+endurnefna	ÞF
+endurnýja	ÞF
+endurnýta	ÞF
+endurnæra	ÞF
+endurprenta	ÞF
+endurráða	ÞF
+endurreikna	ÞF
+endurreisa	ÞF
+endurrétta	ÞF
+endurrita	ÞF
+endursegja	ÞF
+endurselja	ÞF ÞGF
+endursemja	ÞF
+endursenda	ÞF ÞGF
+endurskapa	ÞF
+endurskíra	ÞF
+endurskoða	ÞF
+endurskrá	ÞF
+endurskrifa	ÞF
+endursníða	ÞF
+endurspegla	ÞF
+endurstilla	ÞF
+endursýna	ÞF
+endurtaka	ÞF
+endurtryggja	ÞF
+endurvarpa	ÞGF
+endurvekja	ÞF
+endurvinna	ÞF
+endurvígja	ÞF
+endurþýða	ÞF
+engja	ÞF
+erfa	ÞF
+ergja	ÞF
+erja	ÞF
+erta	ÞF
+espa	ÞF
+etja	ÞGF
+eyða	ÞGF
+eyðast	NF
+eyðileggja	ÞF
+eygja	ÞF
+faðma	ÞF
+fagna	ÞGF
+eiga	ÞGF
+fala	ÞF
+falbjóða	ÞF ÞGF
+falda	ÞF ÞGF
+falla	ÞGF NF
+fallgreina	ÞF
+falsa	ÞF
+fanga	ÞF
+fangelsa	ÞF
+fara	ÞF ÞGF EF NF
+láta	ÞF
+farast	NF
+farða	ÞF
+farga	ÞGF
+farnast	NF
+fastákveða	ÞF
+fastráða	ÞF
+fastsetja	ÞF
+fata	ÞF
+fatast	NF
+fá	ÞF ÞGF EF
+láta	ÞF
+fága	ÞF
+feðra	ÞF
+fegra	ÞF
+feitletra	ÞF
+fela	ÞF ÞGF
+fella	ÞF
+fenna	ÞF
+ferfalda	ÞF
+fergja	ÞF
+ferja	ÞF
+ferma	ÞF
+festa	ÞF ÞGF
+feta	ÞF
+feykja	ÞGF
+féfletta	ÞF
+fimmfalda	ÞF
+finna	ÞF ÞGF
+finnast	NF
+fipa	ÞF
+firra	ÞF
+firrast	ÞF
+fiska	ÞF
+fita	ÞF
+fitja	ÞF
+fitumæla	ÞF
+fífla	ÞF
+fínkemba	ÞF
+fínpússa	ÞF
+fínsalta	ÞF
+fínslípa	ÞF
+fínstilla	ÞF
+fjarlægja	ÞF
+fjarlægjast	ÞF
+fjarræsa	ÞF
+fjárfesta	ÞF
+fjármagna	ÞF
+fjórfalda	ÞF
+fjórhlaða	ÞF
+fjórlesa	ÞF
+fjórskipta	ÞGF
+láta	ÞF
+fjölbinda	ÞF
+fjöldahandtaka	ÞF
+fjölfalda	ÞF
+fjölga	ÞGF
+fjölrita	ÞF
+fjörga	ÞF
+fjötra	ÞF
+flagga	ÞGF
+flaka	ÞF
+láta	ÞF
+flá	ÞF
+fleipra	ÞGF
+fleka	ÞF
+flekka	ÞF
+flengja	ÞF
+flengríða	ÞF
+fletja	ÞF
+fletta	ÞGF ÞF
+fleygja	ÞGF
+fleyta	ÞGF ÞF
+fleytifylla	ÞF
+flétta	ÞF
+flikka	ÞF
+flíka	ÞGF
+flísaleggja	ÞF
+fljúga	NF
+flokka	ÞF
+flóa	ÞF ÞGF
+flúra	ÞF
+flykkja	ÞF
+flysja	ÞF
+flytja	ÞF ÞGF
+flýja	ÞF
+flýta	ÞGF
+flækja	ÞF
+flæma	ÞF
+fnæsa	ÞGF
+forbjóða	ÞGF
+fordæma	ÞF
+forða	ÞGF
+forðast	ÞF
+forða	ÞF
+forhanna	ÞF
+forhita	ÞF
+forma	ÞF
+formóta	ÞF
+formæla	ÞGF
+forrita	ÞF
+forsjóða	ÞF
+forskoða	ÞF
+forsmá	ÞF
+forsníða	ÞF
+fortaka	ÞF
+fóðra	ÞF
+fórna	ÞGF
+fórnfæra	ÞF
+fóstra	ÞF
+fótbrjóta	ÞF
+fótumtroða	ÞF
+frama	ÞF
+framfleyta	ÞGF
+framfylgja	ÞGF
+framkalla	ÞF
+framkvæma	ÞF
+framleiða	ÞF
+framleigja	ÞF
+framlengja	ÞF
+framreiða	ÞF
+framreikna	ÞF
+framselja	ÞF ÞGF
+framsenda	ÞF ÞGF
+framvísa	ÞGF
+fregna	ÞF EF ÞGF
+freista	EF
+frelsa	ÞF
+fremja	ÞF
+fresta	ÞGF
+frétta	ÞF
+friða	ÞF
+friðhelga	ÞF
+friðlýsa	ÞF
+fría	ÞF
+frjóvga	ÞF
+fróa	ÞGF
+frumgilda	ÞF
+frumgreina	ÞF
+frumrita	ÞF
+frumsemja	ÞF
+frumskapa	ÞF
+frumstilla	ÞF
+frumsýna	ÞF
+frussa	ÞGF
+frysta	ÞF
+frýja	ÞGF
+fræða	ÞF
+fullákveða	ÞF
+fullbúa	ÞF
+fullgera	ÞF
+fullgilda	ÞF
+fullhanna	ÞF
+fullkomna	ÞF
+fullna	ÞF
+fullnusta	ÞF
+fullnýta	ÞF
+fullnægja	ÞGF
+fullreyna	ÞF
+fullasanna	ÞF
+fullsanna	ÞF
+fullskýra	ÞF
+fullstækka	ÞF
+fullþakka	ÞGF
+fullþurrka	ÞF
+fullþæfa	ÞF
+fullvinna	ÞF
+fullvissa	ÞF
+furðast	ÞF
+fúaverja	ÞF
+fylgja	ÞGF
+fylkja	ÞGF
+fylla	ÞF
+fyllast	ÞGF
+fyrirbjóða	ÞF ÞGF
+fyrirbyggja	ÞF
+fyrirfara	ÞGF
+fyrirfinna	ÞF
+fyrirgefa	ÞF ÞGF
+fyrirgefast	NF
+fyrirgera	ÞGF
+fyrirhitta	ÞF
+fyrirhuga	ÞF ÞGF
+fyrirlíta	ÞF
+fyrirskipa	ÞF ÞGF
+fyrna	ÞF
+fýsa	ÞF
+fæða	ÞF
+fægja	ÞF
+fækka	ÞGF
+fæla	ÞF
+færa	ÞF ÞGF
+færast	NF
+förlast	NF
+gabba	ÞF
+gagna	ÞGF NF
+gagnast	ÞGF NF
+gagnþurrka	ÞF
+gagnrýna	ÞF
+gagntaka	ÞF
+galla	ÞF
+galdra	ÞF
+galopna	ÞF
+gamna	ÞGF
+ganga	ÞF ÞGF
+gengur	NF
+láta	ÞF
+gangsetja	ÞF
+ganta	ÞF
+gata	ÞF
+gatslíta	ÞGF
+gauka	ÞGF
+gaula	ÞF
+gaumgæfa	ÞF
+gá	EF
+gára	ÞF
+geðjast	NF
+gefa	ÞF ÞGF
+gefast	ÞGF NF
+gegna	ÞGF NF
+gegnbleyta	ÞF
+gegnlýsa	ÞF
+gegnsteikja	ÞF
+gegnvæta	ÞF
+geifla	ÞF
+geirnegla	ÞF
+gelda	ÞF
+gera	ÞF ÞGF NF
+gerast	NF
+gerilsneyða	ÞF
+geta	ÞF EF
+geyma	ÞF EF
+gifta	ÞF ÞGF
+giftast	ÞGF
+gilda	ÞF
+ginna	ÞF
+girða	ÞF
+girnast	ÞF
+gista	ÞF
+gjalda	ÞF EF ÞGF
+gjaldfæra	ÞF
+gjósa	ÞGF
+gjóta	ÞGF
+gjörbylta	ÞGF
+gjöreyða	ÞGF
+gjörbreyta	ÞGF
+gjörhreinsa	ÞF
+gjörkanna	ÞF
+gjörnýta	ÞF
+gjörspilla	ÞGF
+glata	ÞGF
+gleðja	ÞF
+glenna	ÞF
+gera	ÞGF
+glepja	ÞF ÞGF
+gleyma	ÞGF
+gleypa	ÞF
+glíma	ÞF
+gljá	ÞF
+gljábera	ÞF
+gljáhefla	ÞF
+gljáslípa	ÞF
+glopra	ÞGF
+glóða	ÞF
+glóðarbaka	ÞF
+glóðarsteikja	ÞF
+glóðsteikja	ÞF
+glósa	ÞF
+glutra	ÞGF
+glæða	ÞF
+glöggva	ÞF ÞGF
+gnísta	ÞGF
+gnýja	ÞF
+gogga	ÞF
+láta	ÞF
+góma	ÞF
+grafa	ÞF ÞGF
+granda	ÞGF
+grandgæfa	ÞF
+grandskoða	ÞF
+grannskoða	ÞF
+grauta	ÞGF
+gráta	ÞF
+grátbiðja	ÞF EF
+grátbæna	ÞF
+greftra	ÞF
+greiða	ÞF ÞGF
+greikka	ÞF
+greina	ÞF ÞGF
+gremja	ÞF
+gremjast	ÞGF NF
+greypa	ÞF
+grilla	ÞF
+grisja	ÞF
+grípa	ÞF
+grjótbera	ÞF
+gróðursetja	ÞF
+grófflokka	ÞF
+grófsalta	ÞF
+grugga	ÞF
+gruna	ÞF
+grundvalla	ÞF
+grunna	ÞF
+grynnka	ÞF
+grýta	ÞF ÞGF
+græða	ÞF
+græðast	NF
+grænka	ÞF
+græta	ÞF
+gufuhreinsa	ÞF
+gufupressa	ÞF
+gufusjóða	ÞF
+gufuþvo	ÞF
+gullbrydda	ÞF
+gulltryggja	ÞF
+gusa	ÞGF
+gúlpa	ÞF
+gylla	ÞF
+gyrða	ÞF
+gæða	ÞF ÞGF
+gæla	ÞF ÞGF
+gæta	EF
+göfga	ÞF
+gösla	ÞF
+hafa	ÞF
+hafna	ÞGF
+haga	ÞGF NF
+hagga	ÞGF
+hagna	NF
+hagnýta	ÞF
+hagræða	ÞGF
+hagvenja	ÞF
+hakka	ÞF
+hala	ÞF
+halda	ÞGF ÞF
+haldast	NF
+halla	ÞGF
+hallmæla	ÞGF
+hamfletta	ÞF
+hamla	ÞGF
+hampa	ÞGF
+hamra	ÞF
+hamstra	ÞF
+handbrjóta	ÞF
+handfesta	ÞF
+handfjatla	ÞF
+handgrafa	ÞF
+handheilsa	ÞGF
+handhöggva	ÞF
+handjárna	ÞF
+handlanga	ÞF ÞGF
+handleggsbrjóta	ÞF
+handleika	ÞF
+handmjólka	ÞF
+handsaga	ÞF
+handsala	ÞF ÞGF
+handsama	ÞF
+handsauma	ÞF
+handselja	ÞF ÞGF
+handskera	ÞF
+handskrifa	ÞF ÞGF
+handstyrkja	ÞF
+handtaka	ÞF
+handþvo	ÞF
+hanka	ÞF
+hanna	ÞF
+harðfjötra	ÞF
+harðhnoða	ÞF
+harðlofa	ÞGF
+harðloka	ÞGF
+harðlæsa	ÞGF
+harðneita	ÞGF
+harðsjóða	ÞF
+harðþurrka	ÞF
+harka	ÞF ÞGF
+harma	ÞF
+haska	ÞGF
+hasla	ÞGF
+hasta	ÞGF
+hata	ÞF
+hauga	ÞGF
+haugleggja	ÞF
+haugsetja	ÞF
+hausa	ÞF
+hausbrjóta	ÞF
+há	ÞGF
+háfa	ÞF
+hálfdrepa	ÞF
+hálfeyða	ÞGF
+hálfeyðileggja	ÞF
+hálffylla	ÞF
+hálfgleyma	ÞGF
+hálfgremjast	NF
+hálfhá	ÞGF
+hálfhrópa	ÞF
+hálfhvísla	ÞGF
+hálfkvíða	ÞGF
+hálfleiðast	NF
+hálfloka	ÞGF
+hálfsárna	NF
+hálfskamma	ÞF
+hálfsvelta	ÞF
+hálfsvíða	ÞF
+hálfþurrka	ÞF
+hálföfunda	ÞF
+hámarka	ÞF
+hárreyta	ÞF
+hálsbrjóta	ÞF
+hálshöggva	ÞF
+hálsskera	ÞF
+háma	ÞF
+hártoga	ÞF
+hástafa	ÞF
+hátta	ÞGF ÞF
+hefja	ÞF
+hefla	ÞF
+hefna	EF ÞGF
+eiga	EF
+hefta	ÞF
+hegða	ÞGF
+hegna	ÞGF
+heiðra	ÞF
+heilaþvo	ÞF
+heilda	ÞF
+heilfrysta	ÞF
+heilla	ÞF
+heilsa	ÞGF
+heilsteikja	ÞF
+heimfæra	ÞF
+heimila	ÞF ÞGF
+heimsækja	ÞF
+heimta	ÞF
+heita	NF ÞGF
+heitbinda	ÞF
+heitbindast	ÞGF
+heitreykja	ÞF
+hekla	ÞF
+helga	ÞF ÞGF
+hella	ÞGF
+helluleggja	ÞF
+helminga	ÞF
+helskjóta	ÞF
+heltaka	ÞF
+helta	ÞF
+hemja	ÞF
+henda	ÞF ÞGF NF
+hengja	ÞF
+henta	ÞGF NF
+heppnast	NF
+herða	ÞF
+herja	ÞF
+herleiða	ÞF
+herma	ÞF
+hernema	ÞF
+herpa	ÞF
+hersetja	ÞF
+hertaka	ÞF
+hervæða	ÞF
+hespa	ÞF ÞGF
+hesthúsa	ÞF
+heygja	ÞF
+heyja	ÞF
+heykja	ÞF
+heyra	ÞF ÞGF EF
+heyrist	NF
+himnudraga	ÞF
+hindra	ÞF
+hirða	ÞF
+hirta	ÞF
+hita	ÞF ÞGF
+hitta	ÞF
+hífa	ÞF
+hjakka	ÞF ÞGF
+hjara	ÞF
+hjálpa	ÞGF
+hjúfra	ÞF
+hjúkra	ÞGF
+hjúpa	ÞF
+hlaða	ÞF ÞGF
+hlamma	ÞGF
+hlaupa	ÞF
+hafa	ÞF
+hlekkja	ÞF
+hlera	ÞF
+hleypa	ÞF ÞGF
+hliðra	ÞGF
+hlífa	ÞGF
+hlíta	ÞGF
+hljóðrita	ÞF
+hljóðsetja	ÞF
+hljóta	ÞF
+hlotnast	NF
+hlunnfara	ÞF
+hlunka	ÞGF
+hlusta	ÞF
+hluta	ÞGF ÞF
+hlutgera	ÞF
+hlúa	ÞGF
+hlýða	ÞGF NF
+hlýðnast	ÞGF
+hlýja	ÞGF
+hlægja	ÞF
+hnakkafletja	ÞF
+hnappa	ÞGF
+hnappsitja	ÞF
+hneigja	ÞGF
+hnekkja	ÞF ÞGF
+hneppa	ÞGF ÞF
+hneyksla	ÞF
+hnika	ÞGF
+hnita	ÞF
+hníga	ÞGF
+hnoða	ÞF
+hnoðnegla	ÞF
+hnupla	ÞGF
+hnykkja	ÞGF
+hnykla	ÞF
+hnýta	ÞF
+hola	ÞF ÞGF
+holdbæta	ÞF
+holufylla	ÞF
+hornbrjóta	ÞF
+hornskella	ÞF
+hossa	ÞGF
+hóa	ÞGF
+hólfa	ÞF
+hósta	ÞGF
+hóta	ÞGF
+hraða	ÞGF
+hraðfrysta	ÞF
+hraðfækka	ÞGF
+hraðkæla	ÞF
+hraðlesa	ÞF
+hraðrita	ÞF
+hraðsauma	ÞF
+hraðsjóða	ÞF
+hraðþurrka	ÞF
+hrakyrða	ÞF
+hranna	ÞGF
+hrapa	ÞGF
+hreiðra	ÞGF
+hreingera	ÞF
+hreinka	ÞF
+hreinkemba	ÞF
+hreinrita	ÞF
+hreinrækta	ÞF
+hreinsa	ÞF
+hreinskrifa	ÞF
+hreinskúra	ÞF
+hreistra	ÞF
+hrekja	ÞF
+hrekkja	ÞF
+hrella	ÞF
+hremma	ÞF
+hreppa	ÞF
+hressa	ÞF
+hreyfa	ÞF ÞGF
+hreyta	ÞF ÞGF
+hrifsa	ÞF
+hrinda	ÞGF
+hringa	ÞF
+hringja	ÞGF
+hringbeygja	ÞF
+hringla	ÞGF
+hringsnúa	ÞGF
+hripa	ÞF ÞGF
+hrista	ÞF
+hríðlækka	ÞF
+hrífa	ÞF
+hrísla	ÞGF
+hrjá	ÞF
+hrjóta	NF
+hrófa	ÞGF
+hrófla	ÞGF
+hrópa	ÞF
+hrósa	ÞGF
+hrufla	ÞF
+hrukka	ÞF
+hrúga	ÞGF
+hryggbrjóta	ÞF
+hryggja	ÞF
+hræða	ÞF
+hræðast	ÞF
+hrækja	ÞGF ÞF
+hræra	ÞF
+hrökkla	ÞGF
+huga	ÞF ÞGF
+hugfesta	ÞF
+hugga	ÞF
+hughreysta	ÞF
+hugkvæmast	NF
+hugleiða	ÞF
+hugna	NF
+hugnast	NF
+hugsa	ÞF ÞGF
+hugsast	NF
+humma	ÞF
+hundbeita	ÞF
+hundelta	ÞF
+hundleiðast	NF
+hundskamma	ÞF
+hundraðfalda	ÞF
+hunsa	ÞF
+hunska	ÞF
+húða	ÞF ÞGF
+húðfletta	ÞF
+húðskamma	ÞF
+húðstrýkja	ÞF
+húkka	ÞF
+hvekkja	ÞF
+hvelfa	ÞGF
+hverfa	ÞGF
+hversjóða	ÞF
+hvessa	ÞF
+hvetja	ÞF
+vera	EF
+hvíla	ÞF ÞGF
+hvísla	ÞGF
+hvítfága	ÞF
+hvítskúra	ÞF
+hvítþvo	ÞF
+hvolfa	ÞGF
+hyggjast	ÞF
+hygla	ÞGF
+hylja	ÞF ÞGF
+hylla	ÞF
+hysja	ÞF
+hýða	ÞF
+hýrudraga	ÞF
+hýsa	ÞF
+hæða	ÞF
+hæðarmæla	ÞF
+hæfa	ÞF ÞGF
+hægja	ÞF ÞGF
+hægrijafna	ÞF
+hækka	ÞF
+hæla	ÞGF
+hælbíta	ÞF
+hæna	ÞF
+hætta	ÞGF
+eiga	ÞF
+stofna	ÞGF
+höfða	ÞF
+höfuðsitja	ÞF
+höggva	ÞF
+höndla	ÞF
+iðka	ÞF
+iðra	EF
+iðrast	EF
+impra	ÞF
+inna	ÞF
+innbyrða	ÞF
+innheimta	ÞF
+innifela	ÞF
+inniloka	ÞF
+innilykja	ÞF
+innkalla	ÞF
+innleiða	ÞF
+innlima	ÞF
+innleysa	ÞF
+innprenta	ÞGF
+innramma	ÞF
+innrétta	ÞF
+innrita	ÞF
+innræta	ÞGF
+innsigla	ÞF
+jaðra	ÞF
+jafna	ÞF ÞGF
+jafngilda	ÞGF
+jafnhatta	ÞF
+jaga	ÞF ÞGF
+japla	ÞF
+jarða	ÞF
+jarðsetja	ÞF
+jarðsyngja	ÞF
+jarðtengja	ÞF
+jarðvarpa	ÞGF
+jaska	ÞGF
+jánka	ÞGF
+járna	ÞF
+járnhatta	ÞF
+járnklæða	ÞF
+játa	ÞF ÞGF
+játast	ÞGF
+jóna	ÞF
+jórtra	ÞF
+kaffæra	ÞF
+kafhleypa	ÞGF
+kagbæta	ÞF
+kaghýða	ÞF
+kagstrýkja	ÞF
+kaldhreinsa	ÞF
+kaldreykja	ÞF
+kalka	ÞF
+kalkbera	ÞF
+kalla	ÞF
+kallast	NF
+kanna	ÞF
+kappfóðra	ÞF
+kappklæða	ÞF
+kappkynda	ÞF
+kara	ÞF
+karlkenna	ÞF
+kasta	ÞGF
+kaupa	ÞF ÞGF
+kála	ÞGF
+káma	ÞF
+kássa	ÞGF
+kefla	ÞF
+kelfa	ÞF
+kemba	ÞF ÞGF
+kengbeygja	ÞF
+kenna	ÞF ÞGF EF
+vera	ÞGF
+keyra	ÞF
+kippa	ÞF ÞGF
+kipra	ÞF
+kirja	ÞF
+kyrja	ÞF
+kistuleggja	ÞF
+kitla	ÞF
+kíkja	ÞGF
+kítta	ÞF
+kjafta	ÞF ÞGF
+kjaftshöggva	ÞF
+kjassa	ÞF
+kjálkabrjóta	ÞF
+kjósa	ÞF
+kjöldraga	ÞF
+klaga	ÞF
+klambra	ÞGF
+klappa	ÞF ÞGF
+klastra	ÞGF
+klára	ÞF
+klekja	ÞGF
+klemma	ÞF
+klessa	ÞF ÞGF
+klessukeyra	ÞF
+klingja	ÞGF
+klippa	ÞF
+klífa	ÞF
+klína	ÞF ÞGF
+klípa	ÞF
+klístra	ÞGF
+kljá	ÞF ÞGF
+kljúfa	ÞF
+klófesta	ÞF
+klóra	ÞF ÞGF
+klúðra	ÞGF
+klæða	ÞF
+klæðast	ÞGF
+klæðfletta	ÞF
+klæma	ÞF
+klöngra	ÞGF
+kneyfa	ÞF
+knéfalla	ÞGF
+knésetja	ÞF
+knúsa	ÞF
+knúskyssa	ÞF
+knýja	ÞF
+kokgleypa	ÞF
+kolfella	ÞF
+kollfella	ÞF
+kollhlaupa	ÞF
+kollraka	ÞF
+kollsteypa	ÞGF
+kollvarpa	ÞGF
+kollvelta	ÞGF
+kollvæta	ÞF
+koma	ÞGF
+vera	EF
+kosta	ÞF ÞGF
+kostgæfa	ÞF
+kóða	ÞF
+kóróna	ÞF
+kóta	ÞF
+krafsa	ÞF
+kraka	ÞF
+krefja	ÞF
+krefjast	EF
+kreista	ÞF
+kremja	ÞF
+kreppa	ÞF
+kristalla	ÞF
+kristna	ÞF
+kría	ÞF
+kríta	ÞF
+krjúpa	ÞGF
+kroppa	ÞF ÞGF
+krossa	ÞF
+krossbinda	ÞF
+krossblóta	ÞGF
+krossbölva	ÞGF
+krossfesta	ÞF
+krossleggja	ÞF
+krota	ÞF
+króa	ÞF
+króma	ÞF
+krómhúða	ÞF
+krulla	ÞF
+krumpa	ÞF
+krúnuraka	ÞF
+krydda	ÞF
+kryfja	ÞF
+kryppla	ÞF
+krýna	ÞF
+krækja	ÞGF ÞF
+kræla	ÞF
+kubba	ÞF
+kunna	ÞF ÞGF
+kunngera	ÞF ÞGF
+kurla	ÞF
+kurlbrjóta	ÞF
+kúffylla	ÞF
+kúga	ÞF
+kúldra	ÞGF
+kúvenda	ÞGF
+kvarða	ÞF
+kveða	ÞF
+kveðja	ÞF
+kveikja	ÞF
+kvelja	ÞF
+kvengera	ÞF
+kvenkenna	ÞF
+kviðfletja	ÞF
+kviðrista	ÞF
+kvikmynda	ÞF
+kviksetja	ÞF
+kvista	ÞF
+kvía	ÞF
+kvíða	ÞGF
+kvongast	ÞGF
+kvænast	ÞGF
+kynbæta	ÞF
+kynda	ÞF
+kyngja	ÞGF
+kyngreina	ÞF
+kynna	ÞF ÞGF
+kynnast	ÞGF
+kyrja	ÞF
+kyrkja	ÞF
+kyrrsetja	ÞF
+kyssa	ÞF
+kýla	ÞF
+kæfa	ÞF
+kæla	ÞF
+kæra	ÞF
+kæsa	ÞF
+kæta	ÞF
+laða	ÞF
+laga	ÞF
+lagfæra	ÞF
+lakka	ÞF
+lakkbera	ÞF
+láta	ÞF
+lama	ÞF
+landa	ÞGF
+lappa	ÞF
+laska	ÞF
+lasta	ÞF
+lastmæla	ÞGF
+lauga	ÞF
+lauma	ÞGF
+launa	ÞGF
+lá	ÞGF
+lást	NF
+lágmarka	ÞF
+lágstafa	ÞF
+lána	ÞF ÞGF
+lánast	NF
+láta	ÞF ÞGF EF NF
+fá	ÞF
+leggja	ÞF ÞGF
+leggjast	NF
+leiða	ÞF ÞGF
+leiðast	NF
+leiðbeina	ÞGF
+leiðrétta	ÞF
+leiðsegja	ÞGF
+leifa	ÞGF
+leigja	ÞF ÞGF
+leika	ÞF
+leita	ÞGF EF ÞF
+leka	ÞGF
+lemba	ÞF
+lemja	ÞF
+lemstra	ÞF
+lenda	ÞGF
+lengja	ÞF
+lepja	ÞF
+lesa	ÞF ÞGF
+lesta	ÞF
+letja	ÞF
+letra	ÞF
+leyfa	ÞF ÞGF
+leyfast	NF
+leyna	ÞGF ÞF
+leysa	ÞF
+létta	ÞF ÞGF
+liða	ÞF
+liðka	ÞF
+liðsinna	ÞGF
+lifa	ÞF ÞGF
+liggja	ÞGF NF
+láta	ÞF
+leggjast	NF
+lima	ÞF
+limlesta	ÞF
+lina	ÞF
+linna	ÞGF
+lista	ÞF
+lita	ÞF
+litgreina	ÞF
+litprenta	ÞF
+láta	ÞF
+líða	NF ÞF ÞGF
+líðast	NF
+lífga	ÞF
+lífláta	ÞF
+lífnæra	ÞF
+líftryggja	ÞF
+líka	NF
+líkja	ÞGF
+líkjast	ÞGF
+líkna	ÞGF
+líma	ÞF
+límbera	ÞF
+líta	ÞF
+lítast	NF
+lítillækka	ÞF
+lítilsvirða	ÞF
+ljá	ÞGF
+ljábera	ÞF
+ljósprenta	ÞF
+ljósrita	ÞF
+ljósta	ÞF ÞGF
+ljóstra	ÞF ÞGF
+ljúga	ÞGF ÞF
+ljúka	ÞGF
+lofa	ÞF ÞGF
+lofast	ÞGF
+lofta	ÞGF
+loftræsa	ÞF
+loftræsta	ÞF
+loftþurrka	ÞF
+loga	ÞGF
+logsjóða	ÞF
+logskera	ÞF
+loka	ÞGF ÞF
+lokka	ÞF
+losa	ÞF
+lóða	ÞF
+lóga	ÞGF
+lóskera	ÞF
+lukkast	NF
+lulla	ÞF
+luma	ÞGF
+lunningafylla	ÞF
+lumbra	ÞGF
+lúberja	ÞF
+lúlemja	ÞF
+lúra	ÞF
+lúsa	ÞF
+lúskra	ÞGF
+lúta	ÞGF
+lútsjóða	ÞF
+lyfta	ÞGF
+lykja	ÞF ÞGF
+lykkja	ÞF
+lyppa	ÞF
+lýja	ÞF
+lýsa	ÞF ÞGF
+læða	ÞGF
+lægja	ÞF
+lækka	ÞF
+lækna	ÞF
+læra	ÞF
+lærast	NF
+lærbrjóta	ÞF
+læsa	ÞGF ÞF
+löðra	ÞF
+löðrunga	ÞF
+lögbjóða	ÞF ÞGF
+lögfesta	ÞF
+löggilda	ÞF
+löghelga	ÞF
+lögleiða	ÞF
+lögskipa	ÞF
+lögskrá	ÞF
+lögskylda	ÞF
+lögsækja	ÞF
+lögtaka	ÞF
+lögvernda	ÞF
+lögþvinga	ÞF
+magagleypa	ÞF
+magna	ÞF
+maka	ÞF ÞGF
+mala	ÞF ÞGF
+malbera	ÞF
+malbika	ÞF
+malla	ÞF
+mana	ÞF
+manga	ÞGF
+manna	ÞF
+manngera	ÞF
+margathuga	ÞF
+margbiðja	ÞF ÞGF EF
+margbjóða	ÞF ÞGF
+margblessa	ÞF
+margborga	ÞF ÞGF
+margbrjóta	ÞF
+margbölva	ÞGF
+margdrepa	ÞF
+margendurtaka	ÞF
+margfalda	ÞF
+margfresta	ÞGF
+margkjósa	ÞF
+marglesa	ÞF ÞGF
+marglofa	ÞF ÞGF
+marglæsa	ÞGF
+margneita	ÞGF
+margreyna	ÞF
+margsanna	ÞF
+margsegja	ÞF ÞGF
+margskipta	ÞGF
+margspyrja	ÞF EF
+margtyggja	ÞF
+margvefja	ÞF ÞGF
+margþakka	ÞGF
+margþæfa	ÞF
+marka	ÞF ÞGF
+markaðssetja	ÞF
+mata	ÞF
+matbúa	ÞF
+matreiða	ÞF
+maula	ÞF
+má	ÞF
+mála	ÞF
+máta	ÞF
+meðganga	ÞF
+meðkenna	ÞF
+meðtaka	ÞF
+megna	ÞF ÞGF
+meiða	ÞF
+meina	ÞF ÞGF
+meintaka	ÞF
+meitla	ÞF
+melta	ÞF
+menga	ÞF
+mennta	ÞF
+mergsjúga	ÞF
+merja	ÞF
+merkja	ÞF ÞGF
+meta	ÞF
+metta	ÞF
+miða	ÞF ÞGF
+miðja	ÞF
+miðjusetja	ÞF
+miðla	ÞGF
+mikla	ÞF
+miklast	NF
+milda	ÞF
+millifæra	ÞF
+minna	ÞF
+minnast	EF
+minnka	ÞF
+misbeita	ÞGF
+misbjóða	ÞGF NF
+misbrúka	ÞF
+misfara	ÞGF
+misheppnast	NF
+misheyra	ÞF
+miskunna	ÞGF
+mislesa	ÞF
+mislíka	NF
+mislukkast	NF
+misminna	ÞF
+mismuna	ÞGF
+misnota	ÞF
+misreikna	ÞF
+misrita	ÞF
+missa	ÞF EF
+misskilja	ÞF
+misskrifa	ÞF
+mistaka	ÞF
+mistakast	NF
+mistryggja	ÞF
+misvirða	ÞF
+misþyrma	ÞGF
+misþýða	ÞF
+mjaka	ÞGF
+mjalta	ÞF
+mjatla	ÞF ÞGF
+mjókka	ÞF
+mjólka	ÞF ÞGF
+moða	ÞF ÞGF
+moka	ÞF ÞGF
+mola	ÞF
+molbrjóta	ÞF
+moldfylla	ÞF
+móðga	ÞF
+móta	ÞF
+mótmæla	ÞGF
+mótsegja	ÞGF
+mótþægja	ÞGF
+muldra	ÞF
+muna	ÞGF ÞF
+munda	ÞF
+murka	ÞF
+múlbinda	ÞF
+múra	ÞF
+múta	ÞGF
+mylja	ÞF
+mynda	ÞF
+myndlífga	ÞF
+myndskreyta	ÞF
+myrða	ÞF
+myrkva	ÞF
+mýkja	ÞF
+mæða	ÞF
+mæla	ÞF ÞGF
+mæna	ÞF
+mænufletja	ÞF
+mænustinga	ÞF
+mæta	ÞGF
+láta	ÞF
+mölbrjóta	ÞF
+mölva	ÞF
+möndla	ÞF
+nafngreina	ÞF
+naga	ÞF
+narra	ÞF
+narta	ÞF
+nasla	ÞF
+nauðbeygja	ÞF
+nauðbeita	ÞF
+nauðga	ÞGF
+nauðlenda	ÞGF
+nauðraka	ÞF
+ná	ÞGF
+náða	ÞF
+nálga	ÞF
+nálgast	ÞF
+nefbrjóta	ÞF
+nefna	ÞF
+nefnast	NF
+negla	ÞF
+neita	ÞGF
+nema	ÞF ÞGF
+nenna	ÞGF
+nesta	ÞF
+neyða	ÞF ÞGF
+neyta	EF
+niða	ÞF
+niðurlægja	ÞF
+níða	ÞF
+nífalda	ÞF
+nísta	ÞF
+njóta	EF
+njörva	ÞF
+nota	ÞF NF
+notast	NF
+nótusetja	ÞF
+nudda	ÞF ÞGF
+nugga	ÞF ÞGF
+nurla	ÞGF
+núa	ÞGF
+núllfylla	ÞF
+númera	ÞF
+núrétta	ÞF
+nytja	ÞF
+nýglæða	ÞF
+nýta	ÞF
+nýtast	ÞGF NF
+nægja	ÞGF
+nægjast	NF
+næla	ÞF ÞGF
+næra	ÞF
+ofbeita	ÞGF
+ofbjóða	ÞGF NF
+offra	ÞGF
+offylla	ÞF
+ofgera	ÞGF
+ofhita	ÞF
+ofhlaða	ÞF
+ofkeyra	ÞF
+ofkæla	ÞF
+ofmeta	ÞF
+ofnýta	ÞF
+ofskýra	ÞF
+ofsækja	ÞF
+ofurselja	ÞF
+ofvernda	ÞF
+ofþjaka	ÞGF
+ofþurrka	ÞF
+ofþyngja	ÞGF
+olíubera	ÞF
+opinbera	ÞF
+opinberast	ÞGF
+opna	ÞF ÞGF
+orða	ÞF
+orðfylla	ÞF
+orðfæra	ÞF
+orðgera	ÞF
+orðlengja	ÞF
+orka	ÞGF
+fá	ÞGF
+orna	ÞGF
+orsaka	ÞF
+ota	ÞGF
+pakka	ÞGF
+panta	ÞF
+pantsetja	ÞF
+pappaklæða	ÞF
+para	ÞF
+parta	ÞF
+passa	ÞF ÞGF NF
+pára	ÞF ÞGF
+pensla	ÞF
+persónugera	ÞF
+pikka	ÞF
+pilla	ÞF
+pipra	ÞF
+pirra	ÞF
+pína	ÞF
+píra	ÞGF
+pjakka	ÞF
+plaga	ÞF
+planta	ÞGF
+plata	ÞF
+plástra	ÞF
+plássbera	ÞF
+plokka	ÞF
+plægja	ÞF
+poppa	ÞF
+pota	ÞGF
+póla	ÞF
+póstleggja	ÞF
+póstsenda	ÞF ÞGF
+pranga	ÞGF
+predika	ÞF
+prenta	ÞF
+pressa	ÞF
+pretta	ÞF
+prédika	ÞF
+prísa	ÞF
+prjóna	ÞF
+prófa	ÞF
+prufa	ÞF
+prufukeyra	ÞF
+prútta	ÞF
+prýða	ÞF
+pukra	ÞGF
+pumpa	ÞF ÞGF
+punda	ÞF ÞGF
+punga	ÞGF
+punkta	ÞF
+punta	ÞF
+púa	ÞGF
+púðra	ÞF
+púkka	ÞF ÞGF
+pússa	ÞF
+pútta	ÞGF
+pynda	ÞF
+pynta	ÞF
+pækilsalta	ÞF
+pæla	ÞF
+radda	ÞF
+raddsetja	ÞF
+raða	ÞGF
+raðtengja	ÞF
+rafhita	ÞF
+rafsjóða	ÞF
+rafvæða	ÞF
+raka	ÞF ÞGF
+rakaverja	ÞF
+láta	ÞF
+ramba	ÞGF
+ramma	ÞF
+rangfeðra	ÞF
+rangfæra	ÞF
+rangherma	ÞF
+rangskýra	ÞF
+rangtúlka	ÞF
+rannsaka	ÞF
+raska	ÞGF
+raspa	ÞF
+rassskella	ÞF
+rata	ÞF
+rauðhita	ÞF
+rauðkynda	ÞF
+raula	ÞF
+raungera	ÞF
+ráða	ÞF ÞGF
+ráðgera	ÞF
+ráðleggja	ÞGF
+ráðstafa	ÞGF
+ráfletja	ÞF
+ráskera	ÞF
+redda	ÞGF
+refsa	ÞGF
+reiða	ÞF
+reiðast	ÞGF
+reifa	ÞF
+reigja	ÞF
+reika	ÞF
+reikna	ÞF ÞGF
+reiknast	NF
+reima	ÞF
+reisa	ÞF ÞGF
+reita	ÞF
+reka	ÞF ÞGF EF
+láta	ÞF
+rekja	ÞF
+remba	ÞGF
+rengja	ÞF
+renna	ÞF ÞGF
+rennvæta	ÞF
+reskja	ÞF
+reykja	ÞF
+reyna	ÞF
+reynast	ÞGF NF
+reyra	ÞF
+reyta	ÞF
+rétta	ÞF ÞGF
+réttlæta	ÞF
+riðla	ÞGF
+rifbrjóta	ÞF
+rifja	ÞF
+rifta	ÞGF ÞF
+rimpa	ÞF
+rispa	ÞF
+rissa	ÞF
+rista	ÞF
+rita	ÞF
+ritdæma	ÞF
+ritfesta	ÞF
+ritla	ÞF
+ritsetja	ÞF
+ritskoða	ÞF
+ritskýra	ÞF
+ritstýra	ÞGF
+ritvinna	ÞF
+ríða	ÞF ÞGF
+rífa	ÞF
+rígbinda	ÞF
+rígfesta	ÞF
+ríghalda	ÞGF
+rígnegla	ÞF
+rígskorða	ÞF
+ríma	ÞF
+rjóða	ÞF ÞGF
+rjúfa	ÞF
+roðfletja	ÞF
+roðfletta	ÞF
+roðskera	ÞF
+roga	ÞGF
+romsa	ÞGF
+ropa	ÞGF
+rota	ÞF
+róa	ÞGF ÞF
+rógbera	ÞF
+róma	ÞF
+róta	ÞGF
+rótbíta	ÞF
+rótfesta	ÞF
+rubba	ÞGF
+rugga	ÞGF
+rugla	ÞF ÞGF
+rukka	ÞF
+runka	ÞGF
+rupla	ÞGF
+rusla	ÞGF
+rúa	ÞF
+rúlla	ÞGF
+rúma	ÞF
+rústa	ÞGF
+ryðhreinsa	ÞF
+ryðja	ÞF ÞGF
+ryðverja	ÞF
+rykbinda	ÞF
+ryksjúga	ÞF
+ryksoga	ÞF
+ryksuga	ÞF
+rykkja	ÞF ÞGF
+rýja	ÞF
+rýma	ÞF ÞGF
+rýmka	ÞF
+rýna	ÞF
+rýra	ÞF
+ræða	ÞF
+rægja	ÞF
+rækja	ÞF
+rækta	ÞF
+ræna	ÞF ÞGF
+ræsa	ÞF
+ræsta	ÞF
+ræta	ÞF
+rökfæra	ÞF
+rökræða	ÞF
+rökstyðja	ÞF
+rölta	ÞF
+safna	ÞGF
+safnast	NF
+safnvista	ÞF
+saga	ÞF
+saka	ÞF
+sakbera	ÞF
+sakfella	ÞF
+sakna	EF
+saksækja	ÞF
+salla	ÞF ÞGF
+salta	ÞF
+sambeygjast	ÞGF
+sameina	ÞF
+sameinast	ÞGF
+samgleðjast	ÞGF
+samhringja	ÞGF
+samhæfa	ÞF
+samkemba	ÞF
+samlaga	ÞF
+samlagast	ÞGF
+samneyta	ÞGF
+samnýta	ÞF
+samraða	ÞGF
+samrekkja	ÞGF
+samrýma	ÞF
+samrýmast	ÞGF
+samræma	ÞF
+samræmast	ÞGF
+samsinna	ÞGF
+samstilla	ÞF
+samsama	ÞF
+samsamast	ÞGF
+samsvara	ÞGF
+samtengja	ÞF
+samtvinna	ÞF
+samþykkja	ÞF
+samþætta	ÞF
+samæfa	ÞF
+sandblása	ÞF
+sandskúra	ÞF
+sanka	ÞGF
+sanna	ÞF
+sannfrétta	ÞF
+sannprófa	ÞF
+sannfæra	ÞF
+sannreyna	ÞF
+sannvotta	ÞF
+sarga	ÞF
+sauma	ÞF
+saurga	ÞF
+saxa	ÞF
+sá	ÞGF
+sáldra	ÞGF
+sálga	ÞGF
+sápa	ÞF
+sápubera	ÞF
+sápuþvo	ÞGF
+sárbæna	ÞF
+sárbeiða	ÞF
+sárbeiðast	EF
+sárbiðja	EF ÞF
+sárbölva	ÞGF
+sárgremjast	NF
+sárkvíða	ÞGF
+sárleiðast	NF
+sárna	NF
+sársakna	EF
+sárþjá	ÞF
+sáröfunda	ÞF
+seðja	ÞF
+sefa	ÞF
+sefja	ÞF
+segja	ÞF ÞGF
+seiða	ÞF
+seigdrepa	ÞF
+seinka	ÞGF
+sekta	ÞF
+selflytja	ÞF
+selja	ÞF ÞGF
+sementsbera	ÞF
+semja	ÞF
+semjast	ÞGF
+senda	ÞF ÞGF
+serða	ÞF
+setja	ÞF ÞGF
+sexfalda	ÞF
+sérgreina	ÞF
+sérhæfa	ÞF
+sérkenna	ÞF
+sérprenta	ÞF
+sértaka	ÞF
+siða	ÞF
+siðbæta	ÞF
+siga	ÞGF
+sigla	ÞGF ÞF
+sigra	ÞF
+sigta	ÞF
+silfra	ÞF
+sinna	ÞGF
+sitja	ÞF ÞGF
+sía	ÞF
+síendurtaka	ÞF
+sífækka	ÞGF
+síkka	ÞF
+símsenda	ÞF ÞGF
+sívefja	ÞF ÞGF
+sjá	ÞF ÞGF
+sjálfþýða	ÞF
+sjóða	ÞF
+sjónvarpa	ÞGF
+sjósetja	ÞF
+sjúga	ÞF
+sjöfalda	ÞF
+skadda	ÞF
+skaða	ÞF
+skaðskemma	ÞF
+skafa	ÞF
+skaffa	ÞF ÞGF
+skaka	ÞF
+skalla	ÞF
+skamma	ÞF
+skammstafa	ÞF
+skammta	ÞF ÞGF
+skanna	ÞF
+skapa	ÞF ÞGF
+vera	NF
+skaprauna	ÞGF
+skara	ÞF ÞGF
+skarta	ÞGF
+skatta	ÞF
+skattgilda	ÞF
+skattleggja	ÞF
+skattskylda	ÞF
+skauta	ÞGF
+skáka	ÞGF
+skálda	ÞF
+skáletra	ÞF
+skáskjóta	ÞGF
+skeiðríða	ÞF
+skeina	ÞF ÞGF
+skekja	ÞF
+skekkja	ÞF
+skelfa	ÞF
+skelfast	ÞF
+skelfletta	ÞF
+skella	ÞGF
+skemma	ÞF
+skemmta	ÞGF
+skenkja	ÞF ÞGF
+skera	ÞF
+skerða	ÞF
+skerpa	ÞF
+skeyta	ÞGF ÞF
+skikka	ÞF
+skila	ÞGF
+skilgreina	ÞF
+skilja	ÞF
+eiga	ÞF
+skiljast	NF
+skima	ÞF
+skipa	ÞF ÞGF
+eiga	ÞGF
+hafa	ÞGF
+skipa	ÞGF
+skipta	ÞF ÞGF
+skiptast	ÞGF
+skipuleggja	ÞF
+skirra	ÞGF
+skirrast	EF
+skíða	ÞF
+láta	ÞF
+skíra	ÞF
+skírskota	ÞGF
+skíta	ÞF ÞGF
+skjalfesta	ÞF
+skjalla	ÞF
+skjóta	ÞF ÞGF
+skoða	ÞF
+skola	ÞF ÞGF
+skopa	ÞF
+skopfæra	ÞF
+skopgera	ÞF
+skoppa	ÞGF
+skopstæla	ÞF
+skora	ÞF ÞGF
+skorða	ÞF
+skorta	ÞF
+skotra	ÞGF
+skóa	ÞF
+skófla	ÞGF
+skóla	ÞF
+skrapa	ÞF
+skrautprenta	ÞF
+skrautrita	ÞF
+skrá	ÞF
+skrásetja	ÞF
+skreyta	ÞF
+skrifa	ÞF ÞGF
+skriflæsa	ÞGF
+skrínleggja	ÞF
+skrubba	ÞF ÞGF
+skrumskæla	ÞF
+skrúbba	ÞF ÞGF
+skrúfa	ÞF ÞGF
+skrýða	ÞF
+skrýðast	ÞGF
+skræla	ÞF
+skrælþurrka	ÞF
+skrökva	ÞGF
+skulda	ÞF ÞGF
+skuldbinda	ÞF
+skuldsetja	ÞF
+skurka	ÞGF
+skutla	ÞF ÞGF
+skúra	ÞF
+skvetta	ÞGF
+skyggna	ÞF
+skylda	ÞF
+skynja	ÞF
+skyrpa	ÞGF
+skýla	ÞGF
+skýra	ÞF ÞGF
+skýrgreina	ÞF
+slafra	ÞGF
+slangra	ÞGF
+slapa	ÞF
+láta	ÞF
+slasa	ÞF
+slaufa	ÞGF
+slauffa	ÞGF
+slá	ÞF ÞGF
+slátra	ÞGF
+sleikja	ÞF
+slengja	ÞGF
+sleppa	NF ÞGF
+sletta	ÞGF
+slétta	ÞF
+sléttfága	ÞF
+sléttfylla	ÞF
+slétthefla	ÞF
+sléttkemba	ÞF
+sliga	ÞF
+slíðra	ÞF
+slípa	ÞF
+slíta	ÞF ÞGF
+sljóvga	ÞF
+slóðadraga	ÞF
+slysa	ÞF ÞGF
+slysast	NF
+slysatryggja	ÞF
+slæða	ÞF ÞGF
+slægja	ÞF
+slæpa	ÞGF
+slæva	ÞF
+slökkva	ÞF ÞGF
+slöngva	ÞGF
+smakka	ÞF
+smala	ÞF ÞGF
+smáaukast	NF
+smábrytja	ÞF
+smádrepa	ÞF
+smáerta	ÞF
+smáeyða	ÞGF
+smáeyðileggja	ÞF
+smáfjarlægja	ÞF
+smáfjarlægjast	ÞF
+smáfjölga	ÞGF
+smáfækka	ÞGF
+smágrynnka	ÞF
+smáhnupla	ÞGF
+smáhætta	ÞGF
+smákæla	ÞF
+smálaga	ÞF
+smálækka	ÞF
+smáminnka	ÞF
+smámjaka	ÞGF
+smámjókka	ÞF
+smána	ÞF
+smánarta	ÞF
+smásaxa	ÞF
+smástækka	ÞF
+smávaxa	NF
+smáþyngja	ÞF
+smella	ÞGF
+smellkyssa	ÞF
+smeygja	ÞGF
+sminka	ÞF
+smita	ÞF
+smíða	ÞF
+smjúga	ÞF
+smokka	ÞGF
+smygla	ÞGF
+smyrja	ÞF
+smækka	ÞF
+snaka	ÞGF
+snapa	ÞF
+snara	ÞF ÞGF
+snarsnúa	ÞGF
+snarka	ÞF
+sneiða	ÞF
+snerpa	ÞF
+snerta	ÞF
+sneyða	ÞF
+sniðganga	ÞF
+sniðskera	ÞF
+sníða	ÞF
+sníkja	ÞF
+snjóa	ÞGF
+snoða	ÞF
+snuða	ÞF
+snuðra	ÞF
+snupra	ÞF
+snurfusa	ÞF
+snurfunsa	ÞF
+snúa	ÞF ÞGF
+sortulita	ÞF
+sólsteikja	ÞF
+sólþurrka	ÞF
+snyrta	ÞF
+snæða	ÞF
+snöggfrysta	ÞF
+snögghækka	ÞF
+snögghætta	ÞGF
+snöggklippa	ÞF
+snöggkyrra	ÞF
+snöggkæla	ÞF
+snöggsjóða	ÞF
+snöggsteikja	ÞF
+sofa	ÞF
+soga	ÞF
+soramarka	ÞF
+sóa	ÞGF
+sóða	ÞF ÞGF
+sóla	ÞF
+sólbaka	ÞF
+sólþurrka	ÞF
+sólunda	ÞGF
+sóma	ÞGF NF
+sópa	ÞF ÞGF
+sótbölva	ÞGF
+sótthreinsa	ÞF
+spaðbrytja	ÞF
+spaðhöggva	ÞF
+spana	ÞF
+spandera	ÞGF
+spandéra	ÞGF
+spanna	ÞF
+spara	ÞF ÞGF
+sparka	ÞGF
+spartla	ÞF
+spá	ÞGF
+spegla	ÞF
+spekja	ÞF
+spengja	ÞF
+spenna	ÞF
+sperra	ÞF
+spila	ÞGF ÞF
+spilla	ÞGF
+spinna	ÞF
+spjalla	ÞF
+spjara	ÞF ÞGF
+splundra	ÞGF
+splæsa	ÞF ÞGF
+spora	ÞF
+sporðreisa	ÞF
+spotta	ÞF
+spóla	ÞF
+spónleggja	ÞF
+sprauta	ÞF ÞGF
+sprengja	ÞF
+sprengríða	ÞF
+spreða	ÞGF
+spretta	ÞGF
+spreyta	ÞF
+spúa	ÞGF
+spyrða	ÞF
+spyrja	ÞF EF
+spyrna	ÞGF
+spýja	ÞGF
+spýta	ÞF ÞGF
+spæla	ÞF
+spæna	ÞF ÞGF
+staðfesta	ÞF
+staðfæra	ÞF
+staðgreiða	ÞF
+staðhæfa	ÞF
+staðla	ÞF
+staðlofa	ÞGF
+staðrétta	ÞF
+staðsetja	ÞF
+stafa	ÞF ÞGF NF
+stafla	ÞGF
+stafnstinga	ÞGF
+stafsetja	ÞF
+stafsía	ÞF
+staga	ÞF
+stagbæta	ÞF
+stagla	ÞF
+stama	ÞGF
+standa	ÞF ÞGF
+standast	ÞF ÞGF
+standsetja	ÞF
+stanga	ÞF
+stansa	ÞF
+stappa	ÞF
+starfrækja	ÞF
+starta	ÞGF
+staula	ÞF
+stauta	ÞF
+stefna	ÞGF
+steikja	ÞF
+steindrepa	ÞF
+steingera	ÞF
+steinhalda	ÞGF
+steinhætta	ÞGF
+steinleggja	ÞF
+steinrota	ÞF
+stela	ÞF ÞGF
+stella	ÞF
+stemma	ÞF
+steypa	ÞF ÞGF
+steyta	ÞF ÞGF
+stigbeygja	ÞF
+stigbæta	ÞF
+stigmagna	ÞF
+stika	ÞF
+strika	ÞF
+stikla	ÞF
+stilla	ÞF ÞGF
+stimpa	ÞF
+stimpla	ÞF
+stinga	ÞF ÞGF
+stía	ÞGF ÞF
+stífa	ÞF
+stífbóna	ÞF
+stífla	ÞF
+stíga	ÞF ÞGF NF
+stíla	ÞF
+stílfæra	ÞF
+stílsetja	ÞF
+stjaka	ÞGF
+stjaksetja	ÞF
+stjórna	ÞGF
+stoða	ÞF ÞGF
+stofna	ÞF ÞGF
+stofnsetja	ÞF
+stokka	ÞF
+stoppa	ÞF
+storka	ÞGF
+stóraukast	NF
+stórbatna	NF
+stórefa	ÞF
+stórhá	ÞGF
+stórmóðga	ÞF
+stórskaða	ÞF
+stórskemma	ÞF
+stórslasa	ÞF
+straffa	ÞF
+strauja	ÞF
+strá	ÞF ÞGF
+strádrepa	ÞF
+stráfella	ÞF
+strekkja	ÞF
+strengja	ÞF EF
+stressa	ÞF
+strika	ÞF
+stríða	ÞGF
+strjála	ÞGF
+strjúka	ÞF ÞGF
+stroka	ÞF
+strokka	ÞF
+strýkja	ÞF
+stuða	ÞF
+stugga	ÞF ÞGF
+stunda	ÞF
+sturla	ÞF
+sturta	ÞGF
+stúdera	ÞF
+stúdéra	ÞF
+stúka	ÞF
+stúta	ÞGF
+stútfylla	ÞF
+styðja	ÞF ÞGF
+styggja	ÞF
+stykkja	ÞF
+stynja	ÞGF
+styrkja	ÞF
+stytta	ÞF ÞGF
+stýfa	ÞF
+stýra	ÞGF ÞF
+stækka	ÞF
+stæla	ÞF
+stæra	ÞF
+stöðva	ÞF
+stökkva	ÞGF
+subba	ÞF
+sulla	ÞF ÞGF
+summa	ÞF
+sundhleypa	ÞGF
+sundra	ÞGF
+sundríða	ÞF
+sundurgreina	ÞF
+sundurlima	ÞF
+sundurskilja	ÞF
+sussa	ÞF
+súgþurrka	ÞF
+súpa	ÞF
+súrsa	ÞF
+súta	ÞF
+svala	ÞGF
+svara	ÞGF
+sveia	ÞGF
+sveifla	ÞGF
+sveigja	ÞF ÞGF
+sveipa	ÞF ÞGF
+sveipast	ÞGF
+sveitfesta	ÞF
+svekkja	ÞF
+svelgja	ÞF ÞGF
+svella	NF
+svellþæfa	ÞF
+svelta	ÞF
+láta	ÞF
+sverfa	ÞF
+sverja	ÞF ÞGF
+sverta	ÞF
+sviðsetja	ÞF
+svipa	ÞGF ÞF
+svipta	ÞF ÞGF
+svissa	ÞGF
+svíða	ÞF NF
+svíkja	ÞF
+svína	ÞF
+svínbeygja	ÞF
+svínfylkja	ÞGF
+svívirða	ÞF
+svolgra	ÞF
+svæfa	ÞF
+svæla	ÞF ÞGF
+sykra	ÞF
+sykursalta	ÞF
+synda	ÞF
+syngja	ÞF ÞGF
+synja	ÞGF
+synjast	ÞGF
+syrgja	ÞF
+sýkja	ÞF
+sýkna	ÞF
+sýna	ÞF ÞGF
+sýnast	ÞF ÞGF NF
+sýra	ÞF
+sýta	ÞF
+sæða	ÞF
+sækja	ÞF ÞGF NF
+sækjast	NF
+sæma	ÞF ÞGF NF
+særa	ÞF
+sæta	ÞF ÞGF
+sætta	ÞF
+söðla	ÞF
+sökkhlaða	ÞF
+sökkva	ÞGF
+sölsa	ÞF
+söngla	ÞF
+sötra	ÞF
+taglskella	ÞF
+taglskera	ÞF
+taka	ÞF ÞGF NF
+takast	NF
+takmarka	ÞF
+tala	ÞF
+talfæra	ÞF
+tannbrjóta	ÞF
+tapa	ÞGF
+tappa	ÞGF
+tattóvera	ÞF
+tattúera	ÞF
+tauta	ÞF
+tákna	ÞF
+tákngera	ÞF
+táldraga	ÞF
+tálga	ÞF
+tálma	ÞF ÞGF
+tefja	ÞF
+tefla	ÞF ÞGF
+tegra	ÞF
+teikna	ÞF
+telgja	ÞF
+telja	ÞF ÞGF
+teljast	NF
+temja	ÞF
+tempra	ÞF
+tendra	ÞF
+tengja	ÞF
+tengjast	ÞGF
+teppa	ÞF
+teppaleggja	ÞF
+teyga	ÞF
+teygja	ÞF
+teyma	ÞF
+tékka	ÞF
+tifa	ÞGF
+tigla	ÞGF
+tigna	ÞF
+tilbiðja	ÞF
+tilbúa	ÞF
+tildra	ÞGF
+tileinka	ÞGF
+tilfalla	NF
+tilfæra	ÞF
+tilgreina	ÞF
+tilheyra	ÞGF
+tilkeyra	ÞF
+tilkynna	ÞF ÞGF
+tilnefna	ÞF
+tilreiða	ÞF
+tilsegja	ÞF ÞGF
+tilskilja	ÞF
+tilsníða	ÞF
+tiltaka	ÞF
+tina	ÞF
+titla	ÞF
+tíðka	ÞF
+tífalda	ÞF
+tíma	ÞGF ÞF
+tímasetja	ÞF
+tímga	ÞF
+tína	ÞF
+tíunda	ÞF
+tjakka	ÞF
+tjarga	ÞF
+tjasla	ÞF ÞGF
+tjá	ÞF ÞGF
+tjóðra	ÞF
+tjónkast	NF
+tjörubera	ÞF
+tjöruþvo	ÞF
+toga	ÞF
+tolla	ÞGF ÞF
+tollera	ÞF
+torga	ÞGF
+torkenna	ÞF
+tortíma	ÞGF
+tortryggja	ÞF
+torvelda	ÞF ÞGF
+tosa	ÞF ÞGF
+totta	ÞF
+tónsetja	ÞF
+traðfóðra	ÞF
+traðgefa	ÞGF
+traðka	ÞF
+tralla	ÞF
+trana	ÞGF
+trassa	ÞF
+trega	ÞF
+trekkja	ÞF
+trénegla	ÞF
+treina	ÞF
+treysta	ÞF ÞGF
+trilla	ÞGF
+troða	ÞF ÞGF
+troðfylla	ÞF
+trompa	ÞF
+trufla	ÞF
+trúa	ÞGF
+trúlofast	ÞGF
+tryggja	ÞF ÞGF
+trylla	ÞF
+tröllríða	ÞGF
+tukta	ÞF
+tuldra	ÞF
+tunguskera	ÞF
+túlka	ÞF
+tvinna	ÞF
+tvíborga	ÞF ÞGF
+tvífalda	ÞF
+tvíhenda	ÞF
+tvíhlaða	ÞF
+tvíhólfa	ÞF
+tvíkjósa	ÞF
+tvílesa	ÞF
+tvílæsa	ÞGF
+tvísjóða	ÞF
+tvískipta	ÞGF
+tvístra	ÞGF
+tvítaka	ÞF
+tvítugfalda	ÞF
+tvítyggja	ÞF
+tvívefja	ÞF ÞGF
+tvöfalda	ÞF
+tyfta	ÞF
+tyggja	ÞF
+tygja	ÞF
+tylla	ÞGF
+tyrfa	ÞF
+týna	ÞGF
+tæla	ÞF
+tæma	ÞF
+tæpa	ÞGF
+tæra	ÞF
+tæta	ÞF
+töfra	ÞF
+tölumerkja	ÞF
+tölusetja	ÞF
+tölvukeyra	ÞF
+tölvusetja	ÞF
+tölvuskrá	ÞF
+tölvuvinna	ÞF
+tölvuvæða	ÞF
+ugga	NF
+umbera	ÞF ÞGF
+umbuna	ÞGF
+umbylta	ÞGF
+umflýja	ÞF
+umgangast	ÞF
+umgirða	ÞF
+umhlaða	ÞGF
+umkringja	ÞF
+umla	ÞF
+umlykja	ÞF
+umlýsa	ÞF
+ummynda	ÞF
+umorða	ÞF
+umreikna	ÞF
+umrita	ÞF
+umsalta	ÞF
+umsemja	ÞF
+umskapa	ÞF
+umskera	ÞF
+umskipa	ÞGF
+umskíra	ÞF
+umskrá	ÞF
+umskrifa	ÞF
+umstafa	ÞF
+umstafla	ÞGF
+umstakka	ÞGF
+umturna	ÞGF
+umvefja	ÞF
+una	ÞGF
+undanskilja	ÞF
+undirbjóða	ÞF
+undirbúa	ÞF
+undirgangast	ÞF
+undirleggja	ÞF
+undirskilja	ÞF
+undiroka	ÞF
+undirrita	ÞF
+undirskrifa	ÞF
+undirstrika	ÞF
+undra	ÞF NF
+undrast	ÞF
+unga	ÞGF
+unna	ÞGF
+eiga	ÞGF
+vera	NF
+uppfræða	ÞF
+uppfylla	ÞF
+uppfæða	ÞF
+uppfæra	ÞF
+uppgötva	ÞF
+upphefja	ÞF
+upphita	ÞF
+upphugsa	ÞF
+upplifa	ÞF
+upplita	ÞF
+upplýsa	ÞF
+uppnefna	ÞF
+uppræta	ÞF
+uppskera	ÞF
+uppvekja	ÞF
+urða	ÞF
+urga	ÞGF
+vaða	ÞF
+vagga	ÞGF
+láta	ÞF
+vakta	ÞF
+valda	ÞGF ÞF
+valdbjóða	ÞF ÞGF
+valsa	ÞF
+vana	ÞF
+vanbrúka	ÞF
+vanda	ÞF ÞGF
+vanfóðra	ÞF
+vanhelga	ÞF
+vanmeta	ÞF
+vannýta	ÞF
+vanreikna	ÞF
+vanrækja	ÞF
+vanþakka	ÞF
+vanta	ÞF
+vantreysta	ÞGF
+vanvirða	ÞF
+vanþakka	ÞF
+vara	ÞF
+varast	ÞF
+varða	ÞF ÞGF
+varðveita	ÞF
+varna	ÞGF
+varpa	ÞGF ÞF
+vasa	ÞGF
+vatna	ÞGF
+vaxa	ÞGF NF
+vaxbera	ÞF
+vaxta	ÞF
+vátryggja	ÞF
+veðja	ÞGF
+veðsetja	ÞF
+vefa	ÞF
+vefja	ÞF ÞGF
+vega	ÞF ÞGF
+veggfóðra	ÞF
+vegsama	ÞF
+veiða	ÞF
+veifa	ÞGF
+veikja	ÞF
+veikla	ÞF
+veita	ÞF ÞGF NF
+veitast	NF
+vekja	ÞF
+velgja	ÞF ÞGF
+velja	ÞF ÞGF
+velkja	ÞF ÞGF
+velta	ÞGF
+venda	ÞGF
+venja	ÞF
+venjast	ÞGF
+vensla	ÞGF
+vera	NF ÞGF
+verða	NF ÞGF EF
+verðlauna	ÞF
+verðleggja	ÞF
+verðskrá	ÞF
+verðskulda	ÞF
+verðtryggja	ÞF
+verja	ÞF ÞGF
+verjast	ÞGF
+verka	ÞF
+verma	ÞF
+vernda	ÞF
+verpa	ÞF ÞGF
+versla	ÞF
+versna	NF
+vefengja	ÞF
+véfengja	ÞF
+véla	ÞF
+vélbinda	ÞF
+vélgrafa	ÞF
+vélmjólka	ÞF
+vélrita	ÞF
+vélsaga	ÞF
+vélsauma	ÞF
+vélvæða	ÞF
+vélþurrka	ÞF
+vélþvo	ÞF
+viða	ÞF ÞGF
+viðbeinsbrjóta	ÞF
+láta	ÞF
+viðhafa	ÞF
+viðhalda	ÞGF
+viðkoma	ÞGF
+viðra	ÞF
+viðurkenna	ÞF
+vigta	ÞF
+vilja	ÞF ÞGF NF
+láta	ÞF
+villa	ÞF ÞGF
+vinda	ÞF ÞGF
+vindþurrka	ÞF
+vingsa	ÞGF
+vinka	ÞGF
+vinkilbeygja	ÞF
+vinna	ÞF ÞGF EF
+vinnast	ÞGF NF
+vinsa	ÞF
+vinstrijafna	ÞF
+vippa	ÞGF
+virða	ÞF ÞGF
+virðast	NF
+biðja	ÞF
+virkja	ÞF
+vista	ÞF
+vistfengja	ÞF
+vistráða	ÞF
+vistþýða	ÞF
+vita	ÞF EF
+vitja	EF
+vitka	ÞF
+vitra	ÞGF
+vitrast	NF
+vígbúa	ÞF
+víggirða	ÞF
+vígja	ÞF
+víkja	ÞGF
+víkka	ÞF
+víla	ÞF
+vísa	ÞGF
+vísasetja	ÞF
+vísitera	ÞF
+vísitölutryggja	ÞF
+víta	ÞF
+víxla	ÞGF
+víxlleggja	ÞF
+voga	ÞF ÞGF
+vona	EF
+vopna	ÞF
+vorkenna	ÞGF
+láta	ÞF
+votta	ÞGF
+vægja	ÞGF
+væna	ÞF
+vænast	EF
+vængbrjóta	ÞF
+vængstýfa	ÞF
+vænta	EF
+væta	ÞF
+vöðla	ÞGF
+vökva	ÞF
+ydda	ÞF
+yfirborga	ÞF
+yfirbjóða	ÞF
+yfirbuga	ÞF
+yfirfara	ÞF
+yfirfylla	ÞF
+yfirfæra	ÞF
+yfirgefa	ÞF
+yfirgnæfa	ÞF
+yfirheyra	ÞF
+yfirhita	ÞF
+yfirrita	ÞF
+yfirsjást	NF
+yfirskyggja	ÞF
+yfirstíga	ÞF
+yfirtaka	ÞF
+yfirvinna	ÞF
+ylja	ÞGF
+ympra	ÞF
+yngja	ÞF
+yppa	ÞGF
+yppta	ÞGF
+yrða	ÞF
+yrkja	ÞF ÞGF
+ábyrgjast	ÞF
+áfellast	ÞF
+áforma	ÞF
+áfrýja	ÞGF
+ágirnast	ÞF
+ákalla	ÞF
+ákvarða	ÞF
+ákveða	ÞF
+ákæra	ÞF
+álasa	ÞGF
+álíta	ÞF
+álpa	ÞGF
+álykta	ÞF
+ámálga	ÞF
+áminna	ÞF
+ámæla	ÞGF
+ánafna	ÞGF
+ánetja	ÞF
+ánetjast	ÞGF
+áorka	ÞGF
+fá	ÞGF
+áreita	ÞF
+árétta	ÞF
+árfæra	ÞF
+árita	ÞF
+árna	ÞF ÞGF
+ásaka	ÞF
+áskotnast	NF
+ástunda	ÞF
+ásækja	ÞF
+ásælast	ÞF
+átelja	ÞF
+áttfalda	ÞF
+ávarpa	ÞF
+ávaxta	ÞF
+ávísa	ÞGF
+ávíta	ÞF
+áþyngja	ÞGF
+áætla	ÞF
+æfa	ÞF
+ægja	ÞGF NF
+æja	ÞGF
+æla	ÞGF
+æra	ÞF
+æsa	ÞF
+ætla	ÞGF ÞF
+ætlast	ÞF
+ættfæra	ÞF
+ættleiða	ÞF
+æxla	ÞF ÞGF
+éta	ÞF
+íbrenna	ÞF
+ígrunda	ÞF
+íhuga	ÞF
+íklæðast	ÞGF
+ílenda	ÞF
+ílengja	ÞF
+ímyndast	ÞGF
+ísa	ÞF
+íslenska	ÞF
+ítreka	ÞF
+ívilna	ÞGF
+íþyngja	ÞGF
+óa	NF
+óast	ÞF
+ófrægja	ÞF
+ógilda	ÞF
+ógna	ÞGF NF
+ógnast	ÞF
+óhlýðnast	ÞGF
+óhreinka	ÞF
+ómerkja	ÞF
+ónáða	ÞF
+ónýta	ÞF
+órækja	ÞF
+ósanna	ÞF
+óska	ÞGF EF
+ótalfalda	ÞF
+ótta	ÞGF
+óttast	ÞF
+óvirða	ÞF
+óvirkja	ÞF
+öðlast	ÞF
+öfunda	ÞF
+ögra	ÞGF
+ökklabrjóta	ÞF
+öngla	ÞF ÞGF
+örmagna	ÞF
+örva	ÞF
+ösla	ÞF
+úða	ÞGF
+úrelda	ÞF
+útata	ÞF
+útausa	ÞGF
+útbía	ÞF
+útbreiða	ÞF
+útbúa	ÞF
+útbýta	ÞGF
+útdeila	ÞGF
+útflúra	ÞF
+útfylla	ÞF
+útfæra	ÞF
+útheimta	ÞF
+úthluta	ÞGF
+úthúða	ÞGF
+úthýsa	ÞGF
+útiloka	ÞF
+útilykja	ÞF
+útkljá	ÞF
+útlista	ÞF
+útmá	ÞF
+útmála	ÞF
+útnefna	ÞF
+útrétta	ÞF
+útrýma	ÞGF
+útsetja	ÞF
+útskrifa	ÞF
+útskúfa	ÞGF
+útskýra	ÞF
+útvarpa	ÞGF
+útvatna	ÞF
+útvega	ÞF ÞGF
+útvíkka	ÞF
+ýfa	ÞF
+ýkja	ÞF
+ýta	ÞGF
+þagga	ÞF
+þakka	ÞGF ÞF
+eiga	ÞGF
+þamba	ÞF
+þarfna	NF
+þarfnast	EF
+þaulhugsa	ÞF
+þaulkanna	ÞF
+þaullesa	ÞF
+þaulprófa	ÞF
+þaulræða	ÞF
+þaulskoða	ÞF
+þaulspyrja	ÞF EF
+þátta	ÞF
+þefa	ÞF
+þegja	ÞF

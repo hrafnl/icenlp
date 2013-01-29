@@ -124,8 +124,7 @@ public class IceParser {
                 // We are only interested in the text representing the format, within the brackets, e.g. bla[txt]bla
                 value_IceParserOutput = newFormat.replaceAll(".*\\[(\\S+)\\].*","$1");
 			}
-            System.out.println("gDB>>taggedString=("+taggedString+")");
-            System.out.println("gDB>>IceParserOutput=" + value_IceParserOutput);
+
 			String strParse = this.parser.parse(taggedString, include_functions, value_IceParserOutput, error, merge);
 
             parsedString = strParse;

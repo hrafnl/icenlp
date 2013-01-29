@@ -3,6 +3,9 @@ package is.iclt.icenlp.core.utils;
 import is.iclt.icenlp.core.lemmald.Lemmald;
 import is.iclt.icenlp.core.lemmald.LemmaResult;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 
 /**
  * Created by IntelliJ IDEA.
@@ -13,6 +16,8 @@ import is.iclt.icenlp.core.lemmald.LemmaResult;
  */
 // GöL - error identification
 public class ErrorDetector {
+
+	static WordHashMap verbs;
 
 	static boolean SqlEnabled = false;
 	static String SqlUser;
@@ -45,6 +50,15 @@ public class ErrorDetector {
 	// returns an error string like : ?g+ca
 	private static String CheckGenNumCase(String str)
 	{
+		//remove all tags that do not contain case/number/gender
+		str = str.replaceAll("\\s*\\^\\w{0,3}\\$\\s*","");
+		// and returns nothing if there are less than two tags (continues to detect an error if it contains two or more ^ signs)
+		if (!str.matches(".*\\^.*\\^.*"))
+		{
+			return "";
+		}
+
+
 		StringBuffer error = new StringBuffer();
 		boolean allTheSame = true;
 		String [] tags = str.split(" ");
@@ -113,22 +127,17 @@ public class ErrorDetector {
 
 
 	// from Phrase_NP.flex {NounPhrase}
-	public static String ErrorCheck(String originalStr, boolean agreement, boolean markGrammarError, String PhraseType)
+	public static String ErrorCheck(String originalStr, String PhraseType)
 	{
-		if(!agreement && !markGrammarError)
-		{
-			return " [" + PhraseType + " " + originalStr + " " + PhraseType + "] ";//do nothing to originalStr
-		}
-		else if (markGrammarError) // check for errors
-		{
-			String tokenlessStr = RemoveTokens(originalStr);
-			String errors = CheckGenNumCase(tokenlessStr);//create the error string which is going to be something like ge+n+ca
+//		System.out.println("ErrorCheck originalStr=("+originalStr+")");
 
-			//HL: return " [" + PhraseType + errors + " " + originalStr + " " + PhraseType + errors + "] ";
-            return " [" + PhraseType + errors + " " + originalStr + " " + PhraseType + "] ";
-		}
-		return originalStr;
+		String tokenlessStr = RemoveTokens(originalStr);
+		String errors = CheckGenNumCase(tokenlessStr);//create the error string which is going to be something like g+n+ca
+		//HL: return " [" + PhraseType + errors + " " + originalStr + " " + PhraseType + errors + "] ";
+        return " [" + PhraseType + errors + " " + originalStr + " " + PhraseType + "] ";
 	}
+
+
 
 
 	// for Phrase_NP and Func_SUBJ
@@ -418,7 +427,6 @@ public class ErrorDetector {
 	// returns true if there is a mismatch between the first tag that has a number and the incoming number
 	public static boolean isNumberMismatch(char n1, char n2)
 	{
-//		System.out.println("gDB >> isNumberMismatch n1=("+n1+") n2=("+n2+")");
 		if (n1 == n2)
 		{
 			return false;
@@ -437,7 +445,6 @@ public class ErrorDetector {
 	// returns the person if there is any person found, or x if none is found
 	public static char findPerson(String[] input)
 	{
-
 		// we prefer to find number in nouns
 		// go through all the inputs and return the number of the noun if there is any noun found
 		for (String a : input)
@@ -699,10 +706,22 @@ public class ErrorDetector {
 		return false;
 	}
 
+	// checks if the input contains QUAL, if it does, removes it and returns the rest
+	private static String removeQual(String in)
+	{
+		if (in.contains("*QUAL"))
+		{
+			return in.replaceAll("\\{\\*QUAL.*\\*QUAL\\}","");
+		}
+		else
+			return in;
+	}
+
 	// from Func_COMP.flex {SubjVerbAdvPCompl}, {SubjVerbCompl}, {SubjCompl} and {VerbSubjCompl}
 	// from Func_OBJ2.flex {SubjVerbComp}, {SubjVerbAdvPComp}
 	public static String CompAgreementCheck(String s1, String s2, String open, String close, int order)
 	{
+//		System.out.println("CompAgreementCheck s1=("+s1+") s2=("+s2+")");
 		StringBuffer out0 = new StringBuffer();
 		// check if the compliment contains a noun, if so then we dont look for an error
 		// Vigdís var forseti
@@ -726,14 +745,20 @@ public class ErrorDetector {
 		// get s1 without the VPb
 		String s1tmp = removePhrase(s1,phrase);
 
+		// if there is a *QUAL we need to strip it off as it can accidentally be picked instead of the main noun
+		s1tmp = removeQual(s1tmp);
+		String s2tmp = removeQual(s2);
+
 		// s1:({*SUBJ> [NPn Börnin ^nhfng$  NP] *SUBJ>}  [VPb  voru ^sfg3fþ$   VPb])
 		// pull out the VPb tag and compare it to the subject
 		String[] VPbTags = toTagList(RemoveTokens(findPhrase(s1,phrase)));
 		 /* detect mismatch between VPb and the subject and object */
 
 
+
+
 		String[] s1Tags = toTagList(RemoveTokens(s1tmp));
-		String[] s2Tags = toTagList(RemoveTokens(s2));
+		String[] s2Tags = toTagList(RemoveTokens(s2tmp));
 
 		int count = 0;
 		for (String s:s1Tags)
@@ -839,6 +864,7 @@ public class ErrorDetector {
 	// from Func_SUBJ.flex {VerbSubject}, {SubjectVerb}
 	public static String agreementSubjectVerbCheckNumberAndPerson(String s1, String s2, String open, String close, int order)
 	{
+//		System.out.println("agreementSubjectVerbCheckNumberAndPerson s1=("+s1+") s2=("+s2+")");
 		String[] s1Tags = toTagList(RemoveTokens(s1));
 		String[] s2Tags = toTagList(RemoveTokens(s2));
 		StringBuffer error = new StringBuffer();
@@ -1005,39 +1031,59 @@ public class ErrorDetector {
 	// from Func_OBJ.flex {SubjVerbObj},
 	public static String agreementCheckSubjVerbObj(String s1, String s2, String open, String close, int order)
 	{
-		if (SqlEnabled) {
-			String s1in = s1.substring(s1.indexOf("[VP")+3,s1.indexOf("VP]")); // gets the verb and tag from s1
-			String word = s1in.substring(0,s1in.indexOf('^')); // gets the verb s1
-			word = stripOffWhitespaces(word);
+//		System.out.println("agreementCheckSubjVerbObj s1=("+s1+") s2=("+s2+")");
+		Boolean error = false;
+		String s1in = s1.substring(s1.indexOf("[VP")+3,s1.indexOf("VP]")); // gets the verb and tag from s1
+		String word = s1in.substring(0,s1in.indexOf('^')); // gets the verb s1
+		word = stripOffWhitespaces(word);
+//		System.out.println("word=("+word+")");
+		String tag = s1in.substring(s1in.indexOf('^')+1,s1in.indexOf('$')); // gets the tag from s1
 
-			String tag = s1in.substring(s1in.indexOf('^')+1,s1in.indexOf('$')); // gets the tag from s1
+//		System.out.println("tag=("+tag+")");
+		char s2case = findCase(toTagList(s2)); // get the tag of the nounphrase in s2
 
-			char s2case = findCase(toTagList(s2)); // get the tag of the nounphrase in s2
+//		System.out.println("s2case=("+s2case+")");
+		String lemma = lemmado(word,tag);
 
-			String lemma = lemmado(word,tag);
-
-			String possibleTags[] = SqlLookup.sqlWordLookup(lemma,SqlUrl,SqlUser,SqlPass);
-
-			// if the case of the object is the same as any possible tag for the verb, then do nothing, if there is a mismatch the nounphrase will be error marked
-			if (possibleTags[1].equals(Character.toString(s2case))||
-				possibleTags[2].equals(Character.toString(s2case))||
-				possibleTags[3].equals(Character.toString(s2case))||
-			// if we cannot find the word in the sqlWordLoopup then we do nothing
-				(possibleTags[1].equals("") && possibleTags[2].equals("") && possibleTags[3].equals("") && possibleTags[4].equals("")))
+//		System.out.println("lemma=("+lemma+")");
+		String possibleTags = "";
+		try
+		{
+			// initialize verbs if it hasn't been
+			if (null == verbs)
 			{
-				// do nothing
+				verbs = new WordHashMap("/lists/verbs.txt");
 			}
-			else
-			{
-				// case not found in database, mark the nounphrase with an error
-				s2 = errorMarkPhrase(s2,"NP","Aca");
-			}
-
-		// there is missing something to do if there is any different order
-		// then we need to compare s2in and possibleTags[]
-		// currently is only in one place in Func_OBJ.flex
-
+			 possibleTags = verbs.wordLookup(lemma);
+//			System.out.println("possibletags="+possibleTags);
 		}
+		catch (FileNotFoundException e) {System.out.println("Error [FileNotFound] "+e);}
+		catch (IOException i) {System.out.println("Error [IO] "+i);}
+
+//		System.out.println("possibleTags=("+possibleTags+") verb case=("+Character.toString(s2case)+")");
+
+//		if the case of the object is the same as any possible tag for the verb, then do nothing, if there is a mismatch the nounphrase will be error marked
+// 		or if we cannot find the word in the sqlWordLoopup then we do nothing
+		if (possibleTags.contains(Character.toString(s2case))||(possibleTags.equals("")))
+		{
+			// do nothing
+		}
+		else
+		{
+			// case not found in database, mark the nounphrase with an error
+			s2 = errorMarkPhrase(s2,"NP","Aca");
+			error = true;
+		}
+
+		// there is something missing to do if there is any different order
+		// then we need to compare s2in and possibleTags
+		// currently is only in one place in Func_OBJ.flex
+		if ((!error)&&(order == 3))
+		{
+			open = "";
+			close = "";
+		}
+
 
 		StringBuffer out = new StringBuffer();
 		out.append(s1).append(open).append(s2).append(close);
@@ -1072,5 +1118,44 @@ public class ErrorDetector {
 		StringBuffer out = new StringBuffer();
 		out.append(open).append(s1).append(close).append(s2);
 		return out.toString();
+	}
+
+
+
+	// from Phrase_PP.flex
+	public static String PPErrorCheck(String originalStr, String open, String close)
+	{
+		String tokenlessStr = RemoveTokens(originalStr);
+		String errors = PPCaseCompare(tokenlessStr);//create the error string which is going to be something like g+n+ca
+
+		// fit the error into the open and closing of the phrase markings
+		if (0 < errors.length())
+		{
+			// remove white spaces at the end of the variable and add the error code (and the signs that were removed)
+			open = open.replaceAll("(.*\\S)\\s+","$1")+errors+" ";
+		}
+
+        return open + " " + originalStr + close;
+	}
+
+	// extract the case of the first adjective tag (^aþ$)
+	// extract the case of the last tag.
+	// create an error code if there is a mismatch and case was detected for both words (x is undetected)
+	private static String PPCaseCompare(String tagString)
+	{
+		String errorCode= "";
+
+		char adjectiveCase = tagString.replaceAll(".*\\^a([noþe])\\$.*","$1").charAt(0);
+		String lastTag = tagString.replaceAll(".*\\^(\\S+)\\$\\s+$","$1");  //^aþ$ ^aa$ ^nkeþ$ )
+		String[] tmpTag={lastTag};
+		char lastCase = findCase(tmpTag);
+
+		// if we find a mismatch then we write the error code
+		if ((adjectiveCase != lastCase)&&(lastCase != 'x')&&(adjectiveCase != 'x'))
+		{
+			errorCode = "?Pca?";
+		}
+
+		return errorCode;
 	}
 }

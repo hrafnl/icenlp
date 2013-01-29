@@ -35,10 +35,12 @@ public class IceNLPSingletonService {
 	 *             object we will throw a configuration error.
 	 */
 	public static synchronized IceNLPSingletonService getInstance() throws IceTaggerConfigrationException {
-		if (instance_ == null) {
+		/*if (instance_ == null) {
 			instance_ = new IceNLPSingletonService();
 		}
 		return instance_;
+		*/
+		return new IceNLPSingletonService();
 	}
 
 	/***

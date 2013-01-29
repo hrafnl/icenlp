@@ -638,6 +638,7 @@ public class OutputFormatter
 			if(var.OutputFormatter_Type == OutputFormatter_Type.TAG)
 			{
 				posTags += "   <tag tokenIDs=\"t"+tokenID+"\">" + data + "</tag>\n";
+				printTCFtree(var.children, indent+" ", phrase);
 			}
 			else if(var.OutputFormatter_Type == OutputFormatter_Type.WORDS)
 			{
@@ -647,7 +648,7 @@ public class OutputFormatter
 			{
 				constituentID++;
 
-				tcfConstituents += (indent+"<constituent ID=\"c"+constituentID+"\" cat=\""+var.OutputFormatter_Type+"\">\n");
+				tcfConstituents += (indent+"<constituent ID=\"c"+constituentID+"\" cat=\""+(var.OutputFormatter_Type)+"\">\n");
 				printTCFtree(var.children, indent+" ", phrase);
 				tcfConstituents += (indent+"</constituent>\n");
 			}
@@ -655,23 +656,21 @@ public class OutputFormatter
 			{
 				constituentID++;
 
-
-				// remove the error code after and including the ? with the replaceAll
-				tcfConstituents += (indent+"<constituent ID=\"c"+constituentID+"\" cat=\""+data+"\">\n");
-				printTCFtree(var.children, indent+" ", phrase);
-				tcfConstituents += (indent+"</constituent>\n");
-
-//				System.out.println("FUNC-end");
-
-				// if we find something like : {*SUBJ>?Npn or [NP?Nn
+				// if we find something like : {*SUBJ>?Npn or [NP?Nn   or {*COMP&lt;?Cg?
 				// we should write an error with p and n
 				// any thing with a question mark will be grabbed as an error
-				if (data.matches("[\\[\\{].*\\?.*"))
+				if (data.matches("[\\{\\[]\\S+\\?\\S+\\?"))
                 {
-                  errorID++;
+					errorID++;
                     String errorType = extractError(data);
                     tcfErrors += "   <e ID=\"e"+errorID+"\" const=\"c"+constituentID+"\" type=\""+errorType+"\" />\n";
                 }
+
+				// remove the error code after and including the ? with the replaceAll
+				tcfConstituents += (indent+"<constituent ID=\"c"+constituentID+"\" cat=\""+data.replaceAll("[\\[\\{]","")+"\">\n"); // *SUBJ&gt;
+				printTCFtree(var.children, indent+" ", phrase);
+				tcfConstituents += (indent+"</constituent>\n");
+
 			}
 			else if(var.OutputFormatter_Type == OutputFormatter_Type.WORD)
 			{
@@ -682,14 +681,16 @@ public class OutputFormatter
                 // the error detected here are words
                 // that is : phrase="NP?" var.OutputFormatter_Type="WORD" data="möguleiki"
                 // If we see an error we remove it before it is put into the constituent brackets
-				if (phrase.matches("[\\[\\{]?[\\w]+[\\w\\W]+\\?.*"))
+/*				if (phrase.matches("[\\[\\{]?[\\w]+[\\w\\W]+\\?.*"))
                 {
                     errorID++;
                     String errorType = "underline";
                     errorType = extractError(phrase);
                     //  <e ID="e1" const="c5" type="highlight" />
-                    tcfErrors += "   <e ID=\"e"+errorID+"\" const=\"c"+(constituentID+0)+"\" type=\""+errorType+"\" />\n";
+                    tcfErrors += "   <e ID=\"e"+errorID+"\" const=\"c"+(constituentID+0)+"\" type=\""+errorType+"\"/>\n";
                 }
+*/
+
 
 /*				if (aspell(data))
 				{
@@ -714,9 +715,8 @@ public class OutputFormatter
 				}
 				else
 				{
-
 					// remove the error code after and including the ? with the replaceAll
-					tcfConstituents += (indent+"<constituent ID=\"c"+constituentID+"\" cat=\""+phrase.replaceAll("(.*)\\?.*","$1")+"\" tokenIDs=\"t"+tokenID+"\"/>\n");
+					tcfConstituents += (indent+"<constituent ID=\"c"+constituentID+"\" cat=\""+phrase.replaceAll("\\[?(\\S\\S)(\\?\\S+\\?)?","$1")+"\" tokenIDs=\"t"+tokenID+"\"/>\n");//[PP?Pca?
 				}
 
 
@@ -725,9 +725,10 @@ public class OutputFormatter
 			}
 			else if(var.OutputFormatter_Type == OutputFormatter_Type.PHRASE)
 			{
+//				System.out.println("in data = "+data + " phrase="+phrase);
 				// if the child contains a phrase we will print out "constituent" data
 				// if the child does not contain a phrase we only move the child without printing the "constituent"
-				if (isChildHasPHRASE(var.children))
+				if (isChildHasPHRASEorWORDS(var.children))
 				{
 					constituentID++;
 
@@ -742,15 +743,23 @@ public class OutputFormatter
 
 						int n = numberOfWORDinWORDS(var.children);
 
-						for (int i = 0; i < n; i++) {
+						if (n < 0)
+						{
+							for (int i = 0; i < n; i++) {
+								errorID++;
+								tcfErrors += "   <e ID=\"e"+errorID+"\" const=\"c"+(constituentID+i)+"\" type=\""+errorType+"\" />\n";
+							}
+						}
+						else
+						{
 							errorID++;
-							tcfErrors += "   <e ID=\"e"+errorID+"\" const=\"c"+(constituentID+0+i)+"\" type=\""+errorType+"\" />\n";
+							tcfErrors += "   <e ID=\"e"+errorID+"\" const=\"c"+(constituentID)+"\" type=\""+errorType+"\" />\n";
 						}
 					}
 
-					// removing the [ in front of [NP and then the error coming after the question mark [NP?NcaNg, which will let the phrase (NP) remain
-					tcfConstituents += (indent+"<constituent ID=\"c"+constituentID+"\" cat=\""+data.replaceAll("\\[(.*)\\?.*","$1")+"\">\n");
-					printTCFtree(var.children, indent+" ", data.substring(1));
+					// removing the [ in front of [NP and then the error coming after the question mark [NP?NcaNg?, which will let the phrase (NP) remain
+					tcfConstituents += (indent+"<constituent ID=\"c"+constituentID+"\" cat=\""+data.replaceAll("\\[?\\{?(\\w\\w)\\??.*","$1")+"\">\n"); //[PP?Pca?
+					printTCFtree(var.children, indent+" ", data);
 					tcfConstituents += (indent+"</constituent>\n");
 					}
 				else
@@ -810,7 +819,7 @@ public class OutputFormatter
     {
         if (in.indexOf('?')+1 < in.length())
 		{
-			return in.substring(in.indexOf('?')+1);
+			return in.substring(in.indexOf('?')+1,in.length()-1).replace("?",""); //remove the first and last ? in ?Pca?, then remove all ? marks which can be in ?Nn??Aca?
 		}
 			else
 		{
@@ -822,16 +831,14 @@ public class OutputFormatter
 // otherwise we do nothing
 // usage: if we find a phrase and want to see if we should print it out (only if it contains a phrase in it's child's list)
 // PHRASE → [PHRASE], WORD, WORD
-	private boolean isChildHasPHRASE(ArrayList<OutputFormatter_Part> list)
+	private boolean isChildHasPHRASEorWORDS(ArrayList<OutputFormatter_Part> list)
 	{
-//		print ("- ");
-		for (OutputFormatter_Part var : list) 
+		for (OutputFormatter_Part var : list)
 		{
-			if (var.OutputFormatter_Type == OutputFormatter_Type.PHRASE) {
+			if ((var.OutputFormatter_Type == OutputFormatter_Type.PHRASE)||(var.OutputFormatter_Type == OutputFormatter_Type.FUNC)||(var.OutputFormatter_Type == OutputFormatter_Type.WORDS)) {
 				return true;
 			}
 		}
-//		print ("-\n");
 		return false;
 	}
 

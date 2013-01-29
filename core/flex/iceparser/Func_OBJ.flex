@@ -87,6 +87,9 @@ NP = {OpenNP}[adg]~{CloseNP}//  (same as the line below)//CloseNP = "NP"\??{Word
 //NP = {OpenNP}[adg]~"NP"\??{Word}"]"
 //NP = "[NP"\??{Word}?[adg]~"NP"\??{Word}?"]"  // For some reason, we cannot use {OpenNP}[adg]~{CloseNP} because then we are not able to compile this file with JFlex!
 
+NPn = {OpenNP}[n]~{CloseNP}//  (same as the line below)//CloseNP = "NP"\??{Word}"
+
+
 //NPs = {NPsAcc}|{NPsDat}|{NPsGen}//  (same as the line below)
 //NPs = {OpenNPs}{WhiteSpace}+{OpenNP}(a|d|g)~{CloseNPs}
 NPs = {StartNPs}(a|d|g)~{CloseNPs}
@@ -105,6 +108,7 @@ SubjectRelCP = {FuncSubject}|{RelCP}
 SubjVerb = {SubjectRelCP}{WhiteSpace}+{VP}{WhiteSpace}+
 VerbSubj = {VP}{WhiteSpace}+{FuncSubject}{WhiteSpace}+
 
+SubjVerbNPn = {SubjVerb}{NPn}
 SubjVerbObj = {SubjVerb}{Object}
 SubjVerbAdvPObj = {SubjVerb}{AdvPs}{Object}
 SubjVerbPPObj = {SubjVerb}{AdvPs}?{PP}{WhiteSpace}+{Object}
@@ -120,6 +124,25 @@ VerbInfAdvPObj = {VPInf}{WhiteSpace}+({AdvPs}|{PP}{WhiteSpace}+){Object}
 VerbSupineObj = {VPSupine}{WhiteSpace}+{Object}
 
 %%
+
+{SubjVerbNPn}	{
+	theIndex = StringSearch.splitString(yytext(),"VP]", false, 3);
+	if(theIndex == -1)
+		out.write(yytext());
+	else
+	{
+		if (errorCheck)
+		{
+			out.write(ErrorDetector.agreementCheckSubjVerbObj(StringSearch.firstString,StringSearch.nextString,Obj1Open,Obj1Close,3));
+		}
+		else
+		{
+			out.write(yytext());
+		}
+	}
+}
+
+
 
 {SubjVerbObj}	{ 
 //	System.err.println("obj-1");
@@ -140,7 +163,7 @@ VerbSupineObj = {VPSupine}{WhiteSpace}+{Object}
 					out.write(StringSearch.firstString + Obj1Open + StringSearch.nextString + Obj1Close);
 				}
 			}
-		} 		
+		}
 	
 {SubjVerbAdvPObj} { 
 //	System.err.println("obj-2");

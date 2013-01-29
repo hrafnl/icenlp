@@ -36,7 +36,8 @@ import java.io.InputStream;
 public class IceMorphyLexicons {
 // Default paths and file names
     public String dictPathTagger = "dict/icetagger/";
-    public static String dictionary = "otb.dict";
+	public static String dictionary = "otbBinSmall.dict";
+//    public static String dictionary = "otb.dict";
     //public static String dictionary = "otbBin.dict";
      public static String dictionaryBase = "baseDict.dict";
     // IceMorphy variables

@@ -97,7 +97,7 @@
             <fileset dir="./">
 		<include name="dict/icetagger/*.dict" />
 		<!-- The following line is needed for not copying  otbBin.dict into the jar file-->
-                <exclude name="dict/icetagger/otbBin*.dict" />
+                <!--exclude name="dict/icetagger/otbBin*.dict" /-->
 		<include name="dict/tokenizer/*" />
                 <include name="dict/tritagger/*.dict" />
             	<include name="dict/formald/segment.srx" />
@@ -108,6 +108,7 @@
             	<include name="dict/lemmald/settings.txt" />   
 		<!-- HMM /--> 
                 <include name="ngrams/models/otb.*" />
+		        <include name="lists/*" />
             </fileset>
 	        <manifest>
 	                <attribute name="Built-By" value="${user.name}" />
@@ -137,6 +138,9 @@
 			<fileset dir="ngrams">
 				<exclude name="**/models/otbBin*.lex"/>
 			</fileset>
+		</copy>
+		<copy todir="${dist}/${package}/lists">
+			<fileset dir="lists" />
 		</copy>
 
 

@@ -104,7 +104,10 @@ import is.iclt.icenlp.core.utils.ErrorDetector;
 
 	private String FinalCheck(String originalStr)
 	{
-		return ErrorDetector.ErrorCheck(originalStr, agreement, markGrammarError, PhraseType);
+		if (agreement||markGrammarError)
+			return ErrorDetector.ErrorCheck(originalStr, PhraseType);
+		else
+			return NPOpen + originalStr + NPClose;
 	}
 
 %}

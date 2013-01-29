@@ -7,7 +7,6 @@ import is.iclt.icenlp.server.network.NetworkThread;
 
 public class Runner {
 	public static void main(String[] args) {
-		System.out.println(">> IceNLPServer");
 
 		// If there is no argument in the argument array then we will try
 		// to read the default configuration file which is located in the

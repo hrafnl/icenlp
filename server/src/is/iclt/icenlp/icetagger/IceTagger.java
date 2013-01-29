@@ -29,14 +29,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class IceTagger implements IIceTagger {
-	
+
 	private static IceTagger instance_ = null;
-	
+
 	public static IceTagger instance() throws IceTaggerException
 	{
 		if(instance_ == null)
 			instance_ = new IceTagger();
-		return instance_; 
+		return instance_;
 	}
 	
 	// instance of the configuration.
@@ -179,7 +179,8 @@ public class IceTagger implements IIceTagger {
 		}
 	}
 	
-	public List<Word> tag(String text) throws IceTaggerException {
+	public synchronized List<Word> tag(String text) throws IceTaggerException {
+
 		List<Word> returnlist = new LinkedList<Word>();
 		if (text.length() == 0)
 			return returnlist;
@@ -191,7 +192,6 @@ public class IceTagger implements IIceTagger {
 			for (Sentence s : sentences.getSentences()) {
 				for (Object token : s.getTokens()) {
 					IceTokenTags t = ((IceTokenTags) token);
-						//System.out.println("gDB>>token=("+token+")");
 
 
 					Word word;
@@ -207,7 +207,6 @@ public class IceTagger implements IIceTagger {
 					} 
 					else{
 						word = new Word(t.lexeme, t.getFirstTagStr(), t.mweCode, t.tokenCode, t.linkedToPreviousWord);
-						//System.out.println("gDB>>lexeme=("+t.lexeme+")");
 						
 						if (t.preSpace != null){
 							word.preSpace = t.preSpace;
@@ -303,9 +302,9 @@ public class IceTagger implements IIceTagger {
 		
 		return returnlist;
 	}
-	
+
 	public void lemmatize(boolean value)
-	{	
+	{
 		this.lemmatize = value;
 		if(value)
 			this.lemmald = Lemmald.instance();

@@ -42,6 +42,7 @@ public class RunIceParser extends RunIceParserBase
 
         IceParserFacade ipf = new IceParserFacade();
 
+
         if (inputFile == null) {
             standardInputOutput=true;
             br = FileEncoding.getReader(System.in);

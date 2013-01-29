@@ -139,30 +139,6 @@ public class OutputGenerator {
 			System.out.println("[i] Space character Output format: " + this.spaceOutputFormat + '.');
 		}
 
-		if (this.configuration.containsKey("sql")) {
-			boolean sql = false;
-			if (this.configuration.getValue("sql").equals("true")) {sql = true;}
-			String user = "";
-			String password = "";
-			String url = "";
-
-			if (this.configuration.containsKey("sqluser")) {
-				user = this.configuration.getValue("sqluser");
-			}
-		else { System.out.println("gDB>>SQL user missing");}
-			if (this.configuration.containsKey("sqlpassword")) {
-				password = this.configuration.getValue("sqlpassword");
-			}
-		else { System.out.println("gDB>>SQL password missing");}
-			if (this.configuration.containsKey("sqlurl")) {
-				url = this.configuration.getValue("sqlurl");
-			}
-		else { System.out.println("gDB>>SQL url missing");}
-
-				is.iclt.icenlp.core.utils.ErrorDetector.setSQL(sql,url,user,password);
-		}
-		else { System.out.println("gDB>>SQL missing in config");}
-
 		try {
 			// Check for a mappinglexicon lexicon configuration entry.
 			if (this.configuration.containsKey("mappinglexicon")) {

@@ -22,7 +22,7 @@
 package is.iclt.icenlp.facade;
 
 import is.iclt.icenlp.core.iceparser.*;
-import org.apache.xml.serialize.OutputFormat;
+import is.iclt.icenlp.core.utils.ErrorDetector;
 
 import java.io.*;
 
@@ -115,6 +115,7 @@ public class IceParserFacade
             return parse( text, OutputFormatter.OutputType.plain, include_func, false, false, false);
 		}
 	}
+
 
 // GöL
 // this is the new preferred version of the function above
@@ -325,6 +326,8 @@ public class IceParserFacade
 		sr = new StringReader( sw.toString() );
 		sw = new StringWriter( );
 
+
+		pp_scn.set_markGrammarError(markGrammarError);
         pp_scn.yyclose();
         pp_scn.yyreset(sr);
         pp_scn.parse(sw);
