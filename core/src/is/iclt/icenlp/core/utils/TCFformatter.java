@@ -48,38 +48,45 @@ public class TCFformatter {
 	public static boolean isTCF(Segmentizer segmentizer) throws IOException
 	{
 
-		StringBuffer text = new StringBuffer();
+		StringBuilder text = new StringBuilder();
 		while (segmentizer.hasMoreSentences())
 		{
 			text.append(segmentizer.getNextSentence());
 		}
 		String temp = text.toString();
 
-		if ((temp.contains("<D-Spin"))&&(temp.contains("<TextCorpus"))&&(temp.contains("</TextCorpus>"))&&(temp.contains("</D-Spin>")))
-		{
-			System.out.println("isTCF return true");
-			return true;
-		}
-		else
-		{
-			System.out.println("isTCF return false");
-			return false;
-		}
+		return isTCF(temp);
 	}
 
 
 	public static boolean isTCF(String text)
 	{
-
-		if (text.contains("<TextCorpus")&&(text.contains("<tokens>")&&(text.contains("<parsing tagset="))))
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return ((text.contains("<D-Spin"))&&(text.contains("<TextCorpus"))&&(text.contains("<text>"))&&(text.contains("</text>"))&&(text.contains("</TextCorpus>"))&&(text.contains("</D-Spin>")));
 	}
+
+	// input: TCF
+	// output: text part of the TCF
+	public static String getText()
+	{
+		return "";
+	}
+
+	// input: TCF
+	// output: string array of tokens from the TCF
+	public static String[] getTokens()
+	{
+		String out[] = {};
+		return out;
+	}
+
+	// input: TCF
+	// output: string array of tags from the TCF
+	public static String[] getTags()
+	{
+		String out[] = {};
+		return out;
+	}
+
 
 	public static String TCFtoText(String tcf)
 	{
@@ -127,7 +134,7 @@ public class TCFformatter {
 	// Input: token, tag and constituent string arrays, were each has been extracted from the TCF and put in the next empty array slot
 	private static String compileText(String[] token, String[] tag, String[] constituent)
 	{
-		StringBuffer out = new StringBuffer();
+		StringBuilder out = new StringBuilder();
 		for (String s: constituent)
 		{
 			if (s==null)

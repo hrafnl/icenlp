@@ -133,8 +133,17 @@ DatNPWithNomAdjPhrase = {OpenNP}d{WhiteSpace}+{OpenAP}n~{CloseNP}
 		
 {DatNPWithNomAdjPhrase}	{
 				String str = yytext();
-				str = str.replaceAll("\\[NPd","");
-				str = str.replaceAll("AP]","AP] [NPd");
+				String error = str.replaceAll(".*\\[NP(\\S*)d.*","$1"); // extracting the error to move with the noun phrase
+				String errorRegx = "";
+				if (0 < error.length())
+				{
+					str = str.replaceAll("\\[NP\\?"+error.substring(1,error.length()-1)+"\\?d","");
+				}
+				else
+				{
+					str = str.replaceAll("\\[NPd","");
+                }
+				str = str.replaceAll("AP]","AP] [NP"+error+"d");
 				out.write(str);
 			}
 		

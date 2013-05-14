@@ -7,14 +7,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 
-/**
- * Created by IntelliJ IDEA.
- * User: gudmundur
- * Date: 2/10/12
- * Time: 3:38 PM
- * To change this template use File | Settings | File Templates.
+ /**
+ * Identifies and marks errors found in the flex.
+ * @author Guðmundur Örn Leifsson
  */
-// GöL - error identification
 public class ErrorDetector {
 
 	static WordHashMap verbs;
@@ -59,8 +55,7 @@ public class ErrorDetector {
 		}
 
 
-		StringBuffer error = new StringBuffer();
-		boolean allTheSame = true;
+		StringBuilder error = new StringBuilder();
 		String [] tags = str.split(" ");
 
 		String tagI = tags[0].substring(encO.length(), tags[0].length()-encC.length());
@@ -106,13 +101,15 @@ public class ErrorDetector {
 				if (!gen1.equals(gen2)&&(!gen1.equals("x"))&&(!gen2.equals("x")))
 				{
 					error.append("Ng");
-				};
+				}
+
             	if (!num1.equals(num2)) {
 					error.append("Nn");
-				};
+				}
+
                	if (!case1.equals(case2)) {
 					error.append("Nca");
-				};
+				}
 			}
 		}
 
@@ -127,21 +124,22 @@ public class ErrorDetector {
 
 
 	// from Phrase_NP.flex {NounPhrase}
-	public static String ErrorCheck(String originalStr, String PhraseType)
+	public static String ErrorCheck(String originalStr, String phraseType)
 	{
-//		System.out.println("ErrorCheck originalStr=("+originalStr+")");
+//		System.out.println("gDB>> ErrorCheck originalStr=("+originalStr+") phraseType=("+phraseType+")");
 
 		String tokenlessStr = RemoveTokens(originalStr);
 		String errors = CheckGenNumCase(tokenlessStr);//create the error string which is going to be something like g+n+ca
+
 		//HL: return " [" + PhraseType + errors + " " + originalStr + " " + PhraseType + errors + "] ";
-        return " [" + PhraseType + errors + " " + originalStr + " " + PhraseType + "] ";
+        return " [" + phraseType + errors + " " + originalStr + " " + phraseType + "] ";
 	}
 
 
 
 
 	// for Phrase_NP and Func_SUBJ
-	public static String RemoveTokens(String str)
+	private static String RemoveTokens(String str)
 	{
 		str = IceParserUtils.RemoveFromSymbolToWhitespace("[", str);
 		str = IceParserUtils.RemoveFromSymbolToWhitespace("{", str);
@@ -154,172 +152,10 @@ public class ErrorDetector {
 	}
 
 
-/*
-	// for Func_SUBJ
-	// checks agreement within a subject
-	public static String checkAgreement(String str)
-	{
-		System.out.println("!!!!!!!!!!!!!!!!");
-		StringBuffer error = new StringBuffer();
-
-		String [] tags = str.split(" ");
-
-		// in this for-loop [x = i+1] and we stop when x reaches the last tag
-		int x = 0;
-		int forLoopStop =  tags.length-1 ;
-		for(int i=0; x<forLoopStop; i++)
-		{
-			x++;
-			int mod1, mod2;
-
-			String tagI = tags[i].substring(encO.length(), tags[i].length()-encC.length());
-			String tagX = tags[x].substring(encO.length(), tags[x].length()-encC.length());
-
-			mod1 = getModifierNFS(tagI.substring(0,1));
-			mod2 = getModifierNFS(tagX.substring(0,1));
-
-			if (tagI.equals("ssg") || tagI.equals("sng") || tagX.equals("ssg") || tagX.equals("sng") )
-			{
-				error.append("Ss");
-				continue;
-			}
-
-			// if either word doesn't include a gender or a person
-			if ( mod1 == -1 || mod2 == -1)
-			{
-				continue;
-			}
-
-			if (tagI.length() < 3+mod1 || tagX.length() < 3+mod2)
-			{
-				continue;
-			}
-			String pers1, pers2, nr1, nr2;
-
-			pers1 = tagI.substring(1 + mod1,2 + mod1);
-			nr1 = tagI.substring(2 + mod1,3 + mod1);
-
-			pers2 = tagX.substring(1 + mod2,2 + mod2);
-			nr2 = tagX.substring(2 + mod2,3 + mod2);
-
-			pers1 = IfGenderReturnPers(pers1);
-			pers2 = IfGenderReturnPers(pers2);
-//	System.err.println("pers1: " + pers1 + "\n" + "pers2: " + pers2 + "\n" + "nr1: " + nr1 + "\n" + "nr2: " + nr2);
-			// if there is an error we add a letter [p], but if we already have an error we first add a + [p+n]
-			if( !pers1.equals(pers2)&&!error.toString().endsWith("Sp") )
-			{
-				error.append("Sp");
-			}
-			// if we have already found problem with number we do not report it again
-			if ( !nr1.equals(nr2)
-			//&&!error.endsWith("Sn")
-			)
-			{
-				error.append("Sn");
-			}
-		}
-		return error.toString();
-	}
-*/
-	// for Func_SUBJ
-	public static int getModifierNFS(String letter)
-	{
-		if( letter.equals("n")  )   // gender's position is right after n [nhfn]
-		{
-			return 0;
-		}
-		else if( letter.equals("f")  )
-		{
-			return 1;
-		}
-		else if( letter.equals("s")  )   // persona is the second one after s [sfg3eþ]
-		{
-			return 2;
-		}
-
-		return -1;
-	}
-
-	// for Func_SUBJ
-	private static String IfGenderReturnPers(String pers)
-	{
-		if(pers.equals("h") || pers.equals("k") || pers.equals("v"))
-			return "3";
-
-		return pers;
-	}
-/*
-	// from Func_SUBJ.flex {SubjectVerbMissing}, {VerbAdvPSubject}, {SubjectRel}
-	public static String AgreementCheck(String s1, String s2, String s3, String s4, int order, boolean agreement, boolean markGrammarError)
-	{
-		//order of the input is not always the same and the output shouldnt be either.
-		String trueOut = createOutputString(s1,s2,s3,s4, order, true, markGrammarError, "");
-		if(!agreement)
-		{
-			return trueOut;
-		}
-
-		String tokenAndWordLess = RemoveTokens(trueOut);
-
-		String error = checkAgreement(tokenAndWordLess);
-
-		if(error.equals(""))
-		{
-			return trueOut;
-		}
-
-		return createOutputString(s1,s2,s3,s4, order, false, markGrammarError, error);
-	}
-*/
-	public static String createOutputString(String s1, String s2, String s3, String s4, int order, boolean tag, boolean markGrammarError, String error)
-	{
-
-		StringBuffer out = new StringBuffer();
-
-		if(tag)
-		{
-			return out.append(s1).append(s2).append(s3).append(s4).toString();
-		}
-		if(markGrammarError)
-		{
-			switch(order)
-			{
-				case 1:
-					return out.append(getErrTag(s1, error)).append(s2).append(s3).append(s4).toString();
-                    //return out.append(getErrTag(s1, error)).append(s2).append(getErrTag(s3, error)).append(s4).toString();
-				case 2:
-					return out.append(s1).append(getErrTag(s2, error)).append(s3).append(s4).toString();
-                    //return out.append(s1).append(getErrTag(s2, error)).append(s3).append(getErrTag(s4, error)).toString();
-			}
-		}
-		else
-		{
-			switch(order)
-			{
-				case 1:
-					return out.append(s2).append(s4).toString();
-				case 2:
-					return  out.append(s1).append(s3).toString();
-			}
-		}
-
-		return out.append("[ERR ").append(s1).append(s2).append(s3).append(s4).append(" ERR]").toString();
-	}
-
-	//inserts a question mark to identify as a possible error
-	public static String getErrTag(String str, String error)
-	{
-		StringBuffer stb = new StringBuffer();
-
-		if( str.substring(1,2).equals("{") )
-			return stb.insert(str.length()-1, "?"+error).toString();
-
-		return stb.insert(str.length()-2, "?"+error).toString();
-	}
 
 
 
-	public static char findGender(String[] input)
+	private static char findGender(String[] input)
 	{
 		// we prefer to find gender in nouns
 		// go through all the inputs and return the gender of the noun if there is any noun found
@@ -363,26 +199,16 @@ public class ErrorDetector {
 	}
 
 
-	public static boolean isGenderMismatch(char c1, char c2)
+	private static boolean isGenderMismatch(char c1, char c2)
 	{
-		// return false if the gender matches
-		if (c1 == c2)
-		{
-			return false;
-		}
-		// return false if the gender is a (1. or 2.) person or unidentified
-		else if ((c1 == '1')||(c1 == '2')||(c1 == 'x')||(c2 == '1')||(c2 == '2')||(c2 == 'x'))
-		{
-			return false;
-		}
-		else
-		{
-			return true;
-		}
+		// c1!=c2, if the gender matches return false
+		// !((c1 == '1')||...||(c2 == 'x')) f the gender is a (1. or 2.) person or unidentified, return false
+		// otherwise return true
+		return c1!=c2 && !((c1 == '1')||(c1 == '2')||(c1 == 'x')||(c2 == '1')||(c2 == '2')||(c2 == 'x'));
 	}
 
 
-	public static char findNumber(String[] input)
+	private static char findNumber(String[] input)
 	{
 		// we prefer to find number in nouns
 		// go through all the inputs and return the number of the noun if there is any noun found
@@ -425,25 +251,15 @@ public class ErrorDetector {
 	}
 
 	// returns true if there is a mismatch between the first tag that has a number and the incoming number
-	public static boolean isNumberMismatch(char n1, char n2)
+	private static boolean isNumberMismatch(char n1, char n2)
 	{
-		if (n1 == n2)
-		{
-			return false;
-		}
-		// if we don't know one of the numbers we cannot tell if there is a mismatch or not
-		else if ((n1 == 'x')||(n2 == 'x'))
-		{
-			return false;
-		}
-		else
-		{
-			return true;
-		}
+		// n1!=n2, return true if there is a mismatch
+		// !((n1 == 'x')||(n2 == 'x')), and neither one of the numbers are unknown
+		return n1!=n2 && !((n1 == 'x')||(n2 == 'x'));
 	}
 
 	// returns the person if there is any person found, or x if none is found
-	public static char findPerson(String[] input)
+	private static char findPerson(String[] input)
 	{
 		// we prefer to find number in nouns
 		// go through all the inputs and return the number of the noun if there is any noun found
@@ -505,7 +321,7 @@ public class ErrorDetector {
 	}
 
 		// returns true if there is a mismatch between the first tag that has a person and the incoming person
-	public static boolean isPersonMismatch(String[] input, char person)
+	private static boolean isPersonMismatch(String[] input, char person)
 	{
 //		System.out.println("isPersonMishmatch input=("+input+") person=("+person+")");
 		// if the person of the target is unknown we cannot tell if there is a mismatch or not
@@ -538,10 +354,6 @@ public class ErrorDetector {
 					{
 						return true;
 					}
-					else
-					{
-						return false;
-					}
 				}
 				else // if we land here it means the a.charAt returns 1,2 or 3 and we can match it OR if it returns k v or h with persona = 3
 				{
@@ -556,14 +368,7 @@ public class ErrorDetector {
 				// if we see f with k v or h and persona is not 3, we return an error
 				if (((a.charAt(3) == 'k')||(a.charAt(2) == 'v')||(a.charAt(2) == 'h'))&&(person != '3'))
 				{
-					if (person != '3')
-					{
-						return true;
-					}
-					else
-					{
-						return false;
-					}
+					return true;
 				}
 				else // if we land here it means the a.charAt returns 1,2 or 3 and we can match it
 				{
@@ -578,7 +383,7 @@ public class ErrorDetector {
 	}
 
 	// returns the findCase if there is any findCase found, or x if none is found
-	public static char findCase(String[] input)
+	private static char findCase(String[] input)
 	{
 		// checks the first letter in the tag and pulls out the appropriate letter to indicate the gender
 		for (String a : input)
@@ -609,7 +414,7 @@ public class ErrorDetector {
 	// gets in a string like : ^lkensf$ ^nkeng$ ^sfg3en$ ^aa$ ^lkensf$
 	// we can also handle any other strings now and just filter out strings that do not start with a ^
 	// then it is turned into a string array where each item is [lkensf][nkeng][sfg3en][aa][lkensf]
-	public static String[] toTagList(String input)
+	private static String[] toTagList(String input)
 	{
 
 		String[] output;
@@ -638,14 +443,16 @@ public class ErrorDetector {
 	// phraseType can be the beginning of a phrase
 	private static String findPhrase(String s1, String phraseType)
 	{
+		int s1PosOfPrase = s1.indexOf(phraseType);
+
 		if (phraseType.equals(""))
 		{
 			return s1;
 		}
-		if (s1.indexOf(phraseType) != -1)
+		if (s1PosOfPrase != -1)
 		{
 			int maxLength = s1.length(); // to make sure we don't check outside of the incoming string
-			int startPos = s1.indexOf(phraseType)+phraseType.length(); // the start of the phrase we are looking for
+			int startPos = s1PosOfPrase+phraseType.length(); // the start of the phrase we are looking for
 			int endPos = s1.lastIndexOf(phraseType); // the end location of the phrase we are looking for
 
 			while (true)
@@ -722,7 +529,7 @@ public class ErrorDetector {
 	public static String CompAgreementCheck(String s1, String s2, String open, String close, int order)
 	{
 //		System.out.println("CompAgreementCheck s1=("+s1+") s2=("+s2+")");
-		StringBuffer out0 = new StringBuffer();
+		StringBuilder out0 = new StringBuilder();
 		// check if the compliment contains a noun, if so then we dont look for an error
 		// Vigdís var forseti
 		if ((order == 1) && (s2.contains(" ^n")))
@@ -734,7 +541,7 @@ public class ErrorDetector {
 			return out0.append(open).append(s1).append(close).append(s2).toString();
 		}
 
-		StringBuffer error = new StringBuffer();
+		StringBuilder error = new StringBuilder();
 
 		String phrase = "";
 		if (s1.contains("VPb") || s2.contains("VPb")) // if the incoming sentences do not have VPb
@@ -751,7 +558,7 @@ public class ErrorDetector {
 
 		// s1:({*SUBJ> [NPn Börnin ^nhfng$  NP] *SUBJ>}  [VPb  voru ^sfg3fþ$   VPb])
 		// pull out the VPb tag and compare it to the subject
-		String[] VPbTags = toTagList(RemoveTokens(findPhrase(s1,phrase)));
+//		String[] VPbTags = toTagList(RemoveTokens(findPhrase(s1,phrase)));
 		 /* detect mismatch between VPb and the subject and object */
 
 
@@ -760,16 +567,7 @@ public class ErrorDetector {
 		String[] s1Tags = toTagList(RemoveTokens(s1tmp));
 		String[] s2Tags = toTagList(RemoveTokens(s2tmp));
 
-		int count = 0;
-		for (String s:s1Tags)
-		{
-			count++;
-		}
-		count = 0;
-		for (String s:s2Tags)
-		{
-			count++;
-		}
+
 		// gender = h ; number = f
 		//if we find NPs it means we have something like "maðurinn og konan eru góð" or "maðurinn og drengurinn eru góðir"
 		// we check if we have NPs, and then we check if the gender matches, if it doesn't we change the gender to neutral
@@ -836,16 +634,23 @@ public class ErrorDetector {
 			}
 		}
 
+
+
+		/*
 		if (error.length() > 0)
 		{
 			error.insert(0,'?');
             error.append('?');
 		}
+		*/
 
     // order 1 = s1 {comp s2 comp}
-		open = open.substring(0,open.length()-1)+error+" ";
+//		System.out.println("gDB>> open=("+open+")");
+		open = addError(open, error.toString());
+		//open = open.substring(0,open.length()-1)+error+" ";
 		// HL: close = close.substring(0,close.indexOf('}'))+error+"} ";
 
+		/*
 		StringBuffer out = new StringBuffer();
 		if (order == 1)
 		{
@@ -857,7 +662,37 @@ public class ErrorDetector {
 			out.append(open).append(s1).append(close).append(s2);
 		}
 		return out.toString();
+		*/
+
+        return makeOutput(s1,s2,open,close,order != 1);
 	}
+
+	// receives a phrase and marks the first phrase or function with the error
+	// checks if there already has been marked an error and makes sure the number of ? symbols fits
+	private static String addError(String phrase, String error)
+	{
+		// if we do not receive an error we do not mark the phrase
+		if (error.length()<1)
+		{
+			return phrase;
+		}
+		else
+		{
+			// extracts the first phrase or function and replaces with the mark <-.->
+			// stores the rest of the phrase
+			String temp = phrase.replaceFirst("\\s*([\\{\\[]\\S+)\\s?.*","$1");
+			String foundation = phrase.replaceFirst("(\\s*)[\\{\\[]\\S+(\\s?.*)","$1<-.->$2");
+			if (temp.contains("?"))
+			{   // {*COMP<?Cg? → {*COMP<?Cg?Xx?
+				return foundation.replace("<-.->",temp+error+"?");
+			}
+			else
+			{   //{*COMP<      → {*COMP<?Xx?
+				return foundation.replace("<-.->",temp+"?"+error+"?");
+			}
+		}
+	}
+
 
 	// looks at s1 and s2 and turns an error if their numbers doesn't match
 	// if order is 1, then the s2 will get open and close around it, otherwise it will be s1
@@ -867,10 +702,10 @@ public class ErrorDetector {
 //		System.out.println("agreementSubjectVerbCheckNumberAndPerson s1=("+s1+") s2=("+s2+")");
 		String[] s1Tags = toTagList(RemoveTokens(s1));
 		String[] s2Tags = toTagList(RemoveTokens(s2));
-		StringBuffer error = new StringBuffer();
+		StringBuilder error = new StringBuilder();
 
-		String VPTags[];
-		VPTags = new String[1];
+//		String VPTags[];
+//		VPTags = new String[1];
 		String VPTemp = "";
 
 		 /* detect mismatch between VPb and the subject and object */
@@ -900,11 +735,11 @@ public class ErrorDetector {
 			{
 				error.append("Vp");
 			}
-			s1 = errorMarkPhrase(s1, "VP", error.toString());
+			s1 = addError(s1, "VP", error.toString());
 		}
 		else
 		{
-			VPTemp = findPhrase(s2,"VP");
+//			VPTemp = findPhrase(s2,"VP");
 
 			// if we have multiple cases of NP then it is marked with NPs. If we find that we know the verb is
 			// most likely plural. "Hann og hún eru góð"
@@ -922,9 +757,10 @@ public class ErrorDetector {
 			{
 				error.append("Vp");
 			}
-			s2 = errorMarkPhrase(s2, "VP", error.toString());
+			s2 = addError(s2, "VP", error.toString());
 		}
 
+		/*
 		StringBuffer out = new StringBuffer();
 
 		if (order == 1)
@@ -937,17 +773,24 @@ public class ErrorDetector {
 			out.append(open).append(s1).append(close).append(s2);
 		}
 			return out.toString();
+		*/
+
+
+        return makeOutput(s1,s2,open,close,order != 1);
 	}
 
-	// adds error to the phrase in s1 and returns the results
-	private static String errorMarkPhrase (String s1, String phrase, String error)
+	// adds error to the identified phrase in s1 and returns the results
+	private static String addError (String s1, String phrase, String error)
 	{
-		// make sure the phrase can be found by the function
-		if (s1.indexOf("["+phrase) == -1)
+		int s1Pos = s1.indexOf("["+phrase);
+		if (s1.contains("{"))
 		{
-			return s1;
+			s1Pos = s1.indexOf("{"+phrase);
 		}
-		if (error.length() < 1)
+
+//		System.out.println("gDB>> s1=("+s1+") phrase=("+phrase+") error=("+error+")");
+		// make sure the phrase can be found by the function and that there is an error to mark
+		if ((s1Pos == -1)||(error.length() < 1))
 		{
 			return s1;
 		}
@@ -955,7 +798,7 @@ public class ErrorDetector {
 		// mark the first NP
 		int phraseStartExtend = 0;
 		int phraseEndExtend = 0;
-		int startOfPhrase = s1.indexOf("["+phrase)+phrase.length()+1;
+		int startOfPhrase = s1Pos+phrase.length()+1;
 		int endOfPhrase = s1.indexOf(phrase,startOfPhrase)-phrase.length()+1;
 		int endOfS1 = s1.length();
 
@@ -989,7 +832,7 @@ public class ErrorDetector {
 		}
 		endOfPhrase += phraseEndExtend;
 
-		StringBuffer out = new StringBuffer();
+		StringBuilder out = new StringBuilder();
 		out.append(s1.substring(0,startOfPhrase)) // start the string with everything in front of the phrase
 				.append('?').append(error).append('?') // insert the error after the first NP
 				.append(s1.substring(startOfPhrase,endOfPhrase)) //everything inside NP
@@ -1071,7 +914,8 @@ public class ErrorDetector {
 		else
 		{
 			// case not found in database, mark the nounphrase with an error
-			s2 = errorMarkPhrase(s2,"NP","Aca");
+			s2 = addError(s2,"NP","Aca");
+//			System.out.println("gDB>> test s2=("+addError(s2,"NP","Aca")+")");
 			error = true;
 		}
 
@@ -1084,18 +928,20 @@ public class ErrorDetector {
 			close = "";
 		}
 
-
+		  /*
 		StringBuffer out = new StringBuffer();
 		out.append(s1).append(open).append(s2).append(close);
 		return out.toString();
+		*/
+        return makeOutput(s1,s2,open,close,false);
 	}
 
 	private static String lemmado(String wordform, String tag)
 	{
-		Lemmald myLemmald=null;
-		myLemmald = Lemmald.getInstance();
+		Lemmald myLemmald = Lemmald.getInstance();
 
-            if (myLemmald != null) {
+            if (myLemmald != null)
+			{
                  LemmaResult lemmaResult = myLemmald.lemmatize(wordform,tag);// String wordform, String tag
  		 		return lemmaResult.getLemma();
             }
@@ -1107,17 +953,23 @@ public class ErrorDetector {
 	// when we try to
 	public static String objVerbSubj (String s1, String s2, String open, String close)
 	{
+//		System.out.println("gDB>> objVerbSubj s1=("+s1+") s2=("+s2+") open=("+open+") close=("+close+")");
 		String noun[] = toTagList(s1);
 		String verb[] = toTagList(findPhrase(s2,"VP"));
 
 		if (isNumberMismatch(findNumber(noun),findNumber(verb)))
 		{
-			s2 = errorMarkPhrase(s2,"VP","Vn");
+			s2 = addError(s2,"VP","Vn");
+//		System.out.println("s2=("+s2+")");
 		}
 
+	/*
 		StringBuffer out = new StringBuffer();
 		out.append(open).append(s1).append(close).append(s2);
 		return out.toString();
+	*/
+
+        return makeOutput(s1,s2,open,close,true);
 	}
 
 
@@ -1135,7 +987,8 @@ public class ErrorDetector {
 			open = open.replaceAll("(.*\\S)\\s+","$1")+errors+" ";
 		}
 
-        return open + " " + originalStr + close;
+//        return open + " " + originalStr + close;
+        return makeOutput(originalStr,"",open + " ",close,true);
 	}
 
 	// extract the case of the first adjective tag (^aþ$)
@@ -1158,4 +1011,25 @@ public class ErrorDetector {
 
 		return errorCode;
 	}
+
+
+	// input:
+	// s1 - first part of sentence
+	// s2 - second part of sentence
+	// open - how the new phrase opens
+	// close - how the new phrase closes
+	// isFirstMarked - if true, then the new phrase will open and close around s1, otherwise s2
+	// returns a string in this order, s1 s2, where open and close goes around either s1 or s2 according to isFirstMarked
+	private static String makeOutput(String s1, String s2, String open, String close, boolean isFirstMarked/*which of s1/s2 is marked*/)
+	{
+		if (isFirstMarked)
+		{
+			return open+s1+close+s2;
+		}
+		else
+		{
+			return s1+open+s2+close;
+		}
+	}
 }
+

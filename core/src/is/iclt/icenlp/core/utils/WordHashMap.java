@@ -3,18 +3,18 @@ package is.iclt.icenlp.core.utils;
 import java.io.*;
 import java.util.HashMap;
 
-/**
- * Created by IntelliJ IDEA.
- * User: gudmundur
- * Date: 1/15/13
- * Time: 2:55 PM
- * To change this template use File | Settings | File Templates.
+
+ /**
+ * Allows errors to be identifies with assistance of words that have been stored in a hashmap.
+  * Hashmaps can be created to contain a list of words and associated POS tags expected of them
+  * or the following words.
+ * @author Guðmundur Örn Leifsson
  */
 public class WordHashMap {
 	private static HashMap wordHashMap = new HashMap();
 
 	// load the hashmap with words
-	WordHashMap(String filePath) throws FileNotFoundException, IOException
+	WordHashMap(String filePath) throws IOException
 	{
 		    InputStream fstream = getClass().getResourceAsStream(filePath);
 			readFile(fstream);
@@ -28,21 +28,20 @@ public class WordHashMap {
 		// get the word we are looking for in the hashmap
 		if (wordHashMap.containsKey(word))
 		{
-			String results = wordHashMap.get(word).toString();
+			return wordHashMap.get(word).toString();
 //			System.out.println("gD>>found ("+word+") to have ("+results+")");
-			return results;
+//			return results;
 		}
 
 		return "";
 	}
 
 	// reads a file stream, extracts the words and cases, and puts it into the hashmap
-	private void readFile(InputStream fstream) throws FileNotFoundException, IOException
+	private void readFile(InputStream fstream) throws IOException
 	{
 		DataInputStream in = new DataInputStream(fstream);
 		BufferedReader br = new BufferedReader(new InputStreamReader(in));
-		String strLine = null;
-		int lineNum = 1;
+		String strLine;
 
 		while ((strLine = br.readLine()) != null)
 		{
@@ -54,13 +53,12 @@ public class WordHashMap {
 
 				addWord(word, cases);
 			}
-			lineNum++;
 		}
 	}
 
 	private String extractCases (String in)
 	{
-		StringBuffer out = new StringBuffer();
+		StringBuilder out = new StringBuilder();
 		String cases = in.replaceAll("[^=\\s]+\\s+(.*)","$1");
 
 		// extract which case the word dictates and convert to our code

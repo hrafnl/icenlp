@@ -199,8 +199,6 @@ public class OutputFormatter
 
 		if(outType == OutputType.json)
 		{
-            if (firstLine)
-              print("{\n\t\"Parsed Text\":{"+"\n");
 			writeJson(root);
 		}
 		else if(outType == OutputType.xml)
@@ -227,7 +225,7 @@ public class OutputFormatter
 		OutputFormatter_Part root = new OutputFormatter_Part(OutputFormatter_Type.ROOT);
 
 		char[] arr = new char[8*1024];
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		int numChars;
 		while((numChars = r.read(arr, 0, arr.length)) > 0)
 		{
@@ -872,7 +870,10 @@ public class OutputFormatter
 //
 	private void writeJson(OutputFormatter_Part root)
 	{
+        //    if (firstLine)
+        print("{\n\t\"Parsed Text\":{\n");
 		printJtree(root.children, "\t\t");
+		print("\t}\n}\n");
 	}
 
 	private void printJtree(ArrayList<OutputFormatter_Part> list, String indent)
