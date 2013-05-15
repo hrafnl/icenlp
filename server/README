@@ -1,0 +1,20 @@
+IceNLP is an open source Natural Language Processing (NLP) toolkit for analysing and processing Icelandic text.
+
+http://sourceforge.net/projects/icenlp
+
+-----------------------------------------
+The project is checked out with: 
+svn checkout svn://svn.code.sf.net/p/icenlp/code/ icenlp-code
+
+This file contains information about the contents of the subdirectory server.
+
+The server part of IceNLP allows one to run IceNLP as a daemon, i.e. a background process. An example of the usage of the server part is the following: 
+
+1) Start the server by running /server/sh/RunServer.sh
+2) Communicate with the server using a client: echo "Hann er góður kennari" | ./RunClient.sh
+
+
+The server part can be compiled with:
+ant
+-----------------------------------------
+hrafn@ru.is

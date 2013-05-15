@@ -1,10 +1,10 @@
-tIceNLP is an open source Natural Language Processing (NLP) toolkit for analysing and processing Icelandic text.
+IceNLP is an open source Natural Language Processing (NLP) toolkit for analysing and processing Icelandic text.
 
 http://sourceforge.net/projects/icenlp
 
 -----------------------------------------
 The project is checked out with: 
-svn co https://icenlp.svn.sourceforge.net/svnroot/icenlp icenlp
+svn checkout svn://svn.code.sf.net/p/icenlp/code/ icenlp-code
 
 This file contains information about the contents of the subdirectory core.
 
