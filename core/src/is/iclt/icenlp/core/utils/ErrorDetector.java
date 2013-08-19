@@ -15,18 +15,6 @@ public class ErrorDetector {
 
 	static WordHashMap verbs;
 
-	static boolean SqlEnabled = false;
-	static String SqlUser;
-	static String SqlPass;
-	static String SqlUrl;
-
-	public static void setSQL(boolean enableSQL, String url, String user, String pass) {
-		SqlEnabled = enableSQL;
-		SqlUser = user;
-		SqlPass = pass;
-		SqlUrl = url;
-	}
-
 	// for Phrase_NP
 	static String encO =  IceParserUtils.encodeOpen;
 	static String encC =  IceParserUtils.encodeClose;
@@ -108,7 +96,7 @@ public class ErrorDetector {
 				}
 
                	if (!case1.equals(case2)) {
-					error.append("Nca");
+					error.append("Nc");
 				}
 			}
 		}
@@ -906,7 +894,7 @@ public class ErrorDetector {
 //		System.out.println("possibleTags=("+possibleTags+") verb case=("+Character.toString(s2case)+")");
 
 //		if the case of the object is the same as any possible tag for the verb, then do nothing, if there is a mismatch the nounphrase will be error marked
-// 		or if we cannot find the word in the sqlWordLoopup then we do nothing
+// 		or if we cannot find the word in the WordLoopup then we do nothing
 		if (possibleTags.contains(Character.toString(s2case))||(possibleTags.equals("")))
 		{
 			// do nothing
@@ -914,7 +902,7 @@ public class ErrorDetector {
 		else
 		{
 			// case not found in database, mark the nounphrase with an error
-			s2 = addError(s2,"NP","Aca");
+			s2 = addError(s2,"NP","Oc");
 //			System.out.println("gDB>> test s2=("+addError(s2,"NP","Aca")+")");
 			error = true;
 		}
@@ -1006,7 +994,7 @@ public class ErrorDetector {
 		// if we find a mismatch then we write the error code
 		if ((adjectiveCase != lastCase)&&(lastCase != 'x')&&(adjectiveCase != 'x'))
 		{
-			errorCode = "?Pca?";
+			errorCode = "?Pc?";
 		}
 
 		return errorCode;

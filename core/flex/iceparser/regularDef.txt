@@ -53,7 +53,7 @@ ProperNounTag = {encodeOpen}n{Gender}{Number}{Case}("-"|{ArticleChar}){ProperNam
 NumeralTag = {encodeOpen}t([aop]|f{Gender}{Number}{Case}){encodeClose}{WhiteSpace}+
 PersPronounTag = {encodeOpen}fp({Gender}|{Person}){Number}{Case}{encodeClose}{WhiteSpace}+
 
-ErrorCodes = Ng|Nn|Nca|Np|Vn|Vp|Sn|Ss|Sp|Aca|Cg|Cn|Xx|Gh|Pca
+ErrorCodes = Ng|Nn|Nc|Np|Vn|Vp|Sn|Ss|Sp|Oc|Cg|Cn|Xx|Gh|Pc
 //ErrorCodes = [VNASCXGP]([gnpsxh]|"ca")
 Error = \?{ErrorCodes}+\?
 
