@@ -20,6 +20,7 @@
  * hrafn@ru.is
  */
 package is.iclt.icenlp.core.iceNER;
+import java.io.*;
 %% NameScanner
 %public
 %class NameScanner
@@ -27,10 +28,29 @@ package is.iclt.icenlp.core.iceNER;
 %unicode
 
 %{
+      java.io.Writer out = new BufferedWriter(new OutputStreamWriter(System.out));
+
+      public void parse(java.io.Writer _out) throws java.io.IOException
+      {
+        out = _out;
+        while (!zzAtEOF)
+            yylex();
+      }
 
 	
 %}
-WhiteSpace = [ ]
+
+%eof{
+        try {
+          out.flush();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+%eof}
+
+//WhiteSpace = [ ]
+WhiteSpace =  [ \t\n\r]+
 
 Upper = [A-ZÁÉÐÍÓÚÝÞÆÖ]
 Lower = [a-záéðíóúýþæö]
@@ -66,15 +86,15 @@ EventRole =	{Upper}?{Lower}*-?(hátíð(ar(innar)?|in(a|ni)?)?|keppni(n(a|n(i|ar
 LocationRole = {Upper}?{Lower}*-?([Nn]orður|[Ss]uður|[Aa]ustur|[Vv]estur|[Bb]org(ar(innar)?|in(a|ni)?)?|[Bb]æ(r(inn)?|jar(ins)?|inn|num)?|[Dd]al(ur(inn)?|num|inn|s(ins)?)?|[Ee]y(ju(num|nni|m)?|na|ja(r(innar|nar)?|nn)?|in)?|[Ff]ell(i(ð|nu)?|s(ins)?)?|[Ff]jall(i(ð|nu)?|s(ins)?)?|[Ff]jörð(ur(inn)?|inn)?|[Ff]irði(num)?|[Ff]jarðarins|[Ff]ljót(i(ð|nu)?|s(ins)?)?|[Ff]ló(i(nn)?|a(nn|num|ns)?)|[Ff]oss(i(nn|num|ns)?)?|[Gg]ata(n)?|[Gg]ötu(na|nni|nnar)?|[Hh]eið(i(n(a|ni)?)?|ar(innar)?)|[Hh]raun(i(ð|nu)?|s(ins)?)?|höfn(in(a|ni)?)?|hafnar(innar)?|[Hh]öll(in(a|ni)?)?|[Hh]allar(innar)?|land(i(ð|nu)?|s(ins)?)?|nes(i(ð|nu)?|s(ins)?)?|ríki((ð|nu)?|s(ins)?)?|[Ss]kag(i(nn)?|a(n(n|s|um))?)|[Ss]kál(i(nn)?|a(n(n|s|um))?)|[Ss]lóð(ar(innar)?|in(a|ni)?)?|stað([au]r)?|[Ss]træti(ð|nu|s(ins)?)?|[Ss]trönd(in(a|ni)?|um)?|[Ss]trandar(innar)?|[Ss]væði(ð|nu|s(ins)?)?|[Tt]org(i(ð|nu)?|s(ins)?)?|[Vv]atn(i(ð|nu)?|s(ins)?)?|[Vv]eg(ur(inn)?|i(n(n|um)?)?|ar(ins)?)?|[Vv]öll(ur(inn)?|inn)?|[Vv]elli(num)?|[Vv]allar(ins)?|[Þþ]orp(i(ð|nu)?|s(ins)?)?|[Öö]ræf(i|um|a))
 	
 %%
-{Event} { System.out.println(yytext()+" SEP EVENT");}
-{Person} { System.out.println(yytext()+" SEP PERSON");}
-{Company} { System.out.println(yytext()+" SEP COMPANY");}
-{Location} { System.out.println(yytext()+" SEP LOCATION");}
-{EventRole} { System.out.println(yytext()+" SEP ROLE_EVENT");}
-{PersonRole} { System.out.println(yytext()+" SEP ROLE_PERSON");}
-{CompanyRole} { System.out.println(yytext()+" SEP ROLE_COMPANY");}
-{LocationRole} { System.out.println(yytext()+" SEP ROLE_LOCATION");}
-{PersonRelation} { System.out.println(yytext()+" SEP RELATION_PERSON");}
+{Event} { out.write(yytext()+" SEP EVENT\n");}
+{Person} { out.write(yytext()+" SEP PERSON\n");}
+{Company} { out.write(yytext()+" SEP COMPANY\n");}
+{Location} { out.write(yytext()+" SEP LOCATION\n");}
+{EventRole} { out.write(yytext()+" SEP ROLE_EVENT\n");}
+{PersonRole} { out.write(yytext()+" SEP ROLE_PERSON\n");}
+{CompanyRole} { out.write(yytext()+" SEP ROLE_COMPANY\n");}
+{LocationRole} { out.write(yytext()+" SEP ROLE_LOCATION\n");}
+{PersonRelation} { out.write(yytext()+" SEP RELATION_PERSON\n");}
 {WhiteSpace} {;}
 {Word} {;}
 {WebPage} {;}
