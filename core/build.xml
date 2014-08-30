@@ -42,36 +42,89 @@
                 <pathelement location="${junit}" />
 	</path>
 
-	<target name="init" depends="clean" >
-		<tstamp /> <!-- Create the timestamp for the build -->
-		<!-- Create all the directories for the build -->
-		<mkdir dir="${build}" />
-		<mkdir dir="${dist}" />
-		<mkdir dir="${dist}/${package}" />
+	<target name="makerules"
+					depends="flex-icetagger, flex-iceparser, flex-iceparser-errorsearch, flex-iceNER"
+					description="Runs the make rules file"/>
+	<target name="flex-icetagger-check">
+		<condition property="flex-icetagger.is-uptodate">
+			<uptodate>
+				<srcfiles dir="." includes="flex/icetagger/genIceRules.flex"/>
+				<mapper type="merge"
+					to="src/is/iclt/icenlp/core/icetagger/IceLocalRules.java"/>
+			</uptodate>
+		</condition>
 	</target>
-
-	<target name="makerules" depends="init" description="Runs the make rules file">
+	<target name="flex-icetagger" depends="flex-icetagger-check" unless="flex-icetagger.is-uptodate">
 		<exec executable="bash" newenvironment="false" dir="flex/icetagger">
-			<arg value="makeRules.sh" />
+			<arg value="compileRules.sh" />
 		</exec>
-
-		<!-- wait for the generated file to appear -->
-		<waitfor maxwait="30" maxwaitunit="second">
-			<and>
-				<available file="${src}/is/iclt/icenlp/core/icetagger/IceLocalRules.java"/>
-			</and>
-		</waitfor>
-		<echo message="Rules file created." level="info" />
+		<echo message="IceTagger rules file created." level="info" />
+	</target>
+	<target name="flex-iceparser-check">
+		<condition property="flex-iceparser.is-uptodate">
+			<uptodate>
+				<srcfiles dir="." includes="flex/iceparser/*.flex"/>
+				<mapper type="glob"
+          from="flex/iceparser/*.flex"
+					to="src/is/iclt/icenlp/core/iceparser/*.java"/>
+			</uptodate>
+		</condition>
+	</target>
+	<target name="flex-iceparser" depends="flex-iceparser-check" unless="flex-iceparser.is-uptodate">
+		<exec executable="bash" newenvironment="false" dir="flex/iceparser">
+			<arg value="flexAll.sh" />
+		</exec>
+		<echo message="IceParser rules file created." level="info" />
+	</target>
+	<target name="flex-iceparser-errorsearch-check">
+		<condition property="flex-iceparser-errorsearch.is-uptodate">
+			<uptodate>
+				<srcfiles dir="." includes="flex/iceparser/errorSearch/*.flex"/>
+				<mapper type="glob"
+          from="flex/iceparser/errorSearch/*.flex"
+					to="src/is/iclt/icenlp/core/iceparser/*.java"/>
+			</uptodate>
+		</condition>
+	</target>
+	<target name="flex-iceparser-errorsearch" depends="flex-iceparser-errorsearch-check" unless="flex-iceparser-errorsearch.is-uptodate">
+		<exec executable="bash" newenvironment="false" dir="flex/iceparser/errorSearch">
+			<arg value="flexAll.sh" />
+		</exec>
+		<echo message="IceParser errorSearch rules file created." level="info" />
+	</target>
+	<target name="flex-iceNER-check">
+		<condition property="flex-iceNER.is-uptodate">
+			<uptodate>
+				<srcfiles dir="." includes="flex/iceNER/NameScanner.flex"/>
+				<mapper type="merge"
+					to="src/is/iclt/icenlp/core/iceNER/NameScanner.java"/>
+			</uptodate>
+		</condition>
+	</target>
+	<target name="flex-iceNER" depends="flex-iceNER-check" unless="flex-iceNER.is-uptodate">
+		<exec executable="bash" newenvironment="false" dir="flex/iceNER">
+			<arg value="flexit.sh" />
+		</exec>
+		<echo message="IceNER rules file created." level="info" />
 	</target>
 
-	<target name="compile" depends="makerules" description="Compiles all the source files">
+	<target name="compile-check" depends="makerules">
+		<condition property="compile.is-uptodate">
+			<uptodate>
+				<srcfiles dir="." includes="src/**/*.java"/>
+        <regexpmapper from="src/(.*).java" to="build/\1.class"/>
+			</uptodate>
+		</condition>
+	</target>
+	<target name="compile" depends="compile-check" unless="compile.is-uptodate" description="Compiles all the source files">
+		<mkdir dir="${build}" />
 		<javac srcdir="${src}" destdir="${build}">
 			<classpath refid="classpath" /> 		
 			<!-- <compilerarg value="-Xlint"/> /-->
 		</javac>
 	</target>
 
-	<target name="junit" depends="compile" description="Runs the JUnit tests">
+	<target name="junit" depends="compile" unless="release-jar.is-uptodate" description="Runs the JUnit tests">
 		<junit fork="no" haltonfailure="yes">
 			<classpath refid="classpath.test" />
 			<formatter type="brief" usefile="false" />
@@ -80,7 +133,17 @@
 		</junit>
 	</target>
 	
-	<target name="release-jar" depends="junit, compile, init, makerules" description="Compiles a release version of IceNLP">
+	<target name="release-jar-check" depends="compile">
+		<condition property="release-jar.is-uptodate">
+			<uptodate>
+				<srcfiles dir="." includes="build/**/*.class"/>
+				<mapper type="merge"
+					to="dist/IceNLPCore.jar"/>
+			</uptodate>
+		</condition>
+	</target>
+	<target name="release-jar" depends="release-jar-check, junit" unless="release-jar.is-uptodate" description="Compiles a release version of IceNLP">
+	    <mkdir dir="${dist}" />
 	    <manifestclasspath property="jar.classpath" jarfile="${dist}/${jar_name}.jar">
 	      <classpath refid="classpath"/>
 	    </manifestclasspath>  
@@ -117,9 +180,22 @@
 		</jar>
 	</target>
 
+	<target name="docs-check">
+		<condition property="docs.is-uptodate">
+			<uptodate>
+				<srcfiles dir="." includes="doc/*.tex"/>
+				<mapper type="glob" from="doc/*.tex" to="doc/*.pdf"/>
+			</uptodate>
+		</condition>
+	</target>
+	<target name="docs" depends="docs-check" unless="docs.is-uptodate" description="Build PDFs from TeX-files">
+		<exec executable="bash" newenvironment="false" dir="doc">
+			<arg value="maketex.sh" />
+		</exec>
+	</target>
 
-	<target name="package" depends="release-jar" >
-		
+	<target name="package" depends="release-jar, docs" >
+		<mkdir dir="${dist}/${package}" />
 		<copy file="${dist}/${jar_name}.jar" todir="${dist}/${package}/dist" />
 		<copy todir="${dist}/${package}/bat">
 			<fileset dir="bat" />
@@ -166,9 +242,57 @@
         	<!-- Delete the ${build} and ${dist} directory trees -->
         	<delete dir="${build}"/>
         	<delete dir="${dist}"/>
-		<!-- Delete the generated rules file -->
+		<!-- Delete the generated rules files -->
+		<delete file="flex/icetagger/genIceRules.class"/>
+		<delete file="flex/icetagger/genIceRules.java"/>
 		<delete file="${src}/is/iclt/icenlp/core/icetagger/IceLocalRules.java"/>
-    	</target>
+		<delete file="${src}/is/iclt/icenlp/core/iceparser/Case_AP.java"/>
+		<delete file="${src}/is/iclt/icenlp/core/iceparser/Case_NP.java"/>
+		<delete file="${src}/is/iclt/icenlp/core/iceparser/Clean1.java"/>
+		<delete file="${src}/is/iclt/icenlp/core/iceparser/Clean2.java"/>
+		<delete file="${src}/is/iclt/icenlp/core/iceparser/Correction.java"/>
+		<delete file="${src}/is/iclt/icenlp/core/iceparser/ErrDetect.java"/>
+		<delete file="${src}/is/iclt/icenlp/core/iceparser/Func_COMP.java"/>
+		<delete file="${src}/is/iclt/icenlp/core/iceparser/Func_OBJ.java"/>
+		<delete file="${src}/is/iclt/icenlp/core/iceparser/Func_OBJ2.java"/>
+		<delete file="${src}/is/iclt/icenlp/core/iceparser/Func_OBJ3.java"/>
+		<delete file="${src}/is/iclt/icenlp/core/iceparser/Func_QUAL.java"/>
+		<delete file="${src}/is/iclt/icenlp/core/iceparser/Func_SUBJ.java"/>
+		<delete file="${src}/is/iclt/icenlp/core/iceparser/Func_SUBJ2.java"/>
+		<delete file="${src}/is/iclt/icenlp/core/iceparser/Func_TIMEX.java"/>
+		<delete file="${src}/is/iclt/icenlp/core/iceparser/Phrase_AP.java"/>
+		<delete file="${src}/is/iclt/icenlp/core/iceparser/Phrase_APs.java"/>
+		<delete file="${src}/is/iclt/icenlp/core/iceparser/Phrase_AdvP.java"/>
+		<delete file="${src}/is/iclt/icenlp/core/iceparser/Phrase_FOREIGN.java"/>
+		<delete file="${src}/is/iclt/icenlp/core/iceparser/Phrase_MWE.java"/>
+		<delete file="${src}/is/iclt/icenlp/core/iceparser/Phrase_MWEP1.java"/>
+		<delete file="${src}/is/iclt/icenlp/core/iceparser/Phrase_MWEP2.java"/>
+		<delete file="${src}/is/iclt/icenlp/core/iceparser/Phrase_NP.java"/>
+		<delete file="${src}/is/iclt/icenlp/core/iceparser/Phrase_NP2.java"/>
+		<delete file="${src}/is/iclt/icenlp/core/iceparser/Phrase_NPs.java"/>
+		<delete file="${src}/is/iclt/icenlp/core/iceparser/Phrase_PP.java"/>
+		<delete file="${src}/is/iclt/icenlp/core/iceparser/Phrase_Per_Line.java"/>
+		<delete file="${src}/is/iclt/icenlp/core/iceparser/Phrase_VP.java"/>
+		<delete file="${src}/is/iclt/icenlp/core/iceparser/Preprocess.java"/>
+		<delete file="${src}/is/iclt/icenlp/core/iceparser/TagDecoder.java"/>
+		<delete file="${src}/is/iclt/icenlp/core/iceparser/TagEncoder.java"/>
+		<delete file="${src}/is/iclt/icenlp/core/iceparser/NP_errors.java"/>
+		<delete file="${src}/is/iclt/icenlp/core/iceparser/PP_errors.java"/>
+		<delete file="${src}/is/iclt/icenlp/core/iceparser/VP_errors.java"/>
+		<delete file="${src}/is/iclt/icenlp/core/iceNER/NameScanner.java"/>
+		<delete file="dict/lemmald/rule_database_utf8.dat"/>
+		<delete file="doc/IceNLP.aux"/>
+		<delete file="doc/IceNLP.bbl"/>
+		<delete file="doc/IceNLP.blg"/>
+		<delete file="doc/IceNLP.log"/>
+		<delete file="doc/IceNLP.pdf"/>
+		<delete file="doc/IceNLP.toc"/>
+		<delete file="doc/Tagset.aux"/>
+		<delete file="doc/Tagset.bbl"/>
+		<delete file="doc/Tagset.blg"/>
+		<delete file="doc/Tagset.log"/>
+		<delete file="doc/Tagset.pdf"/>
+	</target>
 	
 	
 	<!-- ================================================================== -->
