@@ -1,0 +1,31 @@
+# Special endings
+*.class
+*.pdf
+*.aux
+*.bbl
+*.blg
+*.log
+*.toc
+*.gz
+*.iml
+*.java~
+
+# Directories
+dist/
+.idea/
+
+* Generated files by JFlex
+core/dict/lemmald/rule_database_utf8.dat
+core/flex/icetagger/genIceRules.java
+core/src/is/iclt/icenlp/core/iceNER/NameScanner.java
+core/src/is/iclt/icenlp/core/iceparser/Phrase*.java
+core/src/is/iclt/icenlp/core/iceparser/Func*.java
+core/src/is/iclt/icenlp/core/iceparser/Clean*.java
+core/src/is/iclt/icenlp/core/iceparser/Case*.java
+core/src/is/iclt/icenlp/core/iceparser/*_errors.java
+core/src/is/iclt/icenlp/core/iceparser/Correction.java
+core/src/is/iclt/icenlp/core/iceparser/ErrDetect.java
+core/src/is/iclt/icenlp/core/iceparser/Preprocess.java
+core/src/is/iclt/icenlp/core/iceparser/TagDecoder.java
+core/src/is/iclt/icenlp/core/iceparser/TagEncoder.java
+core/src/is/iclt/icenlp/core/icetagger/IceLocalRules.java
