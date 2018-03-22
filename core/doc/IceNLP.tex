@@ -805,6 +805,35 @@ Tagging and parsing can also be tested by running the \textbf{/.tagAndParse.sh} 
 
 In that case, the \emph{test.txt} file is used as the input to the tagger.  The output of the tagger is then piped into \textit{IceParser}, which finally produces the file \emph{parse.out} as output.
 
+\section{Building from source}
+If you need to build  \emph{IceNLP} from source, you need the following three tools:
+
+\begin{enumerate}
+\item{\bf Java Development Kit (JDK)}.
+The JDK includes tools useful for developing and testing programs written in the Java programming language and running on the Java platform.  JDK is available for free from Oracle.
+
+\item{\bf JFlex}.
+JFlex is a lexical analyzer generator (also known as scanner generator) for Java, written in Java.
+JFlex is availble for free from \url{http://jflex.de}
+
+\item{\bf Apache Ant}.
+Apache Ant is a Java library and command-line tool whose mission is to drive processes described in build files as targets and extension points dependent upon each other.
+Ant is available for free from \url{http://ant.apache.org/}
+\end{enumerate}
+
+For example, to build \emph{IceNLPCore}, go to the directory  {\bf icenlp/core} and issue this command: {\bf ant}
+
+\emph{Ant} will then use the instructions given in the \emph{build.xml} file to build each individual component of \emph{IceNLP}.
+
+Note that before building you will need to increase the memory used by \emph{JFlex}: Go to the directory of JFlex
+and edit the \emph{jflex} (or \emph{jflex.bat}) file.
+At the bottom of this file, change:
+
+\verb|$JAVA -Xmx128m -jar $JFLEX_HOME/lib/jflex-1.x.y.jar $@|
+
+to
+
+\verb|$JAVA -Xmx2048m -jar $JFLEX_HOME/lib/jflex-1.x.y.jar $@|
 
 \newpage
 \begin{spacing}{1.0}
