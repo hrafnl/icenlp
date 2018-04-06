@@ -45,11 +45,11 @@ public class Tagger implements Serializable {
     protected HashSet<String> allowedPrefixes = null;
     protected HashSet<String> allowedSuffixes = null;
 
-    protected void setMaxPosIters(int n) {
+    public void setMaxPosIters(int n) {
         maxPosIters = n;
     }
 
-    protected void setMaxNEIters(int n) {
+    public void setMaxNEIters(int n) {
         maxNEIters = n;
     }
 

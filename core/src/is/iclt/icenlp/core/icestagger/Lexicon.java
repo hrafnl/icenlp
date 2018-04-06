@@ -8,7 +8,7 @@ import java.io.*;
  * sorted by ascending tag ID, as is done by the <code>sortLexicon</code>
  * method. This allows lists of tags to be merged efficiently.
  */
-class Lexicon implements Serializable {
+public class Lexicon implements Serializable {
     static final long serialVersionUID = 206015441661126717L;
 
     private HashMap<String,ArrayList<Entry>> lexicon;
@@ -16,7 +16,7 @@ class Lexicon implements Serializable {
     /**
      * Constructor creating an empty lexicon.
      */
-    Lexicon() {
+    public Lexicon() {
         clear();
     }
 
