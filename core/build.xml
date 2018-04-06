@@ -20,7 +20,7 @@
 	<property name="xerces" location="${lib}/xerces.jar" />
 	<property name="junit" location="${lib}/junit-4.8.2.jar" />
 
-    	<property name="version" value="11.03" />
+	<property name="version" value="11.03" />
 	<property name="jar_name" value="IceNLPCore" />
 
 	<path id="classpath">
@@ -43,7 +43,7 @@
 	</path>
 
 	<target name="makerules"
-					depends="flex-icetagger, flex-iceparser, flex-iceparser-errorsearch, flex-iceNER"
+					depends="flex-icetagger, flex-icestagger, flex-iceparser, flex-iceparser-errorsearch, flex-iceNER"
 					description="Runs the make rules file"/>
 	<target name="flex-icetagger-check">
 		<condition property="flex-icetagger.is-uptodate">
@@ -59,6 +59,22 @@
 			<arg value="compileRules.sh" />
 		</exec>
 		<echo message="IceTagger rules file created." level="info" />
+	</target>
+	<target name="flex-icestagger-check">
+		<condition property="flex-icestagger.is-uptodate">
+			<uptodate>
+				<srcfiles dir="." includes="flex/icestagger/*.flex"/>
+				<mapper type="glob"
+						from="flex/icestagger/*.flex"
+						to="src/is/iclt/icenlp/core/icestagger/*.java"/>
+			</uptodate>
+		</condition>
+	</target>
+	<target name="flex-icestagger" depends="flex-icestagger-check" unless="flex-icestagger.is-uptodate">
+		<exec executable="bash" newenvironment="false" dir="flex/icestagger">
+			<arg value="flexAll.sh" />
+		</exec>
+		<echo message="IceStagger tokenizer files created." level="info" />
 	</target>
 	<target name="flex-iceparser-check">
 		<condition property="flex-iceparser.is-uptodate">
@@ -246,6 +262,9 @@
 		<delete file="flex/icetagger/genIceRules.class"/>
 		<delete file="flex/icetagger/genIceRules.java"/>
 		<delete file="${src}/is/iclt/icenlp/core/icetagger/IceLocalRules.java"/>
+		<delete file="${src}/is/iclt/icenlp/core/icestagger/SwedishTokenizer.java"/>
+		<delete file="${src}/is/iclt/icenlp/core/icestagger/EnglishTokenizer.java"/>
+		<delete file="${src}/is/iclt/icenlp/core/icestagger/LatinTokenizer.java"/>
 		<delete file="${src}/is/iclt/icenlp/core/iceparser/Case_AP.java"/>
 		<delete file="${src}/is/iclt/icenlp/core/iceparser/Case_NP.java"/>
 		<delete file="${src}/is/iclt/icenlp/core/iceparser/Clean1.java"/>
