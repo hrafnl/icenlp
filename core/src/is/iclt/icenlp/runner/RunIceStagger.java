@@ -93,39 +93,6 @@ public class RunIceStagger {
         return parts;
     }
 
-    /**
-     * Splits the sentences into training/development/test data sets.
-     *
-     * @param sents         array of sentences
-     * @param nFolds        number of folds in the experiment
-     * @param devPercent    size of development set in 1/10 percent
-     * @param testPercent   size of test set in 1/10 percent
-     * @param i             fold number (between 0 and nFolds-1, inclusive)
-     * @return              array with 3 TaggedToken[][] objects, containing
-     *                      the training, development and test sets
-     */
-    private static TaggedToken[][][] getFold(
-            TaggedToken[][] sents, int nFolds, int devPercent, int testPercent, int i)
-    {
-        int j,k;
-        TaggedToken[][][] parts = new TaggedToken[3][][];
-        ArrayList<Integer> order = new ArrayList<Integer>(sents.length);
-        for(j=0; j<sents.length; j++) order.add(new Integer(j));
-        Collections.shuffle(order, new Random(1));
-        int nDev = (devPercent*sents.length) / 1000;
-        int nTest = (testPercent*sents.length) / 1000;
-        int nTrain = sents.length - (nDev+nTest);
-        parts[0] = new TaggedToken[nTrain][];
-        parts[1] = new TaggedToken[nDev][];
-        parts[2] = new TaggedToken[nTest][];
-        int a = (sents.length*i)/nFolds;
-        for(j=0,k=0; j<a; j++) parts[0][k++] = sents[j];
-        for(j=a+nDev+nTest; j<sents.length; j++) parts[0][k++] = sents[j];
-        for(j=0; j<nDev; j++) parts[1][j] = sents[a+j];
-        for(j=0; j<nTest; j++) parts[2][j] = sents[a+nDev+j];
-        return parts;
-    }
-
     public static void main(String[] args) {
         String lexiconFile = null;
         String trainFile = null;
@@ -318,10 +285,7 @@ public class RunIceStagger {
                     for(int j=0; j<nFolds; j++) {
                         Evaluation localEval = new Evaluation();
                         TaggedToken[][][] parts = getSUCFold(allSents, j);
-                        /*
-                        TaggedToken[][][] parts = getFold(
-                            allSents, nFolds, devPercent, testPercent, j);
-                        */
+
                         System.err.println(
                                 "Fold " + j + ", train (" + parts[0].length +
                                         "), dev (" + parts[1].length + "), test (" +
