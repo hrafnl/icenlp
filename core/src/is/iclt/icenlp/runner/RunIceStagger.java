@@ -134,6 +134,121 @@ public class RunIceStagger {
         }
     }
 
+    private static void tag(ArrayList<String> inputFiles,
+                            String modelFile,
+                            String lang,
+                            int iceMorphyType,
+                            String fold,
+                            boolean extendLexicon,
+                            boolean preserve,
+                            boolean plainOutput,
+                            boolean useIceHeuristic) {
+        try {
+            if(modelFile == null) {
+                System.err.println("Insufficient data.");
+                System.exit(1);
+            }
+            TaggedToken[][] inputSents = null;
+
+            ObjectInputStream modelReader = new ObjectInputStream(
+                    new FileInputStream(modelFile));
+            System.err.println( "Loading Stagger model ...");
+            Tagger tagger = (Tagger)modelReader.readObject();
+            lang = tagger.getTaggedData().getLanguage();
+            modelReader.close();
+
+            if(lang.equals("is")) {
+                ((IceTagger)tagger).setIceMorphyType(iceMorphyType);
+                if(iceMorphyType > 0)
+                    Guesser.loadIceMorphy(fold);
+            }
+            // TODO: experimental feature, might remove later
+            tagger.setExtendLexicon(extendLexicon);
+
+            for(String inputFile : inputFiles) {
+                if(!inputFile.endsWith(".txt")) {
+                    inputSents = tagger.getTaggedData().readConll(
+                            inputFile, null, true,
+                            !inputFile.endsWith(".conll"));
+                    Evaluation eval = new Evaluation();
+                    int count=0;
+                    for(TaggedToken[] sent : inputSents) {
+                        if (count % 100 == 0 )
+                            System.err.print( "Tagging sentence nr: " + count + "\r" );
+                        count++;
+                        TaggedToken[] taggedSent =
+                                tagger.tagSentence(sent, true, preserve);
+
+                        if(lang.equals("is") && useIceHeuristic)
+                            Guesser.correctSentence(taggedSent, tagger.getTaggedData().getPosTagSet());
+                        eval.evaluate(taggedSent, sent);
+                        tagger.getTaggedData().writeConllGold(
+                                System.out, taggedSent, sent, plainOutput);
+                    }
+                    System.err.println( "Tagging sentence nr: " + count);
+                    System.err.println(
+                            "POS accuracy: "+eval.posAccuracy()+
+                                    " ("+eval.posCorrect+" / "+
+                                    eval.posTotal+")");
+                    System.err.println(
+                            "NE precision: "+eval.nePrecision());
+                    System.err.println(
+                            "NE recall:    "+eval.neRecall());
+                    System.err.println(
+                            "NE F-score:   "+eval.neFscore());
+                } else {
+                    String fileID =
+                            (new File(inputFile)).getName().split(
+                                    "\\.")[0];
+                    BufferedReader reader = new BufferedReader(
+                            new InputStreamReader(
+                                    new FileInputStream(inputFile), "UTF-8"));
+                    BufferedWriter writer = null;
+                    if(inputFiles.size() > 1) {
+                        String outputFile = inputFile +
+                                (plainOutput? ".plain" : ".conll");
+                        writer = new BufferedWriter(
+                                new OutputStreamWriter(
+                                        new FileOutputStream(
+                                                outputFile), "UTF-8"));
+                    }
+                    Tokenizer tokenizer = getTokenizer(reader, lang);
+                    ArrayList<Token> sentence;
+                    int sentIdx = 0;
+                    long base = 0;
+                    while((sentence=tokenizer.readSentence())!=null) {
+                        TaggedToken[] sent =
+                                new TaggedToken[sentence.size()];
+                        if(tokenizer.sentID != null) {
+                            if(!fileID.equals(tokenizer.sentID)) {
+                                fileID = tokenizer.sentID;
+                                sentIdx = 0;
+                            }
+                        }
+                        for(int j=0; j<sentence.size(); j++) {
+                            Token tok = sentence.get(j);
+                            String id;
+                            id = fileID + ":" + sentIdx + ":" +
+                                    tok.offset;
+                            sent[j] = new TaggedToken(tok, id);
+                        }
+                        TaggedToken[] taggedSent =
+                                tagger.tagSentence(sent, true, false);
+                        tagger.getTaggedData().writeConllSentence(
+                                (writer == null)? System.out : writer,
+                                taggedSent, plainOutput);
+                        sentIdx++;
+                    }
+                    tokenizer.yyclose();
+                    if(writer != null) writer.close();
+                }
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
+
     public static void main(String[] args) {
         String lexiconFile = null;
         String trainFile = null;
@@ -259,117 +374,24 @@ public class RunIceStagger {
                         neEmbeddings);
 
             } else if(args[i].equals("-tag")) {
-                try {
-                    if(modelFile == null || i >= args.length-1) {
-                        System.err.println("Insufficient data.");
-                        System.exit(1);
-                    }
-                    ArrayList<String> inputFiles = new ArrayList<String>();
-                    for(i++; i<args.length && !args[i].startsWith("-"); i++)
-                        inputFiles.add(args[i]);
-                    if(inputFiles.size() < 1) {
-                        System.err.println("No files to tag.");
-                        System.exit(1);
-                    }
-                    TaggedToken[][] inputSents = null;
 
-                    ObjectInputStream modelReader = new ObjectInputStream(
-                            new FileInputStream(modelFile));
-                    System.err.println( "Loading Stagger model ...");
-                    Tagger tagger = (Tagger)modelReader.readObject();
-                    lang = tagger.getTaggedData().getLanguage();
-                    modelReader.close();
-
-                    if(lang.equals("is")) {
-                        ((IceTagger)tagger).setIceMorphyType(iceMorphyType);
-                        if(iceMorphyType > 0)
-                            Guesser.loadIceMorphy(fold);
-                    }
-                    // TODO: experimental feature, might remove later
-                    tagger.setExtendLexicon(extendLexicon);
-
-                    for(String inputFile : inputFiles) {
-                        if(!inputFile.endsWith(".txt")) {
-                            inputSents = tagger.getTaggedData().readConll(
-                                    inputFile, null, true,
-                                    !inputFile.endsWith(".conll"));
-                            Evaluation eval = new Evaluation();
-                            int count=0;
-                            for(TaggedToken[] sent : inputSents) {
-                                if (count % 100 == 0 )
-                                    System.err.print( "Tagging sentence nr: " + count + "\r" );
-                                count++;
-                                TaggedToken[] taggedSent =
-                                        tagger.tagSentence(sent, true, preserve);
-
-                                if(lang.equals("is") && useIceHeuristic)
-                                    Guesser.correctSentence(taggedSent, tagger.getTaggedData().getPosTagSet());
-                                eval.evaluate(taggedSent, sent);
-                                tagger.getTaggedData().writeConllGold(
-                                        System.out, taggedSent, sent, plainOutput);
-                            }
-                            System.err.println( "Tagging sentence nr: " + count);
-                            System.err.println(
-                                    "POS accuracy: "+eval.posAccuracy()+
-                                            " ("+eval.posCorrect+" / "+
-                                            eval.posTotal+")");
-                            System.err.println(
-                                    "NE precision: "+eval.nePrecision());
-                            System.err.println(
-                                    "NE recall:    "+eval.neRecall());
-                            System.err.println(
-                                    "NE F-score:   "+eval.neFscore());
-                        } else {
-                            String fileID =
-                                    (new File(inputFile)).getName().split(
-                                            "\\.")[0];
-                            BufferedReader reader = new BufferedReader(
-                                    new InputStreamReader(
-                                            new FileInputStream(inputFile), "UTF-8"));
-                            BufferedWriter writer = null;
-                            if(inputFiles.size() > 1) {
-                                String outputFile = inputFile +
-                                        (plainOutput? ".plain" : ".conll");
-                                writer = new BufferedWriter(
-                                        new OutputStreamWriter(
-                                                new FileOutputStream(
-                                                        outputFile), "UTF-8"));
-                            }
-                            Tokenizer tokenizer = getTokenizer(reader, lang);
-                            ArrayList<Token> sentence;
-                            int sentIdx = 0;
-                            long base = 0;
-                            while((sentence=tokenizer.readSentence())!=null) {
-                                TaggedToken[] sent =
-                                        new TaggedToken[sentence.size()];
-                                if(tokenizer.sentID != null) {
-                                    if(!fileID.equals(tokenizer.sentID)) {
-                                        fileID = tokenizer.sentID;
-                                        sentIdx = 0;
-                                    }
-                                }
-                                for(int j=0; j<sentence.size(); j++) {
-                                    Token tok = sentence.get(j);
-                                    String id;
-                                    id = fileID + ":" + sentIdx + ":" +
-                                            tok.offset;
-                                    sent[j] = new TaggedToken(tok, id);
-                                }
-                                TaggedToken[] taggedSent =
-                                        tagger.tagSentence(sent, true, false);
-                                tagger.getTaggedData().writeConllSentence(
-                                        (writer == null)? System.out : writer,
-                                        taggedSent, plainOutput);
-                                sentIdx++;
-                            }
-                            tokenizer.yyclose();
-                            if(writer != null) writer.close();
-                        }
-                    }
-                } catch(Exception e) {
-                    e.printStackTrace();
+                ArrayList<String> inputFiles = new ArrayList<String>();
+                for(i++; i<args.length && !args[i].startsWith("-"); i++)
+                    inputFiles.add(args[i]);
+                if(inputFiles.size() < 1) {
+                    System.err.println("No files to tag.");
                     System.exit(1);
                 }
+                tag(    inputFiles,
+                        modelFile,
+                        lang,
+                        iceMorphyType,
+                        fold,
+                        extendLexicon,
+                        preserve,
+                        plainOutput,
+                        useIceHeuristic);
+
             } else if(args[i].equals("-tokenize")) {
                 String inputFile = args[++i];
                 try {
