@@ -49,7 +49,7 @@ public class RunIceStagger {
         } else {
             System.err.println("Invalid language: "+lang);
             System.exit(1);
-        }
+        }   
         return tagger;
     }
 
@@ -249,6 +249,30 @@ public class RunIceStagger {
         }
     }
 
+    public static void tokenize(String inputFile, String lang) {
+        try {
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(
+                            new FileInputStream(inputFile), "UTF-8"));
+            Tokenizer tokenizer = getTokenizer(reader, lang);
+            ArrayList<Token> sentence;
+            while((sentence = tokenizer.readSentence()) != null) {
+                if(sentence.size() == 0) continue;
+                System.out.print(
+                        sentence.get(0).value.replace(' ', '_'));
+                for(int j=1; j<sentence.size(); j++) {
+                    System.out.print(
+                            " " + sentence.get(j).value.replace(' ', '_'));
+                }
+                System.out.println("");
+            }
+            tokenizer.yyclose();
+        } catch(IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
+
     public static void main(String[] args) {
         String lexiconFile = null;
         String trainFile = null;
@@ -394,27 +418,7 @@ public class RunIceStagger {
 
             } else if(args[i].equals("-tokenize")) {
                 String inputFile = args[++i];
-                try {
-                    BufferedReader reader = new BufferedReader(
-                            new InputStreamReader(
-                                    new FileInputStream(inputFile), "UTF-8"));
-                    Tokenizer tokenizer = getTokenizer(reader, lang);
-                    ArrayList<Token> sentence;
-                    while((sentence = tokenizer.readSentence()) != null) {
-                        if(sentence.size() == 0) continue;
-                        System.out.print(
-                                sentence.get(0).value.replace(' ', '_'));
-                        for(int j=1; j<sentence.size(); j++) {
-                            System.out.print(
-                                    " " + sentence.get(j).value.replace(' ', '_'));
-                        }
-                        System.out.println("");
-                    }
-                    tokenizer.yyclose();
-                } catch(IOException e) {
-                    e.printStackTrace();
-                    System.exit(1);
-                }
+                tokenize(inputFile, lang);
             }
         }
     }
