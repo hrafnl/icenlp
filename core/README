@@ -1,17 +1,10 @@
 IceNLP is an open source Natural Language Processing (NLP) toolkit for analysing and processing Icelandic text.
 
-http://sourceforge.net/projects/icenlp
-
------------------------------------------
-The project is checked out with:
-
-	svn checkout svn://svn.code.sf.net/p/icenlp/code/ icenlp-code
-
 This file contains information about the contents of the subdirectory core.
 
-The core includes core utilities like a tokeniser, a unknown word guesser, a PoS tagger, a finite state parser, a lemmatiser, and a Named Entity Recogniser.
+The core includes core utilities like a tokenisers, an unknown word guesser, PoS taggers, a finite state parser, a lemmatiser, and a Named Entity Recogniser.
 
-Build dependencies can be installen on Debian/Ubuntu with:
+Build dependencies can be installed on Debian/Ubuntu with:
 
 	sudo apt-get install -y jflex ant openjdk-7-jdk texlive-latex-extra texlive-fonts-recommended
 

@@ -1,7 +1,7 @@
 IceNLP is an open source Natural Language Processing (NLP) toolkit for analysing and processing Icelandic text.
 
-http://sourceforge.net/projects/icenlp <-- old repository
 https://github.com/hrafnl/icenlp
+http://sourceforge.net/projects/icenlp <-- old repository
 
 -----------------------------------------
 The project currently consists of two directories:
