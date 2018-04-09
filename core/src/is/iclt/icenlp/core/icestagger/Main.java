@@ -27,10 +27,7 @@ public class Main {
     String lang, TaggedData td, int posBeamSize, int neBeamSize)
     {
         Tagger tagger = null;
-        if(lang.equals("sv")) {
-            tagger = new SUCTagger(
-                td, posBeamSize, neBeamSize);
-        } else if(lang.equals("is")) {
+        if(lang.equals("is")) {
             tagger = new IceTagger(
                 td, posBeamSize, neBeamSize);
         } else if(lang.equals("en")) {
@@ -38,9 +35,6 @@ public class Main {
                 td, posBeamSize, neBeamSize);
         } else if(lang.equals("any")) {
             tagger = new GenericTagger(
-                td, posBeamSize, neBeamSize);
-        } else if(lang.equals("zh")) {
-            tagger = new CTBTagger(
                 td, posBeamSize, neBeamSize);
         } else {
             System.err.println("Invalid language: "+lang);
