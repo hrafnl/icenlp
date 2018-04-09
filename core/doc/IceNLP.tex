@@ -33,7 +33,7 @@ A Natural Language Processing Toolkit for Icelandic \\ \ \\ \ \\ \ \\
 \begin{document}
 \hyphenation{Ice-Tagger Ice-Morphy Reykja-vik}
 \label{firstpage}
-\date{March 2011}
+\date{April 2018}
 \maketitle
 \newpage
 \tableofcontents
@@ -42,7 +42,7 @@ A Natural Language Processing Toolkit for Icelandic \\ \ \\ \ \\ \ \\
 
 \section{What is IceNLP?}
 \emph{IceNLP} is a Natural Language Processing (NLP) toolkit for analysing Icelandic text.
-The toolkit consists of a tokeniser and a sentence segmentiser, the morphological analyser \emph{IceMorphy}, the linguistic rule-based tagger \emph{IceTagger}, the trigram tagger \emph{TriTagger}, the shallow parser \emph{IceParser}, the lemmatiser \emph{Lemmald}, and the named entity recogniser \emph{IceNER}.
+The toolkit consists of a tokeniser and a sentence segmentiser, the morphological analyser \emph{IceMorphy}, the linguistic rule-based tagger \emph{IceTagger}, the trigram tagger \emph{TriTagger}, the perceptron tagger \emph{IceStagger}, the shallow parser \emph{IceParser}, the lemmatiser \emph{Lemmald}, and the named entity recogniser \emph{IceNER}.
 The system is written as a collection of Java classes.
 
 The tokeniser is used for tokenising stream of characters into linguistic units and for performing sentence segmentation \citep{pal00}.
@@ -51,13 +51,15 @@ The tokeniser is used for tokenising stream of characters into linguistic units 
 
 \emph{IceTagger} is a linguistic rule-based tagger for tagging Icelandic text\footnote{As apposed to a data-driven tagger trainable on different languages.} \citep{lof06,lof08}.
 It uses a large part-of-speech (PoS) tagset consisting of about 600 tags (see Section \ref{sec:tagset}).
-Evaluation has shown that \textit{IceTagger} achieves higher accuracy than the best performing data-driven tagger when tested using the same test corpora and the same ratio of unknown words \citep{lof08,lof09b,lof11,hel04}.
+Evaluation has shown that \textit{IceTagger} achieves higher accuracy than the best performing data-driven tagger (at that time) when tested using the same test corpora and the same ratio of unknown words \citep{lof08,lof09b,lof11,hel04}.
 The average tagging accuracy, computed when tagging test corpora derived from the \emph{Icelandic Frequency Dictionary} (\emph{IFD}) corpus \citep{pin91}, is about 92\%\footnote{Tagging accuray is measured using a corrected version of the IFD corpus \citep{lof09}.}.
 \emph{IceTagger} is now able to produce the lemma of a word form, thanks to an integration with \emph{Lemmald} (see below).
 
 \emph{TriTagger} is a re-implementation of the well known TnT trigram tagger \citep{bra00}.
 By using \textit{TriTagger} as a word class tagger during initial disambiguation, then using \textit{IceTagger} to disambiguate tags that are consistent with the chosen word class, 
 and finally using \emph{TriTagger} again to fully disambiguate words, to which \emph{IceTagger} is not able to assign unambiguous tags, an accuracy of about 92.7\% is achieved \citep{lof09b,lof11}.
+
+\emph{IceStagger} is a modified version of \emph{Stagger}  \citep{ost13}, a tagger based on the averaged perceptron algorithm.   By adding specific linguistic features and using \emph{IceMorphy}, an accuracy of about 92.8\% is achieved \citep{lof13}.
 
 \emph{IceParser} is a shallow parser based on the incremental finite-state parsing technique \citep{mok97}.
 It labels both constituent structure and grammatical functions.
