@@ -12,9 +12,7 @@ public class RunIceStagger {
      */
     private static Tokenizer getTokenizer(Reader reader, String lang) {
         Tokenizer tokenizer;
-        if(lang.equals("sv")) {
-            tokenizer = new SwedishTokenizer(reader);
-        } else if(lang.equals("en")) {
+        if(lang.equals("en")) {
             tokenizer = new EnglishTokenizer(reader);
         } else if(lang.equals("is") || lang.equals("any")) {
             tokenizer = new LatinTokenizer(reader);

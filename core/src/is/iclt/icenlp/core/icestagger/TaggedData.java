@@ -216,12 +216,8 @@ public class TaggedData implements Serializable {
         ArrayList<TaggedToken[]> sentences = new ArrayList<TaggedToken[]>();
         ArrayList<TaggedToken> sentence = new ArrayList<TaggedToken>();
         Tokenizer tokenizer;
-        if(language.equals("sv"))
-            tokenizer = new SwedishTokenizer(new StringReader(""));
-        else if(language.equals("en"))
+        if(language.equals("en"))
             tokenizer = new EnglishTokenizer(new StringReader(""));
-        else if(language.equals("zh"))
-            tokenizer = null;
         else
             tokenizer = new LatinTokenizer(new StringReader(""));
         String line;
