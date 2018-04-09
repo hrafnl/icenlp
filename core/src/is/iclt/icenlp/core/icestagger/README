@@ -1,0 +1,28 @@
+
+                    IceStagger -- The Icelandic version of the Stockholm Tagger
+
+
+    Introduction
+    ------------
+
+Stagger (Stockholm Tagger) is a part of speech tagger and named entity recognizer. Though
+originally designed for Swedish, it has has also been tested with English,
+Chinese and Icelandic.
+
+The tagger was written by Robert Östling (robert@ling.su.se) and is available for download at:
+http://www.ling.su.se/stagger
+
+The Icelandic version of Stagger was written by Hrafn Loftsson and Robert Östling and is now part of the IceNLP toolkit. 
+
+
+
+    Building
+    ---------
+
+IceStagger (as well as all other IceNLP core tools) is built by running ant in the icenlp/core directory.
+
+
+    Quick start
+    -----------
+
+See the IceNLP.pdf user guide in the icenlp/doc directory
