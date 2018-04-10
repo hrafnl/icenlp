@@ -1,4 +1,7 @@
 package is.iclt.icenlp.core.icestagger;
+import is.iclt.icenlp.core.tokenizer.IceTokenTags;
+import is.iclt.icenlp.core.tokenizer.Segmentizer;
+
 import java.io.*;
 import java.util.*;
 
@@ -321,6 +324,46 @@ public class TaggedData implements Serializable {
         TaggedToken[][] sentenceArray = new TaggedToken[sentences.size()][];
         return sentences.toArray(sentenceArray);
     }
+
+    private static TaggedToken[] CreateTaggedTokens(ArrayList<IceTokenTags> iceTokens, String fileID, int sentIdx) {
+        TaggedToken[] taggedSentence = new TaggedToken[iceTokens.size()];
+
+        for(int i = 0; i < taggedSentence.length; i++) {
+            String tokenID = fileID + ":" + sentIdx + ":" + i;
+            String text = iceTokens.get(i).lexeme;
+            TaggedToken taggedToken = new TaggedToken(new Token(Token.TOK_UNKNOWN, text, 0), tokenID);
+            taggedSentence[i] = taggedToken;
+        }
+        return taggedSentence;
+    }
+
+    /*public TaggedToken[][] readTrainingData(
+            Segmentizer segmentizer, is.iclt.icenlp.core.tokenizer.Tokenizer tokenizer, String filename, int lineFormat, boolean extend)
+            throws FormatException, TagNameException, IOException {
+
+        String sentence = null;
+        int count = 0;
+        while( segmentizer.hasMoreSentences() )
+        {
+            sentence = segmentizer.getNextSentence();
+            count++;
+
+            if( !sentence.equals("") )
+            {
+                if (lineFormat == Segmentizer.tokenPerLine)
+                    tokenizer.tokenizeSplit( sentence );    // Only split on whitespace
+                else
+                    tokenizer.tokenize( sentence );         // Perform more intelligent tokenization
+
+                if( tokenizer.tokens.size() > 0 )
+                {
+                    TaggedToken[] taggedTokens = CreateTaggedTokens(tokenizer.tokens, filename, count-1);
+
+                }
+            }
+        }
+
+    }*/
 
 }
 

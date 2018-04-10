@@ -45,7 +45,7 @@ public class Token {
     public String lexeme;               // The lexeme
     public TokenCode tokenCode;         // The token code
     public MWECode mweCode;
-    
+
     // hs added
     public boolean linkedToPreviousWord;
     public String preSpace = null;

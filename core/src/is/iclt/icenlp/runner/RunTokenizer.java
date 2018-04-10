@@ -21,10 +21,7 @@
  */
 package is.iclt.icenlp.runner;
 
-import is.iclt.icenlp.core.tokenizer.Segmentizer;
-import is.iclt.icenlp.core.tokenizer.Token;
-import is.iclt.icenlp.core.tokenizer.Tokenizer;
-import is.iclt.icenlp.core.tokenizer.TokenizerResources;
+import is.iclt.icenlp.core.tokenizer.*;
 import is.iclt.icenlp.core.utils.FileEncoding;
 import is.iclt.icenlp.core.utils.Lexicon;
 
@@ -57,7 +54,7 @@ public class RunTokenizer {
        System.out.println("-help (shows this screen)");
        System.out.println("-i <input file>");
        System.out.println("-o <output file>");
-       System.out.println("-if <input format> (1=one token per line, 2=one sentence per line, 3=some other different format ");
+       System.out.println("-if <input format> (0=one token/tag per line, 1=one token per line, 2=one sentence per line, 3=some other different format ");
        System.out.println("-of <output format> (1=one token per line, 2=one sentence per line");
        //System.out.println("-s <input string> (if no input file)");
        System.out.println("-c <count> (optional; quit after <count> sentences)");      
@@ -99,15 +96,17 @@ public class RunTokenizer {
         InputStream tokenDictIStream = (lexiconFile == null ? tokResources.isLexicon : new BufferedInputStream(new FileInputStream( lexiconFile )));
         tokLex = new Lexicon(tokenDictIStream);
 
-        Tokenizer myTokenizer = new Tokenizer(Tokenizer.typeToken, strictTokenization, tokLex);
+        Tokenizer myTokenizer = new Tokenizer(Tokenizer.typeTokenTags, strictTokenization, tokLex);
 
         if (inputFile != null)
             mySegmentizer = new Segmentizer(inputFile, inpFormat, tokLex);
         else
             mySegmentizer = new Segmentizer(FileEncoding.getReader(System.in), Segmentizer.otherDifferentFormat, tokLex);
-        Token token;
+
+        TokenTags token;
         String sentence;
         int count=0;
+
         while (mySegmentizer.hasMoreSentences())
         {
            if (numSentences != 0 && count == numSentences)
@@ -120,22 +119,34 @@ public class RunTokenizer {
                if( !standardInputOutput && count % 100 == 0 )
                   System.out.print( "Tokenising sentence nr: " + Integer.toString(count) + "\r");
 
-                myTokenizer.tokenize(sentence);
-                if (splitAbbreviations)
+               if (inpFormat == Segmentizer.tokenPerLine)
+                   myTokenizer.tokenizeSplit(sentence);
+               else if (inpFormat == Segmentizer.tokenAndTagPerLine)
+                   myTokenizer.tokensWithTags(sentence);
+               else
+                    myTokenizer.tokenize(sentence);
+
+               if (splitAbbreviations)
                     myTokenizer.splitAbbreviations();
+
                 ArrayList tokens = myTokenizer.tokens;
                 for (int i=0; i<tokens.size(); i++)
                 {
-                    token = (Token)tokens.get(i);
+                    token = (TokenTags)tokens.get(i);
+
                     if (outputFormat == Segmentizer.sentencePerLine)
                     {
                       outWriter.write(token.lexeme);
+                      if (inpFormat == Segmentizer.tokenAndTagPerLine)
+                          outWriter.write(" " + token.goldTag);
                       if (i < tokens.size()-1)
                            outWriter.write(" ");
                     }
                     else // tokenPerLine
                     {
                       outWriter.write(token.lexeme);
+                      if (inpFormat == Segmentizer.tokenAndTagPerLine)
+                          outWriter.write("\t" + token.goldTag);
                       if (showMWEs) {
                           if (token.mweCode == Token.MWECode.begins)
                               outWriter.write("\t" + "MWE_begins");
@@ -169,7 +180,9 @@ public class RunTokenizer {
     {
         if (inputFormatString != null) {
             lineFormat = Integer.parseInt(inputFormatString);
-            if (lineFormat == Segmentizer.tokenPerLine)
+            if (lineFormat == Segmentizer.tokenAndTagPerLine)
+                showInputFormat = "one token/tag per line";
+            else if (lineFormat == Segmentizer.tokenPerLine)
               showInputFormat = "one token per line";
             else if (lineFormat == Segmentizer.sentencePerLine)
                 showInputFormat = "one sentence per line";

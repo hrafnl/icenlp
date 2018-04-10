@@ -35,6 +35,7 @@ public class Segmentizer
 	private BufferedWriter output = null;      // Output file used if tags are removed from input
 	private Lexicon lex = null;			// a lexicon consisting of known abbreviations
 	private String currLine = null;           // Current line in input
+	public static final int tokenAndTagPerLine = 0;
 	public static final int tokenPerLine = 1;
 	public static final int sentencePerLine = 2;
 	public static final int otherDifferentFormat = 3;
@@ -47,6 +48,7 @@ public class Segmentizer
     public static String interpretLineFormat(int format)
     {
         switch (format) {
+			case tokenAndTagPerLine: return "one token/tag per line";
             case tokenPerLine:      return "one token per line";
             case sentencePerLine:   return "one sentence per line";
             default:                return "unspecified format";
@@ -324,6 +326,9 @@ public class Segmentizer
 		String sentence;
 		switch( lineFormat )
 		{
+			case tokenAndTagPerLine:
+				sentence = nextSentenceBrill();
+				break;
 			case tokenPerLine:
 				sentence = nextSentenceBrill();
 				break;

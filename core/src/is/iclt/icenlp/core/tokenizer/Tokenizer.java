@@ -242,6 +242,22 @@ public class Tokenizer
         markMWEs();
     }
 
+	// Used if the original input had already been tokenized and contains token/tag pairs
+	// In that case, we only want to split into tokens using whitespace as a delimiter
+	public void tokensWithTags(String sentenc)
+	{
+		TokenTags token;
+		tokens.clear();
+		sentence = sentenc;
+
+		String [] words = sentence.split("\\s+");  // split on white space
+		for (int i=0; i < words.length; i = i + 2) {
+
+			token = new TokenTags(words[i], TokenCode.tcUnknown, words[i+1]);
+			tokens.add( token );
+		}
+	}
+
 
     public void tokenize( String sentenc )
 	{

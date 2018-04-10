@@ -37,12 +37,14 @@ public class TokenTags extends Token
 {
     protected ArrayList tags;        // All possible tags for the word
     protected boolean unknown;      // unknown word?
+    public String goldTag;          // The correct (gold) tag in the given context
 
     public TokenTags()
     {
         super();
         tags = new ArrayList(6);
         unknown = false;
+        goldTag = null;
     }
 
     public TokenTags(String str, TokenCode tc)
@@ -50,6 +52,12 @@ public class TokenTags extends Token
         super(str, tc);
         tags = new ArrayList(6);
         unknown = false;
+    }
+
+    public TokenTags(String str, TokenCode tc, String goldTag)
+    {
+        this(str, tc);
+        this.goldTag = goldTag;
     }
     
     // The following methods are really abstract methods
