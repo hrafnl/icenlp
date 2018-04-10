@@ -1,1 +1,1 @@
-./icestagger.sh -modelfile ../../models/icestagger/otb.bin -lang is -icemorphy 0 -plain -tag test.txt 
+./icestagger.sh -modelfile ../../models/icestagger/otb.bin -lang is -lf 1 -of 1 -icemorphy 0 -tag test1.txt 
