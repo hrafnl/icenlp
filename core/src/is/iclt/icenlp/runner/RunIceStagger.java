@@ -75,11 +75,15 @@ public class RunIceStagger {
                 System.exit(1);
             }
             TaggedData td = new TaggedData(lang);
-            trainSents = td.readConll(
-                    trainFile, null, true, lineFormat == Segmentizer.tokenPerLine);
-            if(devFile != null)
-                devSents = td.readConll(
-                        devFile, null, true, lineFormat == Segmentizer.tokenPerLine);
+
+            //trainSents = td.readTrainingData(trainFile, true);
+
+            trainSents = td.readConll(trainFile, null, true, lineFormat == Segmentizer.tokenPerLine);
+            if(devFile != null) {
+                //devSents = td.readTrainingData(trainFile, true);
+
+                devSents = td.readConll(devFile, null, true, lineFormat == Segmentizer.tokenPerLine);
+            }
             if(lang.equals("is") && devSents != null &&
                     iceMorphyType > 0) {
                 Guesser.loadIceMorphy(fold);
@@ -178,7 +182,6 @@ public class RunIceStagger {
                 System.err.println("Insufficient data.");
                 System.exit(1);
             }
-            //TaggedToken[][] inputSents = null;
 
             ObjectInputStream modelReader = new ObjectInputStream(
                     new FileInputStream(modelFile));
@@ -194,7 +197,7 @@ public class RunIceStagger {
             }
             // TODO: experimental feature, might remove later
             tagger.setExtendLexicon(extendLexicon);
-
+            
             TokenizerResources tokResources = new TokenizerResources();
             is.iclt.icenlp.core.utils.Lexicon tokLex = new is.iclt.icenlp.core.utils.Lexicon(tokResources.isLexicon );
             is.iclt.icenlp.core.tokenizer.Tokenizer tokenizer = new is.iclt.icenlp.core.tokenizer.Tokenizer( is.iclt.icenlp.core.tokenizer.Tokenizer.typeIceTokenTags, true, tokLex );

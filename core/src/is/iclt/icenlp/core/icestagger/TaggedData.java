@@ -1,6 +1,8 @@
 package is.iclt.icenlp.core.icestagger;
 import is.iclt.icenlp.core.tokenizer.IceTokenTags;
 import is.iclt.icenlp.core.tokenizer.Segmentizer;
+import is.iclt.icenlp.core.tokenizer.TokenTags;
+import is.iclt.icenlp.core.tokenizer.TokenizerResources;
 
 import java.io.*;
 import java.util.*;
@@ -325,45 +327,53 @@ public class TaggedData implements Serializable {
         return sentences.toArray(sentenceArray);
     }
 
-    private static TaggedToken[] CreateTaggedTokens(ArrayList<IceTokenTags> iceTokens, String fileID, int sentIdx) {
-        TaggedToken[] taggedSentence = new TaggedToken[iceTokens.size()];
+    public TaggedToken[][] readTrainingData(
+            String inputFile, boolean extend)
+            throws TagNameException, IOException {
 
-        for(int i = 0; i < taggedSentence.length; i++) {
-            String tokenID = fileID + ":" + sentIdx + ":" + i;
-            String text = iceTokens.get(i).lexeme;
-            TaggedToken taggedToken = new TaggedToken(new Token(Token.TOK_UNKNOWN, text, 0), tokenID);
-            taggedSentence[i] = taggedToken;
-        }
-        return taggedSentence;
-    }
+        String sentenceStr = null;
+        String posString = null;
+        int sentIdx = 0;
+        int posTag;
 
-    /*public TaggedToken[][] readTrainingData(
-            Segmentizer segmentizer, is.iclt.icenlp.core.tokenizer.Tokenizer tokenizer, String filename, int lineFormat, boolean extend)
-            throws FormatException, TagNameException, IOException {
+        ArrayList<TaggedToken[]> sentences = new ArrayList<TaggedToken[]>();
+        ArrayList<TaggedToken> sentence = new ArrayList<TaggedToken>();
 
-        String sentence = null;
-        int count = 0;
+        TokenizerResources tokResources = new TokenizerResources();
+        is.iclt.icenlp.core.utils.Lexicon tokLex = new is.iclt.icenlp.core.utils.Lexicon(tokResources.isLexicon );
+        is.iclt.icenlp.core.tokenizer.Tokenizer tokenizer = new is.iclt.icenlp.core.tokenizer.Tokenizer( is.iclt.icenlp.core.tokenizer.Tokenizer.typeTokenTags, true, tokLex );
+
+        Segmentizer segmentizer = new Segmentizer( inputFile, Segmentizer.tokenAndTagPerLine, tokLex );
+
         while( segmentizer.hasMoreSentences() )
         {
-            sentence = segmentizer.getNextSentence();
-            count++;
+            sentenceStr = segmentizer.getNextSentence();
 
-            if( !sentence.equals("") )
-            {
-                if (lineFormat == Segmentizer.tokenPerLine)
-                    tokenizer.tokenizeSplit( sentence );    // Only split on whitespace
-                else
-                    tokenizer.tokenize( sentence );         // Perform more intelligent tokenization
+            if( !sentenceStr.equals("") ) {
+                tokenizer.tokensWithTags(sentenceStr);
 
-                if( tokenizer.tokens.size() > 0 )
-                {
-                    TaggedToken[] taggedTokens = CreateTaggedTokens(tokenizer.tokens, filename, count-1);
-
+                if (tokenizer.tokens.size() > 0) {
+                    for (int i = 0; i < tokenizer.tokens.size(); i++) {
+                        TokenTags iceToken = (TokenTags) tokenizer.tokens.get(i);
+                        String tokenID = sentIdx + ":" + i;
+                        TaggedToken token = new TaggedToken(
+                                new Token(Token.TOK_UNKNOWN, iceToken.lexeme, 0), tokenID);
+                        if (iceToken.goldTag != null) {
+                            posTag = posTagSet.getTagID(iceToken.goldTag, extend);
+                            token.posTag = posTag;
+                        }
+                        sentence.add(token);
+                    }
+                    TaggedToken[] tokensArray = new TaggedToken[sentence.size()];
+                    sentences.add(sentence.toArray(tokensArray));
+                    sentence = new ArrayList<>();
+                    sentIdx++;
                 }
             }
         }
-
-    }*/
+        TaggedToken[][] sentenceArray = new TaggedToken[sentences.size()][];
+        return sentences.toArray(sentenceArray);
+    }
 
 }
 
