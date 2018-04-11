@@ -2,10 +2,6 @@ package is.iclt.icenlp.runner;
 
 import is.iclt.icenlp.core.icestagger.*;
 import is.iclt.icenlp.core.icestagger.Dictionary;
-import is.iclt.icenlp.core.tokenizer.IceTokenTags;
-import is.iclt.icenlp.core.tokenizer.Segmentizer;
-import is.iclt.icenlp.core.tokenizer.TokenizerResources;
-
 import java.io.*;
 import java.util.*;
 
@@ -53,7 +49,6 @@ public class RunIceStagger {
                               String lexiconFile,
                               String modelFile,
                               String lang,
-                              int lineFormat,
                               int iceMorphyType,
                               String fold,
                               boolean extendLexicon,
@@ -76,13 +71,9 @@ public class RunIceStagger {
             }
             TaggedData td = new TaggedData(lang);
 
-            //trainSents = td.readTrainingData(trainFile, true);
-
-            trainSents = td.readConll(trainFile, null, true, lineFormat == Segmentizer.tokenAndTagPerLine);
+            trainSents = td.readConll(trainFile, null, true, !trainFile.endsWith(".conll"));
             if(devFile != null) {
-                //devSents = td.readTrainingData(trainFile, true);
-
-                devSents = td.readConll(devFile, null, true, lineFormat == Segmentizer.tokenAndTagPerLine);
+                devSents = td.readConll(devFile, null, true, !trainFile.endsWith(".conll"));
             }
             if(lang.equals("is") && devSents != null &&
                     iceMorphyType > 0) {
@@ -134,112 +125,6 @@ public class RunIceStagger {
         }
     }
 
-    /*
-    private static TaggedToken[] CreateTaggedTokens(ArrayList<IceTokenTags> iceTokens, String fileID, int sentIdx) {
-        TaggedToken[] taggedSentence = new TaggedToken[iceTokens.size()];
-
-        for(int i = 0; i < taggedSentence.length; i++) {
-            String tokenID = fileID + ":" + sentIdx + ":" + i;
-            String text = iceTokens.get(i).lexeme;
-            TaggedToken taggedToken = new TaggedToken(new Token(Token.TOK_UNKNOWN, text, 0), tokenID);
-            taggedSentence[i] = taggedToken;
-        }
-        return taggedSentence;
-    }
-
-    private static void printSentence(Tagger tagger, TaggedToken[] taggedSentence, int outputFormat) throws IOException, TagNameException
-    {
-        String separator = outputFormat == Segmentizer.tokenPerLine ? "\t" : " " ;
-
-        for( int i = 0; i < taggedSentence.length; i++ )
-        {
-            TaggedToken currToken = taggedSentence[i];
-            TagSet posTagSet = tagger.getTaggedData().getPosTagSet();
-            String tag = posTagSet.getTagName(currToken.posTag);
-            System.out.print(currToken.token.value + separator + tag);
-            if( outputFormat == Segmentizer.tokenPerLine ) {
-                System.out.print('\n');
-            }
-            else {
-                System.out.print(separator);
-            }
-        }
-        // And empty line between sentences
-        System.out.print('\n');
-    }
-
-    private static void tagUsingIceNLPTokenizer(ArrayList<String> inputFiles,
-                            String modelFile,
-                            String lang,
-                            int lineFormat,
-                            int outputFormat,
-                            int iceMorphyType,
-                            String fold,
-                            boolean extendLexicon,
-                            boolean preserve,
-                            boolean useIceHeuristic) {
-        try {
-            if(modelFile == null) {
-                System.err.println("Insufficient data.");
-                System.exit(1);
-            }
-
-            ObjectInputStream modelReader = new ObjectInputStream(
-                    new FileInputStream(modelFile));
-            System.err.println( "Loading Stagger model ...");
-            Tagger tagger = (Tagger)modelReader.readObject();
-            lang = tagger.getTaggedData().getLanguage();
-            modelReader.close();
-
-            if(lang.equals("is")) {
-                ((IceTagger)tagger).setIceMorphyType(iceMorphyType);
-                if(iceMorphyType > 0)
-                    Guesser.loadIceMorphy(fold);
-            }
-            // TODO: experimental feature, might remove later
-            tagger.setExtendLexicon(extendLexicon);
-            
-            TokenizerResources tokResources = new TokenizerResources();
-            is.iclt.icenlp.core.utils.Lexicon tokLex = new is.iclt.icenlp.core.utils.Lexicon(tokResources.isLexicon );
-            is.iclt.icenlp.core.tokenizer.Tokenizer tokenizer = new is.iclt.icenlp.core.tokenizer.Tokenizer( is.iclt.icenlp.core.tokenizer.Tokenizer.typeIceTokenTags, true, tokLex );
-
-            String sentence;
-            int count = 0;
-            for(String inputFile : inputFiles) {
-                Segmentizer segmentizer = new Segmentizer( inputFile, lineFormat, tokLex );
-
-                    while( segmentizer.hasMoreSentences() )
-                    {
-                        sentence = segmentizer.getNextSentence();
-                        count++;
-                        if (count % 100 == 0 )
-                            System.err.print( "Tagging sentence nr: " + count + "\r" );
-
-                        if( !sentence.equals("") )
-                        {
-                            if (lineFormat == Segmentizer.tokenPerLine)
-                                tokenizer.tokenizeSplit( sentence );    // Only split on whitespace
-                            else
-                                tokenizer.tokenize( sentence );         // Perform more intelligent tokenization
-
-                            if( tokenizer.tokens.size() > 0 )
-                            {
-                                tokenizer.splitAbbreviations();
-                                TaggedToken[] taggedTokens = CreateTaggedTokens(tokenizer.tokens, inputFile, count-1);
-                                TaggedToken[] taggedSent =
-                                        tagger.tagSentence(taggedTokens, true, preserve);
-                                if(lang.equals("is") && useIceHeuristic)
-                                    Guesser.correctSentence(taggedSent, tagger.getTaggedData().getPosTagSet());
-                                printSentence(tagger, taggedSent, outputFormat);
-                            }
-                        }
-                    }
-            }
-        } catch(Exception e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-    }      */
 
     private static void tag(ArrayList<String> inputFiles,
                             String modelFile,
@@ -376,8 +261,6 @@ public class RunIceStagger {
         boolean useIceHeuristic = false;
         boolean extendLexicon = true;
         int iceMorphyType = 0;
-        int lineFormat = Segmentizer.tokenAndTagPerLine; // token per line
-        int outputFormat = Segmentizer.tokenPerLine; // token per line
 
         for(int i=0; i<args.length; i++) {
             if(args[i].equals("-lexicon")) {
@@ -405,20 +288,6 @@ public class RunIceStagger {
                 }
             } else if(args[i].equals("-lang")) {
                 lang = args[++i];
-            } else if(args[i].equals("-lf")) {  // line format
-                lineFormat = Integer.parseInt(args[++i]);
-                if(lineFormat < 0 || iceMorphyType > 3) {
-                    System.err.println(
-                            "Error: -lf argument must be 0, 1, 2 or 3");
-                    System.exit(1);
-                }
-            } else if(args[i].equals("-of")) {  // output format
-                outputFormat = Integer.parseInt(args[++i]);
-                if(outputFormat < 1 || iceMorphyType > 2) {
-                    System.err.println(
-                            "Error: -of argument must be 1 or 2");
-                    System.exit(1);
-                }
             } else if(args[i].equals("-icemorphy")) {
                 iceMorphyType = Integer.parseInt(args[++i]);
                 if(iceMorphyType < 0 || iceMorphyType > 2) {
@@ -484,7 +353,6 @@ public class RunIceStagger {
                         lexiconFile,
                         modelFile,
                         lang,
-                        lineFormat,
                         iceMorphyType,
                         fold,
                         extendLexicon,
@@ -506,16 +374,6 @@ public class RunIceStagger {
                     System.err.println("No files to tag.");
                     System.exit(1);
                 }
-                /*tagUsingIceNLPTokenizer(    inputFiles,
-                        modelFile,
-                        lang,
-                        lineFormat,
-                        outputFormat,
-                        iceMorphyType,
-                        fold,
-                        extendLexicon,
-                        preserve,
-                        useIceHeuristic); */
 
                 tag(    inputFiles,
                         modelFile,

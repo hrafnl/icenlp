@@ -327,53 +327,5 @@ public class TaggedData implements Serializable {
         return sentences.toArray(sentenceArray);
     }
 
-    public TaggedToken[][] readTrainingData(
-            String inputFile, boolean extend)
-            throws TagNameException, IOException {
-
-        String sentenceStr = null;
-        String posString = null;
-        int sentIdx = 0;
-        int posTag;
-
-        ArrayList<TaggedToken[]> sentences = new ArrayList<TaggedToken[]>();
-        ArrayList<TaggedToken> sentence = new ArrayList<TaggedToken>();
-
-        TokenizerResources tokResources = new TokenizerResources();
-        is.iclt.icenlp.core.utils.Lexicon tokLex = new is.iclt.icenlp.core.utils.Lexicon(tokResources.isLexicon );
-        is.iclt.icenlp.core.tokenizer.Tokenizer tokenizer = new is.iclt.icenlp.core.tokenizer.Tokenizer( is.iclt.icenlp.core.tokenizer.Tokenizer.typeTokenTags, true, tokLex );
-
-        Segmentizer segmentizer = new Segmentizer( inputFile, Segmentizer.tokenAndTagPerLine, tokLex );
-
-        while( segmentizer.hasMoreSentences() )
-        {
-            sentenceStr = segmentizer.getNextSentence();
-
-            if( !sentenceStr.equals("") ) {
-                tokenizer.tokensWithTags(sentenceStr);
-
-                if (tokenizer.tokens.size() > 0) {
-                    for (int i = 0; i < tokenizer.tokens.size(); i++) {
-                        TokenTags iceToken = (TokenTags) tokenizer.tokens.get(i);
-                        String tokenID = sentIdx + ":" + i;
-                        TaggedToken token = new TaggedToken(
-                                new Token(Token.TOK_UNKNOWN, iceToken.lexeme, 0), tokenID);
-                        if (iceToken.goldTag != null) {
-                            posTag = posTagSet.getTagID(iceToken.goldTag, extend);
-                            token.posTag = posTag;
-                        }
-                        sentence.add(token);
-                    }
-                    TaggedToken[] tokensArray = new TaggedToken[sentence.size()];
-                    sentences.add(sentence.toArray(tokensArray));
-                    sentence = new ArrayList<>();
-                    sentIdx++;
-                }
-            }
-        }
-        TaggedToken[][] sentenceArray = new TaggedToken[sentences.size()][];
-        return sentences.toArray(sentenceArray);
-    }
-
 }
 
