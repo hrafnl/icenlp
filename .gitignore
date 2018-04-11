@@ -9,6 +9,8 @@
 *.toc
 *.gz
 *.iml
+*.ipr
+*.iws
 *.java~
 
 # Directories
