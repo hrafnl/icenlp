@@ -78,11 +78,11 @@ public class RunIceStagger {
 
             //trainSents = td.readTrainingData(trainFile, true);
 
-            trainSents = td.readConll(trainFile, null, true, lineFormat == Segmentizer.tokenPerLine);
+            trainSents = td.readConll(trainFile, null, true, lineFormat == Segmentizer.tokenAndTagPerLine);
             if(devFile != null) {
                 //devSents = td.readTrainingData(trainFile, true);
 
-                devSents = td.readConll(devFile, null, true, lineFormat == Segmentizer.tokenPerLine);
+                devSents = td.readConll(devFile, null, true, lineFormat == Segmentizer.tokenAndTagPerLine);
             }
             if(lang.equals("is") && devSents != null &&
                     iceMorphyType > 0) {
@@ -376,7 +376,7 @@ public class RunIceStagger {
         boolean useIceHeuristic = false;
         boolean extendLexicon = true;
         int iceMorphyType = 0;
-        int lineFormat = Segmentizer.tokenPerLine; // token per line
+        int lineFormat = Segmentizer.tokenAndTagPerLine; // token per line
         int outputFormat = Segmentizer.tokenPerLine; // token per line
 
         for(int i=0; i<args.length; i++) {
@@ -407,9 +407,9 @@ public class RunIceStagger {
                 lang = args[++i];
             } else if(args[i].equals("-lf")) {  // line format
                 lineFormat = Integer.parseInt(args[++i]);
-                if(lineFormat < 1 || iceMorphyType > 3) {
+                if(lineFormat < 0 || iceMorphyType > 3) {
                     System.err.println(
-                            "Error: -lf argument must be 1, 2 or 3");
+                            "Error: -lf argument must be 0, 1, 2 or 3");
                     System.exit(1);
                 }
             } else if(args[i].equals("-of")) {  // output format
