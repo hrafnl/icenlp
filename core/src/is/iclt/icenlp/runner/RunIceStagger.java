@@ -133,8 +133,7 @@ public class RunIceStagger {
                             String fold,
                             boolean extendLexicon,
                             boolean preserve,
-                            boolean plainOutput,
-                            boolean useIceHeuristic) {
+                            boolean plainOutput) {
         try {
             if(modelFile == null) {
                 System.err.println("Insufficient data.");
@@ -171,8 +170,6 @@ public class RunIceStagger {
                         TaggedToken[] taggedSent =
                                 tagger.tagSentence(sent, true, preserve);
 
-                        if(lang.equals("is") && useIceHeuristic)
-                            Guesser.correctSentence(taggedSent, tagger.getTaggedData().getPosTagSet());
                         eval.evaluate(taggedSent, sent);
                         tagger.getTaggedData().writeConllGold(
                                 System.out, taggedSent, sent, plainOutput);
@@ -258,7 +255,6 @@ public class RunIceStagger {
         String fold = null;
         int maxPosIters = 16;
         int maxNEIters = 16;
-        boolean useIceHeuristic = false;
         boolean extendLexicon = true;
         int iceMorphyType = 0;
 
@@ -299,10 +295,6 @@ public class RunIceStagger {
                 extendLexicon = true;
             } else if(args[i].equals("-noextendlexicon")) {
                 extendLexicon = false;
-            } else if(args[i].equals("-iceheuristic")) {
-                useIceHeuristic = true;
-            } else if(args[i].equals("-noiceheuristic")) {
-                useIceHeuristic = false;
             } else if(args[i].equals("-positers")) {
                 maxPosIters = Integer.parseInt(args[++i]);
             } else if(args[i].equals("-neiters")) {
@@ -382,8 +374,7 @@ public class RunIceStagger {
                         fold,
                         extendLexicon,
                         preserve,
-                        plainOutput,
-                        useIceHeuristic);
+                        plainOutput);
             }
         }
     }
