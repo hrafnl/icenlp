@@ -24,24 +24,20 @@ public class Guesser {
     private static HashMap wordHash;   // Stores each word
     private static IceMorphy morphoAnalyzer;
     private static IceMorphyLexicons morphLex=null;
-    //private static is.iclt.icenlp.core.utils.Lexicon BINlex = null;
-    private static String dictPath = "dict/";
-    //private static String dictPath = "/home/hrafn/nlp/java/icenlpDev/core/dictResearch/icetagger/otb/new/";
+    private static String dictPath = "/home/hrafn/nlp/java/icenlpDev/core/dictResearch/icetagger/otb/";
     private static String dictionaryBase = "baseDict.dict";
     private static String dictionary = ".dict";
-    //private static String dictionaryBIN = "BIN.dict";
     private static String endingsBaseDictionary = "baseEndings.dict";
     private static String endingsDictionary = ".endings.dict";
     private static String endingsProperDictionary = ".endingsProper.dict";
     private static String prefixesDictionary = "prefixes.dict";
-    //private static String fold = "10TM";
 
     public static void loadIceMorphy(String fold)
     {
         wordHash = new HashMap();
         try {
             System.err.println("Loading IceMorphy dictionaries ...");
-            /*
+
             IceMorphyResources morphyResources = new IceMorphyResources();
             morphLex  = new IceMorphyLexicons(
                     morphyResources.isDictionaryBase,
@@ -51,7 +47,18 @@ public class Guesser {
                     morphyResources.isEndingsProper,
                     morphyResources.isPrefixes,
                     null);
-            */
+
+            // The following should be used instead of the above when evaluating IceStagger on the different folds
+            // In that case it is imperative that IceMorphy only uses the dictionaries derived from the training fold
+            /*
+            String dictPath = "/home/hrafn/nlp/java/icenlpDev/core/dictResearch/icetagger/otb/";
+            String dictionaryBase = "baseDict.dict";
+            String dictionary = ".dict";
+            String endingsBaseDictionary = "baseEndings.dict";
+            String endingsDictionary = ".endings.dict";
+            String endingsProperDictionary = ".endingsProper.dict";
+            String prefixesDictionary = "prefixes.dict";
+
             morphLex = new IceMorphyLexicons(
                     dictPath + dictionaryBase,
                     dictPath + fold + dictionary,
@@ -60,11 +67,6 @@ public class Guesser {
                     dictPath + fold + endingsProperDictionary,
                     dictPath + endingsBaseDictionary,
                     dictPath + prefixesDictionary);
-
-            /*
-            System.err.println("Loading BÍN ...");
-            BINlex = new is.iclt.icenlp.core.utils.Lexicon(dictPath + dictionaryBIN);
-            System.err.println("BÍN loaded");
             */
         }
         catch(Exception e) {
@@ -154,24 +156,6 @@ public class Guesser {
             }
         }
     }
-
-    /*private static boolean isVerbSkip(String lexeme)
-    {
-        String checkTagStr = morphLex.baseDict.lookup(lexeme,false);
-        if (checkTagStr != null)
-        {
-            IceTokenTags myToken = new IceTokenTags();
-            myToken.lexeme = lexeme;
-            myToken.addAllTags(checkTagStr);
-
-            if (myToken.isVerbCaseMarking() || myToken.isVerbAuxiliary() || myToken.isVerbBe()
-                || myToken.isVerbMiddleForm() || myToken.isVerbSubjunctive() || myToken.isVerbPastPart())
-                return true;
-        }
-        return false;
-    }*/
-
-
 
     public static void getMissingTags(String lexeme, boolean firstWord, Lexicon posLexicon, TagSet tagSet)
     {
