@@ -24,14 +24,7 @@ public class Guesser {
     private static HashMap wordHash;   // Stores each word
     private static IceMorphy morphoAnalyzer;
     private static IceMorphyLexicons morphLex=null;
-    private static String dictPath = "/home/hrafn/nlp/java/icenlpDev/core/dictResearch/icetagger/otb/";
-    private static String dictionaryBase = "baseDict.dict";
-    private static String dictionary = ".dict";
-    private static String endingsBaseDictionary = "baseEndings.dict";
-    private static String endingsDictionary = ".endings.dict";
-    private static String endingsProperDictionary = ".endingsProper.dict";
-    private static String prefixesDictionary = "prefixes.dict";
-
+    
     public static void loadIceMorphy(String fold)
     {
         wordHash = new HashMap();
