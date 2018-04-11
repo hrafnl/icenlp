@@ -141,7 +141,7 @@
 	</target>
 
 	<target name="junit" depends="compile" unless="release-jar.is-uptodate" description="Runs the JUnit tests">
-		<junit fork="no" haltonfailure="yes">
+		<junit fork="true" haltonfailure="yes">
 			<classpath refid="classpath.test" />
 			<formatter type="brief" usefile="false" />
 
