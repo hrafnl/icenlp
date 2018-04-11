@@ -98,9 +98,15 @@ class Perceptron extends FeatureMap implements Serializable {
         assert nFeats >= 0 && nFeats <= feats.length &&
                nFeats <= values.length;
         if(curWeight == null || average) {
-            for(int i=0; i<nFeats; i++) sum += sumWeight[feats[i]]*values[i];
+            for(int i=0; i<nFeats; i++) {
+                if (feats[i] < sumWeight.length)
+                    sum += sumWeight[feats[i]] * values[i];
+            }
         } else {
-            for(int i=0; i<nFeats; i++) sum += curWeight[feats[i]]*values[i];
+            for(int i=0; i<nFeats; i++) {
+                if (feats[i] < curWeight.length)
+                    sum += curWeight[feats[i]]*values[i];
+            }
         }
         return sum;
     }
