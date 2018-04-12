@@ -1,0 +1,6 @@
+# Read the SHsnid.csv BIN file and select rows from it that match the given tag pattern
+echo Reading SHsnid.csv ...
+perl bin2otb.pl -i SHsnid.csv -o bin.tmp -l 6000000 -p "n...(g|-m)?$|l...|s[lns][gm]$|s[fv]....|sþg..n|aa[me]?" -u
+echo Remove named entity info from proper nouns ...
+sed 's/\(n...[-g]\)\([msö]\)$/\1s/' < bin.tmp > bin.out
+rm bin.tmp

@@ -216,13 +216,20 @@
 		<copy file="${dist}/${jar_name}.jar" todir="${dist}/${package}/dist" />
 		<copy file="${src-core}/icestagger/README" todir="${dist}/${package}/bat/icestagger" />
 		<copy todir="${dist}/${package}/bat">
-			<fileset dir="bat" />
+			<fileset dir="bat">
+				<exclude name="**/icestagger/corpora/bin.lexicon"/>
+				<exclude name="**/icestagger/corpora/otb.plain"/>
+				<exclude name="**/icestagger/models/*.bin"/>
+			</fileset>
 		</copy>		
 	    <chmod perm="+x" dir="${dist}/${package}/bat" includes="**/*.sh" />		 
 		
 		<copy todir="${dist}/${package}/dict">
 			<fileset dir="dict"> 
 				<exclude name="**/otbBin*.dict"/>
+				<exclude name="**/BIN/bin.dict"/>
+				<exclude name="**/BIN/bin.out"/>
+				<exclude name="**/BIN/SHsnid.csv"/>
 			</fileset>
 		</copy>
 		<copy todir="${dist}/${package}/lib">

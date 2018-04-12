@@ -12,4 +12,4 @@
 CORPUS_DIR=./corpora
 MODELS_DIR=./models
 
-./icestagger.sh -trainfile $CORPUS_DIR/otb.plain -modelfile $MODELS_DIR/otb.bin -positers 4 -lang is -train
+./icestagger.sh -trainfile $CORPUS_DIR/otb.plain -modelfile $MODELS_DIR/otb.bin -positers 12 -lang is -train

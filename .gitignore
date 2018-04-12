@@ -11,11 +11,19 @@
 *.iml
 *.ipr
 *.iws
+*.out
 *.java~
 
 # Directories
 dist/
 .idea/
+
+* Files that cannot be distributed
+otb.plain
+otbBin.dict
+bin.dict
+bin.lexicon
+SHsnid.csv
 
 * Generated files by JFlex
 core/dict/lemmald/rule_database_utf8.dat

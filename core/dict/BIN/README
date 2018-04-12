@@ -1,0 +1,3 @@
+To create dictionaries and lexicons from BIN to be used by taggers in IceNLP you need to obtain the BIN database dump, SHsnid.csv, from bin.arnastofnun.is.
+
+Then run the shell, extractBinData.sh

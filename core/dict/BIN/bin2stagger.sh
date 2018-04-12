@@ -1,0 +1,3 @@
+STAGGER=../../bat/icestagger
+echo Creating a lexicon for IceStagger ...
+awk '{print $1"\t"$2"\t"$3"\t""0"}' < bin.out > $STAGGER/corpora/bin.lexicon
