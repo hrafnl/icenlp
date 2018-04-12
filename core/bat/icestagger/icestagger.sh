@@ -1,4 +1,4 @@
 RUNNER=is.iclt.icenlp.runner.RunIceStagger
 DIST_DIR=../../dist
 
-java -classpath $DIST_DIR/IceNLPCore.jar $RUNNER $*
+java -Xmx6G -ea -classpath $DIST_DIR/IceNLPCore.jar $RUNNER $*

@@ -15,7 +15,6 @@ http://www.ling.su.se/stagger
 The Icelandic version of Stagger was written by Hrafn Loftsson and Robert Östling and is now part of the IceNLP toolkit. 
 
 
-
     Building
     ---------
 
@@ -25,4 +24,125 @@ IceStagger (as well as all other IceNLP core tools) is built by running ant in t
     Quick start
     -----------
 
-See the IceNLP.pdf user guide in the icenlp/doc directory
+See the IceNLP.pdf user guide in the core/doc directory
+
+
+To train a plain tagger from the Penn Treebank data:
+
+    java -Xmx8G -ea Main -devfile ptb/dev.conll -trainfile ptb/train.conll \
+        -modelfile models/ptb.bin -lang en -train
+
+To tag a text document with the model created above:
+
+    time java Main -modelfile models/ptb.bin -tag test.txt >test.conll
+
+
+    File formats
+    ------------
+
+Stagger supports three file formats:
+
+* Plain format, with one token/tag pair per line on the format
+  "token<space(s)>tag", and blank lines between sentences. This is the default
+  input format unless the file ends with ".conll" or ".txt".
+  For output, use the -plain option to enable plain format.
+
+* CoNLL-style format, see the FORMAT file for further documentation, and
+  perhaps the SIC corpus (http://www.ling.su.se/sic) if you need an example.
+
+* Raw text to be tokenized (input only), this is used for filenames ending
+  with ".txt"
+
+
+    Command-line options
+    --------------------
+
+    -lexicon <filename>
+
+For training, an optional POS lexicon may be specified. Each line in the given
+file should have these 4 tab-separated fields:
+
+    word form       citation form       POS tag         frequency
+
+Ambiguous word forms have one line for each possible POS tag.
+The frequency field is typically 0 when taken from a dictionary, but can be
+non-zero if derived from a POS-tagged lexicon.
+NOTE: this dictionary is automatically extended by the training set before
+training, and if no dictionary is available this option can be left out.
+
+    -dict <pos | ne | all> <filename.dict>
+
+Use a word class dictionary for POS tagging (pos), Named Entity Recognition
+(ne) or both (all). Each line in the file contains two tab-separated fields:
+a word form, and a word class. Both are strings. The word class could be e.g.
+a Brown cluster identifier. Each word form should occur only once.
+
+    -embed <pos | ne | all> <filename.embed>
+
+Similar to the above, but the format is:
+
+    word form       x_1     x_2     x_3     ...
+
+Where each x_i is a real-valued number, representing the i:th dimension of the
+given word form. This can be used for word representations, see:
+http://metaoptimize.com/projects/wordreprs/
+
+    -lang <language code>
+
+Currently "sv", "en", "is", "zh" and "any" are supported. The "any" option
+uses a generic Latin tokenizer, with a generic tagger class that considers
+the entire tagset for unknown words, reducing accuracy and performance.
+This argument is mandatory for training.
+
+    -trainfile <filename>
+
+File to use as training set.
+
+    -devfile <filename>
+
+File to use as development set, whose only use is to determine when to
+abort the training. If no development set is provided, the -positers and
+-neiters arguments determine the number of training iterations.
+
+    -positers <n>       -neiters <n>
+
+Train the POS tagger/NER with at most n iterations. If the -devfile option is
+used, training may be aborted earlier than this if the accuracy peaks.
+Default values are 16 for both.
+
+    -posbeamsize <n>    -nebeamsize <n>
+
+Use the beam size n for the POS tagger/NER. Defaults are 8 and 4.
+A small amount of accuracy can be gained by increasing these, at the expense
+of performance, and vice versa.
+
+    -modelfile <filename.bin>
+
+Model file to use, for training this will be written to, when tagging it is
+read.
+
+    -train
+
+Perform training. This should be the last argument.
+
+    -preserve
+
+Useful when tagging partially tagged .conll files, to not overwrite existing
+annotation.
+
+    -plain
+
+Output plain data, with each line on the format "token<tab>tag" and blank
+lines between sentences. All other information is discarded.
+
+    -tag <filename.conll | filename.txt | filename.*> [filename2 [...]]
+
+Tag the given file, and write the result to stdout. If the filename ends with
+something other than ".txt", an evaluation will also be performed, so in these
+cases it makes sense to redirect stdout to /dev/null.
+If the filename ends with ".txt", raw text is assumed, and the relevant
+tokenizer is invoked.
+If more than one file is specified, the output is written to a file with the
+same name as each input, but with a .conll or .plain suffix (depending on
+whether or not the -plain option is used).
+

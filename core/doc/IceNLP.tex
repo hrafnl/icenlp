@@ -5,6 +5,7 @@
 \usepackage{setspace}
 \usepackage{url}
 \usepackage{natbib}
+\usepackage{amsmath}
 
 \oddsidemargin  0.0in
 \evensidemargin 0.0in
@@ -17,17 +18,17 @@
 \bibpunct{(}{)}{,}{a}{}{;}
 
 \title{IceNLP \\
-A Natural Language Processing Toolkit for Icelandic \\ \ \\ \ \\ \ \\
+A Natural Language Processing Toolkit for Icelandic\footnote{The following persons have contributed to the development of IceNLP: Hrafn Loftsson, Anton Karl Ingason, Aðalsteinn Tryggvason, Guðmundur Örn Leifsson, Hlynur Sigurþórsson, Ragnar Lárus Sigurðsson and Robert Östling.} \\ \ \\ \ \\ \ \\
     User Guide}
 \author{Hrafn Loftsson \\
-        School of Computer Science\footnote{The following students in the School of Computer Science at Reykjavik University have contributed to the development of IceNLP: Aðalsteinn Tryggvason, Hlynur Sigurþórsson and Ragnar Lárus Sigurðsson.} \\
+        School of Computer Science \\
         Reykjavik University \\
         hrafn@ru.is 
 \and
 	Anton Karl Ingason \\
 	School of Humanities \\
 	University of Iceland \\
-	anton.karl.ingason@gmail.com \\ \ \\ \ \\
+	antoni@hi.is \\ \ \\ \ \\
 }
 
 \begin{document}
@@ -52,14 +53,13 @@ The tokeniser is used for tokenising stream of characters into linguistic units 
 \emph{IceTagger} is a linguistic rule-based tagger for tagging Icelandic text\footnote{As apposed to a data-driven tagger trainable on different languages.} \citep{lof06,lof08}.
 It uses a large part-of-speech (PoS) tagset consisting of about 600 tags (see Section \ref{sec:tagset}).
 Evaluation has shown that \textit{IceTagger} achieves higher accuracy than the best performing data-driven tagger (at that time) when tested using the same test corpora and the same ratio of unknown words \citep{lof08,lof09b,lof11,hel04}.
-The average tagging accuracy, computed when tagging test corpora derived from the \emph{Icelandic Frequency Dictionary} (\emph{IFD}) corpus \citep{pin91}, is about 92\%\footnote{Tagging accuray is measured using a corrected version of the IFD corpus \citep{lof09}.}.
-\emph{IceTagger} is now able to produce the lemma of a word form, thanks to an integration with \emph{Lemmald} (see below).
+The average tagging accuracy, computed when tagging test corpora derived from the \emph{Icelandic Frequency Dictionary} (\emph{IFD}) corpus \citep{pin91}, is about 92\%\footnote{Tagging accuray is measured using a corrected version of the IFD corpus \citep{lof09}.}.  When using data from \emph{BÍN}, the Database of Modern Icelandic Inflections \citep{kri05}, the accuracy increases to about 92.8\%.
 
 \emph{TriTagger} is a re-implementation of the well known TnT trigram tagger \citep{bra00}.
 By using \textit{TriTagger} as a word class tagger during initial disambiguation, then using \textit{IceTagger} to disambiguate tags that are consistent with the chosen word class, 
-and finally using \emph{TriTagger} again to fully disambiguate words, to which \emph{IceTagger} is not able to assign unambiguous tags, an accuracy of about 92.7\% is achieved \citep{lof09b,lof11}.
+and finally using \emph{TriTagger} again to fully disambiguate words, to which \emph{IceTagger} is not able to assign unambiguous tags, an accuracy of about 92.7\% is achieved \citep{lof09b,lof11}.  By using \emph{BÍN}, the accuracy increases to about 93.5\%.
 
-\emph{IceStagger} is a modified version of \emph{Stagger}  \citep{ost13}, a tagger based on the averaged perceptron algorithm.   By adding specific linguistic features and using \emph{IceMorphy}, an accuracy of about 92.8\% is achieved \citep{lof13}.
+\emph{IceStagger} is a modified version of \emph{Stagger}  \citep{ost13}, a tagger based on the Averaged Perceptron algorithm \citep{col02}.   By adding specific linguistic features and using \emph{IceMorphy}, an accuracy of about 92.8\% is achieved \citep{lof13}. By using \emph{BÍN}, the accuracy increases to about 93.7\%.
 
 \emph{IceParser} is a shallow parser based on the incremental finite-state parsing technique \citep{mok97}.
 It labels both constituent structure and grammatical functions.
@@ -221,6 +221,35 @@ Thus, before \emph{Tritagger} can be used it needs to be trained on a tagged cor
 A pre-trained model, derived from the \emph{IFD} corpus, can be found in the {\bf ngrams/models} directory.
 Training of the tagger is described in section \ref{sec:train}.
 
+\section{IceStagger}
+\emph{IceStagger} \citep{lof13} is a modified version of the Stockholm Tagger (Stagger) \citep{ost13}, an open-source implementation of the Averaged Perceptron tagger by  \cite{col02}. 
+
+The Averaged Perceptron algorithm uses a feature-rich model that can be trained efficiently.
+Features are modeled using \emph{feature functions} of the form
+$\phi(h_i,t_i)$ for a history $h_i$ and a tag $t_i$.
+The history $h_i$ is a complex object modeling different aspects of the sequence
+being tagged. It may contain previously assigned tags in the sequence to be
+annotated, as well as other contextual features such as the form of the
+current word, or whether the current sentence ends with a question mark.
+Intuitively, the job of the training algorithm is to find out which feature
+functions are good indicators that a certain tag $t_i$ is associated with a
+certain history $h_i$.
+
+A model consists of feature functions $\phi_s$, each paired with a
+\emph{feature weight} $\alpha_s$ which is to be estimated during training.
+The scoring function is defined over entire sequences, which in a PoS
+tagging task typically means sentences. For a sequence of words $w$ of length
+$n$ in a model with $d$ feature functions, the scoring function is defined as:
+$$ \mathit{score}(w,t) = \sum_{i=1}^n \sum_{s=1}^d \alpha_s\phi_s(h_i,t_i) $$
+
+Training the model is done in an error-driven fashion: tagging each sequence
+in the training data with the current model, and adding to the feature weights
+the difference between the corresponding feature function for the correct
+tagging, and the model's tagging.
+
+During tagging, the highest scoring sequence of tags is computed:
+$$ \bar{t} = \operatorname{arg\,max}_t \mathit{score}(w,t) $$
+
 \section{IceParser}
 \emph{IceParser} is an incremental finite-state parser.
 The parser comprises a sequence of finite-state transducers, each of which uses a collection of regular expressions to specify which syntactic patterns are to be recognised.
@@ -286,11 +315,12 @@ Moreover, output files, generated by the tool, will be encoded in UTF8.
 
 \subsection{Tagging}
 \subsubsection{Input file}
-The input file to be tagged can have one of three formats.
+The input file to be tagged can have one of four formats.
 \begin{enumerate}
-\item {\bf One token per line.} An empty line (the newline character) is required between sentences.
-\item {\bf One sentence per line. }
-\item {\bf Other format.} This entails that a sentence can span more than one line, or that there can be more than one sentence per line in the input file.
+\item {\bf One token/tag pair per line} (only used by \emph{IceStagger}. An empty line (the newline character) is required between sentences.
+\item {\bf One token per line}. An empty line (the newline character) is required between sentences.
+\item {\bf One sentence per line}.
+\item {\bf Other format}. This entails that a sentence can span more than one line, or that there can be more than one sentence per line in the input file.
 \end{enumerate}
 
 \subsubsection{Output file}
@@ -330,7 +360,6 @@ hvítum lkeþsf brennivínspoka nkeþ með aþ sunddóti nheþ til ae hliðar nv
 
 \subsubsection{Dictionaries}
 \label{sec:dict}
-%The {\bf dict} directory contains a copy of the default dictionaries\footnote{The dictionaries used by IceTagger and IceMorphy are derived from the Icelandic Frequency Dictionary (IFD) corpus, and from a part of the Database of Modern Icelandic Inflections (BIN) -- Copyright \copyright Árni Magnússon Institute for Icelandic Studies.} and wordlists
 The {\bf dict} directory contains a copy of the default dictionaries and wordlists that are part of the \emph{IceNLPCore.jar} file. The files in the {\bf dict} directory can be changed by the user and parameters for individual tools of \emph{IceNLP} can be used to point to these dictionaries in case the user wants to change the default behaviour (see Section \ref{sec:usage}).
 
 The dictionaries, which list words/endings and associated tags, used by \emph{IceTagger} have the following format: \\\\
@@ -439,9 +468,7 @@ Furthermore, if the -i parameter is not provided, the tokeniser reads from stand
 \end{verbatim}
 
 \subsection{SrxSegmentizer}
-The \textit{SrxSegmentizer} splits sentences according to rules defined in an SRX file. Such SRX
-rules are included in the IceNLP distribution and the \textit{Segment} library is used internally
-to apply the rules.
+The \textit{SrxSegmentizer} splits sentences according to rules defined in an SRX file. Such SRX rules are included in the IceNLP distribution and the \textit{Segment} library is used internally to apply the rules.
 
 Use the command \textbf{srxsegmentizer.sh}. Two parameters can be supplied, an input file
 and an output file. If those are omitted, input is read from stdin and output written to
@@ -612,6 +639,53 @@ If all goes well, four files, corpus.ngrams, corpus.lex, corpus.orig.lex and cor
 %\item Type \textbf{fillDictFreq 01}. This command uses files 01TM.orig.lex and 01TM.filled.dict to generate a new tag filled lexicon, 01TM.lex, in the \textbf{Ngrams/models} directory.
 %\end{enumerate}
 \end{enumerate}
+
+\subsection{IceStagger}
+To start \emph{IceStagger} for tagging text, open a terminal, go to the \textbf{bat/icestagger} directory, and type in the following command:\\ \\
+{\bf ./icestagger.sh} [parameters] \\ \\
+The (main) parameters are the following (the full description of the possible parameters can be found in the README file in this directory):
+
+\begin{itemize} 
+\item -lang is: For tagging Icelandic, the value \emph{is} is needed for the \emph{lang} parameter.
+\item -modelfile <filename>: \emph{filename} is the name of a model generated during training.
+\item -plain: For generating plain output, i.e. one token/tag pair per line.
+\item -icemorphy <n>: \emph{n} is {\bf 0} (do not use IceMorphy), or {\bf 1} (use IceMorphy for filling \emph{tag profile gaps} and guessing the tag profile for unknown words), or {\bf 2} (only use IceMorphy for unknown words).
+\item -tag <filename 1> <filename 2> \ldots <filename n>: Specifies tagging of \emph{n} files. This should be the last argument.  
+\end{itemize}
+
+There are two possible formats for the input files to be tagged:
+\begin{itemize}
+\item  A file with an \emph{.txt} extensions is assumed to contain raw text and will be tokenised by IceStagger's tokeniser before tagging.  If there is only one file name in the input list, the output is written to standard output, otherwise each tagging output is written to a separate file.
+\item A file with any other extension is assumed to contain a single token/tag pair in each line with an empty line between sentences.  The tag in the second column is used for evaluating the tagger's accuracy. In this case, the tagging output is written to standard output.
+\end{itemize}
+  
+For example, the following command:
+
+\begin{verbatim}
+./icestagger.sh -modelfile otb.bin -lang is -plain -icemorphy 1 -tag sentences.txt
+\end{verbatim}
+
+uses the training model \emph{otb.bin} to tag the sentences.txt file using \emph{IceMorphy}, generating \emph{plain} (one token/tag per line) output.
+
+\subsubsection{Training}
+To generate a model from a training corpus, the following (main) parameters can be used:
+
+\begin{itemize}
+\item -lang is: For training on Icelandic text.
+\item -trainfile <filename>: \emph{filename} is the training corpus to be used.  The format is assumed to be one token/tag pair in each line with an empty line between sentences.
+\item -lexicon <filename>: \emph{filename} is a lexicon in which  each line has 4 tab-separated fields: <word form, lemma, tag, frequency>.  The frequency can be 0.  The lexicon is optional.
+\item -positers <n>:  Train the tagger with at most \emph{n} iterations.
+\item -plain: For generating plain output, i.e. one token/tag pair per line.
+\item -train: Specifies training mode.  This should be the last argument.
+\end{itemize}
+
+For example, the following command:
+
+\begin{verbatim}
+./icestagger.sh -trainfile otb.plain -modelfile otb.bin -positers 10 -lang is -train
+\end{verbatim}
+
+uses the training corpus \emph{otb.plain} to produce the training model \emph{otb.bin} using 10 iterations. 
 
 
 \subsection{Lemmald}

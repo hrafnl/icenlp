@@ -10,8 +10,6 @@
 # You can then train IceStagger on otb.plain (resulting in the model otb.bin) with the following:
 
 CORPUS_DIR=./corpora
-DIST_DIR=../../dist
 MODELS_DIR=./models
-RUNNER=is.iclt.icenlp.runner.RunIceStagger
 
-time java -Xmx6G -ea -classpath $DIST_DIR/IceNLPCore.jar $RUNNER -trainfile $CORPUS_DIR/otb.plain -modelfile $MODELS_DIR/otb.bin -icemorphy 1 -positers 10 -lang is -train
+./icestagger.sh -trainfile $CORPUS_DIR/otb.plain -modelfile $MODELS_DIR/otb.bin -positers 4 -lang is -train
