@@ -6,11 +6,12 @@
 	</description>
 
 	<property name="src" location="src" />
+	<property name="src-core" location="src/is/iclt/icenlp/core"/>
 	<property name="build" location="build" />
 	<property name="dist" location="dist" />
 	<property name="package" value="IceNLPCore" />
 	<property name="lib" location="lib" />
-	<property name="javadoc" location="javadoc" />	
+	<property name="javadoc" location="javadoc" />
 	
 	<property name="dict" location="dict" />	
 	<property name="segment" location="${lib}/segment-1.3.3.jar" />
@@ -50,7 +51,7 @@
 			<uptodate>
 				<srcfiles dir="." includes="flex/icetagger/genIceRules.flex"/>
 				<mapper type="merge"
-					to="src/is/iclt/icenlp/core/icetagger/IceLocalRules.java"/>
+					to="${src-core}/icetagger/IceLocalRules.java"/>
 			</uptodate>
 		</condition>
 	</target>
@@ -66,7 +67,7 @@
 				<srcfiles dir="." includes="flex/icestagger/*.flex"/>
 				<mapper type="glob"
 						from="flex/icestagger/*.flex"
-						to="src/is/iclt/icenlp/core/icestagger/*.java"/>
+						to="${src-core}/icestagger/*.java"/>
 			</uptodate>
 		</condition>
 	</target>
@@ -82,7 +83,7 @@
 				<srcfiles dir="." includes="flex/iceparser/*.flex"/>
 				<mapper type="glob"
           from="flex/iceparser/*.flex"
-					to="src/is/iclt/icenlp/core/iceparser/*.java"/>
+					to="${src-core}/iceparser/*.java"/>
 			</uptodate>
 		</condition>
 	</target>
@@ -98,7 +99,7 @@
 				<srcfiles dir="." includes="flex/iceparser/errorSearch/*.flex"/>
 				<mapper type="glob"
           from="flex/iceparser/errorSearch/*.flex"
-					to="src/is/iclt/icenlp/core/iceparser/*.java"/>
+					to="${src-core}/iceparser/*.java"/>
 			</uptodate>
 		</condition>
 	</target>
@@ -113,7 +114,7 @@
 			<uptodate>
 				<srcfiles dir="." includes="flex/iceNER/NameScanner.flex"/>
 				<mapper type="merge"
-					to="src/is/iclt/icenlp/core/iceNER/NameScanner.java"/>
+					to="${src-core}/iceNER/NameScanner.java"/>
 			</uptodate>
 		</condition>
 	</target>
@@ -213,6 +214,7 @@
 	<target name="package" depends="release-jar, docs" >
 		<mkdir dir="${dist}/${package}" />
 		<copy file="${dist}/${jar_name}.jar" todir="${dist}/${package}/dist" />
+		<copy file="${src-core}/icestagger/README" todir="${dist}/${package}/bat/icestagger" />
 		<copy todir="${dist}/${package}/bat">
 			<fileset dir="bat" />
 		</copy>		
@@ -234,7 +236,6 @@
 		<copy todir="${dist}/${package}/lists">
 			<fileset dir="lists" />
 		</copy>
-
 
 		<copy file="doc/IceNLP.pdf" todir="${dist}/${package}/doc" />
 		<copy file="doc/Tagset.pdf" todir="${dist}/${package}/doc" />		
@@ -261,44 +262,43 @@
 		<!-- Delete the generated rules files -->
 		<delete file="flex/icetagger/genIceRules.class"/>
 		<delete file="flex/icetagger/genIceRules.java"/>
-		<delete file="${src}/is/iclt/icenlp/core/icetagger/IceLocalRules.java"/>
-		<delete file="${src}/is/iclt/icenlp/core/icestagger/SwedishTokenizer.java"/>
-		<delete file="${src}/is/iclt/icenlp/core/icestagger/EnglishTokenizer.java"/>
-		<delete file="${src}/is/iclt/icenlp/core/icestagger/LatinTokenizer.java"/>
-		<delete file="${src}/is/iclt/icenlp/core/iceparser/Case_AP.java"/>
-		<delete file="${src}/is/iclt/icenlp/core/iceparser/Case_NP.java"/>
-		<delete file="${src}/is/iclt/icenlp/core/iceparser/Clean1.java"/>
-		<delete file="${src}/is/iclt/icenlp/core/iceparser/Clean2.java"/>
-		<delete file="${src}/is/iclt/icenlp/core/iceparser/Correction.java"/>
-		<delete file="${src}/is/iclt/icenlp/core/iceparser/ErrDetect.java"/>
-		<delete file="${src}/is/iclt/icenlp/core/iceparser/Func_COMP.java"/>
-		<delete file="${src}/is/iclt/icenlp/core/iceparser/Func_OBJ.java"/>
-		<delete file="${src}/is/iclt/icenlp/core/iceparser/Func_OBJ2.java"/>
-		<delete file="${src}/is/iclt/icenlp/core/iceparser/Func_OBJ3.java"/>
-		<delete file="${src}/is/iclt/icenlp/core/iceparser/Func_QUAL.java"/>
-		<delete file="${src}/is/iclt/icenlp/core/iceparser/Func_SUBJ.java"/>
-		<delete file="${src}/is/iclt/icenlp/core/iceparser/Func_SUBJ2.java"/>
-		<delete file="${src}/is/iclt/icenlp/core/iceparser/Func_TIMEX.java"/>
-		<delete file="${src}/is/iclt/icenlp/core/iceparser/Phrase_AP.java"/>
-		<delete file="${src}/is/iclt/icenlp/core/iceparser/Phrase_APs.java"/>
-		<delete file="${src}/is/iclt/icenlp/core/iceparser/Phrase_AdvP.java"/>
-		<delete file="${src}/is/iclt/icenlp/core/iceparser/Phrase_FOREIGN.java"/>
-		<delete file="${src}/is/iclt/icenlp/core/iceparser/Phrase_MWE.java"/>
-		<delete file="${src}/is/iclt/icenlp/core/iceparser/Phrase_MWEP1.java"/>
-		<delete file="${src}/is/iclt/icenlp/core/iceparser/Phrase_MWEP2.java"/>
-		<delete file="${src}/is/iclt/icenlp/core/iceparser/Phrase_NP.java"/>
-		<delete file="${src}/is/iclt/icenlp/core/iceparser/Phrase_NP2.java"/>
-		<delete file="${src}/is/iclt/icenlp/core/iceparser/Phrase_NPs.java"/>
-		<delete file="${src}/is/iclt/icenlp/core/iceparser/Phrase_PP.java"/>
-		<delete file="${src}/is/iclt/icenlp/core/iceparser/Phrase_Per_Line.java"/>
-		<delete file="${src}/is/iclt/icenlp/core/iceparser/Phrase_VP.java"/>
-		<delete file="${src}/is/iclt/icenlp/core/iceparser/Preprocess.java"/>
-		<delete file="${src}/is/iclt/icenlp/core/iceparser/TagDecoder.java"/>
-		<delete file="${src}/is/iclt/icenlp/core/iceparser/TagEncoder.java"/>
-		<delete file="${src}/is/iclt/icenlp/core/iceparser/NP_errors.java"/>
-		<delete file="${src}/is/iclt/icenlp/core/iceparser/PP_errors.java"/>
-		<delete file="${src}/is/iclt/icenlp/core/iceparser/VP_errors.java"/>
-		<delete file="${src}/is/iclt/icenlp/core/iceNER/NameScanner.java"/>
+		<delete file="${src-core}/icetagger/IceLocalRules.java"/>
+		<delete file="${src-core}/icestagger/EnglishTokenizer.java"/>
+		<delete file="${src-core}/icestagger/LatinTokenizer.java"/>
+		<delete file="${src-core}/iceparser/Case_AP.java"/>
+		<delete file="${src-core}/iceparser/Case_NP.java"/>
+		<delete file="${src-core}/iceparser/Clean1.java"/>
+		<delete file="${src-core}/iceparser/Clean2.java"/>
+		<delete file="${src-core}/iceparser/Correction.java"/>
+		<delete file="${src-core}/iceparser/ErrDetect.java"/>
+		<delete file="${src-core}/iceparser/Func_COMP.java"/>
+		<delete file="${src-core}/iceparser/Func_OBJ.java"/>
+		<delete file="${src-core}/iceparser/Func_OBJ2.java"/>
+		<delete file="${src-core}/iceparser/Func_OBJ3.java"/>
+		<delete file="${src-core}/iceparser/Func_QUAL.java"/>
+		<delete file="${src-core}/iceparser/Func_SUBJ.java"/>
+		<delete file="${src-core}/iceparser/Func_SUBJ2.java"/>
+		<delete file="${src-core}/iceparser/Func_TIMEX.java"/>
+		<delete file="${src-core}/iceparser/Phrase_AP.java"/>
+		<delete file="${src-core}/iceparser/Phrase_APs.java"/>
+		<delete file="${src-core}/iceparser/Phrase_AdvP.java"/>
+		<delete file="${src-core}/iceparser/Phrase_FOREIGN.java"/>
+		<delete file="${src-core}/iceparser/Phrase_MWE.java"/>
+		<delete file="${src-core}/iceparser/Phrase_MWEP1.java"/>
+		<delete file="${src-core}/iceparser/Phrase_MWEP2.java"/>
+		<delete file="${src-core}/iceparser/Phrase_NP.java"/>
+		<delete file="${src-core}/iceparser/Phrase_NP2.java"/>
+		<delete file="${src-core}/iceparser/Phrase_NPs.java"/>
+		<delete file="${src-core}/iceparser/Phrase_PP.java"/>
+		<delete file="${src-core}/iceparser/Phrase_Per_Line.java"/>
+		<delete file="${src-core}/iceparser/Phrase_VP.java"/>
+		<delete file="${src-core}/iceparser/Preprocess.java"/>
+		<delete file="${src-core}/iceparser/TagDecoder.java"/>
+		<delete file="${src-core}/iceparser/TagEncoder.java"/>
+		<delete file="${src-core}/iceparser/NP_errors.java"/>
+		<delete file="${src-core}/iceparser/PP_errors.java"/>
+		<delete file="${src-core}/iceparser/VP_errors.java"/>
+		<delete file="${src-core}/iceNER/NameScanner.java"/>
 		<delete file="dict/lemmald/rule_database_utf8.dat"/>
 		<delete file="doc/IceNLP.aux"/>
 		<delete file="doc/IceNLP.bbl"/>
