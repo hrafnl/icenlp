@@ -31,23 +31,14 @@ SEPARATOR=space
 
 SENTENCE_START=upper
 
-[LOG_FILE is either a file name or empty if no log (debug info) is desired]
-LOG_FILE=
-
-[The base dictionary used by IceTagger; should not be changed]
-BASE_DICT=../../dict/icetagger/baseDict.dict
-
 [The main dictionary]
 DICT=../../dict/icetagger/otbBIN.dict
 
-[The idioms (phrases) dictionary
-IDIOMS_DICT=../../dict/icetagger/idioms.dict
+[LOG_FILE is either a file name or empty if no log (debug info) is desired]
+LOG_FILE=
 
 [FULL_DISAMBIGUATION = yes|no]
 FULL_DISAMBIGUATION=yes
-
-[The ngram model used for initial or full disambiguation]
-[MODEL=../../ngrams/models/otb]
 
 [ MODEL_TYPE = start|end|startend ]
 [MODEL_TYPE=startend]
@@ -60,43 +51,14 @@ FULL_OUTPUT=no
 [BASE_TAGGING = yes|no. Only assign a single tag to each word based on maximum frequency]
 BASE_TAGGING=no
 
-[Dictionary for verb-preposition info] 
-VERB_PREP_DICT=../../dict/icetagger/otb.verbPrep.dict
-
-[Dictionary for verb-object info] 
-VERB_OBJ_DICT=../../dict/icetagger/otb.verbObj.dict
-
-[Dictionary for verb-adverb info] 
-VERB_ADVERB_DICT=../../dict/icetagger/otb.verbAdverb.dict
-
 [Tag mapping file ]
 [TAG_MAP_DICT=../../dict/icetagger/otb.apertium.dict]
 
 [LEMMATIZE = yes|no ]
 LEMMATIZE=no
 
-[Used by IceMorphy]
-
-[Base endings used by IceMorphy; should not be changed]
-ENDINGS_BASE=../../dict/icetagger/baseEndings.dict
-
-[Dictionary of endings and corresponding tags]
-ENDINGS_DICT=../../dict/icetagger/otb.endings.dict
-
-[Dictionary of endings for proper names and corresponding tags]
-ENDINGS_PROPER_DICT=../../dict/icetagger/otb.endingsProper.dict
-
-[The prefixes dictionary
-PREFIXES_DICT=../../dict/icetagger/prefixes.dict
-
-[Tag frequency file]
-TAG_FREQUENCY_FILE=../../dict/icetagger/otbTags.freq.dict
-
 [Used by the Tokenizer]
 
 [STRICT = yes|no . Strict tokenization or not]
 STRICT=yes
-
-[Lexicon used by the tokenizer]
-TOKEN_DICT=../../dict/tokenizer/lexicon.txt
 

@@ -20,8 +20,9 @@ dist/
 
 * Files that cannot be distributed
 otb.plain
-otbBin.dict
+otbBin.*
 bin.dict
+bin.freq.dict
 bin.lexicon
 SHsnid.csv
 

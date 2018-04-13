@@ -1,0 +1,37 @@
+[Used by TriTagger]
+
+[The name of the input file to be tagged]
+INPUT_FILE=mogginn.txt
+
+[The name of the output file]
+OUTPUT_FILE=mogginn.out
+
+MODEL=../../ngrams/models/otbBin
+
+[NGRAM: 2=bigram | 3=trigram]
+NGRAM=3
+
+[Input LINE_FORMAT = 1|2|3 ]
+[ 1: one token per line. One empty line between sentences ]
+[ 2: one sentence per line ]
+[ 3: other]
+
+LINE_FORMAT=1
+
+[ OUTPUT_FORMAT = 1|2 ]
+[ 1: one token/tag per line. One empty line between sentences ]
+[ 2: one sentence per line ]
+
+OUTPUT_FORMAT=1
+
+[ SENTENCE_START = upper|lower ]
+[ upper: Every sentence starts with an upper case letter ]
+[ lower: Every sentence starts with a lower case letter, except when the first word is a proper noun ]
+
+SENTENCE_START=upper
+
+[STRICT = yes|no . Strict tokenization or not]
+STRICT=no
+
+[Use IceMorphy]
+ICEMORPHY=no
