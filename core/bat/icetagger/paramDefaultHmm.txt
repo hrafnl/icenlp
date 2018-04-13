@@ -1,10 +1,10 @@
 [Used by IceTagger]
 
 [The name of the input file to be tagged]
-INPUT_FILE=test.txt
+INPUT_FILE=mogginn.txt
 
 [The name of the output file]
-OUTPUT_FILE=test.out
+OUTPUT_FILE=mogginn.out
 
 [Input LINE_FORMAT = 1|2|3 ]
 [ 1: one token per line. One empty line between sentences ]
@@ -34,23 +34,11 @@ SENTENCE_START=upper
 [LOG_FILE is either a file name or empty if no log (debug info) is desired]
 LOG_FILE=
 
-[The base dictionary used by IceTagger; should not be changed]
-BASE_DICT=../../dict/icetagger/baseDict.dict
-
-[The main dictionary]
-DICT=../../dict/icetagger/otb.dict
-
-[The idioms (phrases) dictionary
-IDIOMS_DICT=../../dict/icetagger/idioms.dict
-
 [FULL_DISAMBIGUATION = yes|no]
 FULL_DISAMBIGUATION=yes
 
-[The ngram model used for initial or full disambiguation]
-[MODEL=../../ngrams/models/otb]
-
 [ MODEL_TYPE = start|end|startend ]
-[MODEL_TYPE=startend]
+MODEL_TYPE=startend
 
 [FULL_OUTPUT = yes|no ]
 [ yes: Subject-verb-object information is written to output file and detailed information for unknown words]
@@ -60,43 +48,16 @@ FULL_OUTPUT=no
 [BASE_TAGGING = yes|no. Only assign a single tag to each word based on maximum frequency]
 BASE_TAGGING=no
 
-[Dictionary for verb-preposition info] 
-VERB_PREP_DICT=../../dict/icetagger/otb.verbPrep.dict
-
-[Dictionary for verb-object info] 
-VERB_OBJ_DICT=../../dict/icetagger/otb.verbObj.dict
-
-[Dictionary for verb-adverb info] 
-VERB_ADVERB_DICT=../../dict/icetagger/otb.verbAdverb.dict
-
 [Tag mapping file ]
 [TAG_MAP_DICT=../../dict/icetagger/otb.apertium.dict]
 
 [LEMMATIZE = yes|no ]
 LEMMATIZE=no
 
-[Used by IceMorphy]
-
-[Base endings used by IceMorphy; should not be changed]
-ENDINGS_BASE=../../dict/icetagger/baseEndings.dict
-
-[Dictionary of endings and corresponding tags]
-ENDINGS_DICT=../../dict/icetagger/otb.endings.dict
-
-[Dictionary of endings for proper names and corresponding tags]
-ENDINGS_PROPER_DICT=../../dict/icetagger/otb.endingsProper.dict
-
-[The prefixes dictionary
-PREFIXES_DICT=../../dict/icetagger/prefixes.dict
-
-[Tag frequency file]
-TAG_FREQUENCY_FILE=../../dict/icetagger/otbTags.freq.dict
-
 [Used by the Tokenizer]
 
 [STRICT = yes|no . Strict tokenization or not]
 STRICT=yes
 
-[Lexicon used by the tokenizer]
-TOKEN_DICT=../../dict/tokenizer/lexicon.txt
-
+[External Analysis icenlp|apertium]
+EXTERNAL_ANALYSIS=icenlp
