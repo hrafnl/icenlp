@@ -227,8 +227,8 @@
 		<copy todir="${dist}/${package}/dict">
 			<fileset dir="dict"> 
 				<exclude name="**/otbBin*.dict"/>
-				<exclude name="**/BIN/bin.dict"/>
-				<exclude name="**/BIN/bin.out"/>
+				<exclude name="**/BIN/bin*.dict"/>
+				<exclude name="**/BIN/bin*.out"/>
 				<exclude name="**/BIN/SHsnid.csv"/>
 			</fileset>
 		</copy>
@@ -237,7 +237,7 @@
 		</copy>		
 		<copy todir="${dist}/${package}/ngrams">
 			<fileset dir="ngrams">
-				<exclude name="**/models/otbBin*.lex"/>
+				<exclude name="**/models/otbBin*.*"/>
 			</fileset>
 		</copy>
 		<copy todir="${dist}/${package}/lists">
