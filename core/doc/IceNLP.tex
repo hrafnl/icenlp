@@ -43,7 +43,7 @@ A Natural Language Processing Toolkit for Icelandic\footnote{The following perso
 
 \section{What is IceNLP?}
 \label{sec:intro}
-\emph{IceNLP} is a Natural Language Processing (NLP) toolkit for analysing Icelandic text.
+\emph{IceNLP} is an open-source  Natural Language Processing (NLP) toolkit for analysing Icelandic text.
 The toolkit consists of a tokeniser and a sentence segmentiser, the morphological analyser \emph{IceMorphy}, the linguistic rule-based tagger \emph{IceTagger}, the trigram tagger \emph{TriTagger}, the perceptron tagger \emph{IceStagger}, the shallow parser \emph{IceParser}, the lemmatiser \emph{Lemmald}, and the named entity recogniser \emph{IceNER}.
 The system is written as a collection of Java classes.
 
@@ -75,8 +75,12 @@ The system marks persons, companies, locations and events.
 Evaluation has shown that \emph{IceNER} achieves an overall F-score of 71.5\% without using a gazette list, and 79.3\% when using a gazette list of only 523 names \citep{try09}.
 
 \section{Installation}
-The description below assumes installation for the {\bf Linux} operating system.
-The programs and data come in a zip-file named \emph{IceNLP.zip}.
+The source of \emph{IceNLP} is available for download/cloning at \url{https://github.com/hrafnl/icenlp}.
+
+Release versions (programs and data without source code) can be downloaded from \url{https://github.com/hrafnl/icenlp/releases}.
+
+The description below assumes installation or a release version for the {\bf Linux} operating system.
+The programs and data come in a zip-file named \emph{IceNLP-x.y.z.zip} (where \emph{x.y.z} is the current version number).
 Run {\bf unzip} on this zip-file and extract all the files to a directory of your choice.
 
 A main directory, {\bf IceNLP}, will be created with the following subdirectories: {\bf bat}, {\bf dict}, {\bf dist}, {\bf doc}, {\bf lib}, and {\bf ngrams}.
@@ -705,6 +709,8 @@ For example, the following command:
 \end{verbatim}
 
 uses the training corpus \emph{otb.plain} to produce the training model \emph{otb.bin} using 10 iterations. 
+
+A pre-trained model (otb), derived from the \emph{IFD} corpus, is part of the \emph{IceNLP} distribution and can be found in the {\bf models} directory of the \emph{bat/icestagger} directory.
 
 For increasing the accuracy of \emph{IceStagger}, a lexicon with data from \emph{BÍN} can be provided during training.  Once the data from \emph{BÍN} has been extracted (see Section \ref{sec:bin}), the shell script \textbf{trainIceStaggerBin.sh} can be used for training.  Tagging can then be carried out using the \textbf{tagIceStaggerBin.sh} shell.
 
