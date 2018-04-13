@@ -42,6 +42,7 @@ A Natural Language Processing Toolkit for Icelandic\footnote{The following perso
 %\begin{spacing}{1.5}
 
 \section{What is IceNLP?}
+\label{sec:intro}
 \emph{IceNLP} is a Natural Language Processing (NLP) toolkit for analysing Icelandic text.
 The toolkit consists of a tokeniser and a sentence segmentiser, the morphological analyser \emph{IceMorphy}, the linguistic rule-based tagger \emph{IceTagger}, the trigram tagger \emph{TriTagger}, the perceptron tagger \emph{IceStagger}, the shallow parser \emph{IceParser}, the lemmatiser \emph{Lemmald}, and the named entity recogniser \emph{IceNER}.
 The system is written as a collection of Java classes.
@@ -50,14 +51,14 @@ The tokeniser is used for tokenising stream of characters into linguistic units 
 
 \emph{IceMorphy} is mainly used for guessing the tags for unknown words and filling \emph{tag profile gaps} in a dictionary \citep{lof08}.
 
-\emph{IceTagger} is a linguistic rule-based tagger for tagging Icelandic text\footnote{As apposed to a data-driven tagger trainable on different languages.} \citep{lof06,lof08}.
+\emph{IceTagger} is a linguistic rule-based tagger\footnote{As apposed to a data-driven tagger trainable on different languages.} for tagging Icelandic text \citep{lof06,lof08}.
 It uses a large part-of-speech (PoS) tagset consisting of about 600 tags (see Section \ref{sec:tagset}).
-Evaluation has shown that \textit{IceTagger} achieves higher accuracy than the best performing data-driven tagger (at that time) when tested using the same test corpora and the same ratio of unknown words \citep{lof08,lof09b,lof11,hel04}.
-The average tagging accuracy, computed when tagging test corpora derived from the \emph{Icelandic Frequency Dictionary} (\emph{IFD}) corpus \citep{pin91}, is about 92\%\footnote{Tagging accuray is measured using a corrected version of the IFD corpus \citep{lof09}.}.  When using data from \emph{BÍN}, the Database of Modern Icelandic Inflections \citep{kri05}, the accuracy increases to about 92.8\%.
+Evaluation showes that \textit{IceTagger} achieved higher accuracy than the best performing data-driven tagger when tested using the same test corpora and the same ratio of unknown words \citep{lof08,lof09b,lof11,hel04}.
+The average tagging accuracy, computed when tagging test corpora derived from the \emph{Icelandic Frequency Dictionary} (\emph{IFD}) corpus \citep{pin91}, is about 92\%\footnote{Tagging accuray is measured using a corrected version of the IFD corpus \citep{lof09}.}.  When using data from \emph{BÍN} (see Section \ref{sec:bin}), the Database of Modern Icelandic Inflections \citep{kri05}, the accuracy increases to about 92.8\%.
 
-\emph{TriTagger} is a re-implementation of the well known TnT trigram tagger \citep{bra00}.
+\emph{TriTagger} is a re-implementation of the well known statistical \emph{TnT} tagger \citep{bra00}.
 By using \textit{TriTagger} as a word class tagger during initial disambiguation, then using \textit{IceTagger} to disambiguate tags that are consistent with the chosen word class, 
-and finally using \emph{TriTagger} again to fully disambiguate words, to which \emph{IceTagger} is not able to assign unambiguous tags, an accuracy of about 92.7\% is achieved \citep{lof09b,lof11}.  By using \emph{BÍN}, the accuracy increases to about 93.5\%.
+and finally using \emph{TriTagger} again to fully disambiguate words, to which \emph{IceTagger} is not able to assign unambiguous tags, an accuracy of about 92.7\% is achieved \citep{lof09b,lof11}.  By using \emph{BÍN}, the accuracy further increases to about 93.5\%.
 
 \emph{IceStagger} is a modified version of \emph{Stagger}  \citep{ost13}, a tagger based on the Averaged Perceptron algorithm \citep{col02}.   By adding specific linguistic features and using \emph{IceMorphy}, an accuracy of about 92.8\% is achieved \citep{lof13}. By using \emph{BÍN}, the accuracy increases to about 93.7\%.
 
@@ -74,25 +75,29 @@ The system marks persons, companies, locations and events.
 Evaluation has shown that \emph{IceNER} achieves an overall F-score of 71.5\% without using a gazette list, and 79.3\% when using a gazette list of only 523 names \citep{try09}.
 
 \section{Installation}
-The description below assumes installation for the {\bf Linux} or {\bf Windows} operating systems.
+The description below assumes installation for the {\bf Linux} operating system.
 The programs and data come in a zip-file named \emph{IceNLP.zip}.
-Run {\bf unzip} (winzip on Windows) on this zip-file and extract all the files to a directory of your choice.
+Run {\bf unzip} on this zip-file and extract all the files to a directory of your choice.
 
-A main directory, {\bf IceNLP}, will be created with the following subdirectories: {\bf bat}, {\bf dict}, {\bf dist}, {\bf doc}, {\bf lib}, and {\bf ngrams}.
+A main directory, {\bf IceNLP}, will be created with the following subdirectories: {\bf bat}, {\bf dict}, {\bf dist}, {\bf doc}, {\bf lib}, {\bf lists}, and {\bf ngrams}.
+
+The {\bf bat} directory includes shell scripts (.sh files) for running individual components of the tool. The commands for each tool can be found in a subdirectory of the {\bf bat} directory (see Section \ref{sec:usage}).
+
+The {\bf dict} directory contains various dictionaries related to the individual tools of \emph{IceNLP} as well as shell scripts to extract data from \emph{BÍN}. 
 
 The {\bf dist} directory contains the \emph{IceNLPCore.jar} file.  This file consists of all the .class files needed to run \emph{IceNLP} along with default dictionaries (``resource files''). 
 
+The {\bf doc} directory 	contains this user guide and a description of the Icelandic tagset.
+
 The {\bf lib} directory contains various .jar files used by \emph{IceNLP}. 
 
-The {\bf bat} directory includes commands (.sh and .bat files) for running individual components of the tool.
-The commands for each tool can be found in a subdirectory of the {\bf bat} directory (see Section \ref{sec:usage}).
-Use the .sh files for running the tools on \textbf{Linux}, and the .bat files for running on Windows.
+The {\bf ngrams} directory contains tools for building ngram models.
 
 \section{The tagset}
 \label{sec:tagset}
-\emph{IceTagger} uses the main Icelandic tagset, created during the making of the \emph{IFD} corpus.
+The taggers in \emph{IceNLP} use the main Icelandic tagset, created during the making of the \emph{IFD} corpus.
 Due to the morphological richness of the Icelandic language the main tagset is large and makes fine distinctions compared to related languages.
-The tagset contains about 700 tags, but both \emph{IceTagger} and {TriTagger} have been developed/trained using a reduced version of the tagset, containing about 600 tags.
+The original tagset contains about 700 tags, but the taggers have been developed/trained using a reduced version of the tagset, containing about 600 tags.
 Type information for proper nouns (named-entity classification) has been removed and only one tag for numerical constants is used \citep{lof11}.
 
 Each tag in the tagset comprises word class information and morphological features.
@@ -116,7 +121,7 @@ Char\# & Category/Feature & Symbol -- semantics \\
 3 & Number & {\bf e}--singular, {\bf f}--plural \\
 4 & Case & {\bf n}--nominative, {\bf o}--accusative, {\bf {\th}}--dative, {\bf e}--genitive  \\
 5 & Article & {\bf g}--with suffixed definite article \\
-6 & Proper noun & {\bf m}--person name, {\bf {\"o}}--place name, {\bf s}--other proper name \\
+6 & Proper noun & {\bf s}--proper noun \\
 \hline
 \hline
 \end{tabular}
@@ -156,7 +161,7 @@ The former, which is looked up first, is mainly used to capture common endings f
 \emph{IceMorphy} assumes that endings are different for capitalized words vs. other words and therefore uses two endings dictionaries, one for proper nouns and another for all other words.
 
 \item{\bf Tag profile gaps.}
-A \emph{tag profile gap} arises when a particular word, listed in the dictionary, has some missing tags in its set of possible tags.
+A \emph{tag profile gap} arises when a particular word, listed in the dictionary, has some missing tags in its tag profile (set of possible tags).
 This, of course, presents problems to a disambiguator since its purpose is to select one single correct tag from all possible ones.
 For each noun, adjective, or verb of a particular morphological class, \emph{IceMorphy} generates all possible tags for the given word.
 \end{enumerate}
@@ -169,7 +174,7 @@ The tagger consists of the following phases:
 \item {\bf Tokenisation.}
 The sequence of characters in the input file is split into simple tokens (linguistic units) like words, numbers and punctuation marks. In some cases, sentence segmentation needs to be carried out, i.e. the process of identifying when one sentence ends and another one begins.
 \item {\bf Introduction of ambiguity.}
-For each sentence to be tagged, the tag profile (the set of possible tags), for each word, both known and unknown words, is introduced.
+For each sentence to be tagged, the tag profile for each word, both known and unknown words, is introduced.
 A word is looked up in a pre-compiled dictionary. If the word exists, i.e. the word is known, the corresponding tag profile for the word is returned.
 In the case of a \emph{tag profile gap}, the unknown word guesser, \emph{IceMorphy}, is used for filling in the missing tags.
 If the word does not exist in the dictionary, i.e. the word is unknown, \emph{IceMorphy} is used for guessing the possible tags.
@@ -181,14 +186,13 @@ The tasks below are applied to one sentence at a time:
 \begin{enumerate}
 \item {\bf Identify idioms and phrasal verbs.}
 Idioms, i.e. bigrams and trigrams, which are always tagged unambiguously are kept in a special dictionary.
-Phrasal verbs are verb-particle pairs whose words are adjacent in text.
-A special dictionary is used for recognising phrasal verbs.
+A special dictionary is also used for recognising phrasal verbs, i.e. verb-particle pairs whose words are adjacent in text.
 \item {\bf Apply local elimination rules.}
 A sentence to be tagged is scanned from left to right and all tags of each word are checked in sequence.
 Depending on the word class (the first letter of the tag) of the focus word, the token is sent to the appropriate disambiguation routine which checks a variety of disambiguation constraints applicable to the particular word class and the surrounding words.
 At each step, only tags for the focus word are eliminated.
 \item {\bf Apply global heuristics.}
-Grammatical function analysis is performed, prepositional phrases are guessed, and the acquired knowledge is used to force feature agreement where appropriate. The heuristics are a collection of algorithmic procedures that guess the syntactic structure of the sentence and use it as an aid in the disambiguation process.
+Grammatical function analysis is performed, prepositional phrases are guessed, and the acquired knowledge is used to force feature agreement where appropriate. The heuristics are a collection of functions that guess the syntactic structure of the sentence and use it as an aid in the disambiguation process.
 Additionally, specific heuristics are used to choose between supine and past participle verb forms, infinitive or active verb forms, and ensuring agreement between reflexive pronouns and their antecedents.
 At last, the default heuristic is simply to choose the most frequent tag for a given word.
 \end{enumerate}
@@ -218,7 +222,7 @@ A sentence is tagged by assigning it the tag sequence which receives the highest
 
 The probabilities of the model are estimated from a training corpus using maximum likelihood estimation.
 Thus, before \emph{Tritagger} can be used it needs to be trained on a tagged corpus.
-A pre-trained model, derived from the \emph{IFD} corpus, can be found in the {\bf ngrams/models} directory.
+A pre-trained model named \emph{otb}, derived from the \emph{IFD} corpus, can be found in the {\bf ngrams/models} directory.
 Training of the tagger is described in section \ref{sec:train}.
 
 \section{IceStagger}
@@ -287,7 +291,7 @@ It achieves good performance by relying on \emph{IceTagger} for tagging and the 
 \emph{Lemmald} combines the advantages of data-driven machine learning with linguistic insights to maximize performance.
 
 To achieve this, it makes use of a novel approach: Hierarchy of Linguistic Identities (HOLI), which involves organizing features and feature structures for the machine learning based on linguistic knowledge \citep{ant08}.
-Accuracy of the lemmatisation is further improved using an add-on which connects to the Database of Modern Icelandic Inflections \citep{kri05}.
+Accuracy of the lemmatisation is further improved using an add-on which connects to \emph{BÍN}.
 
 Given correct tagging, the system lemmatises Icelandic text with an accuracy of 99.55\%.
 
@@ -307,6 +311,17 @@ The NameFinder will also read the text itself, after it has been run through \em
 The NameFinder will then use the name lists and rules based on the context in which entities appear
 to try to categorize the entities. 
 
+\section{BÍN}
+\label{sec:bin}
+\emph{BÍN} (``Beygingarlýsing íslensks nútímamáls'') is a comprehensive full form database of modern Icelandic inflections \cite{kri05}, developed at the \emph{Árni Magnússon Institute for Icelandic Studies}. BÍN contains about 280,000 paradigms, with over 5.8 million inflectional forms for common nouns, proper nouns, adjectives, verbs, and adverbs.
+
+Due to licensing issues, \emph{BÍN} cannot be distributed with \emph{IceNLP}. However, \emph{IceNLP} contains several shell scripts to extract data from \emph{BÍN} for the purpose of using it in it's taggers.  As stated in Section \ref{sec:intro}, the accuracy of the taggers increases considerably when extending their dictionaries with data from \emph{BÍN}.
+
+The shell scripts rely on a database  dump of \emph{BÍN}, which is available for download from \url{bin.arnastofnun.is}.  The dump file has the name \emph{SHsnid.csv}.
+
+Copy this file into the {\bf dict/BIN} directory.  Then run the {\bf extractBinData.sh} script, which will generate dictionaries with data from \emph{BÍN} for the three taggers: \emph{IceTaggger}, \emph{TriTagger}, and \emph{IceStagger}.
+
+To run a tagger with an extended dictionary, please refer to Section \ref{sec:usage}.
 
 \section{File format}
 The \emph{IceNLP} toolkit uses \textbf{UTF8} character encoding for all files.
@@ -315,16 +330,16 @@ Moreover, output files, generated by the tool, will be encoded in UTF8.
 
 \subsection{Tagging}
 \subsubsection{Input file}
-The input file to be tagged can have one of four formats.
+The input file to be tagged can have one of four formats:
 \begin{enumerate}
-\item {\bf One token/tag pair per line} (only used by \emph{IceStagger}. An empty line (the newline character) is required between sentences.
+\item {\bf One token/tag pair per line} (only used by \emph{IceStagger}). An empty line (the newline character) is required between sentences.
 \item {\bf One token per line}. An empty line (the newline character) is required between sentences.
 \item {\bf One sentence per line}.
 \item {\bf Other format}. This entails that a sentence can span more than one line, or that there can be more than one sentence per line in the input file.
 \end{enumerate}
 
 \subsubsection{Output file}
-The taggers can return output in two formats.
+The taggers can return output in either of two formats:
 \begin{enumerate}
 \item {\bf One token/tag per line} (or one token/tag/lemma per line).
 The token appears first in each line followed by the tag(s) selected by the tagger (and the lemma if lemmatisation is needed (see Section \ref{sec:icetagger_usage}).
@@ -421,7 +436,8 @@ Here is an example of the latter:
 Java 1.6 runtime (or later) is required to run the programs.
 Java is available for free from Oracle, \url{http://java.com}.
 
-In this section, usage of the individual tools on Linux is described. For running on Windows, please use .bat files instead of .sh files.
+In this section, usage of the individual tools on Linux is described. 
+
 \subsection{The tokeniser}
 \label{sec:tok}
 The tokeniser application is used for tokenising input files and converting between different file formats (the tokeniser performs both word tokenisation and sentence segmentation).
@@ -446,7 +462,7 @@ The possible values are:
 \item \emph{1}: One token per line, with an empty line between sentences.
 \item \emph{2}: One sentence per line.
 \end{itemize}
-\item \emph{-l <lexicon file>}: <lexicon file> is the name of a lexicon used by the tokeniser 
+\item \emph{-l <filename>}: filename is the name of a lexicon used by the tokeniser.
 The purpose of the lexicon is to list the abbreviations and the multiword expressions (MWEs) that the tokeniser is supposed to recognise.
 If this parameter is not supplied, the tokeniser uses the default resource file \emph{lexicon.txt} in the \emph{IceNLPCore.jar} file.
 \item \emph{-c <count>}: The tokeniser quits after tokenising \emph{<count>} sentences.
@@ -494,7 +510,7 @@ To start \emph{IceTagger}, open a terminal, go to the \textbf{bat/icetagger} dir
 {\bf ./icetagger.sh} [parameters] \\ \\
 The parameters can be supplied in two ways:
 \begin{itemize}
-\item \emph{-p <paramFile>}: This tells the application to read the parameters from \emph{<paramFile>}.
+\item \emph{-p <filename>}: This tells the application to read the parameters from the file \emph{filename}.
 A default parameter file \emph{paramDefault.txt} can be found in the \textbf{bat/icetagger} directory.
 This file has a number of attribute-value pairs whose values can be changed.
 The parameters are described below.
@@ -557,13 +573,15 @@ echo "Ég á stóran hund" | ./icetagger.sh
 
 \end{itemize}
 
+For increasing the accuracy of \emph{IceTagger}, the main dictionary of the tagger can be extended with data from \emph{BÍN}.  Once the data from \emph{BÍN} has been extracted (see Section \ref{sec:bin}), the parameter file \textbf{paramDefaultBin.txt} can be used for running \emph{IceTagger} with the extended dictionary.
+
 \subsection{TriTagger}
 \label{sec:tritagger_usage}
 To start \emph{TriTagger}, open a terminal, go to the \textbf{bat/tritagger} directory, and type in the following command:\\ \\
 {\bf ./tritagger.sh} [parameters] \\ \\
 The parameters can be supplied in two ways:
 \begin{itemize}
-\item \emph{-p <paramFile>}: This tells the application to read the parameters from \emph{<paramFile>}. A default parameter file \emph{paramDefault.txt} can be found in the \textbf{bat/tritagger} directory.
+\item \emph{-p <filename>}: This tells the application to read the parameters from the file \emph{filename}. A default parameter file \emph{paramDefault.txt} can be found in the \textbf{bat/tritagger} directory.
 This file has a number of attribute-value pairs whose values can be changed:
 
 \begin{itemize}
@@ -610,8 +628,10 @@ echo "Ég á stóran hund" | ./tritagger.sh
 \end{verbatim}
 \end{itemize}
 
+For increasing the accuracy of \emph{TriTagger}, the main dictionary of the tagger can be extended with data from \emph{BÍN}.  Once the data from \emph{BÍN} has been extracted (see Section \ref{sec:bin}), the parameter file \textbf{paramDefaultBin.txt} can be used for running \emph{TriTagger} with the extended dictionary.
+
 As mentioned above, one of the files resulting from the training phase is a lexicon file (with the extension \textit{.lex}), containing the tag profile for each word.
-It is worth noting, that in some cases one might want to extend this file, for example by adding data to it from some other data resource than the training corpus.
+In some cases one might want to extend this file, for example by adding data to it from some other data resource \emph{BÍN} than the training corpus.
 If one does only want \textit{TriTagger} do use data derived from the training corpus (but not also from the other data resource) for suffix handling, then a single line containing the following string can be put into the \textit{.lex} file right after the last entry (word) derived from the training corpus:
 \begin{verbatim}
 [NOSUFFIXES] 
@@ -623,12 +643,11 @@ During the loading of the lexicon, \textit{TriTagger} will then not use entries 
 Before \emph{Tritagger} can be used it needs to be trained on a tagged corpus.
 A pre-trained model (otb), derived from the \emph{IFD} corpus, is part of the \emph{IceNLPCore.jar} file and can also be found in the {\bf ngrams/models} directory.
 For illustration, we now describe how to train a new model using any training corpus, for example the small corpus \textbf{ngrams/corpus.txt}.
-For training, Unix/Linux (or a Unix/Linux emulator\footnote{For example, Cygwin, http://www.cygwin.com/.}) and \emph{Perl}\footnote{http://www.perl.org/.} are needed.
-In the following illustration, we will assume the usage of Linux.
+For training,  \emph{Perl}\footnote{http://www.perl.org/.} is needed.
 
 \begin{enumerate}
-\item Open a terminal (or a \textbf{Cygwin} command prompt in Windows) and go to the \textbf{ngrams} directory.
-\item Type {\bf bash train corpus.txt corpus -e}, where \emph{bash} is a (Cygwin) shell, \emph{train} is the program for training, \emph{corpus.txt} is the training corpus, \emph{corpus} is the name of the output model and \emph{-e} signifies empty lines between sentences in the training corpus.
+\item Open a terminal and go to the \textbf{ngrams} directory.
+\item Type {\bf bash train corpus.txt corpus -e}, where \emph{bash} is a shell, \emph{train} is the program for training, \emph{corpus.txt} is the training corpus, \emph{corpus} is the name of the output model and \emph{-e} signifies empty lines between sentences in the training corpus.
 If all goes well, four files, corpus.ngrams, corpus.lex, corpus.orig.lex and corpus.lambda will be created in the \textbf{ngrams/models} directory.
 \item At this point the file corpus.lex (and corpus.orig.lex) is a lexicon derived from the corpus.txt training corpus and can be used directly with \emph{TriTagger} as described in section \ref{sec:tritagger_usage}.
 %However, this lexicon has probably numerous missing tags (\emph{tag profile gaps}).
@@ -655,7 +674,7 @@ The (main) parameters are the following (the full description of the possible pa
 
 There are two possible formats for the input files to be tagged:
 \begin{itemize}
-\item  A file with an \emph{.txt} extensions is assumed to contain raw text and will be tokenised by IceStagger's tokeniser before tagging.  If there is only one file name in the input list, the output is written to standard output, otherwise each tagging output is written to a separate file.
+\item  A file with an \emph{.txt} extensions is assumed to contain raw text and will be tokenised by \emph{IceStagger's} tokeniser before tagging.  If there is only one file name in the input list, the output is written to standard output, otherwise each tagging output is written to a separate file.
 \item A file with any other extension is assumed to contain a single token/tag pair in each line with an empty line between sentences.  The tag in the second column is used for evaluating the tagger's accuracy. In this case, the tagging output is written to standard output.
 \end{itemize}
   
@@ -665,7 +684,7 @@ For example, the following command:
 ./icestagger.sh -modelfile otb.bin -lang is -plain -icemorphy 1 -tag sentences.txt
 \end{verbatim}
 
-uses the training model \emph{otb.bin} to tag the sentences.txt file using \emph{IceMorphy}, generating \emph{plain} (one token/tag per line) output.
+uses the training model \emph{otb.bin} to tag the \emph{sentences.txt} file using \emph{IceMorphy}, generating \emph{plain} (one token/tag per line) output.
 
 \subsubsection{Training}
 To generate a model from a training corpus, the following (main) parameters can be used:
@@ -687,6 +706,7 @@ For example, the following command:
 
 uses the training corpus \emph{otb.plain} to produce the training model \emph{otb.bin} using 10 iterations. 
 
+For increasing the accuracy of \emph{IceStagger}, a lexicon with data from \emph{BÍN} can be provided during training.  Once the data from \emph{BÍN} has been extracted (see Section \ref{sec:bin}), the shell script \textbf{trainIceStaggerBin.sh} can be used for training.  Tagging can then be carried out using the \textbf{tagIceStaggerBin.sh} shell.
 
 \subsection{Lemmald}
 The lemmatizer can be used as part of \textit{IceTagger} by supplying the \textit{-lem} parameter and specifying output
@@ -784,7 +804,7 @@ This can be controlled by the \emph{MODE} parameter.
 In this mode \emph{IceMorphy} accepts an input file (a dictionary) in the format described in section \ref{sec:dict}. For each word in the input file, the morphological analyzer generates the missing tags, i.e. it does \emph{tag profile gap} filling.
 \end{itemize}
 
-The parameters of the <paramFile> are described below.
+The parameters of the <paramFile> are described below:
 \begin{itemize}
 \item \emph{MODE}: \emph{all|one|fill}. all=analyze words and return all tags, one=analyze words and return the one most frequent tag, fill=fill tag profile gaps in a dictionary.
 \item \emph{INPUT\_FILE}: The name of the input file to be either \emph{analysed} or \emph{filled}.
@@ -883,7 +903,7 @@ Tagging and parsing can also be tested by running the \textbf{/.tagAndParse.sh} 
 In that case, the \emph{test.txt} file is used as the input to the tagger.  The output of the tagger is then piped into \textit{IceParser}, which finally produces the file \emph{parse.out} as output.
 
 \section{Building from source}
-If you need to build  \emph{IceNLP} from source, you need the following three tools:
+To build  \emph{IceNLP} from source, you need the following three tools:
 
 \begin{enumerate}
 \item{\bf Java Development Kit (JDK)}.
@@ -903,7 +923,7 @@ For example, to build \emph{IceNLPCore}, go to the directory  {\bf icenlp/core} 
 \emph{Ant} will then use the instructions given in the \emph{build.xml} file to build each individual component of \emph{IceNLP}.
 
 Note that before building you will need to increase the memory used by \emph{JFlex}: Go to the directory of JFlex
-and edit the \emph{jflex} (or \emph{jflex.bat}) file.
+and edit the \emph{jflex} file.
 At the bottom of this file, change:
 
 \verb|$JAVA -Xmx128m -jar $JFLEX_HOME/lib/jflex-1.x.y.jar $@|
@@ -941,7 +961,7 @@ Char\# & Category/Feature & Symbol -- semantics \\
 3 & Number & {\bf e}--singular, {\bf f}--plural \\
 4 & Case & {\bf n}--nominative, {\bf o}--accusative, {\bf {\th}}--dative, {\bf e}--genitive  \\
 5 & Article & {\bf g}--with suffixed definite article \\
-6 & Proper noun & {\bf m}--person name, {\bf {\"o}}--place name, {\bf s}--other proper name \\
+6 & Proper noun & {\bf s}--proper name \\
 \hline
 1 & Word class & {\bf l}--adjective \\
 2 & Gender & {\bf k}--masculine, {\bf v}--feminine, {\bf h}--neuter \\
@@ -963,7 +983,7 @@ Char\# & Category/Feature & Symbol -- semantics \\
 4 & Case & {\bf n}--nominative, {\bf o}--accusative, {\bf {\th}}--dative, {\bf e}--genitive  \\
 \hline
 1 & Word class & {\bf t}--numeral \\
-2 & Category & {\bf f}--alpha, {\bf a/o}--numeric, {\bf p}--percentage \\
+2 & Category & {\bf f}--alpha, {\bf a}--numeric \\
 3 & Gender & {\bf k}--masculine, {\bf v}--feminine, {\bf h}--neuter  \\
 4 & Number & {\bf e}--singular, {\bf f}--plural \\
 5 & Case & {\bf n}--nominative, {\bf o}--accusative, {\bf {\th}}--dative, {\bf e}--genitive  \\
