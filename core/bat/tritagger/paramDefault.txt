@@ -1,10 +1,10 @@
 [Used by TriTagger]
 
 [The name of the input file to be tagged]
-INPUT_FILE=test.txt
+INPUT_FILE=mogginn.txt
 
 [The name of the output file]
-OUTPUT_FILE=test.out
+OUTPUT_FILE=mogginn.out
 
 [NGRAM: 2=bigram | 3=trigram]
 NGRAM=3
@@ -31,5 +31,5 @@ SENTENCE_START=upper
 [STRICT = yes|no . Strict tokenization or not]
 STRICT=no
 
-[Used by IceMorphy]
+[Use IceMorphy]
 ICEMORPHY=no

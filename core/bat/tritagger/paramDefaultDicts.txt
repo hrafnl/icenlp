@@ -1,12 +1,12 @@
 [Used by TriTagger]
 
 [The name of the input file to be tagged]
-INPUT_FILE=test.txt
+INPUT_FILE=mogginn.txt
 
 [The name of the output file]
-OUTPUT_FILE=test.out
+OUTPUT_FILE=mogginn.out
 
-MODEL=../../ngrams/models/otb
+[MODEL=../../ngrams/models/otb]
 
 [NGRAM: 2=bigram | 3=trigram]
 NGRAM=3
@@ -44,8 +44,8 @@ STRICT=no
 [Lexicon used by the tokenizer]
 TOKEN_DICT=../../dict/tokenizer/lexicon.txt
 
-[Used by IceMorphy]
-ICEMORPHY=no
+[Use IceMorphy]
+ICEMORPHY=yes
 
 [Main dictionary used by IceMorphy]
 DICT=../../dict/icetagger/otb.dict
