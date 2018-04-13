@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="IceNLPCore" default="package" basedir=".">
+<project name="IceNLPCore" default="release-jar" basedir=".">
 	<description>
 		Compiles a release version of the IceNLP toolkit as a single jar file with resource files
 	</description>
@@ -9,7 +9,7 @@
 	<property name="src-core" location="src/is/iclt/icenlp/core"/>
 	<property name="build" location="build" />
 	<property name="dist" location="dist" />
-	<property name="package" value="IceNLPCore" />
+	<property name="zipname" value="IceNLP" />
 	<property name="lib" location="lib" />
 	<property name="javadoc" location="javadoc" />
 	
@@ -21,7 +21,7 @@
 	<property name="xerces" location="${lib}/xerces.jar" />
 	<property name="junit" location="${lib}/junit-4.8.2.jar" />
 
-	<property name="version" value="11.03" />
+	<property name="version" value="1.4.1" />
 	<property name="jar_name" value="IceNLPCore" />
 
 	<path id="classpath">
@@ -177,7 +177,7 @@
             <fileset dir="./">
 		<include name="dict/icetagger/*.dict" />
 		<!-- The following line is needed for not copying  otbBin.dict into the jar file-->
-                <!--exclude name="dict/icetagger/otbBin*.dict" /-->
+				<exclude name="dict/icetagger/otbBin*.dict"/>
 		<include name="dict/tokenizer/*" />
                 <include name="dict/tritagger/*.dict" />
             	<include name="dict/formald/segment.srx" />
@@ -188,6 +188,7 @@
             	<include name="dict/lemmald/settings.txt" />   
 		<!-- HMM /--> 
                 <include name="ngrams/models/otb.*" />
+				<exclude name="ngrams/models/otbBin.*"/>
 		        <include name="lists/*" />
             </fileset>
 	        <manifest>
@@ -211,56 +212,29 @@
 		</exec>
 	</target>
 
-	<target name="package" depends="release-jar, docs" >
-		<mkdir dir="${dist}/${package}" />
-		<copy file="${dist}/${jar_name}.jar" todir="${dist}/${package}/dist" />
-		<copy file="${src-core}/icestagger/README" todir="${dist}/${package}/bat/icestagger" />
-		<copy todir="${dist}/${package}/bat">
-			<fileset dir="bat">
+
+	<target name="zip" depends="release-jar, docs" >
+		<zip compress="yes" destfile="${dist}/${zipname}-${version}.zip">
+			<zipfileset dir="dist" includes="IceNLPCore.jar" prefix="${zipname}/dist" />
+			<zipfileset dir="bat" 	prefix="${zipname}/bat">
 				<exclude name="**/icestagger/corpora/bin.lexicon"/>
 				<exclude name="**/icestagger/corpora/otb.plain"/>
-				<exclude name="**/icestagger/models/*.bin"/>
-			</fileset>
-		</copy>		
-	    <chmod perm="+x" dir="${dist}/${package}/bat" includes="**/*.sh" />		 
-		
-		<copy todir="${dist}/${package}/dict">
-			<fileset dir="dict"> 
+				<exclude name="**/icestagger/models/otbBIN.bin"/>
+			</zipfileset>
+			<zipfileset dir="bat" includes="**/*.sh" filemode="755" prefix="${zipname}/bat" />
+			<zipfileset dir="dict" prefix="${zipname}/dict" >
 				<exclude name="**/otbBin*.dict"/>
 				<exclude name="**/BIN/bin*.dict"/>
 				<exclude name="**/BIN/bin*.out"/>
 				<exclude name="**/BIN/SHsnid.csv"/>
-			</fileset>
-		</copy>
-		<copy todir="${dist}/${package}/lib">
-			<fileset dir="lib" />
-		</copy>		
-		<copy todir="${dist}/${package}/ngrams">
-			<fileset dir="ngrams">
+			</zipfileset>
+			<zipfileset dir="lib" prefix="${zipname}/lib" />
+			<zipfileset dir="ngrams" prefix="${zipname}/ngrams">
 				<exclude name="**/models/otbBin*.*"/>
-			</fileset>
-		</copy>
-		<copy todir="${dist}/${package}/lists">
-			<fileset dir="lists" />
-		</copy>
-
-		<copy file="doc/IceNLP.pdf" todir="${dist}/${package}/doc" />
-		<copy file="doc/Tagset.pdf" todir="${dist}/${package}/doc" />		
-	</target>
-
-	<target name="zip" depends="package" >
-		<zip compress="yes" destfile="${dist}/${package}-${version}.zip">
-			<zipfileset dir="dist" includes="IceNLPCore.jar" prefix="${package}/dist" />
-            		<zipfileset dir="bat" includes="**/*.sh" filemode="755" prefix="${package}/bat" />
-			<zipfileset dir="bat" includes="**/*" excludes="**/*.sh" prefix="${package}/bat" />
-			
-		    	<zipfileset dir="dict" prefix="${package}/dict" />
-			<zipfileset dir="lib" prefix="${package}/lib" />
-			<zipfileset dir="ngrams" prefix="${package}/ngrams" />
-			<zipfileset dir="doc" includes="**/*.pdf" prefix="${package}/doc" />
+			</zipfileset>
+			<zipfileset dir="doc" includes="**/*.pdf" prefix="${zipname}/doc" />
 		</zip>
 	</target>
-	
 
 	<target name="clean" description="clean up" >
         	<!-- Delete the ${build} and ${dist} directory trees -->
