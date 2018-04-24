@@ -23,4 +23,7 @@ public class IceMorphyResources {
         isTagFrequency = getClass().getResourceAsStream( dictPathTagger + IceMorphyLexicons.tagFrequencyFile );
     }
 
+    public void setDictionary(InputStream isDictionary) {
+        this.isDictionary = isDictionary;
+    }
 }
