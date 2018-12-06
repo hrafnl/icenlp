@@ -32,7 +32,7 @@ SEPARATOR=space
 SENTENCE_START=upper
 
 [The main dictionary]
-DICT=../../dict/icetagger/otbBIN.dict
+DICT=../../dict/icetagger/otbBin.dict
 
 [LOG_FILE is either a file name or empty if no log (debug info) is desired]
 LOG_FILE=
