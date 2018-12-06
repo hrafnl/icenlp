@@ -21,7 +21,7 @@
 	<property name="xerces" location="${lib}/xerces.jar" />
 	<property name="junit" location="${lib}/junit-4.8.2.jar" />
 
-	<property name="version" value="1.4.1" />
+	<property name="version" value="1.4.2" />
 	<property name="jar_name" value="IceNLPCore" />
 
 	<path id="classpath">
