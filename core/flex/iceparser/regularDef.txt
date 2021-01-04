@@ -17,6 +17,7 @@ Declension = [osv]	/* o=no declension; s=sterk declension, v=weak declension */
 Degree = [fme]		/* f=positive, m=comparative, e=superlative */
 ArticleChar = "g"
 ProperName = [msö]
+Unspec = "-"        /* Unspecified */
 
 // if encode string is altered, it also has to be changed in core/src/is/iclt/icenlp/core/utils/IceParserUtils.java
 encodeOpen = "^"
@@ -49,7 +50,7 @@ VerbInfinitiveTag = {encodeOpen}sn[mg]{encodeClose}{WhiteSpace}+
 //NounTag = {encodeOpen}n{Gender}{Number}{Case}{ArticleChar}?{encodeClose}{WhiteSpace}+ | x
 NounTag = {encodeOpen}n{Gender}{Number}{Case}{ArticleChar}?{encodeClose}{WhiteSpace}+
 
-ProperNounTag = {encodeOpen}n{Gender}{Number}{Case}("-"|{ArticleChar}){ProperName}{encodeClose}{WhiteSpace}+
+ProperNounTag = {encodeOpen}n({Unspec}|{Gender})({Unspec}|{Number})({Unspec}|{Case})({Unspec}|{ArticleChar}){ProperName}{encodeClose}{WhiteSpace}+
 NumeralTag = {encodeOpen}t([aop]|f{Gender}{Number}{Case}){encodeClose}{WhiteSpace}+
 PersPronounTag = {encodeOpen}fp({Gender}|{Person}){Number}{Case}{encodeClose}{WhiteSpace}+
 
