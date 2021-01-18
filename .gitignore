@@ -17,6 +17,7 @@
 # Directories
 dist/
 .idea/
+out
 
 * Files that cannot be distributed
 otb.plain
@@ -41,3 +42,5 @@ core/src/is/iclt/icenlp/core/iceparser/Preprocess.java
 core/src/is/iclt/icenlp/core/iceparser/TagDecoder.java
 core/src/is/iclt/icenlp/core/iceparser/TagEncoder.java
 core/src/is/iclt/icenlp/core/icetagger/IceLocalRules.java
+core/src/is/iclt/icenlp/core/icestagger/EnglishTokenizer.java
+core/src/is/iclt/icenlp/core/icestagger/LatinTokenizer.java
