@@ -96,10 +96,10 @@ import is.iclt.icenlp.core.utils.ErrorDetector;
 
 
 geta =	"get" ("ur" | "um" | "ið" | "a" | "i" | "ir") | "gat" | "gast" | "gátu" ("m" | "ð") | "gæt" ("i" | "ir" | "um" | "uð" | "u")
-hafa =	{hef}|{höf}|{haf}
 hef = "hef" ("i" | "ir" | "ur" | "um" | "uð" | "ði" | "ðir" | "ðu" | "ðum" | "ðuð" )?
-höf = "höf" ("um" | "ðum" | "ðuð" | "ðu")
+hof = "höf" ("um" | "ðum" | "ðuð" | "ðu")
 haf = "haf" ("ið" | "a" | "ði" | "ðir" | "i" | "ir" )
+hafa =	{hef} | {hof} | {haf}
 fekk = {fae} | {fa} | "fékkst" | "fékk" | {feng}
 fae = "fær" ("r" | "rð")?
 fa = "fá" ("i" | "ir" | "ið" | "um")?
