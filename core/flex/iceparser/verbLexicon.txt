@@ -17,7 +17,7 @@ stEnding = (a(ði)?|i)st
 /* Verbs which demand dative subjects */
 VerbDat = 	
 	[aA]uðn{stEnding}					|	/* auðnast		*/
-	[áÁ]skotn{stEnding}					|	/* áskotnast		*/
+	[á]skotn{stEnding}					|	/* áskotnast		*/
 	
 	[bB]atn{arEnding}					|	/* batna		*/
 	[bB](eri?|ar|æri|orið)					|	/* ber			*/
