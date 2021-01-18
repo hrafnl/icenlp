@@ -24,10 +24,10 @@ public class Token {
 
     public final int type;
     public final String value;
-    public final int offset;
+    public final long offset;
     private final boolean isCapitalizedFlag;
 
-    public Token(int type, String value, int offset) {
+    public Token(int type, String value, long offset) {
         this.type = type;
         this.value = value;
         this.offset = offset;
