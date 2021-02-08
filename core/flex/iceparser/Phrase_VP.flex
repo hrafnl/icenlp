@@ -92,6 +92,7 @@ import java.io.*;
 %include verbLexicon.txt
 
 VerbPastPartTag = {encodeOpen}sþ{Voice}{Gender}{Number}{Case}{encodeClose}
+VerbPastPartTagNeut = {encodeOpen}sþ{Voice}h{Number}{Case}{encodeClose}
 VerbPresentPartTag = {encodeOpen}slg{encodeClose}
 VerbSupineTag = {encodeOpen}ss{Voice}{encodeClose}
 
@@ -100,13 +101,14 @@ VerbBeAndTag =	{WhiteSpace}*{VerbBe}{WhiteSpace}+{VerbFiniteTag}
 Infinitive = 	{WordSpaces}{InfinitiveTag}
 VerbFinite = 	{WordSpaces}{VerbFiniteTag}
 VerbPastPart =  {WordSpaces}{VerbPastPartTag}
+VerbPastPartNeut =  {WordSpaces}{VerbPastPartTagNeut}
 VerbPresentPart =  {WordSpaces}{VerbPresentPartTag}
 VerbSupine = 	{WordSpaces}{VerbSupineTag}
 VerbOther = 	{WordSpaces}{VerbTag}
 VerbInfinitive = {WordSpaces}{VerbInfinitiveTag}
-InfinitivePhrase = {Infinitive}?{VerbInfinitive}{VerbSupine}*
+InfinitivePhrase = {Infinitive}?{VerbInfinitive}({VerbSupine}|{VerbPastPartNeut})*
 
-FinitePhrase = {VerbFinite} (({WhiteSpace}*{AdverbPhrase})*{VerbSupine}+)?
+FinitePhrase = {VerbFinite} (({WhiteSpace}*{AdverbPhrase})*({VerbSupine}|{VerbPastPartNeut})+)?
 VerbPhrase =  {FinitePhrase} 
 VerbPhraseInf = {InfinitivePhrase}
 VerbPhraseSupine = {VerbSupine}+
@@ -140,7 +142,12 @@ VerbPhrasePresentPart = {VerbPresentPart}
 					out.write(VPSOpen+yytext()+VPSClose);
 			}
 {VerbPhrasePastPart}	{ 
-			   out.write(VPPOpen+yytext()+VPPClose);
+			  /* If the last word in the verb phrase is "verið" then mark as a BE phrase */
+				String lastWord = getLastWord(yytext());
+				if (lastWord.equals("verið") || lastWord.equals("orðið"))
+					out.write(VPBOpen+yytext()+VPBClose);			   		
+				else
+					out.write(VPPOpen+yytext()+VPPClose);
 			}
 {VerbPhrasePresentPart}	{ 
 			   out.write(VPGOpen+yytext()+VPGClose);
