@@ -99,7 +99,7 @@ CloseVPp = "VPp]"
 OpenPP = "[PP"
 ClosePP = " PP]"	/* Extra space because of conflict with "MWE_PP]" */
 
-Comma = ","{WhiteSpace}+{encodeOpen}","{encodeClose}
+Comma = ","{WhiteSpace}+{encodeOpen}(","|"pk"){encodeClose}
 //ConjPhrase = {OpenCP}{WhiteSpace}+(og|eða|né|heldur|en)~c{WhiteSpace}+{CloseCP}
 ConjPhrase = {OpenCP}~{CloseCP}
 ConjPhraseOrComma = {ConjPhrase} | {Comma}
