@@ -25,7 +25,7 @@ encodeClose =  "$"
 
 AdverbTag = {encodeOpen}aa[me]?{encodeClose}{WhiteSpace}+
 Adverb = {WordSpaces}{AdverbTag}
-AbbrevTag = {encodeOpen}as{encodeClose}{WhiteSpace}+
+AbbrevTag = {encodeOpen}[ak]s{encodeClose}{WhiteSpace}+
 Abbreviation = {WordSpaces}{AbbrevTag}
 
 AdjectiveTag = {encodeOpen}l{Gender}{Number}{Case}{Declension}{Degree}{encodeClose}
