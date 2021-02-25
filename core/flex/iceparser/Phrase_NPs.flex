@@ -70,6 +70,8 @@ NPProperDat = {OpenNP}d{ProperNouns}{CloseNP}
 NPProperGen = {OpenNP}g{ProperNouns}{CloseNP}
 GenQualifier = {WhiteSpace}*{NPGen}
 
+NPShortening = {OpenNP}{Shortening}{CloseNP}
+
 NPNomGenQual = {NPNom}{GenQualifier}*
 NPAccGenQual = {NPAcc}{GenQualifier}*
 NPDatGenQual = {NPDat}{GenQualifier}*
@@ -78,6 +80,7 @@ CommaNPNom = {Comma}{WhiteSpace}+{NPNom}{WhiteSpace}+
 CommaNPAcc = {Comma}{WhiteSpace}+({NPAcc}|{APAcc}){WhiteSpace}+
 CommaNPDat = {Comma}{WhiteSpace}+({NPDat}|{APDat}){WhiteSpace}+
 CommaNPGen = {Comma}{WhiteSpace}+{NPGen}{WhiteSpace}+
+CommaNPShortening = {Comma}{WhiteSpace}+{NPShortening}{WhiteSpace}+
 
 NPConjNom = {CommaNPNom}*{ConjPhrase}{WhiteSpace}+{NPNom}
 NPConjAcc = {CommaNPAcc}*{ConjPhrase}{WhiteSpace}+({NPAcc}|{APAcc})
@@ -95,7 +98,12 @@ NPSeq = {NPProperNom}{WhiteSpace}+{NPNom}			|
 	{NPNomGenQual}{WhiteSpace}+({NPProperNom}|{NPConjNom}) 	| 
 	{NPAccGenQual}{WhiteSpace}+({NPProperAcc}|{NPConjAcc}) 	| 
 	{NPDatGenQual}{WhiteSpace}+({NPProperDat}|{NPConjDat}) 	| 
-	{NPGen}{WhiteSpace}+({NPProperGen}|{NPConjGen})
+	{NPGen}{WhiteSpace}+({NPProperGen}|{NPConjGen})         |
+
+	{NPShortening}{WhiteSpace}+({NPProperNom}|{NPConjNom}|{CommaNPShortening}) 	| 
+	{NPShortening}{WhiteSpace}+({NPProperAcc}|{NPConjAcc}|{CommaNPShortening}) 	| 
+	{NPShortening}{WhiteSpace}+({NPProperDat}|{NPConjDat}|{CommaNPShortening}) 	| 
+	{NPShortening}{WhiteSpace}+({NPProperGen}|{NPConjGen}|{CommaNPShortening})
 %%
 
 {NPSeq}	{ out.write(NPOpen+yytext()+NPClose);}

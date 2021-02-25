@@ -160,7 +160,7 @@ ProperNounNP = {Title}?{ProperNoun}+({ReflexivePronoun}|{PossPronoun})?
 NounNP = {Noun}({ReflexivePronoun}|{Numeral}|{DemonPronoun}?{IndefPronoun}|{PossPronoun})?
 
 
-NounPhrase = {Hvad} | {HvadaNP} | {ReflNP} | {ArticleNP} | {DemonNP} | {IndefNP} | {PersNP} | {PossNP} | {NumNP} | {AdjAP} | {NounNP} | {ProperNounNP}
+NounPhrase = {Hvad} | {HvadaNP} | {ReflNP} | {ArticleNP} | {DemonNP} | {IndefNP} | {PersNP} | {PossNP} | {NumNP} | {AdjAP} | {NounNP} | {ProperNounNP} | {Shortening}
 
 
 %%

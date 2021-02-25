@@ -28,6 +28,9 @@ Adverb = {WordSpaces}{AdverbTag}
 AbbrevTag = {encodeOpen}[ak]s{encodeClose}{WhiteSpace}+
 Abbreviation = {WordSpaces}{AbbrevTag}
 
+ShorteningTag = {encodeOpen}kt{encodeClose}{WhiteSpace}+
+Shortening = {WordSpaces}{ShorteningTag}
+
 AdjectiveTag = {encodeOpen}l{Gender}{Number}{Case}{Declension}{Degree}{encodeClose}
 
 ConjTag = {encodeOpen}ct?{encodeClose}{WhiteSpace}+
