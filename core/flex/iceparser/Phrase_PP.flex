@@ -117,6 +117,7 @@ PrepPhraseRest3 = {GenQualifier}{WhiteSpace}+({OneNP}|{SeqNP})
 PrepPhraseAccDat = {PrepositionAccDat}({PrepPhraseRest1}|{PrepPhraseRest2}|{PrepPhraseRest3})? 
 PrepPhraseGen = {PrepositionGen}({PrepPhraseRest1}|{PrepPhraseRest2})?
 PrepPhraseMWE = {AdverbPrepPhrase}{WhiteSpace}+({OneNP}|{SeqNP})
+PrepPhraseF = {PrepositionF}({PrepPhraseRest1}|{PrepPhraseRest2}|{PrepPhraseRest3})? 
 
 PrepPhraseSpecial = {NPGenSpec}{Vegna}{PrepTagGen} 
 
@@ -127,6 +128,7 @@ PrepPhraseSpecial = {NPGenSpec}{Vegna}{PrepTagGen}
 {PrepPhraseAccDat}		{ out.write(errorCheck(yytext()));/*out.write(PPOpen+yytext()+PPClose);*/}
 {PrepPhraseGen}			{ out.write(errorCheck(yytext()));/*out.write(PPOpen+yytext()+PPClose);*/}
 {PrepPhraseMWE}			{ out.write(errorCheck(yytext()));/*out.write(PPOpen+yytext()+PPClose);*/}
+{PrepPhraseF}		{ out.write(errorCheck(yytext()));/*out.write(PPOpen+yytext()+PPClose);*/}
 "\n"				{ //System.err.print("Reading line: " + Integer.toString(yyline+1) + "\r"); 
 				out.write("\n"); }
 .		{ out.write(yytext());}

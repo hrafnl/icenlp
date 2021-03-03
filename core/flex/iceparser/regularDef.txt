@@ -38,12 +38,14 @@ Conj = {WordSpaces}{ConjTag}
 
 InfinitiveTag = {encodeOpen}cn{encodeClose}
 
-PrepTag = {encodeOpen}a{ObliqueCase}[em]?{encodeClose}{WhiteSpace}+
+PrepTag = {encodeOpen}a({ObliqueCase}|f)[em]?{encodeClose}{WhiteSpace}+
 PrepTagAccDat = {encodeOpen}a[oþ][em]?{encodeClose}{WhiteSpace}+
 PrepTagGen = {encodeOpen}ae{encodeClose}{WhiteSpace}+
+PrepTagF = {encodeOpen}af[em]?{encodeClose}{WhiteSpace}+
 Preposition = {WordSpaces}{PrepTag}
 PrepositionAccDat = {WordSpaces}{PrepTagAccDat}
 PrepositionGen = {WordSpaces}{PrepTagGen}
+PrepositionF = {WordSpaces}{PrepTagF}
 
 VerbTag = {encodeOpen}s{Mood}{Voice}({Person}{Number}{Tense} | {Gender}{Number}{Case})?{encodeClose}
 VerbFiniteTag = {encodeOpen}s[bfv]{Voice}{Person}{Number}{Tense}{encodeClose}{WhiteSpace}+
