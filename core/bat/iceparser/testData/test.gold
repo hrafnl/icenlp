@@ -8496,7 +8496,8 @@ greiði	svg3en
 hvoru	foheþ
 um	af
 sig	fpheo
-10.550.000 krónur	ta
+10.550.000	ta
+krónur	nvfo
 í	af
 miskabætur	nvfo
 ,	pk
@@ -8724,7 +8725,9 @@ málefnin	nhfog
 .	pl
 
 Ragnheiður	nven-s
-Haralds- og Eiríksdóttir	kt
+Haralds-	kt
+og	c 
+Eiríksdóttir	nven-s
 hjúkrunarfræðingur	nken
 og	c
 blaðamaður	nken
@@ -8749,7 +8752,7 @@ fyrra	lheovm
 fara	sfg3fn
 niður	aa
 að	af
-Ganges	nheþgs
+Ganges	n----s
 -	pa
 fljótinu	nheþg
 ,	pk
