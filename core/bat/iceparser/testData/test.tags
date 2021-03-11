@@ -191,7 +191,9 @@ leiknum	nkeþg
 tryggir	sfg3en
 bankinn	nkeng
 sér	fpkeþ
-þóknana- og vaxtatekjur	kt
+þóknana-	kt
+og	c
+vaxtatekjur	nvfo
 .	pl
 
 Þá	aa
@@ -221,7 +223,9 @@ selja	sng
 hann	fpkeo
 .	pl
 
-Hljóð- og myndstreymi	kt
+Hljóð-	kt
+og	c
+myndstreymi	nhen
 jókst	sfm3eþ
 um	af
 sex	tfhfo
@@ -328,7 +332,8 @@ setið	sþghen
 á	af
 þingi	nheþ
 frá	af
-árinu 1994	nheþg
+árinu	nheþg
+1994	ta
 .	pl
 
 Áætlaður	lkensf
@@ -510,7 +515,8 @@ fjögurra	tfhfe
 prósenta	nhfe
 markið	nheog
 í	af
-desember 2013	nkeþ
+desember nkeþ
+2013	ta
 .	pl
 
 Ungverjar	nkfn-s
@@ -621,7 +627,7 @@ hönd	nveo
 .	pl
 
 Hún	fpven
-staðfesta	sfg3fn
+staðfesti	sfg3eþ
 hins	fakee
 vegar	nkee
 ekki	aa
@@ -755,7 +761,9 @@ líkamsárás	nveo
 Eva	nven-s
 Erlendsdóttir	nven-s
 ,	pk
-leik- og söngkona	kt
+leik-	kt
+og	c
+söngkona	nven
 ,	pk
 prýddi	sfg3eþ
 forsíðu	nveo
@@ -881,7 +889,9 @@ fyrir	af
 tollfrjáls	lhfosf
 viðskipti	nhfo
 með	af
-landbúnaðar- og sjávarútvegsafurðir	kt
+landbúnaðar-	kt
+og	c
+sjávarútvegsafurðir	nvfo
 einnig	aa
 óbreyttir	lkfnsf
 .	pl
@@ -925,7 +935,8 @@ en	c
 hann	fpken
 var	sfg3eþ
 3	ta
-árið 2015	nheog
+árið	nheog
+2015	ta
 .	pl
 
 Simon	n----s
@@ -988,7 +999,8 @@ einar	fovfn
 lokast	sfm3fn
 .	pl
 
-Árið 1990	nheog
+Árið	nheog
+1990	ta
 voru	sfg3fþ
 sveitarstjórnarmenn	nkfn
 alls	fohee
@@ -1385,7 +1397,7 @@ sál	nveo
 Eftir	af
 komuna	nveog
 til	af
-Kenía	nhfe-s
+Keníu	nvee-s
 var	sfg3eþ
 nashyrninganna	nkfeg
 gætt	sþghen
@@ -1485,7 +1497,8 @@ skóginn	nkeog
 Dagana	nkfog
 1.	ta
 til	af
-5. apríl	ta
+5.	ta
+apríl	nkee
 gerði	sfg3eþ
 Neytendastofa	nven-s
 könnun	nveo
@@ -1725,7 +1738,8 @@ eftir	af
 Tove	n----s
 Jansson	n----s
 frá	af
-árinu 1948	nheþg
+árinu	nkeþg
+1948	ta
 .	pl
 
 Sólin	nveng
@@ -2198,7 +2212,7 @@ dag	nkeo
 allt	fohen
 eftir	af
 því	fpheþ
-hvesu	x
+hversu	aa
 mikið	lheosf
 var	sfg3eþ
 að	cn
@@ -2333,8 +2347,7 @@ sigur	nkeo
 .	pl
 
 Hyundai	n----s
-i	e
-30	ta
+i30	n----s
 ,	pk
 sem	ct
 hlaut	sfg3eþ
@@ -2404,7 +2417,7 @@ skil	nhfo
 en	c
 fluttar	sþgvfn
 verða	sfg3fn
-daglegir	lvfnsf
+daglegar	lvfnsf
 fréttir	nvfn
 af	af
 mótinu	nheþg
@@ -2620,7 +2633,7 @@ en	c
 alls	aa
 eru	sfg3fn
 tíu	tfkfn
-leikmen	nkfn
+leikmenn	nkfn
 á	af
 meiðslalistanum	nkeþg
 sem	ct
@@ -3025,7 +3038,8 @@ sig	fpkeo
 úr	af
 Breska	lkeþvf
 alpaklúbbnum	nkeþg
-árið 1877	nheog
+árið	nheog
+1877	ta
 og	c
 eftir	af
 það	fpheo
@@ -3269,7 +3283,7 @@ og	c
 ábyrgð	nveo
 þeirra	fpkfe
 að	cn
-takamarkast	snm
+takmarkast	snm
 af	af
 því	fpheþ
 að	cn
@@ -3372,7 +3386,8 @@ upphæð	nveo
 ,	pk
 500	ta
 eða	c
-1.000 kr.	ta
+1.000	ta
+kr.	ks
 sem	ct
 er	sfg3en
 lögð	sþgven
@@ -3575,7 +3590,8 @@ dollara	nkfe
 síðasta	lheþve
 ári	nheþ
 eða	c
-921 milljón	ta
+921	ta
+milljón	nven
 í	af
 íslenskum	lvfþsf
 krónum	nvfþ
@@ -3585,7 +3601,6 @@ Quincy	n----s
 Jones	n----s
 er	sfg3en
 84	ta
-ra	x
 ára	nhfe
 og	c
 hefur	sfg3en
@@ -3691,7 +3706,7 @@ sig	fpkeo
 í	af
 kjölfarið	nheog
 á	af
-twitter	nheþ
+Twitter	n----s
 um	af
 örlög	nhfo
 Aldridge	n----s
@@ -3864,7 +3879,7 @@ síðustu	lveþve
 viku	nveþ
 og	c
 er	sfg3en
-áinn	nveng
+áin	nveng
 komin	sþgven
 í	af
 1.431	ta
@@ -3901,7 +3916,6 @@ Fonseca	n----s
 
 Þessi	faken
 22	ta
-ára	nhfe
 ára	nhfe
 Kanadamaður	nken-s
 lenti	sfg3eþ
@@ -3948,7 +3962,8 @@ síða	nven
 hans	fpkee
 með	af
 rúmlega	aa
-550 þúsund	to
+550	to
+þúsund	tfkfo
 fylgjendur	nkfo
 .	pl
 

@@ -1498,7 +1498,7 @@ Dagana	nkfog
 1.	ta
 til	af
 5.	ta
-apríl	nkeo
+apríl	nkee
 gerði	sfg3eþ
 Neytendastofa	nven-s
 könnun	nveo
@@ -2633,7 +2633,7 @@ en	c
 alls	aa
 eru	sfg3fn
 tíu	tfkfn
-leikmenn	0nkfn
+leikmenn	nkfn
 á	af
 meiðslalistanum	nkeþg
 sem	ct
@@ -4036,7 +4036,7 @@ næsta	lheþve
 tímabili	nheþ
 með	af
 0	ta
--	m
+-	pa
 3	ta
 útisigri	nheþ
 á	af
@@ -4072,7 +4072,7 @@ konu	nvee
 sem	ct
 lendir	sfg3en
 í	af
-furðlegu	lheþsf
+furðulegu	lheþsf
 tímaflakki	nheþ
 til	af
 forfeðra	nkfe
@@ -4111,7 +4111,7 @@ tíma	nkeþ
 held	sfg1en
 það	fphen
 sé	svg3en
-nokkuð	fohen
+nokkuð	aa
 augljóst	lhensf
 í	af
 ljósi	nheþ
@@ -7927,13 +7927,9 @@ samþykktir	sþgkfn
 sé	svg3en
 gildistími	nken
 þeirra	fpkfe
-1.	ta
-september	nken
-2017	ta
+1. september 2017	ta
 til	af
-31.	ta
-mars	nkeee
-2019	ta
+31. mars 2019	ta
 .	pl
 
 „	pg
@@ -8096,7 +8092,7 @@ forseti	nken
 virðast	sfm3fn
 hafa	sng
 verið	sþghen
-viðstödd	lvensf
+viðstödd	x
 setningu	nveo
 hennar	fpvee
 .	pl
@@ -8114,8 +8110,7 @@ næsta	lheþve
 .	pl
 
 Í	af
-janúar	nkeþ
-2015	ta
+janúar 2015	nkeþ
 hlaut	sfg3eþ
 hún	fpven
 sjö	tfkfe
@@ -8139,7 +8134,7 @@ Aftureldingu	nveþ-s
 .	pl
 
 Möguleiki	nken
-Fram	nhee-s
+Fram	aa
 felst	sfm3en
 í	af
 því	fpheþ
@@ -8363,9 +8358,7 @@ um	af
 nauðsyn	nveo
 þess	fphee
 að	c
-heilbrigðis-	kt
-og	c
-menntakerfi	nhen
+heilbrigðis- og menntakerfi	kt
 landsins	nheeg
 standi	svg3en
 undir	af
