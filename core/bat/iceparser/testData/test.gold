@@ -1470,7 +1470,7 @@ Ron	n----s
 DeSantis	n----s
 ,	pk
 ríkisstjóri	nken
-Flórída	nhee-s
+Flórída	n-ee-s
 ,	pk
 muni	svg3en
 skrifa	sng
@@ -1497,7 +1497,8 @@ skóginn	nkeog
 Dagana	nkfog
 1.	ta
 til	af
-5. apríl	ta
+5.	ta
+apríl	nkeo
 gerði	sfg3eþ
 Neytendastofa	nven-s
 könnun	nveo
@@ -1513,7 +1514,7 @@ höfuðborgarsvæðinu	nheþg
 
 Ástæða	nven
 er	sfg3en
-til	af
+til	aa
 að	cn
 koma	sng
 aftur	aa
@@ -1553,7 +1554,7 @@ dansarar	nkfn
 í	af
 dag	nkeo
 eru	sfg3fn
-orðin	x
+orðin	sþghfn
 stór	lhfnsf
 vörumerki	nhfn
 því	fpheþ
@@ -1731,13 +1732,14 @@ einungis	aa
 fram	aa
 í	af
 bókinni	nveþg
-Pípuhattur	nken-s
+Pípuhattur	nken
 galdrakarlsins	nkeeg
 eftir	af
 Tove	n----s
 Jansson	n----s
 frá	af
-árinu 1948	nheþg
+árinu	nheþg
+1948	ta
 .	pl
 
 Sólin	nveng
@@ -1854,7 +1856,7 @@ tónleika	nkfo
 Bjarkar	nvee-s
 .	pl
 
-Bæjarar	nkfn
+Bæjarar	nkfn-s
 voru	sfg3fþ
 þegar	c
 án	af
@@ -1882,8 +1884,8 @@ einn	tfken
 GR-inga	nkfe-s
 sem	ct
 leika	sfg3fn
-á	aa
-móti	aa
+á	af
+móti	nheþ
 á	af
 Englandi	nheþ-s
 í	af
@@ -2210,7 +2212,7 @@ dag	nkeo
 allt	fohen
 eftir	af
 því	fpheþ
-hvesu	x
+hversu	aa
 mikið	lheosf
 var	sfg3eþ
 að	cn
@@ -2246,7 +2248,7 @@ Skítamóral	nkeþ-s
 spilar	sfg3en
 frá	af
 21	ta
--	ta
+-	m
 00	ta
 og	c
 það	fphen
@@ -2256,7 +2258,7 @@ happy	e
 hour	e
 frá	af
 21	ta
--	ta
+-	m
 23	ta
 .	pl
 
@@ -2345,8 +2347,7 @@ sigur	nkeo
 .	pl
 
 Hyundai	n----s
-i	e
-30	ta
+i30	n----s
 ,	pk
 sem	ct
 hlaut	sfg3eþ
@@ -2399,7 +2400,7 @@ gera	sng
 í	af
 öll	fohfo
 þessi	fahfo
-sex-ish	x
+sex-ish	tfhfo
 ár	nhfo
 ?	pl
 “	pg
@@ -2416,7 +2417,7 @@ skil	nhfo
 en	c
 fluttar	sþgvfn
 verða	sfg3fn
-daglegir	lvfnsf
+daglegar	lvfnsf
 fréttir	nvfn
 af	af
 mótinu	nheþg
@@ -2590,7 +2591,7 @@ fá	sng
 frekari	lvfovm
 upplýsingar	nvfo
 —	pa
-byrjunarlið	nheo
+byrjunarlið	nhfo
 ,	pk
 skiptingar	nvfo
 ,	pk
@@ -2632,7 +2633,7 @@ en	c
 alls	aa
 eru	sfg3fn
 tíu	tfkfn
-leikmen	nkfn
+leikmenn	0nkfn
 á	af
 meiðslalistanum	nkeþg
 sem	ct
@@ -2727,7 +2728,7 @@ leikhlés	nhee
 staðan	nveng
 þá	aa
 9	ta
--	m
+-	pa
 2	ta
 .	pl
 
@@ -2828,8 +2829,8 @@ hennar	fpvee
 ,	pk
 Jónsi	nken-s
 í	af
-Sigur	nkeo-s
-Rós	nveþ-s
+Sigur	n----s
+Rós	n----s
 ,	pk
 hannar	sfg3en
 ilmvötnin	nhfog
@@ -2879,7 +2880,7 @@ flest	lhense
 meira	aam
 og	c
 minna	aam
-samtvinnað	lhensf
+samtvinnað	sþghen
 úr	af
 trúarpælingum	nvfþ
 og	c
@@ -2950,7 +2951,7 @@ ráðamanna	nkfe
 á	af
 HM	n----s
 í	af
-sumar	nheo
+sumar	nheþ
 muni	svg3en
 setja	sng
 mark	nheo
@@ -3037,7 +3038,8 @@ sig	fpkeo
 úr	af
 Breska	lkeþvf
 alpaklúbbnum	nkeþg
-árið 1877	nheog
+árið	nheog
+1877	ta
 og	c
 eftir	af
 það	fpheo
@@ -3277,11 +3279,11 @@ halda	sng
 sig	fpkfo
 fjarri	aa
 og	c
-á	af
+á	sfg3en
 ábyrgð	nveo
 þeirra	fpkfe
 að	cn
-takamarkast	snm
+takmarkast	snm
 af	af
 því	fpheþ
 að	cn
@@ -3305,7 +3307,7 @@ laun	nhfo
 sín	fehfo
 greidd	sþghfo
 í	af
-reiðufé	nheo
+reiðufé	nheþ
 ,	pk
 enda	c
 hafi	svg3en
@@ -3384,7 +3386,8 @@ upphæð	nveo
 ,	pk
 500	ta
 eða	c
-1.000 kr.	ta
+1.000	ta
+kr.	ks
 sem	ct
 er	sfg3en
 lögð	sþgven
@@ -3587,7 +3590,8 @@ dollara	nkfe
 síðasta	lheþve
 ári	nheþ
 eða	c
-921 milljón	ta
+921	ta
+milljón	nven
 í	af
 íslenskum	lvfþsf
 krónum	nvfþ
@@ -3597,7 +3601,6 @@ Quincy	n----s
 Jones	n----s
 er	sfg3en
 84	ta
-ra	x
 ára	nhfe
 og	c
 hefur	sfg3en
@@ -3703,7 +3706,7 @@ sig	fpkeo
 í	af
 kjölfarið	nheog
 á	af
-twitter	nheþ
+Twitter	n----s
 um	af
 örlög	nhfo
 Aldridge	n----s
@@ -3849,7 +3852,7 @@ losna	sfg3fn
 efni	nhfn
 eins	aa
 og	c
-kalsíum	nvfn
+kalsíum	nhen
 ,	pk
 magnesíum	nhen
 og	c
@@ -3876,7 +3879,7 @@ síðustu	lveþve
 viku	nveþ
 og	c
 er	sfg3en
-áinn	nveng
+áin	nveng
 komin	sþgven
 í	af
 1.431	ta
@@ -3913,7 +3916,6 @@ Fonseca	n----s
 
 Þessi	faken
 22	ta
-ára	nhfe
 ára	nhfe
 Kanadamaður	nken-s
 lenti	sfg3eþ
@@ -3960,7 +3962,8 @@ síða	nven
 hans	fpkee
 með	af
 rúmlega	aa
-550 þúsund	to
+550	to
+þúsund	tfkfo
 fylgjendur	nkfo
 .	pl
 
