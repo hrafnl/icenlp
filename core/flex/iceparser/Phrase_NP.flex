@@ -53,6 +53,10 @@
 /* einhverju hátíðlegu	  (indef. pronoun, adj phrase		*/
 /* gamla, litla og mjóa manninum (adj phrases, noun)		*/
 /* fyrstu átta vikunum (adj phrase, numeral, noun)		*/
+/* fjármála- (first half of noun) */
+/* framkv.stj. (abbreviated noun) */
+/* ru.is (web address) */
+/* jonjonsson(at)ru.is (e-mail address) */
 
 
 
@@ -160,7 +164,7 @@ ProperNounNP = {Title}?{ProperNoun}+({ReflexivePronoun}|{PossPronoun})?
 NounNP = {Noun}({ReflexivePronoun}|{Numeral}|{DemonPronoun}?{IndefPronoun}|{PossPronoun})?
 
 
-NounPhrase = {Hvad} | {HvadaNP} | {ReflNP} | {ArticleNP} | {DemonNP} | {IndefNP} | {PersNP} | {PossNP} | {NumNP} | {AdjAP} | {NounNP} | {ProperNounNP} | {Shortening}
+NounPhrase = {Hvad} | {HvadaNP} | {ReflNP} | {ArticleNP} | {DemonNP} | {IndefNP} | {PersNP} | {PossNP} | {NumNP} | {AdjAP} | {NounNP} | {ProperNounNP} | {Shortening} | {Address}
 
 
 %%

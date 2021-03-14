@@ -59,6 +59,9 @@ ProperNounTag = {encodeOpen}n({Unspec}|{Gender})({Unspec}|{Number})({Unspec}|{Ca
 NumeralTag = {encodeOpen}t([aop]|f{Gender}{Number}{Case}){encodeClose}{WhiteSpace}+
 PersPronounTag = {encodeOpen}fp({Gender}|{Person}){Number}{Case}{encodeClose}{WhiteSpace}+
 
+AddressTag = {encodeOpen}v{encodeClose}{WhiteSpace}+
+Address = {WordSpaces}{AddressTag}
+
 ErrorCodes = Ng|Nn|Nc|Np|Vn|Vp|Sn|Ss|Sp|Oc|Cg|Cn|Xx|Gh|Pc
 //ErrorCodes = [VNASCXGP]([gnpsxh]|"ca")
 Error = \?{ErrorCodes}+\?
