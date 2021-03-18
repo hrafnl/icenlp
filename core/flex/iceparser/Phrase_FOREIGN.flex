@@ -62,21 +62,7 @@ import java.io.*;
 
 %include regularDef.txt
 
-ForeignTag = {encodeOpen}e{encodeClose}{WhiteSpace}+
-
-ForeignWord = {WordSpaces}{ForeignTag}
-ForeignWords = {ForeignWord}{WhiteSpace}*({ForeignWord}{WhiteSpace}*)+
-	
 %%
-{ForeignWords} 	{
-			String str = yytext();
-			out.write(FRSOpen+str+FRSClose);
-		}
-{ForeignWord}	{
-//			System.err.println(yytext());
-			String str = yytext();
-			out.write(FROpen+str+FRClose);
-		}
 
 "\n"		{ out.write("\n");}
 .		{ out.write(yytext());}

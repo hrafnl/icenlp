@@ -80,6 +80,10 @@ import is.iclt.icenlp.core.utils.ErrorDetector;
 	String NPClose=" NP] ";
 	String ErrNPOpen=" [NP? ";
 	String ErrNPClose=" NP?] ";
+    String FROpen=" [FRW ";
+    String FRClose=" FRW] ";
+    String FRSOpen=" [FRWs ";
+    String FRSClose=" FRWs] ";
 
 	boolean agreement = false;  // -a parameter attribute	;
 	boolean markGrammarError = false;
@@ -160,7 +164,7 @@ PossNP = {PossPronoun}({AdjectivePhrases}?{Noun})?
 DemonNP = {DemonPronoun}({Numeral}?{AdjectivePhrases}?{NounProperPoss}? | {IndefPronoun})
 IndefNP = {IndefPronoun}+(({Article}|{DemonPronoun})?{Numeral}?{AdjectivePhrases}?{NounProperPoss}? | {PossNP})
 AdjAP = {AdjectivePhrases}{Numeral}?{NounProperPoss}
-ProperNounNP = {Title}?{ProperNoun}+({ReflexivePronoun}|{PossPronoun})?
+ProperNounNP = {Title}?{ProperNoun}({ProperNoun}|{ForeignWord})*({ReflexivePronoun}|{PossPronoun})?
 NounNP = {Noun}({ReflexivePronoun}|{Numeral}|{DemonPronoun}?{IndefPronoun}|{PossPronoun})?
 
 
@@ -182,6 +186,17 @@ NounPhrase = {Hvad} | {HvadaNP} | {ReflNP} | {ArticleNP} | {DemonNP} | {IndefNP}
 {
 	String str = yytext();
 }
+
+{ForeignWord}	{
+//			System.err.println(yytext());
+			String str = yytext();
+			out.write(FROpen+str+FRClose);
+		}
+
+{ForeignWords} 	{
+			String str = yytext();
+			out.write(FRSOpen+str+FRSClose);
+		}
 
 "\n"		{ //System.err.print("Reading line: " + Integer.toString(yyline+1) + "\r"); 
 		out.write("\n"); }

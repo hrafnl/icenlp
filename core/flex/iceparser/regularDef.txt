@@ -113,6 +113,9 @@ ConjPhrase = {OpenCP}~{CloseCP}
 ConjPhraseOrComma = {ConjPhrase} | {Comma}
 //ConjPhraseSem = {OpenCP}{WhiteSpace}+sem~c{WhiteSpace}+{CloseCP}
 
+ForeignTag = {encodeOpen}e{encodeClose}{WhiteSpace}+
+ForeignWord = {WordSpaces}{ForeignTag}
+ForeignWords = {ForeignWord}{WhiteSpace}*({ForeignWord}{WhiteSpace}*)+
 
 /* A multiword expression is marked according to its function   */
 /* AdvP=Adverb, AP=Adjective, CP=Conjunction, PP=Preposition 	*/
