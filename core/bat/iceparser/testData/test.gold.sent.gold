@@ -1,6 +1,6 @@
 {*SUBJ [NP Frétt nven ] } [PP af af [NP mbl.is v ] ] 
 {*SUBJ [NP [AP Möguleg lhfnsf ] viðbrögð nhfn ] } {*COMP [VPp rædd sþghfn ] } 
-{*OBJAP> [NP Merkingum nvfþ ] } {*COMP [AP [AdvP mögulega aa ] ábótavant lhensf ] } 
+{*SUBJ [NP Merkingum nvfþ ] } [AdvP mögulega aa ] {*COMP [AP ábótavant lhensf ] }
 {*SUBJ [NP Forsetinn nkeng ] } [PP með af [NP fiskabindi nheo ] ] 
 {*SUBJ [NP Mannlíf nhen ] } [PP í af [NP myndum nvfþ ] ] 
 [AdvP Þvert aa ] [PP á af [NP [AP evrópska lkfosf ] bílaframleiðendur nkfo ] ] 
@@ -17,7 +17,7 @@
 {*SUBJ> [AP Fátækustu lkfnve ] } [VP bera sfg3fn ] {*OBJ< [NP [AP meiri lvfovm ] byrðar nvfo ] } [CP en c ] {*SUBJ [AP ríkustu lkfnve ] } 
 [AdvP Hvert aa ] [VP fór sfg3eþ ] {*SUBJ< [NP allt fohen þetta fahen fylgi nhen ] } ? pl 
 {*SUBJ> [NP Hvað fshen ] } [VPb verður sfg3en ] [PP um af [NP orkupakkann nkeog ] ] ? pl 
-[NP Þetta faheo ] [VP segir sfg3en ] {*SUBJ [NP Sky n----s Sports e ] [NP fréttastofan nveng ] } . pl 
+{*OBJ> [NP Þetta faheo ] } [VP segir sfg3en ] {*SUBJ< [NP Sky n----s Sports e ] [NP fréttastofan nveng ] } . pl 
 [AdvP Hér aa ] [VP má sfg3en ] [VPi sjá sng ] {*OBJ< [NP mörkin nhfog ] } [PP úr af [NP leiknum nkeþg ] ] . pl 
 {*SUBJ> [NP Magnolia n----s ] } [VP krækir sfg3en ] [PP í af [NP dreifingarrétt nkeo ] ] [AdvP á aa ] [PP Undir af [NP trénu nheþg ] ] 
 [AdvP Þegar aa ] [VPb eru sfg3fn ] {*COMP< [VPp hafnar sþgvfn ] } {*SUBJ< [NP veiðar nvfn ] } [PP á af [NP bátnum nkeþg ] ] . pl 
@@ -29,7 +29,7 @@
 [InjP Já au ] , pk {*SUBJ> [NP ég fp1en ] } [VP vona sfg1en ] {*OBJ< [NP það fpheo ] } . pl 
 {*SUBJ> [NP Young n----s ] } [VP skoraði sfg3eþ ] {*OBJ< [NP tvö tfhfo mörk nhfo ] } [PP í af [NP leiknum nkeþg ] ] . pl 
 [AdvP Þannig aa ] [VP tryggir sfg3en ] {*SUBJ< [NP bankinn nkeng ] } {*IOBJ< [NP sér fpkeþ ] } {*OBJ< [NPs [NP þóknana- kt ] [CP og c ] [NP vaxtatekjur nvfo ] ] . pl } 
-[AdvP Þá aa ] [VP hefur sfg3en ] {*SUBJ< [NP olíuborpöllum nkfþ ] } [PP í af [NP Norðursjó nkeþ-s ] ] {*COMP [VPp fækkað sþghen ] } [AdvP mikið aa ] . pl 
+[AdvP Þá aa ] [VP hefur sfg3en ] {*SUBJ< [NP olíuborpöllum nkfþ ] } [PP í af [NP Norðursjó nkeþ-s ] ] [VPp fækkað sþghen ]  [AdvP mikið aa ] . pl 
 {*SUBJ> [NP Einn tfken maður nken ] } [VP hefur sfg3en látið sþghen ] {*OBJ< [NP lífið nheog ] } [PP í af [NP storminum nkeþg ] ] . pl 
 [AdvP Nú aa ] [VP reynir sfg3en ] {*SUBJ< [NP Real n----s Madrid n----s ] } [VPi að cn selja sng ] {*OBJ< [NP hann fpkeo ] } . pl 
 {*SUBJ> [NPs [NP Hljóð- kt ] [CP og c ] [NP myndstreymi nhen ] ] } [VP jókst sfm3eþ ] [PP um af [NP sex tfhfo prósent nhfo ] ] . pl 
@@ -38,66 +38,66 @@
 [PP Í af [NP minningunni nveþg ] ] [VPb var sfg3eþ ] [SCP annaðhvort c ] {*SUBJ< [NPs [NP snjór nken ] [CP eða c ] [NP sól nven ] ] } . pl 
 [PP Af af [NP hverju fsheþ ] ] [VP ertu sfg2en ] [AdvP ekki aa ] [PP með af [NP [AP beinar lvfosf ] augabrúnir nvfo ] ] ? pl 
 [PP Um af ] [VPb er sfg3en ] [VPi að cn ræða sng ] {*OBJ< [NPs [NP laun nhfo ] [CP og c ] [NP bifreiðahlunnindi nhfo ] ] } . pl 
-[AdvP Þá aa ] [VPb er sfg3en ] {*SUBJ< [NP hann fpken ] } [AdvP einnig aa ] {*COMP [VPp sagður sþgken ] } [VPi tengjast snm ] {*OBJ< [NP [AP öfgasinnuðum lkfþsf ] múslimum nkfþ ] } . pl 
+[AdvP Þá aa ] [VPb er sfg3en ] {*SUBJ< [NP hann fpken ] } [AdvP einnig aa ] {*COMP< [VPp sagður sþgken ] } [VPi tengjast snm ] {*OBJ< [NP [AP öfgasinnuðum lkfþsf ] múslimum nkfþ ] } . pl 
 {*SUBJ> [NP Bjarni nken-s ] } [VPb var sfg3eþ ] [PP í af [NP haldi nheþ ] {*QUAL [NP lögreglunnar nveeg ] } ] [PP í af [NP [AP tæpan lkeosf ] sólarhring nkeo ] ] . pl 
-{*SUBJ> [NP Þetta fahen ] } [VP hefur sfg3en verið sþghen haft sþghen ] [PP að af [NP leiðarljósi nheþ ] ] [AdvP síðan aa ] . pl 
+{*SUBJ> [NP Þetta fahen ] } [VPb hefur sfg3en verið sþghen ] {*COMP< [VPp haft sþghen ] } [PP að af [NP leiðarljósi nheþ ] ] [AdvP síðan aa ] . pl 
 {*SUBJ> [NP [AP Umræddur lkensf ] dýralæknir nken ] {*QUAL [NP fiskisjúkdóma nkfe ] } } [PP hjá af [NP Matvælastofnun nveþ-s ] ] [VPb er sfg3en ] {*COMP< [NP Gísli nken-s Jónsson nken-s ] } . pl 
 {*SUBJ> [NP [AP [AdvP Aðeins aa ] ríkasta lhenve ] 20% tp ] } [VP hefur sfg3en notið sþghen ] {*OBJ< [NP ávinning nkeo ] {*QUAL [NP skattabreytinga nvfe ] [NP ríkisstjórnarinnar nveeg ] } } . pl 
-{*SUBJ> [NP Hann fpken ] } [VP hefur sfg3en setið sþghen ] [PP á af [NP þingi nheþ ] ] [PP frá af {*TIMEX [NP árinu nheþg 1994 ta ] } ] . pl 
+{*SUBJ> [NP Hann fpken ] } [VP hefur sfg3en setið sþghen ] [PP á af [NP þingi nheþ ] ] [PP frá af [NP árinu nheþg 1994 ta ] ] . pl 
 {*SUBJ [NP [AP Áætlaður lkensf ] heildarávinningur nken ] {*QUAL [NP ríkisins nheeg ] } } {*COMP [VPp metinn sþgken ] } [PP á af [AdvP ríflega aa ] [NP 150 to milljarða nkfo ] {*QUAL [NP króna nvfe ] } ] 
 {*SUBJ> [NP Jamie n----s Vardy n----s ] } [VP skorar sfg3en ] [PP af af [NP [AP miklu lheþsf ] öryggi nheþ ] ] [PP úr af [NP vítaspyrnunni nveþg ] ] . pl 
 {*SUBJ> [NP Íþróttafélög nhfn ] } [VP fá sfg3fn ] [MWE_AdvP til af dæmis nhee ] {*OBJ< [NP bakkelsi nheo ] } [SCP sem ct ] [VPb er sfg3en ] {*COMP< [AP óselt lhensf ] } . pl 
 {*SUBJ> [NP Líf nhen ] {*QUAL [NP okkar fp1fe ] } } [VP líður sfg3en ] [AdvP hjá aa ] [CP og c ] {*SUBJ> [NP aðrir fokfn ] } [VP taka sfg3fn ] [AdvP við aa ] . pl 
-{*SUBJ> [NP [AP Næstflest lhfnse ] hjólreiðaslys nhfn ] } [VPb urðu sfg3fþ ] [SCP þegar c ] {*SUBJ> [NP hjólreiðamaður nken ] } [VP hjólaði sfg3eþ ] [AdvP þvert aa ] [PP yfir af [NP akbraut nveo ] ] . pl 
+{*SUBJ> [NP [AP Næstflest lhfnse ] hjólreiðaslys nhfn ] } [VPb urðu sfg3fþ ] [SCP þegar c ] {*SUBJ> [NP hjólreiðamaður nken ] } [VP hjólaði sfg3eþ ] [PP [MWE_PP þvert aa  yfir af ] [NP akbraut nveo ] ] . pl 
 [AdvP Bara aa ] {*SUBJ [NP stormur nken ] } [MWE_CP eins aa og c ] [VP kemur sfg3en ] [AdvP reglulega aa ] [PP á af [NP haustin nhfog ] ] . pl 
 {*SUBJ> [NP Ég fp1en ] } [VP ákvað sfg1eþ ] [VPi að cn hafa sng ] [AdvP ekki aa ] {*OBJ< [NP þjálfara nkeo ] } [PP í af [NP ár nheo ] ] . pl 
 {*SUBJ> [NP Vélin nveng ] } [VPb er sfg3en ] [AdvP um aa ] {*COMP< [NP 238 ta hestöfl nhfn ] } [CP og c ] {*SUBJ> [NP togið nheng ] } [VPb er sfg3en ] {*COMP< [AP mikið lhensf ] } . pl 
 {*SUBJ> [NP Það fphen ] } [VP þarf sfg3en ] [VPi að cn setja sng ] {*OBJ< [NP pening nkeo ] } [PP í af [NP heilbrigðiskerfið nheog ] ] [PP yfir af [NP höfuð nheo ] ] . pl 
-[PP Vegna af {*QUAL [NP [AP mikils lkeesf ] áhuga nkee ] } ] [VPb eru sfg3fn ] {*SUBJ< [NP höfundar nkfn ] } {*COMP< [VPp byrjaðir sþgkfn ] } [PP á af [NP seríu nveþ þrjú ta ] ] . pl 
+[PP Vegna af [NP [AP mikils lkeesf ] áhuga nkee ] ] [VPb eru sfg3fn ] {*SUBJ< [NP höfundar nkfn ] } {*COMP< [VPp byrjaðir sþgkfn ] } [PP á af [NP seríu nveþ þrjú ta ] ] . pl 
 {*OBJ> [NP Skýrslu nveo ] } [PP um af [NP niðurstöður nvfo ] {*QUAL [NP könnunarinnar nveeg ] } ] [VP má sfg3en ] [VPi finna sng ] [AdvP hér aa að aa neðan aa ] . pl 
 {*SUBJ> [NP Erling nken-s ] } [VP segir sfg3en ] [AdvP þó aa ] {*OBJ< [NP enga foveo ástæðu nveo ] } [MWE_CP til af að cn ] [VPi hafa sng ] {*OBJ< [NP áhyggjur nvfo ] } . pl 
 {*SUBJ> [AP Eldri lkfnvm ] } [CP en c ] {*QUAL [NP 18 ta ára nhfe ] } [VP greiða sfg3fn ] {*OBJ< [NP [AP venjulegt lheosf ] komugjald nheo ] } [PP á af [NP stöð nveo ] ] . pl 
 {*SUBJ> [NP Ég fp1en ] } [VPb verð sfg1en ] [VPi að cn fá sng ] [VPi að cn hlæja sng ] [PP að af [NP þessu faheþ ] ] . pl 
 [VPi Fylgjast snm ] [VP má sfg3en ] [PP með af [NP [AP beinni lveþsf ] útsendingu nveþ ] ] [PP frá af [NP blaðamannafundinum nkeþg ] ] [AdvP hér aa að aa neðan aa ] . pl 
 {*SUBJ> [NP Umfjöllun nven ] } [PP um af [NP málið nheog ] ] [VPb var sfg3eþ ] {*COMP< [VPp birt sþgven ] } [PP á af [NP vef nkeþ ] {*QUAL [NP BBC n----s ] } ] {*TIMEX [NP [AP síðastliðinn lkeosf ] mánudag nkeo ] } . pl 
-{*SUBJ> [NP Verðbólgan nveng ] } [VP fór sfg3eþ ] [AdvP síðast aae ] [PP yfir af {*QUAL [NP fjögurra tfhfe prósenta nhfe ] } [NP markið nheog ] ] [PP í af {*TIMEX [NP desember nkeþ 2013 ta ] } ] . pl 
-{*SUBJ> [NP Ungverjar nkfn-s ] } [VP komast sfm3fn ] [AdvP aftur aa yfir aa ] [CP en c ] {*SUBJ> [NP Ronaldo n----s ] } [VP jafnar sfg3en ] [PP með af [NP [AP GLÆSILEGU lheþsf ] marki nheþ ] ] . pl 
+{*SUBJ> [NP Verðbólgan nveng ] } [VP fór sfg3eþ ] [AdvP síðast aae ] [PP yfir af {*QUAL [NP fjögurra tfhfe prósenta nhfe ] } [NP markið nheog ] ] [PP í af [NP desember nkeþ 2013 ta ] ] . pl 
+{*SUBJ> [NP Ungverjar nkfn-s ] } [VP komast sfm3fn ] [AdvP aftur aa ] [AdvP yfir aa ] [CP en c ] {*SUBJ> [NP Ronaldo n----s ] } [VP jafnar sfg3en ] [PP með af [NP [AP GLÆSILEGU lheþsf ] marki nheþ ] ] . pl 
 {*SUBJ> [NP Þetta fahen ] } [VP kemur sfg3en ] [AdvP fram aa ] [PP í af [NP viðtali nheþ ] ] [PP við af [NP Pál nkeo-s ] ] [PP í af [NP helgarblaði nheþ ] {*QUAL [NP DV n----s ] } ] . pl 
 {*COMP> [AP Ljóst lhensf ] } [VPb er sfg3en ] [SCP að c ] [AdvP talsvert aa ] [VP mæðir sfg3en ] [PP á af [NP Katrínu nveo-s ] ] [PP vegna af [NP stjórnarskrármálsins nheeg ] [AP svokallaða lheevf ] ] . pl 
 {*SUBJ> [NP [AP Aukin lvensf ] snjalltækjavæðing nven ] } [VPb þykir sfg3en ] [SCP bæði c ] [VPi fela sng ] [PP í af [NP sér fpveþ ] ] {*OBJ< [NPs [NP ógnir nvfo ] [CP og c ] [NP tækifæri nhfo ] ] } . pl 
 {*SUBJ [NP Múslímar nkfn ] } [PP á af [NP bæn nveþ ] ] [PP við af [NP Finsbury n----s Park e ] ] [PP eftir af [NP árásina nveog ] ] [PP í af [NP nótt nveo ] ] . pl 
 [VP Blandið sbg2fn ] [AdvP þá aa ] {*OBJ< [NP mjólkurblöndunni nveþg ] } [AdvP saman aa ] [PP við af [NP gerið nheog ] ] [CP og c ] [VP hrærið sbg2fn ] [AdvP vel aa saman aa ] . pl 
-{*SUBJ> [NP Admir n----s Kubat n----s ] } [VP leikur sfg3en ] [AdvP ekki aa ] [PP með af [NP Víkingi nkeþ-s Ó. ks ] ] [PP vegna af {*QUAL [NP meiðsla nhfe ] } ] . pl 
+{*SUBJ> [NP Admir n----s Kubat n----s ] } [VP leikur sfg3en ] [AdvP ekki aa ] [PP með af [NP Víkingi nkeþ-s Ó. ks ] ] [PP vegna af [NP meiðsla nhfe ] ] . pl 
 {*SUBJ> [NP Ég fp1en ] } [VP fer sfg1en ] [AdvP oft aa ] [PP að af [NP leiðinu nheþg ] ] [CP og c ] {*SUBJ> [NP það fphen ] } [VPb hafa sfg3fn verið sþghen ] {*COMP< [NP blóm nhfn ] } [AdvP þar aa ] . pl 
 {*SUBJ> [NP Hann fpken ] } [VP á sfg3en ] {*OBJ< [NP 7 ta A-landsleiki nkfo-s ] } [PP að af [NP baki nheþ ] ] [PP fyrir af {*QUAL [NP Íslands nhee-s ] } [NP hönd nveo ] ] . pl 
-{*SUBJ> [NP Hún fpven ] } [VP staðfesti sfg3eþ ] [MWE_AdvP hins fakee vegar nkee ] {*OBJ< [AdvP ekki aa ] [NP fregnir nvfo ] } [PP um af ] [SCP að c ] {*SUBJ> [NP fólk nhen ] } [VP hafi svg3en farist sþmhen ] . pl 
-{*SUBJ> [NP Tölvupóstarnir nkfng ] } [VPb voru sfg3fþ ] [PP vegna af {*QUAL [NP dómsmáls nhee ] } ] [SCP sem ct ] {*SUBJ> [NP Jón nken-s Steinar nken-s ] } [VP vildi sfg3eþ ] [VPi fá sng ] {*OBJ< [NP flýtimeðferð nveo ] } [AdvP á aa ] . pl 
-{*SUBJ> [NP Ráðhúsið nheng ] } [SCP sem ct ] [VPb er sfg3en ] {*QUAL [NPs [NP 150 ta ára nhfe ] , pk [NP 400 ta ára nhfe ] [CP og c ] [NP 650 ta ára nhfe ] ] } {*COMP [AP gamalt lhensf ] } . pl 
-{*SUBJ> [NP RÚV n----s ] } [VP greinir sfg3en ] [PP frá af [NP því faheþ ] ] [SCP sem ct ] [VP kom sfg3eþ ] [AdvP fram aa ] [PP fyrir af [NP dómi nkeþ ] ] [PP í af {*TIMEX [NP morgun nkeo ] } ] . pl 
+{*SUBJ> [NP Hún fpven ] } [VP staðfesti sfg3eþ ] [MWE_AdvP hins fakee vegar nkee ] [AdvP ekki aa ] {*OBJ< [NP fregnir nvfo ] } [PP um af ] [SCP að c ] {*SUBJ> [NP fólk nhen ] } [VP hafi svg3en farist sþmhen ] . pl 
+{*SUBJ> [NP Tölvupóstarnir nkfng ] } [VPb voru sfg3fþ ] [PP vegna af [NP dómsmáls nhee ] ] [SCP sem ct ] {*SUBJ> [NP Jón nken-s Steinar nken-s ] } [VP vildi sfg3eþ ] [VPi fá sng ] {*OBJ< [NP flýtimeðferð nveo ] } [AdvP á aa ] . pl 
+{*SUBJ> [NP Ráðhúsið nheng ] } [SCP sem ct ] [VPb er sfg3en ] {*COMP< {*QUAL [NPs [NP 150 ta ára nhfe ] , pk [NP 400 ta ára nhfe ] [CP og c ] [NP 650 ta ára nhfe ] ] } [AP gamalt lhensf ] } . pl 
+{*SUBJ> [NP RÚV n----s ] } [VP greinir sfg3en ] [PP frá af [NP því faheþ ] ] [SCP sem ct ] [VP kom sfg3eþ ] [AdvP fram aa ] [PP fyrir af [NP dómi nkeþ ] ] [PP í af [NP morgun nkeo ] ] . pl 
 [AdvP Þá aa ] [VP fór sfg1eþ ] {*SUBJ< [NP ég fp1en ] } [VPi að cn hlaupa sng ] [CP og c ] {*SUBJ> [NP Ingvar nken-s ] } [VP kom sfg3eþ ] [AdvP fljótlega aa ] [PP með af [NP mér fp1eþ ] ] . pl 
 {*SUBJ> [NP [AP Minni lhfnvm ] borðin nhfng ] } [VPb eru sfg3fn ] {*COMP< [APs [AP lítil lhfnsf ] [CP og c ] [AP nett lhfnsf ] ] } [MWE_CP eins aa og c ] {*SUBJ> [NP lenskan nveng ] } [VPb er sfg3en ] [AdvP víða aa ] . pl 
-[CP Og c ] {*SUBJ> [NP það fphen ] } [VPb er sfg3en ] {*SUBJ> [NP það fahen ] } [SCP sem ct ] [VP hræðir sfg3en ] {*OBJ< [NP mig fp1eo ] } , pk [VP segir sfg3en ] {*SUBJ< [NP hún fpven ] } . pl 
+[CP Og c ] {*SUBJ> [NP það fphen ] } [VPb er sfg3en ] {*COMP< [NP það fahen ] } [SCP sem ct ] [VP hræðir sfg3en ] {*OBJ< [NP mig fp1eo ] } , pk [VP segir sfg3en ] {*SUBJ< [NP hún fpven ] } . pl 
 {*SUBJ> [NP [AP Stærsta lvenve ] nýjungin nveng ] } [VP varðar sfg3en ] {*OBJ< [NP persónuafsláttinn nkeog ] } , pk [SCP sem ct ] [VPb yrði svg3eþ ] {*COMP< [AP tekjutengdur lkensf ] } [PP eftir af [NP [AP flókinni lveþsf ] formúlu nveþ ] ] . pl 
 {*SUBJ> [NP Ég fp1en ] } [VP hendi sfg1en ] {*OBJ< [NP mér fp1eþ ] } [AdvP beint aa ] [PP í af [NP það fpheo ] ] , pk [VP segir sfg3en ] {*SUBJ< [NP Egill nken-s ] } [CP og c ] [VP hlær sfg3en ] . pl 
-{*COMP> [VPp Krafist sþmhen ] } [VPb var sfg3eþ ] [AP meira lheevm ] [CP en c ] {*QUAL [NP fjögurra tfhfe ára nhfe ] [NP fangelsis nhee ] } [PP yfir af [NP honum fpkeþ ] ] [PP fyrir af [NP [AP alvarlega lveosf ] líkamsárás nveo ] ] . pl 
-{*SUBJ [NP Ágústa nven-s Eva nven-s Erlendsdóttir nven-s ] } , pk {*COMP [NPs [NP leik- kt ] [CP og c ] [NP söngkona nven ] ] } , pk [VP prýddi sfg3eþ ] {*OBJ< [NP forsíðu nveo ] {*QUAL [NPs [NP tímarits nhee ] [NP Smartlands nhee-s ] ] } } . pl 
-{*SUBJ> [NP Almenningssalerni nhfn ] } [VP voru sfg3fþ opnuð sþghfn ] [MWE_AdvP á aa ný aa ] [PP við af [NP skiptistöð nveo ] {*QUAL [NP Strætó nkee-s ] } ] [PP í af [NP Mjódd nveþ-s ] ] [PP á af {*TIMEX [NP föstudag nkeo ] } ] . pl 
+{*COMP> [VPp Krafist sþmhen ] } [VPb var sfg3eþ ] {*SUBJ< [AP meira lheevm ] [CP en c ] {*QUAL [NP fjögurra tfhfe ára nhfe ] } [NP fangelsis nhee ] } [PP yfir af [NP honum fpkeþ ] ] [PP fyrir af [NP [AP alvarlega lveosf ] líkamsárás nveo ] ] . pl 
+{*SUBJ> [NP Ágústa nven-s Eva nven-s Erlendsdóttir nven-s ] , pk [NPs [NP leik- kt ] [CP og c ] [NP söngkona nven ] ] } , pk [VP prýddi sfg3eþ ] {*OBJ< [NP forsíðu nveo ] {*QUAL [NPs [NP tímarits nhee ] [NP Smartlands nhee-s ] ] } } . pl 
+{*SUBJ> [NP Almenningssalerni nhfn ] } [VPb voru sfg3fþ ] {*COMP< [VPp opnuð sþghfn ] } [MWE_AdvP á aa ný aa ] [PP við af [NP skiptistöð nveo ] {*QUAL [NP Strætó nkee-s ] } ] [PP í af [NP Mjódd nveþ-s ] ] [PP á af [NP föstudag nkeo ] ] . pl 
 [AdvP Þá aa ] [VP hafnaði sfg3eþ ] {*SUBJ< [NP hæstiréttur nken ] } [PP í af [NP Bandaríkjunum nhfþgs ] ] {*OBJ< [NP beiðni nveþ ] {*QUAL [NP stjórnvalda nhfe ] } } [PP um af [VPi að cn grípa sng ] ] [AdvP inn aa í aa ] . pl 
-{*SUBJ> [NP Vegagerðin nvengs ] } [VP áætlar sfg3en ] [VPi að cn hefla sng ] {*OBJ< [NP Meðallandsveg nkeo-s ] } [CP en c ] [AdvP ekki aa fyrr aam ] [CP en c ] [PP í af {*TIMEX [NP [AP næstu lveþve ] viku nveþ ] } ] . pl 
-[AdvP Þar aa fyrir aa utan aa ] [VPb eru sfg3fn ] {*COMP< [VPp keyptir sþgkfn ] } {*SUBJ< [NP nokkur fohfn þúsund tfkfn dagskammtar nkfn ] } [PP af af [NP svefnlyfjum nhfþ ] ] [PP fyrir af [NP vistmenn nkfo ] ] . pl 
+{*SUBJ> [NP Vegagerðin nvengs ] } [VP áætlar sfg3en ] [VPi að cn hefla sng ] {*OBJ< [NP Meðallandsveg nkeo-s ] } [CP en c ] [AdvP ekki aa fyrr aam ] [CP en c ] [PP í af [NP [AP næstu lveþve ] viku nveþ ] ] . pl 
+[MWE_AdvP Þar aa fyrir aa utan aa ] [VPb eru sfg3fn ] {*COMP< [VPp keyptir sþgkfn ] } {*SUBJ< [NP nokkur fohfn þúsund tfkfn dagskammtar nkfn ] } [PP af af [NP svefnlyfjum nhfþ ] ] [PP fyrir af [NP vistmenn nkfo ] ] . pl 
 {*SUBJ> [NP Framendinn nkeng ] } [VPb var sfg3eþ ] [VPi að cn detta sng ] [PP af af [NP honum fpkeþ ] ] [CP og c ] {*SUBJ [NP annað fohen frambrettið nheng ] } [VPi að cn rifna sng ] [AdvP upp aa ] . pl 
 {*COMP> [AP Mikilvægt lhensf ] } [VPb er sfg3en ] [VPi að cn ljúka sng ] {*OBJ< [NP heildarstefnu nveþ ] } [PP um af [NP heilbrigðismál nhfo ] ] [PP með af [NP framtíðarsýn nveþ ] ] [PP um af [NP heilsu nveo ] {*QUAL [NP þjóðarinnar nveeg ] } ] . pl 
 [VP Heldurðu sfg2en ] [SCP að c ] {*SUBJ> [NP hann fpken ] } [VP fari svg3en ] [AdvP fljótlega aa ] [PP til af [NP einhvers fohee ] ] [PP af af [NP [AP stóru lhfþvf ] liðunum nhfþg ] ] [PP í af [NP Evrópu nveþ-s ] ] ? pl 
 {*SUBJ> [NP Þú fp2en ] } [VP hefur sfg2en ] {*OBJ< [NP [AP ákveðna lveosf ] heilaheilsu nveo ] } [CP og c ] {*SUBJ> [NP þú fp2en ] } [VP vilt sfg2en ] [VPi halda sng ] {*OBJ< [NP henni fpveþ ] } [AP [AdvP sem aa ] bestri lveþse ] . pl 
-[AdvP Þá aa ] [VPb verða sfg3fn ] {*SUBJ< [NP kvótar nkfn ] } [PP fyrir af [NP [AP tollfrjáls lhfosf ] viðskipti nhfo ] ] [PP með af [NPs [NP landbúnaðar- kt ] [CP og c ] [NP sjávarútvegsafurðir nvfo ] ] ] {*COMP [AP [AdvP einnig aa ] óbreyttir lkfnsf ] } . pl 
-{*COMP> [AP Flestir lkfnse ] } [VPb eru sfg3fn ] {*SUBJ< [NP þeir fpkfn ] } {*COMP< [AP [AdvP þó aa ] sammála lkfnof ] } [AdvP um aa ] {*SUBJ> [NP hvaða fshfn mál nhfn ] } [VP verða sfg3fn sett sþghfn ] [PP á af [NP oddinn nkeog ] ] . pl 
-[AdvP Ekki aa ] [VP er sfg3en búist sþmhen ] [PP við af [AP miklu lheþsf ] ] [PP af af [NP fundum nkfþ ] {*QUAL [NP Shannons n----s ] } ] [PP með af [NP embættismönnum nkfþ ] ] [PP í af [NP Venesúela nheþ-s ] ] . pl 
-[PP Í af {*TIMEX [AP fyrra lheovm ] } ] [VP mældist sfm3eþ ] {*SUBJ< [NP 2 ta hagvöxtur nken ] } [PP í af [NP Póllandi nheþ-s ] ] [CP en c ] {*SUBJ> [NP hann fpken ] } [VPb var sfg3eþ ] [NP 3 ta ] {*TIMEX [NP árið nheog 2015 ta ] } . pl 
-{*SUBJ> [NP Simon n----s Cowell n----s ] } [VP missti sfg3eþ ] {*OBJ< [NP kjálkann nkeog ] } [PP í af [NP gólfið nheog ] ] [SCP þegar c ] {*SUBJ> {*QUAL [NP þessi faken 32 ta ára nhfe ] } [NP Ástrali nken-s ] } [VP byrjaði sfg3eþ ] [VPi að cn syngja sng ] 
+[AdvP Þá aa ] [VPb verða sfg3fn ] {*SUBJ< [NP kvótar nkfn ] } [PP fyrir af [NP [AP tollfrjáls lhfosf ] viðskipti nhfo ] ] [PP með af [NPs [NP landbúnaðar- kt ] [CP og c ] [NP sjávarútvegsafurðir nvfo ] ] ] [AdvP einnig aa ] {*COMP< [AP óbreyttir lkfnsf ] } . pl 
+{*COMP> [AP Flestir lkfnse ] } [VPb eru sfg3fn ] {*SUBJ< [NP þeir fpkfn ] } [AdvP þó aa ] {*COMP< [AP sammála lkfnof ] } [AdvP um aa ] {*SUBJ> [NP hvaða fshfn mál nhfn ] } [VPb verða sfg3fn ] {*COMP< [VPp sett sþghfn ] } [PP á af [NP oddinn nkeog ] ] . pl 
+[AdvP Ekki aa ] [VPb er sfg3en ] {*COMP< [VPp búist sþmhen ] } [PP við af [AP miklu lheþsf ] ] [PP af af [NP fundum nkfþ ] {*QUAL [NP Shannons n----s ] } ] [PP með af [NP embættismönnum nkfþ ] ] [PP í af [NP Venesúela nheþ-s ] ] . pl 
+[PP Í af [AP fyrra lheovm ] ] [VP mældist sfm3eþ ] {*SUBJ< [NP 2 ta hagvöxtur nken ] } [PP í af [NP Póllandi nheþ-s ] ] [CP en c ] {*SUBJ> [NP hann fpken ] } [VPb var sfg3eþ ] [NP 3 ta ] {*TIMEX [NP árið nheog 2015 ta ] } . pl 
+{*SUBJ> [NP Simon n----s Cowell n----s ] } [VP missti sfg3eþ ] {*OBJ< [NP kjálkann nkeog ] } [PP í af [NP gólfið nheog ] ] [SCP þegar c ] {*SUBJ> [NP þessi faken ] {*QUAL [NP 32 ta ára nhfe ] } [NP Ástrali nken-s ] } [VP byrjaði sfg3eþ ] [VPi að cn syngja sng ] 
 [SCP Þegar c ] {*SUBJ> [NP Lina n----s ] } [VP kom sfg3eþ ] [PP til af [NP Íslands nhee-s ] ] [VP fór sfg3eþ ] {*SUBJ< [NP hún fpven ] } [PP á af [NP íslenskunámskeið nheo ] ] [PP ásamt af [NP öðrum fokfþ ] ] [PP úr af [NP flóttamannahópnum nkeþg ] ] . pl 
-{*SUBJ> [NP Hugleikur nken-s ] } [VP ferðaðist sfm3eþ ] [PP ásamt af [NPs [NP [AP ástralska lkeþvf ] grínistanum nkeþg ] [NP Jonathan n----s Duffy n----s ] ] [CP og c ] [NP umboðsmanni nkeþ sínum fekeþ ] , pk [NP Rakel nveþ-s Sævarsdóttur nveþ-s ] ] . pl 
+{*SUBJ> [NP Hugleikur nken-s ] } [VP ferðaðist sfm3eþ ] [PP ásamt af [NPs [NP [AP ástralska lkeþvf ] grínistanum nkeþg ] [NP Jonathan n----s Duffy n----s ] [CP og c ] [NP umboðsmanni nkeþ sínum fekeþ ] , pk [NP Rakel nveþ-s Sævarsdóttur nveþ-s ] ] ] . pl 
 [CP Og c ] {*SUBJ> [NP ég fp1en ] } [VP óska sfg1en ] {*IOBJ< [NP þér fp2eþ ] } {*OBJ< [NP þess fphee ] } [SCP að c ] [AdvP alltaf aa ] [VP opnist svm3fn ] {*SUBJ< [NP [AP nýjar lvfnsf ] dyr nvfn ] } [SCP þegar c ] {*SUBJ> [NP einar fovfn ] } [VP lokast sfm3fn ] . pl 
-{*TIMEX [NP Árið nheog 1990 ta ] } [VPb voru sfg3fþ ] {*SUBJ< [NP sveitarstjórnarmenn nkfn alls fohee ] } {*COMP< [NP 1.116 ta talsins nheeg ] } [CP og c ] {*SUBJ [NP konur nvfn ] } {*COMP< [NPs [NP 21 ta ]  [CP eða c ] [NP 243 ta talsins nheeg ] ] } . pl 
+{*TIMEX [NP Árið nheog 1990 ta ] } [VPb voru sfg3fþ ] {*SUBJ< [NP sveitarstjórnarmenn nkfn ] } [NP alls fohee ] {*COMP< [NP 1.116 ta talsins nheeg ] } [CP og c ] {*SUBJ [NP konur nvfn ] } {*COMP [NPs [NP 21 ta ]  [CP eða c ] [NP 243 ta talsins nheeg ] ] } . pl 
 {*SUBJ> [NP Hún fpven ] } [VP fór sfg3eþ ] [PP [MWE_PP fram aa í af ] [NP rýnihópum nkfþ ] ] [MWE_CP þar aa sem c ] {*SUBJ> [NP fólk nhen ] } [VP var sfg3eþ látið sþghen ] [VPi spila sng ] {*OBJ< [NP [AP nýju lkfovf ] leikina nkfog ] } . pl 
 {*SUBJ> [NP [AP Góðar lvfnsf ] samverustundir nvfn ] } [PP með af [NP [AP skemmtilegu lheþsf ] fólki nheþ ] ] [VP geta sfg3fn virkað sþghen ] [MWE_CP eins aa og c ] {*SUBJ [NP [AP bestu lvfnve ] vítamínsprautur nvfn ] } [PP í af [NP skammdeginu nheþg ] ] . pl 
 {*COMP> [AP Þungfært lhensf ] } [VPb er sfg3en ] [AdvP innansveitar aa ] [PP í af [NP Vopnafirði nkeþ-s ] ] [CP og c ] [PP á af [NP Vopnafjarðarheiði nveþ-s ] ] [CP en c ] {*COMP> [AP ófært lhensf ] } [VPb er sfg3en ] [PP um af [NP Hólasand nkeo-s ] ] . pl 
