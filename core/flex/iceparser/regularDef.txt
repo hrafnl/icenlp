@@ -55,7 +55,9 @@ VerbInfinitiveTag = {encodeOpen}sn[mg]{encodeClose}{WhiteSpace}+
 //NounTag = {encodeOpen}n{Gender}{Number}{Case}{ArticleChar}?{encodeClose}{WhiteSpace}+ | x
 NounTag = {encodeOpen}n{Gender}{Number}{Case}{ArticleChar}?{encodeClose}{WhiteSpace}+
 
-ProperNounTag = {encodeOpen}n({Unspec}|{Gender})({Unspec}|{Number})({Unspec}|{Case})({Unspec}|{ArticleChar}){ProperName}{encodeClose}{WhiteSpace}+
+ForeignNameTag = {encodeOpen}n{Unspec}{Unspec}{Unspec}{Unspec}{ProperName}{encodeClose}{WhiteSpace}+
+ProperNounTag = {encodeOpen}n{Gender}{Number}{Case}({Unspec}|{ArticleChar}){ProperName}{encodeClose}{WhiteSpace}+ | {ForeignNameTag}
+
 NumeralTag = {encodeOpen}t([aop]|f{Gender}{Number}{Case}){encodeClose}{WhiteSpace}+
 PersPronounTag = {encodeOpen}fp({Gender}|{Person}){Number}{Case}{encodeClose}{WhiteSpace}+
 
