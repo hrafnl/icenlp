@@ -58,15 +58,15 @@ import java.io.*;
 %eof}
 
 %include regularDef.txt
-MWEPP_Gen = {WhiteSpace}+{OpenMWE_PP}~{PrepTagGen}{CloseMWE_PP}{WhiteSpace}+
+MWEPP_Gen = {WhiteSpace}+{OpenMWE_PP}~({PrepTagGen}|{PrepTagF}){CloseMWE_PP}{WhiteSpace}+
 
 /* Don't mark genetive NPs that appear after genitive prepositions
 and don't mark genitive NPS that appear after VPs, e.g. "hann hóf máls", "njóta þess" */
 
-GenPP = {OpenPP}({PrepositionGen}|{MWEPP_Gen})
+GenPP = {OpenPP}(({PrepositionGen}|{PrepositionF})|{MWEPP_Gen})
 VP = {OpenVP}~{CloseVP} | {OpenVPs}~{CloseVPs} | {OpenVPi}~{CloseVPi}
 
-PPSkip = ({GenPP}|{VP}{WhiteSpace}+)({NPGen}|{NPsGen}) 
+PPSkip = ({GenPP}|{VP}{WhiteSpace}+)({NPGen}|{NPsGen})
 NPGenSeq = {OpenNPs}{WhiteSpace}+{OpenNP}g~{CloseNPs}
 NPQual = {NPGen}({WhiteSpace}+{NPGen})* | {NPGenSeq}
 //Fiskinn = "[NPa"({WhiteSpace}+{Word}{WhiteSpace}+{NounTag}{WhiteSpace}+)*~"NP]"
