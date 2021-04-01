@@ -29,7 +29,7 @@ FuncTemp = {OpenTemp}~{CloseTemp}
 Function = {FuncQualifier} | {FuncSubject} | {FuncObject} | {FuncObjectI} | {FuncComplement} | {FuncTemp}
 
 /* A nominative subject is either one nominative NP or a sequence of nominative NPs */
- NomSubject = {NPNom} | {NPsNom}
+ NomSubject = {NPNom} | {NPsNom} | {NPForeign} | {NPsForeign}
  AccSubject = {NPAcc} | {NPsAcc}
  DatSubject = {NPDat} | {NPsDat} 
 

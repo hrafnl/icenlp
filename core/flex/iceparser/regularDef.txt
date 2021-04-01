@@ -58,6 +58,8 @@ NounTag = {encodeOpen}n{Gender}{Number}{Case}{ArticleChar}?{encodeClose}{WhiteSp
 ForeignNameTag = {encodeOpen}n{Unspec}{Unspec}{Unspec}{Unspec}{ProperName}{encodeClose}{WhiteSpace}+
 ProperNounTag = {encodeOpen}n{Gender}{Number}{Case}({Unspec}|{ArticleChar}){ProperName}{encodeClose}{WhiteSpace}+ | {ForeignNameTag}
 
+ForeignName = {WordSpaces}{ForeignNameTag}
+
 NumeralTag = {encodeOpen}t([aop]|f{Gender}{Number}{Case}){encodeClose}{WhiteSpace}+
 PersPronounTag = {encodeOpen}fp({Gender}|{Person}){Number}{Case}{encodeClose}{WhiteSpace}+
 
@@ -157,4 +159,7 @@ APsDat = {StartAPs}d~{CloseAPs}
 APsGen = {StartAPs}g~{CloseAPs}
 
 NPNum = {OpenNP} ~{encodeOpen}t(a|p){encodeClose}{WhiteSpace}+{CloseNP}
+
+NPForeign = {OpenNP}({ForeignName})+{CloseNP}
+NPsForeign = {OpenNPs}~{ForeignName}~{CloseNPs}
 

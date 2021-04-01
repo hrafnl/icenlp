@@ -110,29 +110,27 @@ RelCP = {OpenSCP}{WhiteSpace}+sem{WhiteSpace}+{ConjTag}~{CloseSCP}
 AdvP = {OpenAdvP}~{CloseAdvP}
 PP = {OpenPP}~{ClosePP}
 
-ForeignName = {OpenNP}~{ForeignNameTag}~{CloseNP}
-
 PPorQual = ({PP}{WhiteSpace}+)+ | {FuncQualifier}{WhiteSpace}+ (({PP}{WhiteSpace}+)+)?
 /* Qual = {FuncQualifier}{WhiteSpace}+ */
 
-SubjectVerb = 	({FuncQualifier}{WhiteSpace}+)?({NomSubject}|{ForeignName}|{NPNum}){WhiteSpace}+{PPorQual}?{VPorVPBe} 	| 
+SubjectVerb = 	({FuncQualifier}{WhiteSpace}+)?({NomSubject}|{NPNum}){WhiteSpace}+{PPorQual}?{VPorVPBe} 	| 
 		{DatSubject}{WhiteSpace}+{PPorQual}?{VPDat} 	| 
 		{AccSubject}{WhiteSpace}+{PPorQual}?{VPAcc}
 		
 /* SubjectAPVerb = {APNom}{WhiteSpace}+{VPorVPBe} */
 		
-SubjectVerbMissing = ({NomSubject}|{ForeignName}){WhiteSpace}+({PP}{WhiteSpace}+)?({OpenAP}~{CloseAP} | {OpenAPs}~{CloseAPs} | {VPPast}) 
+SubjectVerbMissing = {NomSubject}{WhiteSpace}+({PP}{WhiteSpace}+)?({OpenAP}~{CloseAP} | {OpenAPs}~{CloseAPs} | {VPPast}) 
 		
 /* The subject can follow the verb */
 VerbSubject = 	
 		// {VPorVPBe}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{NomSubject}({WhiteSpace}+{FuncQualifier})? | /* kom hann þá */
-		{VPorVPBe}{WhiteSpace}+{PPorQual}?({NomSubject}|{ForeignName})({WhiteSpace}+{FuncQualifier})? | /* kom hann þá */
+		{VPorVPBe}{WhiteSpace}+{PPorQual}?{NomSubject}({WhiteSpace}+{FuncQualifier})? | /* kom hann þá */
 		{VPDat}{WhiteSpace}+{DatSubject} | 	/* þótti mér hann erfiður */
 		{VPAcc}{WhiteSpace}+{AccSubject}  	/* langaði mig að .. */
 		
-VerbAdvPSubject = {VPorVPBe}{WhiteSpace}+{AdvP}{WhiteSpace}({FuncQualifier}{WhiteSpace}+)?({NomSubject}|{ForeignName})({WhiteSpace}+{FuncQualifier})?  /* hafði þá samingagerðin .. */
+VerbAdvPSubject = {VPorVPBe}{WhiteSpace}+{AdvP}{WhiteSpace}({FuncQualifier}{WhiteSpace}+)?{NomSubject}({WhiteSpace}+{FuncQualifier})?  /* hafði þá samingagerðin .. */
 		
-//PPVerbSubject = ({AdvP}{WhiteSpace}+({PP}{WhiteSpace}+)? | {PP}{WhiteSpace}+) {VPBe}{WhiteSpace}+({NomSubject}|{ForeignName})	/* kannski voru allir; innst í honum var maður, í bílnum var ... */
+//PPVerbSubject = ({AdvP}{WhiteSpace}+({PP}{WhiteSpace}+)? | {PP}{WhiteSpace}+) {VPBe}{WhiteSpace}+{NomSubject}	/* kannski voru allir; innst í honum var maður, í bílnum var ... */
 SubjectRel = {NomSubject}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{RelCP}
 
 
