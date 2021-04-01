@@ -102,7 +102,7 @@ PP = {OpenPP}~{ClosePP}
 RelCP = {OpenCP}~sem{WhiteSpace}+{ConjTag}{CloseCP}
 
 
-Object = ({FuncQualifier}{WhiteSpace}+)?({NP}|{NPs}|{AP}|{APs})({WhiteSpace}+{FuncQualifier})?
+Object = ({FuncQualifier}{WhiteSpace}+)?({NP}|{NPs}|{NPForeign}|{NPsForeign}|{AP}|{APs})({WhiteSpace}+{FuncQualifier})?
 SubjectRelCP = {FuncSubject}|{RelCP}
 
 SubjVerb = {SubjectRelCP}{WhiteSpace}+{VP}{WhiteSpace}+
