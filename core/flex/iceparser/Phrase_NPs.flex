@@ -75,35 +75,44 @@ NPShortening = {OpenNP}{Shortening}{CloseNP}
 NPNomGenQual = {NPNom}{GenQualifier}*
 NPAccGenQual = {NPAcc}{GenQualifier}*
 NPDatGenQual = {NPDat}{GenQualifier}*
+NPForeignGenQual = {NPForeign}{GenQualifier}*
 
 CommaNPNom = {Comma}{WhiteSpace}+{NPNom}{WhiteSpace}+
 CommaNPAcc = {Comma}{WhiteSpace}+({NPAcc}|{APAcc}){WhiteSpace}+
 CommaNPDat = {Comma}{WhiteSpace}+({NPDat}|{APDat}){WhiteSpace}+
 CommaNPGen = {Comma}{WhiteSpace}+{NPGen}{WhiteSpace}+
 CommaNPShortening = {Comma}{WhiteSpace}+{NPShortening}{WhiteSpace}+
+CommaNPForeign = {Comma}{WhiteSpace}+{NPForeign}{WhiteSpace}+
 
 NPConjNom = {CommaNPNom}*{ConjPhrase}{WhiteSpace}+{NPNom}
 NPConjAcc = {CommaNPAcc}*{ConjPhrase}{WhiteSpace}+({NPAcc}|{APAcc})
 // [NP litlum bæ NP] en [AP fornum AP]
 NPConjDat = {CommaNPDat}*{ConjPhrase}{WhiteSpace}+({NPDat}|{APDat})
 NPConjGen = {CommaNPGen}*{ConjPhrase}{WhiteSpace}+{NPGen}
+NPConjForeign = 
+    {CommaNPForeign}*{ConjPhrase}{WhiteSpace}+{NPForeign}   |
+    ({CommaNPNom}|{CommaNPAcc}|{CommaNPDat}|{CommaNPGen})*{ConjPhrase}{WhiteSpace}+{NPForeign}  |
+    {CommaNPForeign}{ConjPhrase}{WhiteSpace}+({NPNom}|{NPAcc}|{APAcc}|{NPDat}|{APDat}|{NPGen})
 
+NPSeq = 
+    {NPProperNom}{WhiteSpace}+({NPNom}|{NPForeign})	|
+	{NPProperAcc}{WhiteSpace}+({NPAcc}|{NPForeign})	|
+	{NPProperDat}{WhiteSpace}+({NPDat}|{NPForeign})	|
+	{NPProperGen}{WhiteSpace}+({NPGen}|{NPForeign})	|
+    {NPForeign}{WhiteSpace}+({NPNom}|{NPAcc}|{NPDat}|{NPGen}|{NPForeign})    |
 
-NPSeq = {NPProperNom}{WhiteSpace}+{NPNom}			|
-	{NPProperAcc}{WhiteSpace}+{NPAcc}			|
-	{NPProperDat}{WhiteSpace}+{NPDat}			|
-	{NPProperGen}{WhiteSpace}+{NPGen}			|
+	({NPNomGenQual}|{NPForeignGenQual}){WhiteSpace}+({NPProperNom}|{NPConjNom}) 	| 
+	({NPAccGenQual}|{NPForeignGenQual}){WhiteSpace}+({NPProperAcc}|{NPConjAcc}) 	| 
+	({NPDatGenQual}|{NPForeignGenQual}){WhiteSpace}+({NPProperDat}|{NPConjDat}) 	| 
+	({NPGen}|{NPForeign}){WhiteSpace}+({NPProperGen}|{NPConjGen})         |
+    ({NPNomGenQual}|{NPAccGenQual}|{NPDatGenQual}|{NPForeignGenQual}|{NPGen}){WhiteSpace}+({NPForeign}|{NPConjForeign})  |
 
-	
-	{NPNomGenQual}{WhiteSpace}+({NPProperNom}|{NPConjNom}) 	| 
-	{NPAccGenQual}{WhiteSpace}+({NPProperAcc}|{NPConjAcc}) 	| 
-	{NPDatGenQual}{WhiteSpace}+({NPProperDat}|{NPConjDat}) 	| 
-	{NPGen}{WhiteSpace}+({NPProperGen}|{NPConjGen})         |
-
-	{NPShortening}{WhiteSpace}+({NPProperNom}|{NPConjNom}|{CommaNPShortening}) 	| 
-	{NPShortening}{WhiteSpace}+({NPProperAcc}|{NPConjAcc}|{CommaNPShortening}) 	| 
-	{NPShortening}{WhiteSpace}+({NPProperDat}|{NPConjDat}|{CommaNPShortening}) 	| 
-	{NPShortening}{WhiteSpace}+({NPProperGen}|{NPConjGen}|{CommaNPShortening})
+    {NPShortening}{WhiteSpace}+{CommaNPShortening}  |
+	{NPShortening}{WhiteSpace}+({NPProperNom}|{NPConjNom}) 	| 
+	{NPShortening}{WhiteSpace}+({NPProperAcc}|{NPConjAcc}) 	| 
+	{NPShortening}{WhiteSpace}+({NPProperDat}|{NPConjDat}) 	| 
+	{NPShortening}{WhiteSpace}+({NPProperGen}|{NPConjGen})  |
+    {NPShortening}{WhiteSpace}+({NPForeign}|{NPConjForeign})
 %%
 
 {NPSeq}	{ out.write(NPOpen+yytext()+NPClose);}
