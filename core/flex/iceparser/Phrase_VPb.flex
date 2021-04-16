@@ -28,25 +28,15 @@ import java.io.*;
 %%
 
 %public
-%class Phrase_VP
+%class Phrase_VPb
 %standalone
 %line
 %extends IceParserTransducer
 %unicode
 
 %{
-  String VPOpen=" [VP ";
-  String VPClose=" VP] "; 
-  String VPIOpen=" [VPi ";
-  String VPIClose=" VPi] "; 
   String VPBOpen=" [VPb ";
   String VPBClose=" VPb] "; 
-  String VPSOpen=" [VPs ";
-  String VPSClose=" VPs] "; 
-  String VPPOpen=" [VPp ";
-  String VPPClose=" VPp] ";
-  String VPGOpen=" [VPg ";
-  String VPGClose=" VPg] ";
   
   //java.io.Writer out = new BufferedWriter(new OutputStreamWriter(System.out, "UTF-8"));
   java.io.Writer out = new BufferedWriter(new OutputStreamWriter(System.out));
@@ -91,7 +81,8 @@ import java.io.*;
 %include regularDef.txt
 %include verbLexicon.txt
 
-VerbPhraseBe = {OpenVPb}~{CloseVPb}
+BeVerb = {VerbBe}|vera
+BeWordSpaces = {WhiteSpace}*{BeVerb}{WhiteSpace}+
 
 VerbPastPartTag = {encodeOpen}sþ{Voice}{Gender}{Number}{Case}{encodeClose}
 VerbPastPartTagNeut = {encodeOpen}sþ{Voice}h{Number}{Case}{encodeClose}
@@ -101,33 +92,36 @@ VerbSupineTag = {encodeOpen}ss{Voice}{encodeClose}
 AdverbPhrase = {OpenAdvP}~{CloseAdvP}
 Infinitive = 	{WordSpaces}{InfinitiveTag}
 
-VerbFinite = 	{WordSpaces}{VerbFiniteTag}
-VerbPastPart =  {WordSpaces}{VerbPastPartTag}
 VerbPastPartNeut =  {WordSpaces}{VerbPastPartTagNeut}
-VerbPresentPart =  {WordSpaces}{VerbPresentPartTag}
 VerbSupine = 	{WordSpaces}{VerbSupineTag}
-VerbOther = 	{WordSpaces}{VerbTag}
-VerbInfinitive = {WordSpaces}{VerbInfinitiveTag}
 
-InfinitivePhrase = {Infinitive}?{VerbInfinitive}({VerbSupine}|{VerbPastPartNeut})*
-FinitePhrase = {VerbFinite} (({WhiteSpace}*{AdverbPhrase})*({VerbSupine}|{VerbPastPartNeut})+)?
-VerbPhrase =  {FinitePhrase} 
-VerbPhraseInf = {InfinitivePhrase}
-VerbPhraseSupine = {VerbSupine}+
-VerbPhrasePastPart = {VerbPastPart}
-VerbPhrasePresentPart = {VerbPresentPart}
+BeFinite = 	{BeWordSpaces}{VerbFiniteTag}
+BePastPart =  {BeWordSpaces}{VerbPastPartTag}
+BePresentPart =  {BeWordSpaces}{VerbPresentPartTag}
+BeSupine = 	{BeWordSpaces}{VerbSupineTag}
+BeInfinitive = {BeWordSpaces}{VerbInfinitiveTag}
+
+BeInfinitivePhrase = {Infinitive}?{BeInfinitive}
+BeFinitePhrase = {BeFinite}
+BePhrase =  {BeFinitePhrase} 
+BePhraseInf = {BeInfinitivePhrase}
+BePhraseSupine = {BeSupine}+
+BePhrasePastPart = {BePastPart}
+BePhrasePresentPart = {BePresentPart}
 
 %%
 
 {MWE}			{ out.write(yytext());}
-{VerbPhraseBe}	{ out.write(yytext());}
-
-{VerbPhrase}		{ out.write(VPOpen+yytext()+VPClose);}
-{VerbPhraseInf}		{ out.write(VPIOpen+yytext()+VPIClose);}
-{VerbPhraseSupine}	{ out.write(VPSOpen+yytext()+VPSClose);}
-{VerbPhrasePastPart}	{ out.write(VPPOpen+yytext()+VPPClose);}
-{VerbPhrasePresentPart}	{ out.write(VPGOpen+yytext()+VPGClose);}
+{BePhrase}		{ out.write(VPBOpen+yytext()+VPBClose);}
+{BePhraseInf}		{ out.write(VPBOpen+yytext()+VPBClose);}
+{BePhraseSupine}	{ out.write(VPBOpen+yytext()+VPBClose);}
+{BePhrasePastPart}	{ out.write(VPBOpen+yytext()+VPBClose);}
+{BePhrasePresentPart}	{ out.write(VPBOpen+yytext()+VPBClose);}
 
 "\n"			{ //System.err.print("Reading line: " + Integer.toString(yyline+1) + "\r"); 
 			out.write("\n"); }
 .			{ out.write(yytext());}
+
+
+
+

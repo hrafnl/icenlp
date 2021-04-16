@@ -43,6 +43,7 @@ public class IceParserFacade
     private Phrase_APs aps_scn;
     private Phrase_NP np_scn;
 	private Phrase_NP2 np2_scn;
+	private Phrase_VPb vpb_scn;
     private Phrase_VP vp_scn;
     private Case_AP cap_scn;
     private Case_NP cnp_scn;
@@ -81,6 +82,7 @@ public class IceParserFacade
         aps_scn = new Phrase_APs(sr);
         np_scn = new Phrase_NP(sr);
 		np2_scn = new Phrase_NP2(sr);
+		vpb_scn = new Phrase_VPb(sr);
         vp_scn = new Phrase_VP(sr);
         cap_scn = new Case_AP(sr);
         cnp_scn = new Case_NP(sr);
@@ -290,6 +292,16 @@ public class IceParserFacade
 			np2_scn.parse(sw);
 		if (debug) System.out.println("gDB>>phrase_NP2=(" + sw.toString()+")");
 		}
+
+        // --------------------------------
+		//print( "Phrase_VPb" );
+		sr = new StringReader( sw.toString() );
+		sw = new StringWriter( );
+
+        vpb_scn.yyclose();
+        vpb_scn.yyreset(sr);
+        vpb_scn.parse(sw);
+		if (debug) System.out.println("gDB>>Phrase_VPb=(" + sw.toString()+")");
 
         // --------------------------------
 		//print( "Phrase_VP" );
