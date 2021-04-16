@@ -110,6 +110,8 @@ VPInfVera = {OpenVPi}~verð?a{WhiteSpace}+{VerbInfinitiveTag}{CloseVPi}
 VPPast = {OpenVPp}~{CloseVPp}
 VPOther = {OpenVP}" "~{CloseVP}
 //VPSpecial = {OpenVP}" "~{CloseVP}
+NotBe = [gisp ]
+NotVPBe = {OpenVP}{NotBe}~"VP"{NotBe}?"]"
 NP = {OpenNP}[adg]~{CloseNP}
 NPs = {NPsAcc}|{NPsDat}|{NPsGen}
 AdvP = {OpenAdvP}~{CloseAdvP}
@@ -140,6 +142,7 @@ SubjVerbCompl = {SubjectVerbBe}({FuncQualifier}{WhiteSpace}+)?{Complement}
 //SubjVerbVerbPastCompl = {SubjectVerbBe}{VPPast}{WhiteSpace}+{Complement}	/* hún var orðin leið */
 //SubjVerbSpecialCompl = {FuncSubject}{WhiteSpace}+{VP}{WhiteSpace}+{Complement}	/* ég heiti Eva */
 
+// TODO: Allow AdvP where appropriate
 SubjCompl = {FuncSubject}{WhiteSpace}+{Complement}
 SubjPPCompl = {FuncSubject}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 VerbSubjCompl = {VPBe}{WhiteSpace}{FuncSubject}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{Complement}
@@ -153,9 +156,11 @@ VerbPPCompl = {VPBe}{WhiteSpace}+{PP}{WhiteSpace}+{Complement}
 // [NPa unginn ^nkeog$  NP] [VPb  er ^sfg3en$  VPb] [AdvP some ^tag$ AdvP] [APn  gul ^lvensf$ AP]
 NounVerbComp = {NP}{WhiteSpace}+{VPBe}{WhiteSpace}+({AdvP}{WhiteSpace}+)?{Complement}
 
+NotVPBePhrase = {NotVPBe}{WhiteSpace}+({SubjCompl}|{SubjPPCompl})
 
 %%
 
+{NotVPBePhrase}	{ out.write(yytext());}
 
 {SubjVerbAdvPCompl} 	{ 
 				//Find where the Verbe Be phrase ends and search for the possible complement tags from there.

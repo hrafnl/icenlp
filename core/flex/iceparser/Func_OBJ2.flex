@@ -398,9 +398,7 @@ VerbSubjObjNom = "[VP"{WhiteSpace}+{VerbDat}~"VP]"{WhiteSpace}+{FuncSubjectObliq
 {Complement1}	{
 		out.write(Comp0Open+yytext()+Comp0Close);
 		}
-{Complement2}	{
-		out.write(Comp0Open+yytext()+Comp0Close);
-		}
+{Complement2}	{out.write(yytext());}
 {SubjVerbComp} {
 
 //			System.out.println("SubjVerbComp");
