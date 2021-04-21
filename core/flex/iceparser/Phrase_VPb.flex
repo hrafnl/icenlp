@@ -20,8 +20,8 @@
  * hrafn@ru.is
  */
  
-/* This transducer marks verb phrases 	*/
-/* Infinitive verb phrases and verb BE phrases are specially marked for use in later transducers */
+/* This transducer marks verb BE phrases */
+/* Verb BE phrases are parsed before other verbs for better sentence function parsing */
 package is.iclt.icenlp.core.iceparser;
 import java.util.regex.Pattern;
 import java.io.*;

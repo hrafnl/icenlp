@@ -21,7 +21,7 @@
  */
  
 /* This transducer marks verb phrases 	*/
-/* Infinitive verb phrases and verb BE phrases are specially marked for use in later transducers */
+/* Verb BE phrases are parsed in Phrase_VPb.flex and are ignored in this transducer */
 package is.iclt.icenlp.core.iceparser;
 import java.util.regex.Pattern;
 import java.io.*;
