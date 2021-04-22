@@ -82,7 +82,7 @@ import java.io.*;
 %include verbLexicon.txt
 
 BeVerb = {VerbBe}|vera
-BeWordSpaces = {WhiteSpace}*{BeVerb}{WhiteSpace}+
+BeWordSpaces = {WhiteSpace}+{BeVerb}{WhiteSpace}+
 
 VerbPastPartTag = {encodeOpen}sþ{Voice}{Gender}{Number}{Case}{encodeClose}
 VerbPastPartTagNeut = {encodeOpen}sþ{Voice}h{Number}{Case}{encodeClose}
