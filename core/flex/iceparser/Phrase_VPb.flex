@@ -48,25 +48,6 @@ import java.io.*;
       	    yylex();
   }
   
-  
-  private String getLastWord(String txt)
-  {
-  	String[] strs;
-	String tag;
-	String result="";
-	Pattern p = Pattern.compile("\\s+");
-	// Get all the individual lexemes as strings
-	strs = p.split(txt);
-        int len = strs.length;
-        if (len >= 2)
-        {
-            tag = strs[len-1];
-            /* if (tag.equal("ssg")) 		Is this necessary? */
-            result = strs[len-2];
-        }
-        return result;
-  }
-  
 %}
 
 %eof{
@@ -81,7 +62,7 @@ import java.io.*;
 %include regularDef.txt
 %include verbLexicon.txt
 
-BeVerb = {VerbBe}|vera
+BeVerb = {VerbBe}|[vV]era
 BeWordSpaces = {WhiteSpace}+{BeVerb}{WhiteSpace}+
 
 VerbPastPartTag = {encodeOpen}sþ{Voice}{Gender}{Number}{Case}{encodeClose}
