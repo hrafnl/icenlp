@@ -73,31 +73,34 @@ VerbSupineTag = {encodeOpen}ss{Voice}{encodeClose}
 AdverbPhrase = {OpenAdvP}~{CloseAdvP}
 Infinitive = 	{WordSpaces}{InfinitiveTag}
 
-VerbPastPartNeut =  {WordSpaces}{VerbPastPartTagNeut}
-VerbSupine = 	{WordSpaces}{VerbSupineTag}
-
 BeFinite = 	{BeWordSpaces}{VerbFiniteTag}
 BePastPart =  {BeWordSpaces}{VerbPastPartTag}
 BePresentPart =  {BeWordSpaces}{VerbPresentPartTag}
 BeSupine = 	{BeWordSpaces}{VerbSupineTag}
+BePastPartNeut =  {BeWordSpaces}{VerbPastPartTagNeut}
 BeInfinitive = {BeWordSpaces}{VerbInfinitiveTag}
 
 BeInfinitivePhrase = {Infinitive}?{BeInfinitive}
 BeFinitePhrase = {BeFinite}
-BePhrase =  {BeFinitePhrase} 
+BePhraseFinite =  {BeFinitePhrase} 
 BePhraseInf = {BeInfinitivePhrase}
 BePhraseSupine = {BeSupine}+
 BePhrasePastPart = {BePastPart}
 BePhrasePresentPart = {BePresentPart}
 
+VerbFiniteTagNoSpace = {encodeOpen}s[bfv]{Voice}{Person}{Number}{Tense}{encodeClose}
+VerbInfinitiveTagNoSpace = {encodeOpen}sn[mg]{encodeClose}
+
+BeFiniteSupine = {WordSpaces}{VerbFiniteTagNoSpace}({WhiteSpace}*{AdverbPhrase})*({BeSupine}|{BePastPartNeut})+
+BeInfinitiveSupine = {Infinitive}?{WordSpaces}{VerbInfinitiveTagNoSpace}({WhiteSpace}*{AdverbPhrase})*({BeSupine}|{BePastPartNeut})+
+
+BePhrase = {BePhraseFinite} | {BePhraseInf} | {BePhraseSupine} | {BePhrasePastPart} | {BePhrasePresentPart} | {BeFiniteSupine} | {BeInfinitiveSupine}
+
 %%
 
 {MWE}			{ out.write(yytext());}
+
 {BePhrase}		{ out.write(VPBOpen+yytext()+VPBClose);}
-{BePhraseInf}		{ out.write(VPBOpen+yytext()+VPBClose);}
-{BePhraseSupine}	{ out.write(VPBOpen+yytext()+VPBClose);}
-{BePhrasePastPart}	{ out.write(VPBOpen+yytext()+VPBClose);}
-{BePhrasePresentPart}	{ out.write(VPBOpen+yytext()+VPBClose);}
 
 "\n"			{ //System.err.print("Reading line: " + Integer.toString(yyline+1) + "\r"); 
 			out.write("\n"); }
