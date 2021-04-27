@@ -1,7 +1,7 @@
 /* The following regluar expression cover verbs which demand oblique case subjects (aukafallssagnir) */
 
-VerbBe =	[eE]r(t|u[mð]?)? | [vV](ar(st)?|oru[mð]?) | [ss]é(rt|u[mð]?)? | [vV]ær(ir?|u[mð]?) |
-		[vV]erð(ur|um|i(ð|r)?|a)? | [vV]arð(st)? | [uU]rðu[mð]? | [yY]rð(ir?|u[mð]?) | [vV]ertu |
+VerbBe =	[eE]r(t|u[mð]?)? | [vV](ar(st)?|oru[mð]?) | [ss]é(rt|u[mð]?)? | [vV]ær(ir?|u[mð]?) | [vV]er(a|ið|tu) |
+		[vV]erð(ur|um|i(ð|r)?|a)? | [vV]arð(st)? | [uU]rðu[mð]? | [yY]rð(ir?|u[mð]?) | [oO]rðið |
 
 /* Verbs that demand complements */
 		[hH](eit(i(r|ð)?|um|a) | é(t((u(m|ð)?)? |ir?) | st))	|		/* heita */
