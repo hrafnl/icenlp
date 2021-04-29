@@ -10,6 +10,7 @@
 ./flexit.sh Phrase_NPs
 ./flexit.sh Case_NP
 ./flexit.sh Case_AP
+./flexit.sh Phrase_VPb
 ./flexit.sh Phrase_VP
 ./flexit.sh Phrase_PP
 ./flexit.sh Clean1
