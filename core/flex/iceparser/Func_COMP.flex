@@ -121,7 +121,7 @@ PP = {OpenPP}~{ClosePP}
 CP = {OpenCP}~{CloseCP}
 
 VPPastSeq = {VPPast}({WhiteSpace}+{ConjPhraseOrComma}{WhiteSpace}+{VPPast})*
-Complement = {APNom} | {APsNom} | {NPNom} | {NPsNom} | {NPForeign} | {NPsForeign} | {VPPastSeq}
+Complement = {APNom} | {APsNom} | {NPNom} | {NPOther} | {NPsNom} | {NPsOther} |{NPForeign} | {NPsForeign} | {VPPastSeq}
 //Complement = {APNom} | {APsNom} | {NPNom} | {VPPastSeq}
 
 SubjectVerbBe = {FuncSubject}{WhiteSpace}+{VPBe}{WhiteSpace}+

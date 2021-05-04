@@ -66,6 +66,9 @@ PersPronounTag = {encodeOpen}fp({Gender}|{Person}){Number}{Case}{encodeClose}{Wh
 AddressTag = {encodeOpen}v{encodeClose}{WhiteSpace}+
 Address = {WordSpaces}{AddressTag}
 
+SymbolTag = {encodeOpen}(m|pa){encodeClose}{WhiteSpace}+
+Symbol = {WordSpaces}{SymbolTag}
+
 ErrorCodes = Ng|Nn|Nc|Np|Vn|Vp|Sn|Ss|Sp|Oc|Cg|Cn|Xx|Gh|Pc
 //ErrorCodes = [VNASCXGP]([gnpsxh]|"ca")
 Error = \?{ErrorCodes}+\?
@@ -140,6 +143,7 @@ NPNom = {OpenNP}n~{CloseNP}
 NPAcc = {OpenNP}a~{CloseNP}
 NPDat = {OpenNP}d~{CloseNP}
 NPGen = {OpenNP}g~{CloseNP}
+NPOther = {OpenNP} ~{CloseNP}
 
 APNom = {OpenAP}n~{CloseAP}
 APAcc = {OpenAP}a~{CloseAP}
@@ -151,6 +155,7 @@ NPsNom = {StartNPs}n~{CloseNPs}
 NPsAcc = {StartNPs}a~{CloseNPs}
 NPsDat = {StartNPs}d~{CloseNPs}
 NPsGen = {StartNPs}g~{CloseNPs}
+NPsOther = {StartNPs} ~{CloseNPs}
 
 StartAPs = {OpenAPs}{WhiteSpace}+{OpenAP}
 APsNom = {StartAPs}n~{CloseAPs}

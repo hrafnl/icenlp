@@ -69,7 +69,8 @@ import java.io.*;
 PPPhrase = {OpenPP}~{ClosePP}
 
 /* A temporal expression, e.g. 
-	[NP 1982 ta NP], [NP árið nheog 1982 ta NP]
+	[NP 1982 ta NP] 
+	[NP árið nheog 1982 ta NP]
 	[NP [AP 30. lkeovf AP] apríl nkeo NP]
 	[NP [AP 30. lkeovf AP] apríl nkeo 1939 ta NP]
 	[NP nokkrum fokfþ dögum nkfþ NP] [AdvP síðar/seinna aam AdvP]
@@ -79,16 +80,18 @@ NumberTag = {encodeOpen}t[ao]{encodeClose}{WhiteSpace}+
 NounNumeral = {WordSpaces}({NounTag}{WordSpaces}){NumberTag}
 AdjPhrase = {OpenAP}a?~{CloseAP}
 AdvPWords =  {OpenAdvP}{WhiteSpace}+s(íðar|einna){WhiteSpace}+{AdverbTag}{CloseAdvP}
+Klukkan = {WhiteSpace}*[kK]lukkan{WhiteSpace}+{NounTag}
 
 Month = {WhiteSpace}+(jan(\.|úar)|feb(\.|rúar)|mar(\.|s)|apr(\.|íl)|maí|jún(\.|í)|
 		      júl(\.|í)|ágú(\.|st)|sep(\.|tember)|okt(\.|óber)|nóv(\.|ember)|des(\.|ember)){WhiteSpace}+{NounTag}
 
-TimeAcc = {OpenNP}a{NounNumeral}{CloseNP} 
+TimeAcc = {OpenNP}a{NounNumeral}{CloseNP}
 TimeMonth = {OpenNP}a({WhiteSpace}+{AdjPhrase}){Month}({WordSpaces}{NumberTag})?{CloseNP} 
-OneNumber = {OpenNP}{WordSpaces}{NumberTag}{CloseNP} 
-TimeDat = {OpenNP}d~{CloseNP} 
+OneNumber = {OpenNP}{WordSpaces}{NumberTag}{CloseNP}
+TimeClock = {OpenNP}n{Klukkan}{WordSpaces}{NumberTag}{CloseNP}
+TimeDat = {OpenNP}d~{CloseNP}
 
-Temporal = {TimeAcc} | {TimeMonth} | {OneNumber}
+Temporal = {TimeAcc} | {TimeMonth} | {TimeClock} | {OneNumber}
 TemporalDat = {TimeDat}{WhiteSpace}+{AdvPWords}
 
 

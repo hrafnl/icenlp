@@ -57,6 +57,7 @@
 /* framkv.stj. (abbreviated noun) */
 /* ru.is (web address) */
 /* jonjonsson(at)ru.is (e-mail address) */
+/* 13:10 (sports score / stand-alone time)) */
 
 
 
@@ -166,9 +167,10 @@ IndefNP = {IndefPronoun}+(({Article}|{DemonPronoun})?{Numeral}?{AdjectivePhrases
 AdjAP = {AdjectivePhrases}{Numeral}?{NounProperPoss}
 ProperNounNP = {Title}?{ProperNoun}({ProperNoun}|{ForeignWord})*({ReflexivePronoun}|{PossPronoun})?
 NounNP = {Noun}({ReflexivePronoun}|{Numeral}|{DemonPronoun}?{IndefPronoun}|{PossPronoun})?
+Score = {Numeral}{Symbol}{Numeral}
 
 
-NounPhrase = {Hvad} | {HvadaNP} | {ReflNP} | {ArticleNP} | {DemonNP} | {IndefNP} | {PersNP} | {PossNP} | {NumNP} | {AdjAP} | {NounNP} | {ProperNounNP} | {Shortening} | {Address}
+NounPhrase = {Hvad} | {HvadaNP} | {ReflNP} | {ArticleNP} | {DemonNP} | {IndefNP} | {PersNP} | {PossNP} | {NumNP} | {AdjAP} | {NounNP} | {ProperNounNP} | {Shortening} | {Address} | {Score}
 
 
 %%
