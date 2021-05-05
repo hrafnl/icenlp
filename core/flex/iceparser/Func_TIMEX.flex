@@ -76,22 +76,25 @@ PPPhrase = {OpenPP}~{ClosePP}
 	[NP nokkrum fokfþ dögum nkfþ NP] [AdvP síðar/seinna aam AdvP]
 */
 
-NumberTag = {encodeOpen}t[ao]{encodeClose}{WhiteSpace}+
+NumberTag = {encodeOpen}t[ao]{encodeClose}{WhiteSpace}*
+PronounTag = {encodeOpen}f~{encodeClose}
 NounNumeral = {WordSpaces}({NounTag}{WordSpaces}){NumberTag}
 AdjPhrase = {OpenAP}a?~{CloseAP}
 AdvPWords =  {OpenAdvP}{WhiteSpace}+s(íðar|einna){WhiteSpace}+{AdverbTag}{CloseAdvP}
 Klukkan = {WhiteSpace}*[kK]lukkan{WhiteSpace}+{NounTag}
 
+Day = {WhiteSpace}+([mM]ánu|[þÞ]riðju|[mM]iðviku|[fF]immtu|[fF]östu|[lL]augar|[sS]unnu)dag(inn)?{WhiteSpace}+{NounTag}
+
 Month = {WhiteSpace}+(jan(\.|úar)|feb(\.|rúar)|mar(\.|s)|apr(\.|íl)|maí|jún(\.|í)|
 		      júl(\.|í)|ágú(\.|st)|sep(\.|tember)|okt(\.|óber)|nóv(\.|ember)|des(\.|ember)){WhiteSpace}+{NounTag}
 
 TimeAcc = {OpenNP}a{NounNumeral}{CloseNP}
-TimeMonth = {OpenNP}a({WhiteSpace}+{AdjPhrase}){Month}({WordSpaces}{NumberTag})?{CloseNP} 
-OneNumber = {OpenNP}{WordSpaces}{NumberTag}{CloseNP}
+TimeDay = {OpenNP}a({WordSpaces}{PronounTag})?({WhiteSpace}+{AdjPhrase}|{WordSpaces}{NumberTag})?{Day}({WhiteSpace}+AdjPhrase})?{CloseNP} 
+TimeMonth = {OpenNP}a({WordSpaces}{PronounTag})?({WhiteSpace}+{AdjPhrase}|{WordSpaces}{NumberTag}){Month}({WordSpaces}{NumberTag})?{CloseNP} 
 TimeClock = {OpenNP}n{Klukkan}{WordSpaces}{NumberTag}{CloseNP}
 TimeDat = {OpenNP}d~{CloseNP}
 
-Temporal = {TimeAcc} | {TimeMonth} | {TimeClock} | {OneNumber}
+Temporal = {TimeAcc} | {TimeDay} | {TimeMonth} | {TimeClock}
 TemporalDat = {TimeDat}{WhiteSpace}+{AdvPWords}
 
 

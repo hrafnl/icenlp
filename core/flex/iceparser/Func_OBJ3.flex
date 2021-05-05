@@ -106,7 +106,7 @@ ComplObjDat = {AdjCompl}{WhiteSpace}+{ObjDat}
 {Function}	{out.write(yytext());}	/* Don't touch the phrases that have already been function marked */
 {PPPhrase}	{out.write(yytext());}	/* Don't touch PP phrases */
 
-{Temporal}	{out.write(TempOpen+yytext()+TempClose);}	
+/* {Temporal}	{out.write(TempOpen+yytext()+TempClose);}	This is catching more wrong than right	*/ 
 
 {ObjDatCompl}	{ 
 			/* Find where the Complement function started and insert the OBJ label */
