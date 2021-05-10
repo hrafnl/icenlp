@@ -76,25 +76,51 @@ PPPhrase = {OpenPP}~{ClosePP}
 	[NP nokkrum fokfþ dögum nkfþ NP] [AdvP síðar/seinna aam AdvP]
 */
 
-NumberTag = {encodeOpen}t[ao]{encodeClose}{WhiteSpace}*
-PronounTag = {encodeOpen}f~{encodeClose}
-NounNumeral = {WordSpaces}({NounTag}{WordSpaces}){NumberTag}
-AdjPhrase = {OpenAP}a?~{CloseAP}
-AdvPWords =  {OpenAdvP}{WhiteSpace}+s(íðar|einna){WhiteSpace}+{AdverbTag}{CloseAdvP}
-Klukkan = {WhiteSpace}*[kK]lukkan{WhiteSpace}+{NounTag}
+NumeralTag = {encodeOpen}t[ao]{encodeClose}{WhiteSpace}+
+Numeral = {WordSpaces}{NumeralTag}
+PronounTag = {encodeOpen}f~{encodeClose}{WhiteSpace}+
+Pronoun = {WordSpaces}{PronounTag}
+NounNumeral = {WordSpaces}{NounTag}{Numeral}
+AdjPhrase = {OpenAP}a?~{CloseAP}{WhiteSpace}+
+AdvPWords =  {OpenAdvP}{WhiteSpace}+(s(íðar|einna)|fyrr){WhiteSpace}+{AdverbTag}{CloseAdvP}{WhiteSpace}+
+Klukkan = [kK]lukkan{WhiteSpace}+{NounTag}
+AdjOrNumOrPro = ({AdjPhrase}|{Numeral}|{Pronoun})
 
-Day = {WhiteSpace}+([mM]ánu|[þÞ]riðju|[mM]iðviku|[fF]immtu|[fF]östu|[lL]augar|[sS]unnu)dag(inn)?{WhiteSpace}+{NounTag}
+Day =  ([mM]ánu		|
+		[þÞ]riðju	|
+		[mM]iðviku	|
+		[fF]immtu	|
+		[fF]östu	|
+		[lL]augar	|
+		[sS]unnu)dag(inn)?
 
-Month = {WhiteSpace}+(jan(\.|úar)|feb(\.|rúar)|mar(\.|s)|apr(\.|íl)|maí|jún(\.|í)|
-		      júl(\.|í)|ágú(\.|st)|sep(\.|tember)|okt(\.|óber)|nóv(\.|ember)|des(\.|ember)){WhiteSpace}+{NounTag}
+Month =	jan(\.|úar)		|
+		feb(\.|rúar)	|
+		mar(\.|s)		|
+		apr(\.|íl)		|
+		maí|jún(\.|í)	|
+		júl(\.|í)		|
+		ágú(\.|st)		|
+		sep(\.|tember)	|
+		okt(\.|óber)	|
+		nóv(\.|ember)	|
+		des(\.|ember)
 
-TimeAcc = {OpenNP}a{NounNumeral}{CloseNP}
-TimeDay = {OpenNP}a({WordSpaces}{PronounTag})?({WhiteSpace}+{AdjPhrase}|{WordSpaces}{NumberTag})?{Day}({WhiteSpace}+AdjPhrase})?{CloseNP} 
-TimeMonth = {OpenNP}a({WordSpaces}{PronounTag})?({WhiteSpace}+{AdjPhrase}|{WordSpaces}{NumberTag}){Month}({WordSpaces}{NumberTag})?{CloseNP} 
-TimeClock = {OpenNP}n{Klukkan}{WordSpaces}{NumberTag}{CloseNP}
+Duration = 	[dD]ag(inn|a(na)?)?			|
+			[sS]ólarhring(inn|a(na)?)?	|
+			[vV]iku(na|r(nar)?)?		|
+			[mM]ánuð(inn|i(na)?)?		|
+			[áÁ]r(ið|in)?				|
+			[áÁ]ratug(inn|a(na)?)?
+
+DurationAndTag = ({Day}|{Month}|{Duration}){WhiteSpace}+{NounTag}
+
+TimeAcc = {OpenNP}a{NounNumeral}{CloseNP} 
+TimeClock = {OpenNP}n{WhiteSpace}+{Klukkan}{Numeral}{CloseNP}
+TimeSpan = {OpenNP}a{WhiteSpace}+{AdjOrNumOrPro}?{DurationAndTag}{AdjOrNumOrPro}?{CloseNP} 
+Temporal = {TimeAcc} | {TimeSpan} | {TimeClock}
+
 TimeDat = {OpenNP}d~{CloseNP}
-
-Temporal = {TimeAcc} | {TimeDay} | {TimeMonth} | {TimeClock}
 TemporalDat = {TimeDat}{WhiteSpace}+{AdvPWords}
 
 
