@@ -168,9 +168,10 @@ AdjAP = {AdjectivePhrases}{Numeral}?{NounProperPoss}
 ProperNounNP = {Title}?{ProperNoun}({ProperNoun}|{ForeignWord})*({ReflexivePronoun}|{PossPronoun})?
 NounNP = {Noun}({ReflexivePronoun}|{Numeral}|{DemonPronoun}?{IndefPronoun}|{PossPronoun})?
 Score = {Numeral}{Symbol}{Numeral}
+ProperNumNP = {Numeral}?{ProperNoun}{Numeral}?
 
 
-NounPhrase = {Hvad} | {HvadaNP} | {ReflNP} | {ArticleNP} | {DemonNP} | {IndefNP} | {PersNP} | {PossNP} | {NumNP} | {AdjAP} | {NounNP} | {ProperNounNP} | {Shortening} | {Address} | {Score}
+NounPhrase = {Hvad} | {HvadaNP} | {ReflNP} | {ArticleNP} | {DemonNP} | {IndefNP} | {PersNP} | {PossNP} | {NumNP} | {AdjAP} | {NounNP} | {ProperNounNP} | {Shortening} | {Address} | {Score} | {ProperNumNP}
 
 
 %%
