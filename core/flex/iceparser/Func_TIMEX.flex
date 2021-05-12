@@ -92,7 +92,10 @@ Day =  ([mM]ánu		|
 		[fF]immtu	|
 		[fF]östu	|
 		[lL]augar	|
-		[sS]unnu)dag(inn)?
+		[sS]unnu	|
+		[fF]yrr[ai]	|	
+		[gG]ær		|
+		[mM]orgun)dag(inn)?
 
 Month =	jan(\.|úar)		|
 		feb(\.|rúar)	|
