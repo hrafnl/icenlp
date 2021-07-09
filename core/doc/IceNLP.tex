@@ -34,7 +34,7 @@ A Natural Language Processing Toolkit for Icelandic\footnote{The following perso
 \begin{document}
 \hyphenation{Ice-Tagger Ice-Morphy Reykja-vik}
 \label{firstpage}
-\date{April 2018}
+\date{July 2021}
 \maketitle
 \newpage
 \tableofcontents
@@ -407,12 +407,13 @@ To illustrate, the following is a record from a frequency dictionary for the wor
 \subsubsection{Input file}
 The input to the parser are POS-tagged sentences.
 The tags are assumed to be part of the tagset used in the \emph{IFD} corpus, i.e. the tagset used by \emph{IceTagger}.
+From version 1.5.0 of \emph{IceNLP}, the parser also accepts tags that confirm to the revised Icelandic tagset, described in the documentation for MIM\_GOLD 20.5 (\url{https://repository.clarin.is/repository/xmlui/handle/20.500.12537/39}).
 Furthermore, it is assumed that the input file has one sentence in each line.
 
 Here is an example of the input format:
 \begin{verbatim}
-ég fp1en opnaði sfg1eþ dyrnar nvfog , , steig sfg1eþ inn aa og c sparkaði sfg1eþ
-hvítum lkeþsf brennivínspoka nkeþ með aþ sunddóti nheþ til ae hliðar nvee . .
+ég fp1en opnaði sfg1eþ dyrnar nvfog , pk steig sfg1eþ inn aa og c sparkaði sfg1eþ
+hvítum lkeþsf brennivínspoka nkeþ með af sunddóti nheþ til af hliðar nvee . pl
 \end{verbatim}
 
 \subsubsection{Output file}
@@ -421,18 +422,18 @@ The parser either writes one sentences in each line or one phrase/syntactic func
 Here is an example of the latter:
 
 \begin{verbatim}
-{*SUBJ> [NP ég fp1en NP] *SUBJ>}
-[VP opnaði sfg1eþ VP]
-{*OBJ< [NP dyrnar nvfog NP] *OBJ<}
-, ,
-[VP steig sfg1eþ VP]
-[AdvP inn aa AdvP]
-, ,
-[VP sparkaði sfg1eþ VP]
-{*OBJ< [NP [AP hvítum lkeþsf AP] brennivínspoka nkeþ NP] *OBJ<}
-[PP með aþ [NP sunddóti nheþ NP] PP]
-[PP til ae [NP hliðar nvee NP] PP]
-. .
+{*SUBJ> [NP ég fp1en ] }
+[VP opnaði sfg1eþ ]
+{*OBJ< [NP dyrnar nvfog ] }
+, pk
+[VP steig sfg1eþ ]
+[AdvP inn aa ]
+[CP og c ]
+[VP sparkaði sfg1eþ ]
+{*OBJ< [NP [AP hvítum lkeþsf ] brennivínspoka nkeþ ] }
+[PP með af [NP sunddóti nheþ ] ]
+[PP til af [NP hliðar nvee ] ]
+. pl
 \end{verbatim}
 
 \section{Usage}
