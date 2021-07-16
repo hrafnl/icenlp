@@ -143,6 +143,8 @@ VPPastCompl = {OpenComp}{WhiteSpace}+{OpenVPp}~{CloseVPp}{WhiteSpace}+{CloseComp
 
 NPPhrases = {OpenNP}~{CloseNP} | {OpenNPs}~{CloseNPs}
 
+Complement = {APNom} | {APsNom} | {NPNom} | {NPOther} | {NPsNom} | {NPsOther} |{NPForeign} | {NPsForeign} | {VPPastSeq}
+
 Complement1 = {APsNom}
 Complement2 = {APNom} | {VPPast}
 
@@ -163,11 +165,14 @@ PPVPInfObj = {VPInf}{WhiteSpace}*{ClosePP}{WhiteSpace}+{Object}
 // A nominative object which follows a verb which demands an oblique case subject
 FuncSubjectOblique = {OpenSubj}{WhiteSpace}+({NPOblique}|{NPsOblique})~{CloseSubj}
 SubjVerbObjNom = {FuncSubjectOblique}{WhiteSpace}+{VPDat}{WhiteSpace}+{NomSubject}
-//VerbSubjObjNom = {VPDat}{WhiteSpace}+{FuncSubjectOblique}{WhiteSpace}+{NomSubject} // VPDat is a problem
+//SubjVerbObjNom = {FuncSubjectOblique}{WhiteSpace}+{OpenVP}{WhiteSpace}+{VerbDat}{CloseVP}{WhiteSpace}+{NomSubject}
+//SubjVerbObjNom = {FuncSubjectOblique}{WhiteSpace}+"[VP"{WhiteSpace}+{VerbDat}~"VP]"{WhiteSpace}+{NomSubject}
+VerbSubjObjNom = {VPDat}{WhiteSpace}+{FuncSubjectOblique}{WhiteSpace}+{NomSubject} // VPDat is a problem
 //VerbSubjObjNom = {OpenVP}{WhiteSpace}+{VerbDat}{CloseVP}{WhiteSpace}+{FuncSubjectOblique}{WhiteSpace}+{NomSubject} // VPDat is a problem
-VerbSubjObjNom = "[VP"{WhiteSpace}+{VerbDat}~"VP]"{WhiteSpace}+{FuncSubjectOblique}{WhiteSpace}+{NomSubject} // VPDat is a problem
+//VerbSubjObjNom = "[VP"{WhiteSpace}+{VerbDat}~"VP]"{WhiteSpace}+{FuncSubjectOblique}{WhiteSpace}+{NomSubject} // VPDat is a problem
 
 %%
+
 {VerbDatObjAccObj}
 	{
 //			System.out.println("VerbDatObjAccObj");
@@ -347,7 +352,7 @@ VerbSubjObjNom = "[VP"{WhiteSpace}+{VerbDat}~"VP]"{WhiteSpace}+{FuncSubjectObliq
 				out.write(StringSearch.firstString+Comp1Open+StringSearch.nextString+Comp1Close);
 			}
 		}
-/*{SubjVerbObjNom}  {
+{SubjVerbObjNom}  {
 //	System.err.println("obj2-5");
 			theIndex = StringSearch.splitString(yytext(),"VP]", false, 3);
 			if(theIndex == -1)
@@ -360,7 +365,6 @@ VerbSubjObjNom = "[VP"{WhiteSpace}+{VerbDat}~"VP]"{WhiteSpace}+{FuncSubjectObliq
 				out.write(StringSearch.firstString+ObjNomOpen+StringSearch.nextString+ObjNomClose);
 			}
 		  }
-*/
 {VerbSubjObjNom}  {
 //			System.out.println("VerbSubjObjNom");
 //	System.err.println("obj2-6");

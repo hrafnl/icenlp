@@ -29,7 +29,7 @@ public class StringSearch {
 	/* firstString contains the first part of the whole string with regard to the search string */
 	/* nextString contains the second part of the whole string with regard to the search string */
 
-	public static String firstString, nextString;
+	public static String firstString, nextString, secondString, lastString;
 
 
 	/* Searches wholeStr for the first/last occurence of searchStr and splits the string	*/
@@ -52,7 +52,7 @@ public class StringSearch {
 	  	{
 	  		endIdx = idx + step;
 			nextString = wholeStr.substring(endIdx);
-			firstString = wholeStr.substring(0,endIdx);
+			firstString = wholeStr.substring(0, endIdx);
 		}
 		return idx;
 	}
@@ -74,10 +74,33 @@ public class StringSearch {
 	      	if (idx2 != -1) {
 	      		endIdx = idx2 + step;
 	    		nextString = wholeStr.substring(endIdx);
-	    		firstString = wholeStr.substring(0,endIdx);
+	    		firstString = wholeStr.substring(0, endIdx);
 			}
 			return idx2;
   	}
 
+	/* Searches wholeStr for first occurences of searchString1 and searchStr2 */
+	/* Splits wholeStr into three strings: firstString, secondString, and lastString */
+
+	public static int splitString3(String wholeStr, String searchStr1, String searchStr2)
+	{
+	      /* Find the indices of the characters following searchStr1 and searchStr2*/
+
+	      	int idx1, idx2, firstIdx, secondIdx;
+			int firstStep = searchStr1.length();
+	      	int secondStep = searchStr2.length();
+
+	      	idx1 = wholeStr.indexOf(searchStr1);		/* First index of searchStr */
+	      	idx2 = wholeStr.indexOf(searchStr2, idx1);
+
+	      	if (idx2 != -1) {
+				firstIdx = idx1 + firstStep;
+	      		secondIdx = idx2 + secondStep;
+	    		lastString = wholeStr.substring(secondIdx);
+				secondString = wholeStr.substring(firstIdx, secondIdx);
+	    		firstString = wholeStr.substring(0, firstIdx);
+			}
+			return idx2;
+  	}
 
 }

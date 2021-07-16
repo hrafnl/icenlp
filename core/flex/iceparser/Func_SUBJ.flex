@@ -134,8 +134,58 @@ VerbAdvPSubject = {VPorVPBe}{WhiteSpace}+{AdvP}{WhiteSpace}({FuncQualifier}{Whit
 SubjectRel = {NomSubject}{WhiteSpace}+({FuncQualifier}{WhiteSpace}+)?{RelCP}
 
 
+VPDat = {OpenVP}{WhiteSpace}+{VerbDat}~{CloseVP}
+
+SubjVerbObjNom = {NPDat}{WhiteSpace}+{VPDat}{WhiteSpace}+{NomSubject}
+VerbSubjObjNom = {VPDat}{WhiteSpace}+{NPDat}{WhiteSpace}+{NomSubject}
+
 %%
 
+{VerbSubjObjNom}
+{
+//System.err.println("subj-3");
+	String str = yytext();
+	theIndex = StringSearch.splitString3(str," VP]", " NP]");
+	if(theIndex == -1)
+	{
+		out.write(yytext());
+	}
+	else
+	{
+		if (agreement)
+		{
+//			out.write(ErrorDetector.agreementSubjectVerbCheckNumberAndPerson(StringSearch.firstString,StringSearch.nextString,Func2Open,Func2Close,1));
+		}
+		else
+		{
+//			out.write(StringSearch.firstString + Func1Open + StringSearch.nextString + Func1Close);
+			out.write(StringSearch.firstString + Func2Open + StringSearch.secondString + Func2Close + StringSearch.lastString);
+		}
+	}
+}
+
+{SubjVerbObjNom}
+{
+//System.err.println("subj-3");
+	String str = yytext();
+	theIndex = StringSearch.splitString(str," NP]", true, 4);
+	if(theIndex == -1)
+	{
+		out.write(yytext());
+	}
+	else
+	{
+		if (agreement)
+		{
+			out.write(ErrorDetector.agreementSubjectVerbCheckNumberAndPerson(StringSearch.firstString,StringSearch.nextString,Func2Open,Func2Close,1));
+		}
+		else
+		{
+//			out.write(StringSearch.firstString + Func1Open + StringSearch.nextString + Func1Close);
+			out.write(Func1Open + StringSearch.firstString + Func1Close + StringSearch.nextString);
+		}
+	}
+}
 
 {SubjectVerb}
 {
