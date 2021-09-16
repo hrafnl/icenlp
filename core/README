@@ -6,7 +6,9 @@ The core includes core utilities like a tokenisers, an unknown word guesser, PoS
 
 Build dependencies can be installed on Debian/Ubuntu with:
 
-	sudo apt-get install -y jflex ant openjdk-7-jdk texlive-latex-extra texlive-fonts-recommended
+	sudo apt-get install -y texlive-latex-extra texlive-fonts-recommended
+	
+IceNLP also requires Java Development kit (JDK), newer versions are recommended.
 
 Then the core can be compiled with:
 
