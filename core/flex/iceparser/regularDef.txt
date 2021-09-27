@@ -118,6 +118,7 @@ Comma = ","{WhiteSpace}+{encodeOpen}(","|"pk"){encodeClose}
 //ConjPhrase = {OpenCP}{WhiteSpace}+(og|eða|né|heldur|en)~c{WhiteSpace}+{CloseCP}
 ConjPhrase = {OpenCP}~{CloseCP}
 ConjPhraseOrComma = {ConjPhrase} | {Comma}
+ConjPhraseAndOrComma = {ConjPhraseOrComma} | {Comma}{WhiteSpace}+{ConjPhrase}
 //ConjPhraseSem = {OpenCP}{WhiteSpace}+sem~c{WhiteSpace}+{CloseCP}
 
 ForeignTag = {encodeOpen}e{encodeClose}{WhiteSpace}+

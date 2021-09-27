@@ -67,6 +67,7 @@ import java.io.*;
 
 
 PPPhrase = {OpenPP}~{ClosePP}
+NPsPhrase = {OpenNPs}~{CloseNPs}
 
 /* A temporal expression, e.g. 
 	[NP 1982 ta NP] 
@@ -101,7 +102,8 @@ Month =	jan(\.|úar)		|
 		feb(\.|rúar)	|
 		mar(\.|s)		|
 		apr(\.|íl)		|
-		maí|jún(\.|í)	|
+		maí				|
+		jún(\.|í)		|
 		júl(\.|í)		|
 		ágú(\.|st)		|
 		sep(\.|tember)	|
@@ -109,19 +111,32 @@ Month =	jan(\.|úar)		|
 		nóv(\.|ember)	|
 		des(\.|ember)
 
-Duration = 	[dD]ag(inn|a(na)?)?			|
-			[sS]ólarhring(inn|a(na)?)?	|
-			[vV]iku(na|r(nar)?)?		|
-			[mM]ánuð(inn|i(na)?)?		|
-			[áÁ]r(ið|in)?				|
-			[áÁ]ratug(inn|a(na)?)?
+Season =	[vV]etur(inn)?	|
+			[vV]or(ið)?		|
+			[sS]umar(ið)?	|
+			[hH]aust(ið)?
 
-DurationAndTag = ({Day}|{Month}|{Duration}){WhiteSpace}+{NounTag}
+Duration = 	[sS]ekúndu(na|r(nar)?)?			|
+			[mM]ínútu(na|r(nar)?)?			|
+			[kK]lukkutíma(nn|na)?			|
+			[kK]lukkustund(ina|ir(nar)?)?	|
+			[dD]ag(inn|a(na)?)?				|
+			[sS]ólarhring(inn|a(na)?)?		|
+			[vV]iku(na|r(nar)?)?			|
+			[mM]ánuð(inn|i(na)?)?			|
+			[áÁ]r(ið|in)?					|
+			[áÁ]ratug(inn|i(na)?)?			|
+			[tT]íma(nn|na)?					|
+			[sS]tund(ina|ir(nar)?)?
+
+TimeAndTag = ({Day}|{Month}|{Season}|{Duration}){WhiteSpace}+{NounTag}
 
 TimeAcc = {OpenNP}a{NounNumeral}{CloseNP} 
 TimeClock = {OpenNP}n{WhiteSpace}+{Klukkan}{Numeral}{CloseNP}
-TimeSpan = {OpenNP}a{WhiteSpace}+{AdjOrNumOrPro}?{DurationAndTag}{AdjOrNumOrPro}?{CloseNP} 
-Temporal = {TimeAcc} | {TimeSpan} | {TimeClock}
+TimeSpan = {OpenNP}[nadg]?{WhiteSpace}+({TimeAndTag}{WhiteSpace}+)?{Numeral}{WhiteSpace}+{Symbol}{WhiteSpace}+{Numeral}{WhiteSpace}+{CloseNP}
+TemporalPhrase = {OpenNP}a{WhiteSpace}+{AdjOrNumOrPro}?{TimeAndTag}{AdjOrNumOrPro}?{CloseNP}({WhiteSpace}+{NPGen})?
+TemporalNPs = {OpenNPs}{WhiteSpace}+{TimeSpan}({WhiteSpace}+{ConjPhraseAndOrComma}{WhiteSpace}+{TimeSpan})+{WhiteSpace}+{CloseNPs}
+Temporal = {TimeAcc} | {TemporalPhrase} | {TimeClock} | {TemporalNPs}
 
 TimeDat = {OpenNP}d~{CloseNP}
 TemporalDat = {TimeDat}{WhiteSpace}+{AdvPWords}
